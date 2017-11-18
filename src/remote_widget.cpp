@@ -26,6 +26,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     ui.refresh->setIcon(style->standardIcon(QStyle::SP_BrowserReload));
     ui.mkdir->setIcon(style->standardIcon(QStyle::SP_FileDialogNewFolder));
     ui.rename->setIcon(style->standardIcon(QStyle::SP_FileIcon));
+    ui.move->setIcon(style->standardIcon(QStyle::SP_DirOpenIcon));
     ui.purge->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
     ui.mount->setIcon(style->standardIcon(QStyle::SP_DirLinkIcon));
     ui.stream->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
@@ -38,6 +39,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     ui.buttonRefresh->setDefaultAction(ui.refresh);
     ui.buttonMkdir->setDefaultAction(ui.mkdir);
     ui.buttonRename->setDefaultAction(ui.rename);
+    ui.buttonMove->setDefaultAction(ui.move);
     ui.buttonPurge->setDefaultAction(ui.purge);
     ui.buttonMount->setDefaultAction(ui.mount);
     ui.buttonStream->setDefaultAction(ui.stream);
@@ -82,6 +84,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         if (model->isLoading(index))
         {
             ui.refresh->setDisabled(true);
+            ui.move->setDisabled(true);
             ui.rename->setDisabled(true);
             ui.purge->setDisabled(true);
             ui.mount->setDisabled(true);
@@ -92,6 +95,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         {
             ui.refresh->setDisabled(false);
             ui.rename->setDisabled(topLevel);
+            ui.move->setDisabled(topLevel);
             ui.purge->setDisabled(topLevel);
             ui.mount->setDisabled(!isFolder);
             ui.stream->setDisabled(isFolder);
@@ -164,6 +168,35 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             if (progress.exec() == QDialog::Accepted)
             {
                 model->rename(index, name);
+            }
+        }
+    });
+
+    QObject::connect(ui.move, &QAction::triggered, this, [=]()
+    {
+        QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+        QString path = model->path(index).path();
+        QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+
+        QString name = model->path(index.parent()).path() + "/";
+        name = QInputDialog::getText(this, "Move", QString("New location for %1").arg(pathMsg), QLineEdit::Normal, name);
+        if (!name.isEmpty())
+        {
+            QProcess process;
+            UseRclonePassword(&process);
+            process.setProgram(GetRclone());
+            process.setArguments(QStringList()
+                                 << "move"
+                                 << GetRcloneConf()
+                                 << remote + ":" + path
+                                 << remote + ":" + name);
+            process.setReadChannelMode(QProcess::MergedChannels);
+
+            ProgressDialog progress("Move", "Moving...", pathMsg, &process, this);
+            if (progress.exec() == QDialog::Accepted)
+            {
+                model->refresh(index);
             }
         }
     });
@@ -376,6 +409,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         menu.addSeparator();
         menu.addAction(ui.mkdir);
         menu.addAction(ui.rename);
+        menu.addAction(ui.move);
         menu.addAction(ui.purge);
         menu.addSeparator();
         menu.addAction(ui.mount);

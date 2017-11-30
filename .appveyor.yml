@@ -10,6 +10,6 @@ build_script:
   - cmake -G "Visual Studio 12 Win64" -DCMAKE_PREFIX_PATH=C:\Qt\5.8\msvc2013_64 ..
   - cmake --build .
 artifacts:
-- path: build/build/Debug/RcloneBrowser.exe
+- path: build/build/Debug
 test: off
 deploy: off

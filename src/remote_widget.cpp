@@ -13,10 +13,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 
     QString root = isLocal ? "/" : QString();
 
-#ifdef Q_OS_WIN32
-    ui.mount->setVisible(false);
-    ui.buttonMount->setVisible(false);
-#else
+#ifndef Q_OS_WIN32
     isLocal = false;
 #endif
     auto settings = GetSettings();
@@ -235,7 +232,11 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         QString path = model->path(index).path();
         QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
+#ifdef Q_OS_WIN32
+        QString folder = QInputDialog::getText(this, "Mount", QString("Drive to mount %1 to").arg(pathMsg), QLineEdit::Normal, "Z:");
+#else
         QString folder = QFileDialog::getExistingDirectory(this, QString("Mount %1").arg(pathMsg));
+#endif
         if (!folder.isEmpty())
         {
             emit addMount(remote + ":" + path, folder);

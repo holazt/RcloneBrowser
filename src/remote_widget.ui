@@ -82,6 +82,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="buttonMove">
+            <property name="text">
+             <string>M&amp;ove</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonPurge">
             <property name="text">
              <string>De&amp;lete</string>
@@ -273,6 +283,11 @@
   <action name="export_">
    <property name="text">
     <string>E&amp;xport</string>
+   </property>
+  </action>
+  <action name="move">
+   <property name="text">
+    <string>M&amp;ove</string>
    </property>
   </action>
  </widget>

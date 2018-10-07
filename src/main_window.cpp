@@ -198,6 +198,11 @@ void MainWindow::rcloneGetVersion()
         if (code == 0)
         {
             QString version = p->readAllStandardOutput().trimmed();
+            int lineBreak = version.indexOf('\n');
+            if (lineBreak != -1)
+            {
+                version.remove(lineBreak, version.length() - lineBreak);
+            }
             mStatusMessage->setText(version + " in " + QDir::toNativeSeparators(GetRclone()));
             rcloneListRemotes();
         }
@@ -570,6 +575,8 @@ void MainWindow::addMount(const QString& remote, const QString& folder)
 
     QStringList args;
     args << "mount";
+    args << "--vfs-cache-mode";
+    args << "writes";
     args.append(GetRcloneConf());
     if (!opt.isEmpty())
     {

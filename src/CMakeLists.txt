@@ -120,9 +120,7 @@ elseif(APPLE)
   add_executable(rclone-browser MACOSX_BUNDLE ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT} icon.icns)
   target_link_libraries(rclone-browser Qt5::Widgets Qt5::MacExtras ${COCOA_LIB})
   set_target_properties(rclone-browser PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
-
-  add_custom_command(TARGET rclone-browser POST_BUILD COMMAND
-    ${CMAKE_COMMAND} -E copy_directory "src/icon.icns" "$<TARGET_FILE_DIR:rclone-browser>/../Resources/")
+  
 else()
   add_executable(rclone-browser ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT})
   target_link_libraries(rclone-browser Qt5::Widgets)

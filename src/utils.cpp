@@ -181,3 +181,13 @@ void SetRclonePassword(const QString& rclonePassword)
 {
     gRclonePassword = rclonePassword;
 }
+
+QStringList GetDriveSharedWithMe() {
+    auto settings = GetSettings();
+    bool driveShared = settings->value("Settings/driveShared", false).toBool();
+    QStringList driveSharedOption;
+    if (driveShared) {
+        driveSharedOption << "--drive-shared-with-me";
+    }
+    return driveSharedOption;
+}

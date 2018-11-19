@@ -618,8 +618,8 @@ void ItemModel::load(const QPersistentModelIndex& parentIndex, Item* parent)
 	else if (path.at(0) != '/') {
 		path = "/" + path;
 	}
-	lsd->start(GetRclone(), QStringList() << "lsd" << GetRcloneConf() << mRemote + ":" + path, QIODevice::ReadOnly);
-	lsl->start(GetRclone(), QStringList() << "lsl" << GetRcloneConf() << "--max-depth" << "1" << mRemote + ":" + path, QIODevice::ReadOnly);
+	lsd->start(GetRclone(), QStringList() << "lsd" << GetRcloneConf() << GetDriveSharedWithMe() << mRemote + ":" + path, QIODevice::ReadOnly);
+	lsl->start(GetRclone(), QStringList() << "lsl" << GetRcloneConf() << GetDriveSharedWithMe() << "--max-depth" << "1" << mRemote + ":" + path, QIODevice::ReadOnly);
 }
 
 void ItemModel::sortRecursive(Item* item, const ItemSorter& sorter)

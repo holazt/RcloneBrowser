@@ -18,6 +18,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 #endif
     auto settings = GetSettings();
     ui.tree->setAlternatingRowColors(settings->value("Settings/rowColors", false).toBool());
+    ui.checkBoxShared->setChecked(settings->value("Settings/driveShared", false).toBool());
 
     QStyle* style = QApplication::style();
     ui.refresh->setIcon(style->standardIcon(QStyle::SP_BrowserReload));
@@ -266,6 +267,13 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         }
 
         emit addStream(remote + ":" + path, stream);
+    });
+
+    QObject::connect(ui.checkBoxShared, &QCheckBox::toggled, this, [=]() {
+        auto settings = GetSettings();
+        bool driveShared = settings->value("Settings/driveShared", true).toBool();
+        settings->setValue("Settings/driveShared", !driveShared);
+
     });
 
     QObject::connect(ui.upload, &QAction::triggered, this, [=]()

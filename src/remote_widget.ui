@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>784</width>
+    <width>867</width>
     <height>552</height>
    </rect>
   </property>
@@ -158,6 +158,16 @@
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxShared">
+            <property name="toolTip">
+             <string>Shared with Me (Google Drive)</string>
+            </property>
+            <property name="text">
+             <string>S&amp;hared</string>
             </property>
            </widget>
           </item>

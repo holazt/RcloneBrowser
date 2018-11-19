@@ -272,6 +272,8 @@ QStringList TransferDialog::getOptions() const
         }
     }
 
+    list << GetDriveSharedWithMe();
+
     list << "--stats" << "1s";
 
     list << ui.textSource->text();

@@ -273,11 +273,12 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         emit addStream(remote + ":" + path, stream);
     });
 
-    QObject::connect(ui.checkBoxShared, &QCheckBox::toggled, this, [=]() {
-        auto settings = GetSettings();
-        bool driveShared = settings->value("Settings/driveShared", true).toBool();
-        settings->setValue("Settings/driveShared", !driveShared);
+    QObject::connect(ui.checkBoxShared, &QCheckBox::toggled, ui.shared, &QAction::toggled);
 
+    QObject::connect(ui.shared, &QAction::toggled, this, [=](const bool checked) {
+        auto settings = GetSettings();
+        settings->setValue("Settings/driveShared", checked);
+        ui.checkBoxShared->setChecked(checked);
     });
 
     QObject::connect(ui.upload, &QAction::triggered, this, [=]()

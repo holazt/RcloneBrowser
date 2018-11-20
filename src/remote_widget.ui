@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>867</width>
+    <width>879</width>
     <height>552</height>
    </rect>
   </property>
@@ -167,7 +167,7 @@
              <string>Shared with Me (Google Drive)</string>
             </property>
             <property name="text">
-             <string>S&amp;hared</string>
+             <string>Shared</string>
             </property>
            </widget>
           </item>
@@ -298,6 +298,11 @@
   <action name="move">
    <property name="text">
     <string>M&amp;ove</string>
+   </property>
+  </action>
+  <action name="shared">
+   <property name="text">
+    <string>Shared</string>
    </property>
   </action>
  </widget>

@@ -191,3 +191,14 @@ QStringList GetDriveSharedWithMe() {
     }
     return driveSharedOption;
 }
+
+QStringList GetShowHidden()
+{
+    auto settings = GetSettings();
+    bool showHidden = settings->value("Settings/showHidden", true).toBool();
+    QStringList showHiddenOption;
+    if (!showHidden) {
+        showHiddenOption << "--exclude" << ".*/**";
+    }
+    return showHiddenOption;
+}

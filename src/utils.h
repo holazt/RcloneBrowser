@@ -17,3 +17,4 @@ void UseRclonePassword(QProcess* process);
 void SetRclonePassword(const QString& rclonePassword);
 
 QStringList GetDriveSharedWithMe();
+QStringList GetShowHidden();

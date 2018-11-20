@@ -275,10 +275,21 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 
     QObject::connect(ui.checkBoxShared, &QCheckBox::toggled, ui.shared, &QAction::toggled);
 
-    QObject::connect(ui.shared, &QAction::toggled, this, [=](const bool checked) {
+    QObject::connect(ui.shared, &QAction::toggled, this, [=](const bool checked)
+    {
         auto settings = GetSettings();
         settings->setValue("Settings/driveShared", checked);
         ui.checkBoxShared->setChecked(checked);
+
+        QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+        QModelIndex top = index;
+        while (!model->isTopLevel(top))
+        {
+            top = top.parent();
+        }
+        ui.tree->selectionModel()->clear();
+        ui.tree->selectionModel()->select(top, QItemSelectionModel::Select);
+        model->refresh(top);
     });
 
     QObject::connect(ui.upload, &QAction::triggered, this, [=]()

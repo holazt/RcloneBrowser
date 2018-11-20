@@ -96,6 +96,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             ui.rename->setDisabled(topLevel || driveShared);
             ui.move->setDisabled(topLevel || driveShared);
             ui.purge->setDisabled(topLevel || driveShared);
+            ui.upload->setDisabled(driveShared);
             ui.mount->setDisabled(!isFolder);
             ui.stream->setDisabled(isFolder);
             path = model->path(index);

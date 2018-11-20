@@ -224,7 +224,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             {
                 QModelIndex parent = index.parent();
                 QModelIndex next = parent.child(index.row() + 1, 0);
-                ui.tree->selectionModel()->select(next.isValid() ? next : parent, QItemSelectionModel::SelectCurrent);
+                ui.tree->selectionModel()->select(next.isValid() ? next : parent, QItemSelectionModel::SelectCurrent| QItemSelectionModel::Rows);
                 model->removeRow(index.row(), parent);
             }
         }

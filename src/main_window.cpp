@@ -48,6 +48,7 @@ MainWindow::MainWindow()
             settings->setValue("Settings/showFolderIcons", dialog.getShowFolderIcons());
             settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
             settings->setValue("Settings/rowColors", dialog.getRowColors());
+            settings->setValue("Settings/showHidden", dialog.getShowHidden());
             SetRclone(dialog.getRclone());
             SetRcloneConf(dialog.getRcloneConf());
             mFirstTime = true;

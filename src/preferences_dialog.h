@@ -23,6 +23,7 @@ public:
     bool getShowFolderIcons() const;
     bool getShowFileIcons() const;
     bool getRowColors() const;
+    bool getShowHidden() const;
 
 private:
     Ui::PreferencesDialog ui;

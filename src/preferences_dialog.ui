@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>475</width>
-    <height>407</height>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,7 +128,7 @@
       <string>User Interface</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="0" colspan="3">
+      <item row="5" column="0" colspan="3">
        <widget class="QLabel" name="info">
         <property name="text">
          <string>Changing these options will require reopening remote tab.</string>
@@ -148,7 +148,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="rowColors">
         <property name="text">
          <string>Alternating row colors</string>
@@ -165,6 +165,13 @@
         </property>
         <property name="text">
          <string>Show file icons</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="showHidden">
+        <property name="text">
+         <string>Show hidden files and folders</string>
         </property>
        </widget>
       </item>

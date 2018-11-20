@@ -62,6 +62,7 @@ PreferencesDialog::PreferencesDialog(QWidget* parent)
     }
     ui.showFileIcons->setChecked(settings->value("Settings/showFileIcons", true).toBool());
     ui.rowColors->setChecked(settings->value("Settings/rowColors", false).toBool());
+    ui.showHidden->setChecked(settings->value("Settings/showHidden", true).toBool());
 
 #ifdef Q_OS_WIN32
     ui.mount->hide();
@@ -123,4 +124,9 @@ bool PreferencesDialog::getShowFileIcons() const
 bool PreferencesDialog::getRowColors() const
 {
     return ui.rowColors->isChecked();
+}
+
+bool PreferencesDialog::getShowHidden() const
+{
+    return ui.showHidden->isChecked();
 }

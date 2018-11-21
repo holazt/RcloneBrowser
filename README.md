@@ -80,21 +80,21 @@ This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
 
-[1]: https://travis-ci.org/mmozeiko/RcloneBrowser/
-[2]: https://ci.appveyor.com/project/mmozeiko/RcloneBrowser
-[3]: https://github.com/mmozeiko/RcloneBrowser/releases
-[4]: https://github.com/mmozeiko/RcloneBrowser/releases/latest
-[5]: https://github.com/mmozeiko/RcloneBrowser/blob/master/LICENSE
+[1]: https://travis-ci.org/DinCahill/RcloneBrowser/
+[2]: https://ci.appveyor.com/project/DinCahill/RcloneBrowser
+[3]: https://github.com/DinCahill/RcloneBrowser/releases
+[4]: https://github.com/DinCahill/RcloneBrowser/releases/latest
+[5]: https://github.com/DinCahill/RcloneBrowser/blob/master/LICENSE
 [6]: https://mpv.io/
 [7]: https://aur.archlinux.org/packages/rclone-browser
 [8]: https://www.visualstudio.com/en-us/news/releasenotes/vs2013-community-vs
 [9]: http://www.cmake.org/
 [10]: https://www.qt.io/download-open-source/
-[img1]: https://api.travis-ci.org/mmozeiko/RcloneBrowser.svg?branch=master
-[img2]: https://ci.appveyor.com/api/projects/status/7s24ixolrk3ueggm/branch/master?svg=true
-[img3]: https://img.shields.io/github/downloads/mmozeiko/RcloneBrowser/total.svg?maxAge=3600
-[img4]: https://img.shields.io/github/release/mmozeiko/RcloneBrowser.svg?maxAge=3600
-[img5]: https://img.shields.io/github/license/mmozeiko/RcloneBrowser.svg?maxAge=2592000
+[img1]: https://api.travis-ci.org/DinCahill/RcloneBrowser.svg?branch=master
+[img2]: https://ci.appveyor.com/api/projects/status/github/DinCahill/RcloneBrowser?branch=master&svg=true
+[img3]: https://img.shields.io/github/downloads/DinCahill/RcloneBrowser/total.svg?maxAge=3600
+[img4]: https://img.shields.io/github/release/DinCahill/RcloneBrowser.svg?maxAge=3600
+[img5]: https://img.shields.io/github/license/DinCahill/RcloneBrowser.svg?maxAge=2592000
 [screenshot1]: https://raw.githubusercontent.com/wiki/mmozeiko/RcloneBrowser/screenshot1.png
 [screenshot2]: https://raw.githubusercontent.com/wiki/mmozeiko/RcloneBrowser/screenshot2.png
 [screenshot3]: https://raw.githubusercontent.com/wiki/mmozeiko/RcloneBrowser/screenshot3.png

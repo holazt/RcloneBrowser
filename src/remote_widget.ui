@@ -305,6 +305,11 @@
     <string>Shared</string>
    </property>
   </action>
+  <action name="link">
+   <property name="text">
+    <string>Public Link</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>buttonRefresh</tabstop>

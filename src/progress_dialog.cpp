@@ -1,6 +1,6 @@
 #include "progress_dialog.h"
 
-ProgressDialog::ProgressDialog(const QString& title, const QString& operation, const QString& message, QProcess* process, QWidget* parent, bool close)
+ProgressDialog::ProgressDialog(const QString& title, const QString& operation, const QString& message, QProcess* process, QWidget* parent, bool close, bool trim)
     : QDialog(parent)
 {
     ui.setupUi(this);
@@ -45,6 +45,10 @@ ProgressDialog::ProgressDialog(const QString& title, const QString& operation, c
     QObject::connect(process, &QProcess::readyRead, this, [=]()
     {
         QString output = process->readAll();
+        if (trim)
+        {
+            output = output.trimmed();
+        }
         ui.output->appendPlainText(output);
         emit outputAvailable(output);
     });

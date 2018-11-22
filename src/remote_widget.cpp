@@ -33,6 +33,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
     ui.getSize->setIcon(style->standardIcon(QStyle::SP_FileDialogInfoView));
     ui.export_->setIcon(style->standardIcon(QStyle::SP_FileDialogDetailedView));
+    ui.link->setIcon(style->standardIcon(QStyle::SP_FileLinkIcon));
 
     ui.buttonRefresh->setDefaultAction(ui.refresh);
     ui.buttonMkdir->setDefaultAction(ui.mkdir);
@@ -292,6 +293,25 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         model->refresh(top);
     });
 
+    QObject::connect(ui.link, &QAction::triggered, this, [=]()
+    {
+        QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+        QString path = model->path(index).path();
+        QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+
+        QProcess process;
+        UseRclonePassword(&process);
+        process.setProgram(GetRclone());
+        process.setArguments(QStringList() << "link" << GetRcloneConf() << GetDriveSharedWithMe() << remote + ":" + path);
+        process.setReadChannelMode(QProcess::MergedChannels);
+
+        ProgressDialog progress("Fetch Public Link", "Fetching link for...", pathMsg, &process, this, false, true);
+        progress.expand();
+        progress.allowToClose();
+        progress.exec();
+    });
+
     QObject::connect(ui.upload, &QAction::triggered, this, [=]()
     {
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
@@ -441,6 +461,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         menu.addAction(ui.stream);
         menu.addAction(ui.upload);
         menu.addAction(ui.download);
+        menu.addAction(ui.link);
         menu.exec(ui.tree->viewport()->mapToGlobal(pos));
     });
 

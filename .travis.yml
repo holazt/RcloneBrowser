@@ -19,7 +19,17 @@ matrix:
 
     - os: osx
       language: cpp
-      osx_image: xcode8.2
+      osx_image: xcode8.3
+      install:
+        - brew update
+        - brew install qt5
+      script:
+        - mkdir build && cd build
+        - cmake -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake ..
+        - cmake --build .
+    - os: osx
+      language: cpp
+      osx_image: xcode9.4
       install:
         - brew update
         - brew install qt5

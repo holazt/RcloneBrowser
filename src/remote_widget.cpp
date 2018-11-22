@@ -224,7 +224,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             {
                 QModelIndex parent = index.parent();
                 QModelIndex next = parent.child(index.row() + 1, 0);
-                ui.tree->selectionModel()->select(next.isValid() ? next : parent, QItemSelectionModel::SelectCurrent| QItemSelectionModel::Rows);
+                ui.tree->selectionModel()->select(next.isValid() ? next : parent, QItemSelectionModel::SelectCurrent);
                 model->removeRow(index.row(), parent);
             }
         }
@@ -288,7 +288,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             top = top.parent();
         }
         ui.tree->selectionModel()->clear();
-        ui.tree->selectionModel()->select(top, QItemSelectionModel::Select);
+        ui.tree->selectionModel()->select(top, QItemSelectionModel::Select | QItemSelectionModel::Rows);
         model->refresh(top);
     });
 

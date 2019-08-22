@@ -199,11 +199,6 @@ void MainWindow::rcloneGetVersion()
         if (code == 0)
         {
             QString version = p->readAllStandardOutput().trimmed();
-            int lineBreak = version.indexOf('\n');
-            if (lineBreak != -1)
-            {
-                version.remove(lineBreak, version.length() - lineBreak);
-            }
             mStatusMessage->setText(version + " in " + QDir::toNativeSeparators(GetRclone()));
             rcloneListRemotes();
         }

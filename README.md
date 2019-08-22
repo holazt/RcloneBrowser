@@ -6,6 +6,13 @@ RcloneBrowser
 Simple cross platfrom GUI for rclone command line tool.
 Supports Windows, macOS and GNU/Linux.
 
+
+
+
+
+Original readme from https://github.com/mmozeiko/RcloneBrowser 
+--------
+
 Features
 --------
 

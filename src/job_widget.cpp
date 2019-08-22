@@ -59,7 +59,7 @@ JobWidget::JobWidget(QProcess* process, const QString& info, const QStringList& 
     QObject::connect(ui.copy, &QToolButton::clicked, this, [=]()
     {
         QClipboard* clipboard = QGuiApplication::clipboard();
-        clipboard->setText(mArgs.join(" "));
+	        clipboard->setText(mArgs.join(" "));
     });
 
     QObject::connect(mProcess, &QProcess::readyRead, this, [=]()
@@ -68,9 +68,9 @@ JobWidget::JobWidget(QProcess* process, const QString& info, const QStringList& 
         QRegExp rxSize2(R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
         QRegExp rxErrors(R"(^Errors:\s+(\S+)$)");
         QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
-        QRegExp rxChecks2(R"(^Checks:\s+(\S+) \/ (\S+), [0-9%-]+$)"); // Starting with rclone 1.43
+        QRegExp rxChecks2(R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+)$)"); // Starting with rclone 1.43
         QRegExp rxTransferred(R"(^Transferred:\s+(\S+)$)"); // Until rclone 1.42
-        QRegExp rxTransferred2(R"(^Transferred:\s+(\S+) \/ (\S+), [0-9%-]+$)"); // Starting with rclone 1.43
+        QRegExp rxTransferred2(R"(^Transferred:\s+(\S+) \/ (\S+), ([0-9%-]+)$)"); // Starting with rclone 1.43
         QRegExp rxTime(R"(^Elapsed time:\s+(\S+)$)");
         QRegExp rxProgress(R"(^\*([^:]+):\s*([^%]+)% done.+(ETA: [^)]+)$)"); // Until rclone 1.38
         QRegExp rxProgress2(R"(\*([^:]+):\s*([^%]+)% \/[a-zA-z0-9.]+, [a-zA-z0-9.]+\/s, (\w+)$)"); // Starting with rclone 1.39
@@ -114,8 +114,10 @@ JobWidget::JobWidget(QProcess* process, const QString& info, const QStringList& 
             }
             else if (rxSize2.exactMatch(line))
             {
-                ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "Bytes");
+                ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "B" + " (" +  rxSize2.cap(5)  + ")");
                 ui.bandwidth->setText(rxSize2.cap(6));
+	        ui.eta->setText(rxSize2.cap(8));
+                ui.totalsize->setText(rxSize2.cap(3) + " " + rxSize2.cap(4));
             }
             else if (rxErrors.exactMatch(line))
             {
@@ -127,7 +129,7 @@ JobWidget::JobWidget(QProcess* process, const QString& info, const QStringList& 
             }
             else if (rxChecks2.exactMatch(line))
             {
-                ui.checks->setText(rxChecks2.cap(1));
+                ui.checks->setText(rxChecks2.cap(1) + " / " + rxChecks2.cap(2) + ", " + rxChecks2.cap(3));
             }
             else if (rxTransferred.exactMatch(line))
             {
@@ -135,7 +137,7 @@ JobWidget::JobWidget(QProcess* process, const QString& info, const QStringList& 
             }
             else if (rxTransferred2.exactMatch(line))
             {
-                ui.transferred->setText(rxTransferred2.cap(1));
+                ui.transferred->setText(rxTransferred2.cap(1) + " / " + rxTransferred2.cap(2) + ", " + rxTransferred2.cap(3));
             }
             else if (rxTime.exactMatch(line))
             {

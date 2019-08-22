@@ -277,7 +277,7 @@ void MainWindow::rcloneConfig()
 #elif defined(Q_OS_OSX)
     auto tmp = new QFile("/tmp/rclone_config.command");
     tmp->open(QIODevice::WriteOnly);
-    QTextStream(tmp) << "#!/bin/sh\n" << GetRclone() << " config" << GetRcloneConf().join(" ") << "\n";
+    QTextStream(tmp) << "#!/bin/sh\n" << GetRclone() << " config " << GetRcloneConf().join(" ") << "\n";
     tmp->close();
     tmp->setPermissions(
         QFileDevice::ReadUser | QFileDevice::WriteUser | QFileDevice::ExeUser |

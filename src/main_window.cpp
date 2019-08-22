@@ -370,7 +370,7 @@ void MainWindow::rcloneListRemotes()
     });
 
     UseRclonePassword(p);
-    p->start(GetRclone(), QStringList() << "listremotes" << GetRcloneConf() << "-l" << "--ask-password=false", QIODevice::ReadOnly);
+    p->start(GetRclone(), QStringList() << "listremotes" << GetRcloneConf() << "--long" << "--ask-password=false", QIODevice::ReadOnly);
 }
 
 bool MainWindow::getConfigPassword(QProcess* p)

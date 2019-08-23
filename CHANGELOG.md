@@ -1,5 +1,22 @@
 # Change Log
 
+## [1.4] - 2019-08-23
+- Fix compliation errors and update all builds with latest Qt (5.13)
+- Fix Config button command
+- Further fix and tweak progress display. Add ETA and Total Size fields
+- Fix remotes icons display
+- Add sftp icon
+- Fix progress display for rclone > 1.37 (by DinCahill)
+- Add a Public Link option to the right-click menu (by DinCahill)
+- Add preference: Show hidden files and folders (by DinCahill)
+- Add Mega icon (by DinCahill)
+- Refresh when Shared is toggled (by DinCahill)
+- Disable Upload button for Shared (by DinCahill)
+- Support for shared Google Drive files. Enable the checkbox when you open a remote, and all rclone commands will be passed --drive-shared-with-me (by DinCahill)
+- Set cache mode for mounts (by DinCahill)
+- Fixed missing leading / in path (required for some SFTP servers) (by DinCahill)
+
+
 ## [1.2] - 2017-03-11
 - Calculate size of folders, issue #4
 - Copy transfer command to clipboard, issue #20

@@ -114,7 +114,7 @@ JobWidget::JobWidget(QProcess* process, const QString& info, const QStringList& 
             }
             else if (rxSize2.exactMatch(line))
             {
-                ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "B" + " (" +  rxSize2.cap(5)  + ")");
+                ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "B" + ", " +  rxSize2.cap(5));
                 ui.bandwidth->setText(rxSize2.cap(6));
 	        ui.eta->setText(rxSize2.cap(8));
                 ui.totalsize->setText(rxSize2.cap(3) + " " + rxSize2.cap(4));

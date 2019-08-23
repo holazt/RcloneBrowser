@@ -78,7 +78,9 @@ MainWindow::MainWindow()
                 R"(<p>Copyright &copy; 2019</p>)"
                 R"(<p>Original version by Martins Mozeiko</p>)"
                 R"(<p>Web: <a href="https://mmozeiko.github.io/RcloneBrowser">https://mmozeiko.github.io/RcloneBrowser</a></p>)"
-                R"(<p>Latest fixes by kapitainsky</p>)"
+                R"(<p>Further improvements by DinCahill</p>)"
+                R"(<p>Web: <a href="https://github.com/DinCahill/RcloneBrowser">https://github.com/DinCahill/RcloneBrowser</a></p>)"
+                R"(<p>Latest fixes and packaging by kapitainsky</p>)"
                 R"(<p>Web: <a href="https://github.com/kapitainsky/RcloneBrowser">https://github.com/kapitainsky/RcloneBrowser</a></p>)"
             )
         );

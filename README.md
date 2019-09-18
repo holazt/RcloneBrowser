@@ -19,7 +19,7 @@ Below sample screenshots:
 
 
 ### macOS
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/Screenshot1.png)
+![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/Screenshot5small.png)
 
 
 ### Linux

@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.4.1] - 2019-09-18
+- small GUI tweaks to make all progress fields always visible (they were too small for large transfers) and adjust some screen sizes to make all GUI elements visible
+- update all builds with latest Qt (5.13.1)
+
 ## [1.4] - 2019-08-23
 - Fix compliation errors and update all builds with latest Qt (5.13)
 - Fix Config button command

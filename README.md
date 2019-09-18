@@ -13,7 +13,7 @@ I've looked around but could not find anything fully working. Some github users 
 
 I used DinCahill's changes (https://github.com/DinCahill/RcloneBrowser) as a base of my version.
 
-I have fixed whatever I found still not working and added few minor tweaks. I've recompiled and repacked everything using latest Qt (5.13.0). This on its own fixed some issues and added new features like support for dark mode in macOS.
+I have fixed whatever I found still not working and added few minor tweaks. I've recompiled and repackaged everything using latest Qt (5.13.1). This on its own fixed some issues and added new features like support for dark mode in macOS.
 
 Below sample screenshots:
 
@@ -39,26 +39,18 @@ https://keys.openpgp.org/vks/v1/by-fingerprint/51731FD9E29CBEC285068F0231DB6AEE3
 
 Enjoy and report if anything is broken. Please note that I am not a programmer and I doubt I could work on any major changes. Also rclone-browser as it is now is enough for my usage. But small fixes and tweaks are always possible - feel free to report any issues.
 
+Download
+--------
 
-Build instructions for macOS
--------------------------------------
-1. If you don't have Homebrew yet install it `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-2. Install dependencies `brew install git cmake rclone qt5`
-3. Set Qt environment variables `export PATH="/usr/local/opt/qt/bin:$PATH" &&  export LDFLAGS="-L/usr/local/opt/qt/lib" &&  export CPPFLAGS="-I/usr/local/opt/qt/include" && export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"`. You can add this to your .bashrc (assuming you use bash) if you want to keep it persistent
-4. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
-5. Go to source folder `cd RcloneBrowser`
-6. Create new `build` folder next to `src` folder - `mkdir build && cd build`
-7. Run `cmake ..` from `build` folder to create makefile
-8. Run `cmake --build .` from `build` folder to create binary
-9. Go to yet another newly created `build` folder `cd build`. Your binary should be here
-10. Package your binary with Qt libraries to create self-contained application `macdeployqt rclone-browser.app -executable="rclone-browser.app/Contents/MacOS/rclone-browser" -qmldir=../src/`. Without this step binary won't work without Qt installed
+Get Windows, macOS and Ubuntu/Debian package on [releases][3] page.
+
+ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
+
+Other GNU/Linux users will need to build from source. Actually in my opinion for Linux it is the best option and is real easy. Below are detailed instructions.
 
 
-Build instructions for other Unix-like systems
-----------------------------------------------
-
-Example commands are for Debian/Ubuntu - they might differ for other systems
-
+Build instructions for Debian/Ubuntu Linux
+------------------------------------------
 1. Install dependencies `sudo apt install git rclone g++ cmake qtbase5-dev`
 2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3. Go to source folder `cd RcloneBrowser`
@@ -75,6 +67,26 @@ Build instructions for openSUSE linux
 4. Create new `build` folder next to `src` folder - `mkdir build && cd build`
 5. Run `cmake ..` from `build` folder to create makefile
 6. Run `cmake --build .` from `build` folder to create binary
+
+Build instructions for macOS
+----------------------------
+1. If you don't have Homebrew yet install it `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+2. Install dependencies `brew install git cmake rclone qt5`
+3. Set Qt environment variables `export PATH="/usr/local/opt/qt/bin:$PATH" &&  export LDFLAGS="-L/usr/local/opt/qt/lib" &&  export CPPFLAGS="-I/usr/local/opt/qt/include" && export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"`. You can add this to your .bashrc (assuming you use bash) if you want to keep it persistent
+4. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+5. Go to source folder `cd RcloneBrowser`
+6. Create new `build` folder next to `src` folder - `mkdir build && cd build`
+7. Run `cmake ..` from `build` folder to create makefile
+8. Run `cmake --build .` from `build` folder to create binary
+9. Go to yet another newly created `build` folder `cd build`. Your binary should be here
+10. Package your binary with Qt libraries to create self-contained application `macdeployqt rclone-browser.app -executable="rclone-browser.app/Contents/MacOS/rclone-browser" -qmldir=../src/`. Without this step binary won't work without Qt installed
+
+
+
+
+
+
+
 
 Original readme from https://github.com/mmozeiko/RcloneBrowser 
 --------

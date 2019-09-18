@@ -55,6 +55,7 @@
 - Mount and unmount folders on macOS and GNU/Linux
 - Optionally minimizes to tray, with notifications when upload/download finishes
 
+[1.4.1]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.4.1
 [1.4]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.4
 [1.2]: https://github.com/mmozeiko/RcloneBrowser/releases/tag/1.2
 [1.1]: https://github.com/mmozeiko/RcloneBrowser/releases/tag/1.1

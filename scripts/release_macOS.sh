@@ -2,7 +2,7 @@
 
 set -e
 
-QTDIR=~/Qt/5.8.0-desktop
+QTDIR=/usr/local/Cellar/Qt/5.13.1
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/..
 VERSION=`cat $ROOT/VERSION`-`git rev-parse --short HEAD`

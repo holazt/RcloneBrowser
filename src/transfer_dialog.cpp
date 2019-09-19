@@ -24,7 +24,6 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         ui.checkSkipNewer->setChecked(false);
         ui.checkCompare->setChecked(true);
         ui.cbCompare->setCurrentIndex(0);
-        ui.checkVerbose->setChecked(false);
         ui.checkSameFilesystem->setChecked(false);
         ui.checkDontUpdateModified->setChecked(false);
         ui.spinTransfers->setValue(4);
@@ -210,10 +209,8 @@ QStringList TransferDialog::getOptions() const
             break;
         }
     }
-    if (ui.checkVerbose->isChecked())
-    {
-        list << "--verbose";
-    }
+    // verbose output is always set
+    list << "--verbose";
     if (ui.checkSameFilesystem->isChecked())
     {
         list << "--one-file-system";

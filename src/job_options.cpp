@@ -105,10 +105,8 @@ QStringList JobOptions::getOptions() const
         }
     }
 
-    if (verbose)
-    {
-        list << "--verbose";
-    }
+    //always verbose
+    list << "--verbose";
     if (sameFilesystem)
     {
         list << "--one-file-system";

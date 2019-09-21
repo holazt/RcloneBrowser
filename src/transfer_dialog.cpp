@@ -34,6 +34,7 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         ui.checkSkipNewer->setChecked(false);
         ui.checkCompare->setChecked(true);
         ui.cbCompare->setCurrentIndex(0);
+//        ui.checkVerbose->setChecked(false);
         ui.checkSameFilesystem->setChecked(false);
         ui.checkDontUpdateModified->setChecked(false);
         ui.spinTransfers->setValue(4);
@@ -265,9 +266,8 @@ JobOptions *TransferDialog::getJobOptions()
             break;
         }
     }
-        list << "--max-age" << ui.textMaxAge->text();
 
-    mJobOptions->verbose = ui.checkVerbose->isChecked();
+//    mJobOptions->verbose = ui.checkVerbose->isChecked();
     mJobOptions->sameFilesystem = ui.checkSameFilesystem->isChecked();
     mJobOptions->dontUpdateModified = ui.checkDontUpdateModified->isChecked();
 
@@ -285,9 +285,8 @@ JobOptions *TransferDialog::getJobOptions()
     mJobOptions->lowLevelRetries = ui.spinLowLevelRetries->text();
     mJobOptions->deleteExcluded = ui.checkDeleteExcluded->isChecked();
 
-    list << GetDriveSharedWithMe();
-
-    list << "--stats" << "1s";
+    mJobOptions->excluded = ui.textExclude->toPlainText().trimmed();
+    mJobOptions->extra = ui.textExtra->text().trimmed();
 
     mJobOptions->source = ui.textSource->text();
     mJobOptions->dest = ui.textDest->text();
@@ -323,7 +322,7 @@ void TransferDialog::putJobOptions()
     ui.checkCompare->setChecked(mJobOptions->compare);
     ui.cbCompare->setCurrentIndex(mJobOptions->compareOption);
 
-    ui.checkVerbose->setChecked(mJobOptions->verbose);
+ //   ui.checkVerbose->setChecked(mJobOptions->verbose);
     ui.checkSameFilesystem->setChecked(mJobOptions->sameFilesystem);
     ui.checkDontUpdateModified->setChecked(mJobOptions->dontUpdateModified);
 

@@ -293,7 +293,8 @@ JobOptions *TransferDialog::getJobOptions()
     mJobOptions->isFolder = mIsFolder;
 
     mJobOptions->description = ui.textDescription->text();
-    
+//    mJobOptions->DriveSharedWithMe = mdriveSharedOption;
+
     return mJobOptions;
 }
 

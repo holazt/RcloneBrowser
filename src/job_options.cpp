@@ -167,6 +167,12 @@ QStringList JobOptions::getOptions() const
         }
     }
 
+
+    if (DriveSharedWithMe)
+    {
+        list << "--drive-shared-with-me";
+    }
+
     list << "--stats" << "1s";
 
     list << source;

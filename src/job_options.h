@@ -53,7 +53,7 @@ public:
     QString dest;
     bool isFolder;
     QUuid uniqueId;
-
+    bool DriveSharedWithMe;
 
     void setJobType (bool isDownload)
     {

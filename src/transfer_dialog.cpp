@@ -72,7 +72,8 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         }
         JobOptions* jobo = getJobOptions();
         ListOfJobOptions::getInstance()->Persist(jobo);
-        if (mIsEditMode)
+	//always close on save
+        //if (mIsEditMode)
             this->close();
     });
 
@@ -199,9 +200,9 @@ QStringList TransferDialog::getOptions()
 }
 
 /*
- * Apply the displayed/edited values on the UI to the 
- * JobOptions object.  
- * 
+ * Apply the displayed/edited values on the UI to the
+ * JobOptions object.
+ *
  * This needs to be edited whenever options are added or changed.
  */
 JobOptions *TransferDialog::getJobOptions()

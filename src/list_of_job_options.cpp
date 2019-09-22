@@ -135,7 +135,7 @@ QDataStream& operator<<(QDataStream& stream, JobOptions& jo)
         << jo.verbose << jo.sameFilesystem << jo.dontUpdateModified << jo.transfers
         << jo.checkers << jo.bandwidth << jo.minSize << jo.minAge << jo.maxAge
         << jo.maxDepth << jo.connectTimeout << jo.idleTimeout << jo.retries
-        << jo.lowLevelRetries << jo.deleteExcluded << jo.excluded << jo.extra
+        << jo.lowLevelRetries << jo.deleteExcluded << jo.excluded << jo.extra << jo.DriveSharedWithMe
         << jo.source << jo.dest << jo.isFolder << jo.uniqueId;
 
     return stream;
@@ -160,7 +160,7 @@ QDataStream& operator >> (QDataStream& stream, JobOptions& jo)
         >> jo.verbose >> jo.sameFilesystem >> jo.dontUpdateModified >> jo.transfers
         >> jo.checkers >> jo.bandwidth >> jo.minSize >> jo.minAge >> jo.maxAge
         >> jo.maxDepth >> jo.connectTimeout >> jo.idleTimeout >> jo.retries
-        >> jo.lowLevelRetries >> jo.deleteExcluded >> jo.excluded >> jo.extra
+        >> jo.lowLevelRetries >> jo.deleteExcluded >> jo.excluded >> jo.extra >>jo.DriveSharedWithMe
         >> jo.source >> jo.dest;
 
     // as fields are added in later revisions, check actualVersion here and 

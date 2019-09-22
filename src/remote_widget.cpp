@@ -21,7 +21,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     settings->setValue("Settings/driveShared", Qt::Unchecked);
     ui.tree->setAlternatingRowColors(settings->value("Settings/rowColors", false).toBool());
     ui.checkBoxShared->setChecked(false);
-
+    ui.checkBoxShared->setDisabled(!isGoogle);
 
     QStyle* style = QApplication::style();
     ui.refresh->setIcon(style->standardIcon(QStyle::SP_BrowserReload));
@@ -91,8 +91,8 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             ui.purge->setDisabled(true);
             ui.mount->setDisabled(true);
             ui.stream->setDisabled(true);
+            ui.checkBoxShared->setDisabled(true);
             path = model->path(model->parent(index));
-	    ui.checkBoxShared->setDisabled(true);
         }
         else
         {

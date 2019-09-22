@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "ui_main_window.h"
 #include "icon_cache.h"
+#include "job_options.h"
 
 class JobWidget;
 
@@ -18,6 +19,7 @@ private slots:
     void rcloneGetVersion();
     void rcloneConfig();
     void rcloneListRemotes();
+    void listTasks();
 
     void addTransfer(const QString& message, const QString& source, const QString& dest, const QStringList& args);
     void addMount(const QString& remote, const QString& folder);
@@ -45,4 +47,9 @@ private:
     bool getConfigPassword(QProcess* p);
 
     void addEmptyJobsMessage();
+
+    void runItem(JobOptionsListWidgetItem* item, bool dryrun = false);
+    void editSelectedTask();
+    QIcon mUploadIcon;
+    QIcon mDownloadIcon;
 };

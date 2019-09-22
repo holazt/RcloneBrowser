@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>756</width>
-    <height>587</height>
+    <width>765</width>
+    <height>664</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,45 +20,21 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetFixedSize</enum>
    </property>
-   <item row="9" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults</set>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QWidget" name="pathGroup" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>747</width>
+       <height>0</height>
+      </size>
+     </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="textDest"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_13">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Source:</string>
-        </property>
-        <property name="buddy">
-         <cstring>textSource</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QToolButton" name="buttonSourceFile">
-        <property name="toolTip">
-         <string>Choose file</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_14">
         <property name="sizePolicy">
@@ -85,6 +61,35 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QLineEdit" name="textSource"/>
+      </item>
+      <item row="0" column="3">
+       <widget class="QToolButton" name="buttonSourceFile">
+        <property name="toolTip">
+         <string>Choose file</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Source:</string>
+        </property>
+        <property name="buddy">
+         <cstring>textSource</cstring>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="3">
        <widget class="QToolButton" name="buttonDest">
         <property name="toolTip">
@@ -95,8 +100,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="textSource"/>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="textDest"/>
       </item>
      </layout>
     </widget>
@@ -111,18 +116,151 @@
        <string>Settings</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="2" column="0">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string/>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QCheckBox" name="checkSameFilesystem">
+            <property name="text">
+             <string>Don't cross filesystem boundaries</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkDontUpdateModified">
+            <property name="text">
+             <string>Don't update mod-time if files are identical</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>Extra arguments:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="textExtra"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Task description</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="textDescription"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="skipFilesGroup">
+         <property name="title">
+          <string>Skip files</string>
          </property>
-        </spacer>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="3" column="3">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="3" column="2" alignment="Qt::AlignVCenter">
+           <widget class="QComboBox" name="cbCompare">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="currentText">
+             <string>Size &amp; mod-time</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Size &amp; mod-time</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Size &amp; checksum</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only mod-time</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only size</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only checksum</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QCheckBox" name="checkSkipNewer">
+            <property name="text">
+             <string>Skip files that are newer on the destination</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2" alignment="Qt::AlignBottom">
+           <widget class="QCheckBox" name="checkCompare">
+            <property name="toolTip">
+             <string>-ignore-times</string>
+            </property>
+            <property name="text">
+             <string>Compare</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="3">
+           <widget class="QCheckBox" name="checkSkipExisting">
+            <property name="text">
+             <string>Skip all files that exist</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QGroupBox" name="modeGroup">
@@ -232,141 +370,18 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QGroupBox" name="skipFilesGroup">
-         <property name="title">
-          <string>Skip files</string>
+       <item row="2" column="0">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item row="3" column="3">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="3" column="2" alignment="Qt::AlignVCenter">
-           <widget class="QComboBox" name="cbCompare">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="currentText">
-             <string>Size &amp; mod-time</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>Size &amp; mod-time</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Size &amp; checksum</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Only mod-time</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Only size</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Only checksum</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="3">
-           <widget class="QCheckBox" name="checkSkipNewer">
-            <property name="text">
-             <string>Skip files that are newer on the destination</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="2" alignment="Qt::AlignBottom">
-           <widget class="QCheckBox" name="checkCompare">
-            <property name="toolTip">
-             <string>-ignore-times</string>
-            </property>
-            <property name="text">
-             <string>Compare</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="3">
-           <widget class="QCheckBox" name="checkSkipExisting">
-            <property name="text">
-             <string>Skip all files that exist</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string/>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QCheckBox" name="checkSameFilesystem">
-            <property name="text">
-             <string>Don't cross filesystem boundaries</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkDontUpdateModified">
-            <property name="text">
-             <string>Don't update mod-time if files are identical</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Extra arguments:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="textExtra"/>
-          </item>
-         </layout>
-        </widget>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -695,6 +710,13 @@
      </widget>
     </widget>
    </item>
+   <item row="9" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
@@ -714,7 +736,6 @@
   <tabstop>cbCompare</tabstop>
   <tabstop>checkSameFilesystem</tabstop>
   <tabstop>checkDontUpdateModified</tabstop>
-  <tabstop>textExtra</tabstop>
   <tabstop>spinTransfers</tabstop>
   <tabstop>spinCheckers</tabstop>
   <tabstop>textBandwidth</tabstop>

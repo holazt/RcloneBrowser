@@ -51,7 +51,6 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         ui.checkDeleteExcluded->setChecked(false);
         ui.textExclude->clear();
         ui.textExtra->clear();
-	ui.textDescription->clear();
     });
     ui.buttonBox->button(QDialogButtonBox::RestoreDefaults)->click();
 

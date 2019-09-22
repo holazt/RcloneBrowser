@@ -10,7 +10,7 @@ class RemoteWidget : public QWidget
     Q_OBJECT
 
 public:
-    RemoteWidget(IconCache* icons, const QString& remote, bool isLocal, QWidget* parent = nullptr);
+    RemoteWidget(IconCache* icons, const QString& remote, bool isLocal, bool isGoogle, QWidget* parent = nullptr);
     ~RemoteWidget();
 
 signals:

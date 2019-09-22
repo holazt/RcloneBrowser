@@ -17,6 +17,10 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 #ifndef Q_OS_WIN32
     isLocal = false;
 #endif
+#ifdef Q_OS_WIN64
+    isLocal = false;
+#endif
+
     auto settings = GetSettings();
     settings->setValue("Settings/driveShared", Qt::Unchecked);
     ui.tree->setAlternatingRowColors(settings->value("Settings/rowColors", false).toBool());

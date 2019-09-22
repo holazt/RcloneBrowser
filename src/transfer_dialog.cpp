@@ -51,6 +51,7 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         ui.checkDeleteExcluded->setChecked(false);
         ui.textExclude->clear();
         ui.textExtra->clear();
+	ui.textDescription->clear();
     });
     ui.buttonBox->button(QDialogButtonBox::RestoreDefaults)->click();
 
@@ -98,7 +99,7 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
             ui.textDest->setText(remote + ":" + path.filePath(QFileInfo(folder).fileName()));
         }
     });
-    
+
     QObject::connect(ui.buttonDest, &QToolButton::clicked, this, [=]()
     {
         QString folder = QFileDialog::getExistingDirectory(this, "Choose destination folder");
@@ -124,24 +125,27 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
     ui.buttonSourceFolder->setVisible(!isDownload);
     ui.buttonDest->setVisible(isDownload);
 
+    // always clear for new jobs
+    ui.textDescription->clear();
+
     if (mIsEditMode && mJobOptions != nullptr)
     {
         // it's not really valid for only one of these things to be true.
-        // when operating on an existing instance i.e. a saved task, 
+        // when operating on an existing instance i.e. a saved task,
         // changing the dest or src seems to have problems so we
-        // will not allow it.  simple enough, and better, to make a 
-        // new task for different pairings anyway.  that will make 
+        // will not allow it.  simple enough, and better, to make a
+        // new task for different pairings anyway.  that will make
         // a lot more sense when/if scheduling and history are added...
         ui.buttonSourceFile->setVisible(false);
         ui.buttonSourceFolder->setVisible(false);
         ui.buttonDest->setVisible(false);
         ui.textDest->setDisabled(true);
-        ui.textSource->setDisabled(true);		
+        ui.textSource->setDisabled(true);
         putJobOptions();
-    } 
+    }
     else
     {
-        (isDownload ? ui.textSource : ui.textDest)->setText(remote + ":" + path.path());		
+        (isDownload ? ui.textSource : ui.textDest)->setText(remote + ":" + path.path());
     }
 
 }
@@ -294,17 +298,17 @@ JobOptions *TransferDialog::getJobOptions()
     mJobOptions->isFolder = mIsFolder;
 
     mJobOptions->description = ui.textDescription->text();
-//    mJobOptions->DriveSharedWithMe = mdriveSharedOption;
+//  mJobOptions->DriveSharedWithMe = mdriveSharedOption;
 
     return mJobOptions;
 }
 
 /*
  * Apply the JobOptions object to the displayed widget values.
- * 
- * It could be "better" to use a two-way binding mechanism, but 
- * if used that should be global to the app; and anyway doing 
- * it this old primitive way makes it easier when the user wants 
+ *
+ * It could be "better" to use a two-way binding mechanism, but
+ * if used that should be global to the app; and anyway doing
+ * it this old primitive way makes it easier when the user wants
  * to not save changes...
  */
 void TransferDialog::putJobOptions()
@@ -324,7 +328,7 @@ void TransferDialog::putJobOptions()
     ui.checkCompare->setChecked(mJobOptions->compare);
     ui.cbCompare->setCurrentIndex(mJobOptions->compareOption);
 
- //   ui.checkVerbose->setChecked(mJobOptions->verbose);
+ // ui.checkVerbose->setChecked(mJobOptions->verbose);
     ui.checkSameFilesystem->setChecked(mJobOptions->sameFilesystem);
     ui.checkDontUpdateModified->setChecked(mJobOptions->dontUpdateModified);
 
@@ -347,7 +351,6 @@ void TransferDialog::putJobOptions()
 
     ui.textSource->setText(mJobOptions->source);
     ui.textDest->setText(mJobOptions->dest);
-
     ui.textDescription->setText(mJobOptions->description);
 }
 

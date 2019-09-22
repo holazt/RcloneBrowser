@@ -141,7 +141,7 @@ MainWindow::MainWindow()
         JobOptionsListWidgetItem* item = static_cast<JobOptionsListWidgetItem*>(ui.tasksListWidget->currentItem());
         runItem(item, true);
     });
-    
+
     QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this, [=]()
     {
         editSelectedTask();
@@ -678,11 +678,19 @@ void MainWindow::addMount(const QString& remote, const QString& folder)
 
     auto settings = GetSettings();
     QString opt = settings->value("Settings/mount").toString();
+    bool driveShared = settings->value("Settings/driveShared").toBool();
 
     QStringList args;
     args << "mount";
     args << "--vfs-cache-mode";
     args << "writes";
+
+   if (driveShared)
+   {
+      args << "--drive-shared-with-me";
+   }
+
+
     args.append(GetRcloneConf());
     if (!opt.isEmpty())
     {

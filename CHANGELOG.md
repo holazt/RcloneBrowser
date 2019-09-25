@@ -1,5 +1,16 @@
 # Change Log
 
+
+## [1.5] - 2019-09-25
+- tasks - jobs can be saved/edited/run/deleted. No need to created the same job again and again.
+- on Google drive DriveSharedWithMe can be mounted to local filesystem
+- DriveSharedWithMe checkbox is now disabled for non Google destinations - it is Google only feature and turning it on for other destinations does not make sense - could even crash the browser.
+- verbose option is now always on and has been removed from UI - which means that stats will be always displayed. No more wondering how long it is going to take for some long job to finish.
+- fixed an issue with local remote on Windows when local drive content was not properly displayed
+- replaced remote Amazon icon with generic S3 one. S3 became name on its own and almost de-facto standard in cloud access used by many rclone supported destinations
+- new application logo
+
+
 ## [1.4.1] - 2019-09-18
 - small GUI tweaks to make all progress fields always visible (they were too small for large transfers) and adjust some screen sizes to make all GUI elements visible
 - update all builds with latest Qt (5.13.1)

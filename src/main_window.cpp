@@ -232,14 +232,17 @@ MainWindow::MainWindow()
     if (rclone.isEmpty())
     {
         rclone = QStandardPaths::findExecutable("rclone");
-        auto settings = GetSettings();
-        settings->setValue("Settings/rclone", rclone);
-        SetRclone(rclone);
-    }
-    if (rclone.isEmpty())
-    {
-        QMessageBox::information(this, "Error", "Cannot check rclone version!\nPlease verify rclone location.");
-        emit ui.preferences->trigger();
+        if (rclone.isEmpty())
+        {
+            QMessageBox::information(this, "Error", "Cannot check rclone version!\nPlease verify rclone location.");
+            emit ui.preferences->trigger();
+        }
+        else
+        {
+            auto settings = GetSettings();
+            settings->setValue("Settings/rclone", rclone);
+            SetRclone(rclone);
+        }
     }
     else
     {
@@ -260,7 +263,7 @@ void MainWindow::rcloneGetVersion()
 
     QProcess* p = new QProcess();
 
-    QObject::connect(p, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int code)
+    QObject::connect(p, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int code, QProcess::ExitStatus)
     {
         if (code == 0)
         {
@@ -313,7 +316,7 @@ void MainWindow::rcloneConfig()
 
     QProcess* p = new QProcess(this);
 
-    QObject::connect(p, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int code)
+    QObject::connect(p, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int code, QProcess::ExitStatus)
     {
         if (code == 0)
         {
@@ -381,7 +384,7 @@ void MainWindow::rcloneListRemotes()
 
     QProcess* p = new QProcess();
 
-    QObject::connect(p, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int code)
+    QObject::connect(p, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int code, QProcess::ExitStatus)
     {
         if (code == 0)
         {
@@ -522,6 +525,7 @@ void MainWindow::closeEvent(QCloseEvent* ev)
     if (canClose())
     {
         ev->accept();
+        QApplication::quit();
     }
     else
     {
@@ -708,7 +712,7 @@ void MainWindow::addStream(const QString& remote, const QString& stream)
     auto rclone = new QProcess();
     rclone->setStandardOutputProcess(player);
 
-    QObject::connect(player, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int status)
+    QObject::connect(player, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int status, QProcess::ExitStatus)
     {
         player->deleteLater();
         if (status != 0 && player->error() == QProcess::FailedToStart)

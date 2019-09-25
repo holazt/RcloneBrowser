@@ -118,11 +118,6 @@ MainWindow::MainWindow()
 
     QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs, &QTabWidget::removeTab);
 
-
-
-
-
-
     QObject::connect(ui.tasksListWidget, &QListWidget::currentItemChanged, this, [=](QListWidgetItem* current)
     {
         ui.buttonDeleteTask->setEnabled(current != nullptr);
@@ -160,10 +155,6 @@ MainWindow::MainWindow()
     });
 
     QObject::connect(ListOfJobOptions::getInstance(), &ListOfJobOptions::tasksListUpdated, this, &MainWindow::listTasks);
-
-
-
-
 
     QStyle* style = QApplication::style();
     ui.buttonDeleteTask->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
@@ -524,7 +515,6 @@ void MainWindow::closeEvent(QCloseEvent* ev)
 
     if (canClose())
     {
-        ev->accept();
         QApplication::quit();
     }
     else

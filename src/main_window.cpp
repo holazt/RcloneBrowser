@@ -142,10 +142,10 @@ MainWindow::MainWindow()
         runItem(item, true);
     });
 
-    QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this, [=]()
-    {
-        editSelectedTask();
-    });
+//    QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this, [=]()
+//    {
+//        editSelectedTask();
+//    });
 
     QObject::connect(ui.buttonEditTask, &QPushButton::clicked, this, [=]()
     {

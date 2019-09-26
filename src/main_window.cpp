@@ -118,11 +118,6 @@ MainWindow::MainWindow()
 
     QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs, &QTabWidget::removeTab);
 
-
-
-
-
-
     QObject::connect(ui.tasksListWidget, &QListWidget::currentItemChanged, this, [=](QListWidgetItem* current)
     {
         ui.buttonDeleteTask->setEnabled(current != nullptr);
@@ -142,10 +137,10 @@ MainWindow::MainWindow()
         runItem(item, true);
     });
 
-//    QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this, [=]()
-//    {
-//        editSelectedTask();
-//    });
+    QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this, [=]()
+    {
+        editSelectedTask();
+    });
 
     QObject::connect(ui.buttonEditTask, &QPushButton::clicked, this, [=]()
     {
@@ -160,10 +155,6 @@ MainWindow::MainWindow()
     });
 
     QObject::connect(ListOfJobOptions::getInstance(), &ListOfJobOptions::tasksListUpdated, this, &MainWindow::listTasks);
-
-
-
-
 
     QStyle* style = QApplication::style();
     ui.buttonDeleteTask->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
@@ -232,14 +223,17 @@ MainWindow::MainWindow()
     if (rclone.isEmpty())
     {
         rclone = QStandardPaths::findExecutable("rclone");
-        auto settings = GetSettings();
-        settings->setValue("Settings/rclone", rclone);
-        SetRclone(rclone);
-    }
-    if (rclone.isEmpty())
-    {
-        QMessageBox::information(this, "Error", "Cannot check rclone version!\nPlease verify rclone location.");
-        emit ui.preferences->trigger();
+        if (rclone.isEmpty())
+        {
+            QMessageBox::information(this, "Error", "Cannot check rclone version!\nPlease verify rclone location.");
+            emit ui.preferences->trigger();
+        }
+        else
+        {
+            auto settings = GetSettings();
+            settings->setValue("Settings/rclone", rclone);
+            SetRclone(rclone);
+        }
     }
     else
     {
@@ -260,7 +254,7 @@ void MainWindow::rcloneGetVersion()
 
     QProcess* p = new QProcess();
 
-    QObject::connect(p, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int code)
+    QObject::connect(p, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int code, QProcess::ExitStatus)
     {
         if (code == 0)
         {
@@ -313,7 +307,7 @@ void MainWindow::rcloneConfig()
 
     QProcess* p = new QProcess(this);
 
-    QObject::connect(p, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int code)
+    QObject::connect(p, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int code, QProcess::ExitStatus)
     {
         if (code == 0)
         {
@@ -381,7 +375,7 @@ void MainWindow::rcloneListRemotes()
 
     QProcess* p = new QProcess();
 
-    QObject::connect(p, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int code)
+    QObject::connect(p, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int code, QProcess::ExitStatus)
     {
         if (code == 0)
         {
@@ -521,7 +515,7 @@ void MainWindow::closeEvent(QCloseEvent* ev)
 
     if (canClose())
     {
-        ev->accept();
+        QApplication::quit();
     }
     else
     {
@@ -708,7 +702,7 @@ void MainWindow::addStream(const QString& remote, const QString& stream)
     auto rclone = new QProcess();
     rclone->setStandardOutputProcess(player);
 
-    QObject::connect(player, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [=](int status)
+    QObject::connect(player, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=](int status, QProcess::ExitStatus)
     {
         player->deleteLater();
         if (status != 0 && player->error() == QProcess::FailedToStart)

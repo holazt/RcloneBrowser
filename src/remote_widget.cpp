@@ -143,7 +143,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             UseRclonePassword(&process);
             process.setProgram(GetRclone());
             process.setArguments(QStringList() << "mkdir" << GetRcloneConf() << GetDriveSharedWithMe() << remote + ":" + folder);
-            process.setReadChannelMode(QProcess::MergedChannels);
+            process.setProcessChannelMode(QProcess::MergedChannels);
 
             ProgressDialog progress("New Folder", "Creating...", folderMsg, &process, this);
             if (progress.exec() == QDialog::Accepted)
@@ -173,7 +173,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
                                  << GetDriveSharedWithMe()
                                  << remote + ":" + path
                                  << remote + ":" + model->path(index.parent()).filePath(name));
-            process.setReadChannelMode(QProcess::MergedChannels);
+            process.setProcessChannelMode(QProcess::MergedChannels);
 
             ProgressDialog progress("Rename", "Renaming...", pathMsg, &process, this);
             if (progress.exec() == QDialog::Accepted)
@@ -203,7 +203,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
                                  << GetDriveSharedWithMe()
                                  << remote + ":" + path
                                  << remote + ":" + name);
-            process.setReadChannelMode(QProcess::MergedChannels);
+            process.setProcessChannelMode(QProcess::MergedChannels);
 
             ProgressDialog progress("Move", "Moving...", pathMsg, &process, this);
             if (progress.exec() == QDialog::Accepted)
@@ -227,13 +227,13 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             UseRclonePassword(&process);
             process.setProgram(GetRclone());
             process.setArguments(QStringList() << (model->isFolder(index) ? "purge" : "delete") << GetRcloneConf() << GetDriveSharedWithMe() << remote + ":" + path);
-            process.setReadChannelMode(QProcess::MergedChannels);
+            process.setProcessChannelMode(QProcess::MergedChannels);
 
             ProgressDialog progress("Delete", "Deleting...", pathMsg, &process, this);
             if (progress.exec() == QDialog::Accepted)
             {
                 QModelIndex parent = index.parent();
-                QModelIndex next = parent.child(index.row() + 1, 0);
+                QModelIndex next = parent.model()->index(index.row() + 1, 0);
                 ui.tree->selectionModel()->select(next.isValid() ? next : parent, QItemSelectionModel::SelectCurrent);
                 model->removeRow(index.row(), parent);
             }
@@ -313,7 +313,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         UseRclonePassword(&process);
         process.setProgram(GetRclone());
         process.setArguments(QStringList() << "link" << GetRcloneConf() << GetDriveSharedWithMe() << remote + ":" + path);
-        process.setReadChannelMode(QProcess::MergedChannels);
+        process.setProcessChannelMode(QProcess::MergedChannels);
 
         ProgressDialog progress("Fetch Public Link", "Fetching link for...", pathMsg, &process, this, false, true);
         progress.expand();
@@ -368,7 +368,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         UseRclonePassword(&process);
         process.setProgram(GetRclone());
         process.setArguments(QStringList() << "size" << GetRcloneConf() << GetDriveSharedWithMe() << remote + ":" + path);
-        process.setReadChannelMode(QProcess::MergedChannels);
+        process.setProcessChannelMode(QProcess::MergedChannels);
 
         ProgressDialog progress("Get Size", "Calculating...", pathMsg, &process, this, false);
         progress.expand();
@@ -401,7 +401,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
             UseRclonePassword(&process);
             process.setProgram(GetRclone());
             process.setArguments(QStringList() << GetRcloneConf() << GetDriveSharedWithMe() << e.getOptions());
-            process.setReadChannelMode(QProcess::MergedChannels);
+            process.setProcessChannelMode(QProcess::MergedChannels);
 
             ProgressDialog progress("Export", "Exporting...", dst, &process, this);
             file->setParent(&progress);

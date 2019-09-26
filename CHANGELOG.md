@@ -7,7 +7,7 @@
 - after task edit initiated by double click main window does not get proper focus back and subsequent Run click might lead to wrong task execution. For time being I disable double click edit - until proper fix is produced.
 
 ## [1.5] - 2019-09-25
-- tasks - jobs can be saved/edited/run/deleted. No need to created the same job again and again.
+- tasks - jobs can be saved/edited/run/deleted. No need creating the same job again and again.
 - on Google drive DriveSharedWithMe can be mounted to local filesystem
 - DriveSharedWithMe checkbox is now disabled for non Google destinations - it is Google only feature and turning it on for other destinations does not make sense - could even crash the browser.
 - verbose option is now always on and has been removed from UI - which means that stats will be always displayed. No more wondering how long it is going to take for some long job to finish.

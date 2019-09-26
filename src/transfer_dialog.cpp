@@ -32,6 +32,7 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         ui.cbSyncDelete->setCurrentIndex(0);
         ui.checkSkipNewer->setChecked(false);
         ui.checkSkipNewer->setChecked(false);
+        ui.checkSkipExisting->setChecked(false);
         ui.checkCompare->setChecked(true);
         ui.cbCompare->setCurrentIndex(0);
 //        ui.checkVerbose->setChecked(false);

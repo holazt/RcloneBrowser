@@ -7,5 +7,5 @@ obj-*-linux-gnu
 debian/files
 debian/debhelper-build-stamp
 debian/rclone-browser*
-
+/release
 /bs0.cmd

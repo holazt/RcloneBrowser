@@ -32,6 +32,7 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
         ui.cbSyncDelete->setCurrentIndex(0);
         ui.checkSkipNewer->setChecked(false);
         ui.checkSkipNewer->setChecked(false);
+        ui.checkSkipExisting->setChecked(false);
         ui.checkCompare->setChecked(true);
         ui.cbCompare->setCurrentIndex(0);
 //        ui.checkVerbose->setChecked(false);
@@ -220,10 +221,12 @@ JobOptions *TransferDialog::getJobOptions()
     if (ui.rbCopy->isChecked())
     {
         mJobOptions->operation = JobOptions::Copy;
+	mJobOptions->sync = false;
     }
     else if (ui.rbMove->isChecked())
     {
         mJobOptions->operation = JobOptions::Move;
+        mJobOptions->sync = false;
     }
     else if (ui.rbSync->isChecked())
     {
@@ -274,6 +277,11 @@ JobOptions *TransferDialog::getJobOptions()
             break;
         }
     }
+    else
+    {
+       mJobOptions->compare = false;
+    };
+
 
 //    mJobOptions->verbose = ui.checkVerbose->isChecked();
     mJobOptions->sameFilesystem = ui.checkSameFilesystem->isChecked();

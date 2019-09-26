@@ -216,10 +216,12 @@ JobOptions *TransferDialog::getJobOptions()
     if (ui.rbCopy->isChecked())
     {
         mJobOptions->operation = JobOptions::Copy;
+	mJobOptions->sync = false;
     }
     else if (ui.rbMove->isChecked())
     {
         mJobOptions->operation = JobOptions::Move;
+        mJobOptions->sync = false;
     }
     else if (ui.rbSync->isChecked())
     {

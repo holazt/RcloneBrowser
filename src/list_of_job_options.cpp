@@ -90,7 +90,7 @@ bool ListOfJobOptions::RestoreFromUserData(ListOfJobOptions& dataIn)
             instream >> *jo;
             dataIn.tasks.append(jo);
         }
-        catch (SerializationException ex)
+        catch (SerializationException &ex)
         {
             qDebug() << QString("failed to restore tasks: ") << ex.Message;
             file->close();

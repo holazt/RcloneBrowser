@@ -119,6 +119,12 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 
     QObject::connect(ui.refresh, &QAction::triggered, this, [=]()
     {
+//DDBB
+            auto settings = GetSettings();
+            bool driveShared = ui.checkBoxShared->checkState();
+            (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
         model->refresh(index);
     });
@@ -126,7 +132,38 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     QObject::connect(ui.mkdir, &QAction::triggered, this, [=]()
     {
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-        if (!model->isFolder(index))
+  
+
+
+
+//DDBB
+auto settings = GetSettings();
+        if (!isGoogle)
+        {
+        settings->setValue("Settings/driveShared", Qt::Unchecked);
+        }
+        else
+        {
+
+                            bool driveShared = ui.checkBoxShared->checkState();
+                        auto settings = GetSettings();
+                        if (driveShared)  {settings->setValue("Settings/driveShared", Qt::Checked);} else {settings->setValue("Settings/driveShared", Qt::Unchecked);}
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      if (!model->isFolder(index))
         {
             index = index.parent();
         }
@@ -242,6 +279,14 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 
     QObject::connect(ui.mount, &QAction::triggered, this, [=]()
     {
+
+//DDBB
+            auto settings = GetSettings();
+            bool driveShared = ui.checkBoxShared->checkState();
+            (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
+
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
         QString path = model->path(index).path();
@@ -324,7 +369,28 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     QObject::connect(ui.upload, &QAction::triggered, this, [=]()
     {
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-        if (!model->isFolder(index))
+ 
+
+
+
+
+//DDBB
+auto settings = GetSettings();
+        if (!isGoogle)
+        {
+        settings->setValue("Settings/driveShared", Qt::Unchecked);
+        }
+        else
+        {
+
+                            bool driveShared = ui.checkBoxShared->checkState();
+                        auto settings = GetSettings();
+                        if (driveShared)  {settings->setValue("Settings/driveShared", Qt::Checked);} else {settings->setValue("Settings/driveShared", Qt::Unchecked);}
+        }
+
+
+
+       if (!model->isFolder(index))
         {
             index = index.parent();
         }
@@ -343,8 +409,33 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 
     QObject::connect(ui.download, &QAction::triggered, this, [=]()
     {
+
+//DDBB
+//        auto settings = GetSettings();
+//        if (!isGoogle)
+//        {
+//            settings->setValue("Settings/driveShared", Qt::Unchecked);
+//        }
+//        else
+//        {
+//DDBB
+            auto settings = GetSettings();
+            bool driveShared = ui.checkBoxShared->checkState();
+	    (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
+//            if (driveShared)
+//	    {
+//		settings->setValue("Settings/driveShared", Qt::Checked);
+//	    }
+//	    else
+//	    {settings->setValue("Settings/driveShared", Qt::Unchecked);
+//	    }
+//        }
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
         QDir path = model->path(index);
+
+
 
         TransferDialog t(true, remote, path, model->isFolder(index), this);
         if (t.exec() == QDialog::Accepted)
@@ -442,8 +533,26 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         qApp->setActiveWindow(this);
         QDir destPath = model->path(parent);
         QString dest = QFileInfo(path.path()).isDir() ? destPath.filePath(path.dirName()) : destPath.path();
+
+
+
+
         TransferDialog t(false, remote, dest, true, this);
         t.setSource(path.path());
+//DDBB
+auto settings = GetSettings();
+	if (!isGoogle)  
+	{
+	settings->setValue("Settings/driveShared", Qt::Unchecked);
+	}	
+	else
+	{
+	
+		            bool driveShared = ui.checkBoxShared->checkState();
+			auto settings = GetSettings();
+			if (driveShared)  {settings->setValue("Settings/driveShared", Qt::Checked);} else {settings->setValue("Settings/driveShared", Qt::Unchecked);}
+	}
+
         if (t.exec() == QDialog::Accepted)
         {
             QString src = t.getSource();

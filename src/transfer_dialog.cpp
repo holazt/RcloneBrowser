@@ -125,10 +125,11 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
     ui.buttonSourceFolder->setVisible(!isDownload);
     ui.buttonDest->setVisible(isDownload);
 
-//DDBB    
-    // Info only - should not be edited
-    //ui.checkisDriveSharedWithMe->setDisabled(true);
+//DDBB    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//    Info only - should not be edited
+    ui.checkisDriveSharedWithMe->setDisabled(true);
 
+    ui.checkisDriveSharedWithMe->setChecked(settings->value("Settings/driveShared", false).toBool());
     // always clear for new jobs
     ui.textDescription->clear();
 
@@ -309,8 +310,8 @@ JobOptions *TransferDialog::getJobOptions()
     mJobOptions->isFolder = mIsFolder;
 
     mJobOptions->description = ui.textDescription->text();
-    auto settings = GetSettings();
-    mJobOptions->DriveSharedWithMe = settings->value("Settings/driveShared", false).toBool();
+ //   auto settings = GetSettings();
+ //   mJobOptions->DriveSharedWithMe = settings->value("Settings/driveShared", false).toBool();
 
     if (mIsEditMode)
           mJobOptions->DriveSharedWithMe = ui.checkisDriveSharedWithMe->isChecked();

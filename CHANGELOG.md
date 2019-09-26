@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.5.2] - 2019-09-26
+- code cleanup - clean compilation with -Werror enabled, GCC8 compilation
+
+## [1.5.1] - 2019-09-25
+- after task edit initiated by double click main window does not get proper focus back and subsequent Run click might lead to wrong task execution. For time being I disable double click edit - until proper fix is produced.
 
 ## [1.5] - 2019-09-25
 - tasks - jobs can be saved/edited/run/deleted. No need to created the same job again and again.
@@ -9,7 +14,6 @@
 - fixed an issue with local remote on Windows when local drive content was not properly displayed
 - replaced remote Amazon icon with generic S3 one. S3 became name on its own and almost de-facto standard in cloud access used by many rclone supported destinations
 - new application logo
-
 
 ## [1.4.1] - 2019-09-18
 - small GUI tweaks to make all progress fields always visible (they were too small for large transfers) and adjust some screen sizes to make all GUI elements visible
@@ -30,7 +34,6 @@
 - Support for shared Google Drive files. Enable the checkbox when you open a remote, and all rclone commands will be passed --drive-shared-with-me (by DinCahill)
 - Set cache mode for mounts (by DinCahill)
 - Fixed missing leading / in path (required for some SFTP servers) (by DinCahill)
-
 
 ## [1.2] - 2017-03-11
 - Calculate size of folders, issue #4
@@ -66,6 +69,8 @@
 - Mount and unmount folders on macOS and GNU/Linux
 - Optionally minimizes to tray, with notifications when upload/download finishes
 
+[1.5.2]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.2
+[1.5.1]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.1
 [1.5]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5
 [1.4.1]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.4.1
 [1.4]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.4

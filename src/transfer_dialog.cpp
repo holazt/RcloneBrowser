@@ -272,6 +272,11 @@ JobOptions *TransferDialog::getJobOptions()
             break;
         }
     }
+    else
+    {
+       mJobOptions->compare = false;
+    };
+
 
 //    mJobOptions->verbose = ui.checkVerbose->isChecked();
     mJobOptions->sameFilesystem = ui.checkSameFilesystem->isChecked();

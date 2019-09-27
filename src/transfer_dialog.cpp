@@ -125,9 +125,10 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
     ui.buttonSourceFolder->setVisible(!isDownload);
     ui.buttonDest->setVisible(isDownload);
 
-//DDBB    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//    Info only - should not be edited
+// Info only - should not be edited
+// would be nice to display it only for Google Drive - todo
     ui.checkisDriveSharedWithMe->setDisabled(true);
+
 
     ui.checkisDriveSharedWithMe->setChecked(settings->value("Settings/driveShared", false).toBool());
     // always clear for new jobs

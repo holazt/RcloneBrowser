@@ -327,16 +327,27 @@ void TransferDialog::putJobOptions()
 
     mDryRun = mJobOptions->dryRun;
     ui.rbSync->setChecked(mJobOptions->sync);
-    ui.cbSyncDelete->setCurrentIndex((int)mJobOptions->syncTiming);
 
+    ui.cbSyncDelete->setCurrentIndex((int)mJobOptions->syncTiming);
+    // set combobox tooltips
+    ui.cbSyncDelete->setItemData(0, "--delete-during", Qt::ToolTipRole);
+    ui.cbSyncDelete->setItemData(1, "--delete-after", Qt::ToolTipRole);
+    ui.cbSyncDelete->setItemData(2, "--delete-before", Qt::ToolTipRole);
 
     ui.checkSkipNewer->setChecked(mJobOptions->skipNewer);
     ui.checkSkipExisting->setChecked(mJobOptions->skipExisting);
 
     ui.checkCompare->setChecked(mJobOptions->compare);
-    ui.cbCompare->setCurrentIndex(mJobOptions->compareOption);
 
- // ui.checkVerbose->setChecked(mJobOptions->verbose);
+    ui.cbCompare->setCurrentIndex(mJobOptions->compareOption);
+    // set combobox tooltips
+    ui.cbCompare->setItemData(0, "default", Qt::ToolTipRole);
+    ui.cbCompare->setItemData(1, "--checksum", Qt::ToolTipRole);
+    ui.cbCompare->setItemData(2, "--ignore-size", Qt::ToolTipRole);
+    ui.cbCompare->setItemData(3, "--size-only", Qt::ToolTipRole);
+
+    ui.cbCompare->setItemData(4, "--checksum --ignore-size", Qt::ToolTipRole);
+    // ui.checkVerbose->setChecked(mJobOptions->verbose);
     ui.checkSameFilesystem->setChecked(mJobOptions->sameFilesystem);
     ui.checkDontUpdateModified->setChecked(mJobOptions->dontUpdateModified);
 

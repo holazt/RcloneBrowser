@@ -1,7 +1,11 @@
 # Change Log
 
-## [1.5.2] - 2019-09-26
-- code cleanup - clean compilation with -Werror enabled, GCC8 compilation
+## [1.5.2] - 2019-09-27
+- code cleanup - clean compilation with -Werror enabled, GCC8 compilation fixed
+- add tooltips showing rclone options used to all transfer window options
+- Google "drive shared with me" caused multiple of issues - now all should work
+- as always small cosmetic UI improvements - still plenty to do but core functionality was first
+
 
 ## [1.5.1] - 2019-09-25
 - after task edit initiated by double click main window does not get proper focus back and subsequent Run click might lead to wrong task execution. For time being I disable double click edit - until proper fix is produced.

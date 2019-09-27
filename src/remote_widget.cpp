@@ -120,10 +120,9 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
     QObject::connect(ui.refresh, &QAction::triggered, this, [=]()
     {
 //DDBB
-            auto settings = GetSettings();
-            bool driveShared = ui.checkBoxShared->checkState();
-            (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
-
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
 
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
         model->refresh(index);
@@ -131,37 +130,13 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
 
     QObject::connect(ui.mkdir, &QAction::triggered, this, [=]()
     {
-        QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-  
-
-
 
 //DDBB
-auto settings = GetSettings();
-        if (!isGoogle)
-        {
-        settings->setValue("Settings/driveShared", Qt::Unchecked);
-        }
-        else
-        {
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
 
-                            bool driveShared = ui.checkBoxShared->checkState();
-                        auto settings = GetSettings();
-                        if (driveShared)  {settings->setValue("Settings/driveShared", Qt::Checked);} else {settings->setValue("Settings/driveShared", Qt::Unchecked);}
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
+        QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
       if (!model->isFolder(index))
         {
@@ -192,6 +167,11 @@ auto settings = GetSettings();
 
     QObject::connect(ui.rename, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
         QString path = model->path(index).path();
@@ -222,6 +202,11 @@ auto settings = GetSettings();
 
     QObject::connect(ui.move, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
         QString path = model->path(index).path();
@@ -252,6 +237,11 @@ auto settings = GetSettings();
 
     QObject::connect(ui.purge, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
         QString path = model->path(index).path();
@@ -279,13 +269,10 @@ auto settings = GetSettings();
 
     QObject::connect(ui.mount, &QAction::triggered, this, [=]()
     {
-
 //DDBB
-            auto settings = GetSettings();
-            bool driveShared = ui.checkBoxShared->checkState();
-            (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
-
-
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
 
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -305,10 +292,15 @@ auto settings = GetSettings();
 
     QObject::connect(ui.stream, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
         QString path = model->path(index).path();
 
-        auto settings = GetSettings();
+//        auto settings = GetSettings();
         bool streamConfirmed = settings->value("Settings/streamConfirmed", false).toBool();
         QString stream = settings->value("Settings/stream", "mpv -").toString();
         if (!streamConfirmed)
@@ -349,6 +341,11 @@ auto settings = GetSettings();
 
     QObject::connect(ui.link, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
         QString path = model->path(index).path();
@@ -368,27 +365,12 @@ auto settings = GetSettings();
 
     QObject::connect(ui.upload, &QAction::triggered, this, [=]()
     {
-        QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
- 
-
-
-
-
 //DDBB
-auto settings = GetSettings();
-        if (!isGoogle)
-        {
-        settings->setValue("Settings/driveShared", Qt::Unchecked);
-        }
-        else
-        {
+       auto settings = GetSettings();
+       bool driveShared = ui.checkBoxShared->checkState();
+       (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
 
-                            bool driveShared = ui.checkBoxShared->checkState();
-                        auto settings = GetSettings();
-                        if (driveShared)  {settings->setValue("Settings/driveShared", Qt::Checked);} else {settings->setValue("Settings/driveShared", Qt::Unchecked);}
-        }
-
-
+       QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
        if (!model->isFolder(index))
         {
@@ -409,33 +391,13 @@ auto settings = GetSettings();
 
     QObject::connect(ui.download, &QAction::triggered, this, [=]()
     {
-
 //DDBB
-//        auto settings = GetSettings();
-//        if (!isGoogle)
-//        {
-//            settings->setValue("Settings/driveShared", Qt::Unchecked);
-//        }
-//        else
-//        {
-//DDBB
-            auto settings = GetSettings();
-            bool driveShared = ui.checkBoxShared->checkState();
-	    (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
-
-//            if (driveShared)
-//	    {
-//		settings->setValue("Settings/driveShared", Qt::Checked);
-//	    }
-//	    else
-//	    {settings->setValue("Settings/driveShared", Qt::Unchecked);
-//	    }
-//        }
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
 
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
         QDir path = model->path(index);
-
-
 
         TransferDialog t(true, remote, path, model->isFolder(index), this);
         if (t.exec() == QDialog::Accepted)
@@ -450,6 +412,10 @@ auto settings = GetSettings();
 
     QObject::connect(ui.getSize, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
         QString path = model->path(index).path();
@@ -469,6 +435,11 @@ auto settings = GetSettings();
 
     QObject::connect(ui.export_, &QAction::triggered, this, [=]()
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
         QDir path = model->path(index);
 
@@ -530,28 +501,17 @@ auto settings = GetSettings();
 
     QObject::connect(model, &ItemModel::drop, this, [=](const QDir& path, const QModelIndex& parent)
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         qApp->setActiveWindow(this);
         QDir destPath = model->path(parent);
         QString dest = QFileInfo(path.path()).isDir() ? destPath.filePath(path.dirName()) : destPath.path();
 
-
-
-
         TransferDialog t(false, remote, dest, true, this);
         t.setSource(path.path());
-//DDBB
-auto settings = GetSettings();
-	if (!isGoogle)  
-	{
-	settings->setValue("Settings/driveShared", Qt::Unchecked);
-	}	
-	else
-	{
-	
-		            bool driveShared = ui.checkBoxShared->checkState();
-			auto settings = GetSettings();
-			if (driveShared)  {settings->setValue("Settings/driveShared", Qt::Checked);} else {settings->setValue("Settings/driveShared", Qt::Unchecked);}
-	}
 
         if (t.exec() == QDialog::Accepted)
         {
@@ -565,6 +525,11 @@ auto settings = GetSettings();
 
     QObject::connect(ui.tree, &QWidget::customContextMenuRequested, this, [=](const QPoint& pos)
     {
+//DDBB
+        auto settings = GetSettings();
+        bool driveShared = ui.checkBoxShared->checkState();
+        (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked) : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
         QMenu menu;
         menu.addAction(ui.refresh);
         menu.addAction(ui.getSize);
@@ -626,7 +591,7 @@ auto settings = GetSettings();
             worker->deleteLater();
         });
 #endif
-        
+
         ui.tree->selectionModel()->selectionChanged(QItemSelection(), QItemSelection());
     }
     else

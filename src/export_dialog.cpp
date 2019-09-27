@@ -7,6 +7,8 @@ ExportDialog::ExportDialog(const QString& remote, const QDir& path, QWidget* par
     ui.setupUi(this);
     resize(0, 0);
 
+    setWindowTitle("Export files list");
+
     mTarget = remote + ":" + path.path();
 
     QObject::connect(ui.buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, [=]()

@@ -30,12 +30,22 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
     QObject::connect(ui.buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, [=]()
     {
         ui.cbSyncDelete->setCurrentIndex(0);
+        // set combobox tooltips
+        ui.cbSyncDelete->setItemData(0, "--delete-during", Qt::ToolTipRole);
+        ui.cbSyncDelete->setItemData(1, "--delete-after", Qt::ToolTipRole);
+        ui.cbSyncDelete->setItemData(2, "--delete-before", Qt::ToolTipRole);
         ui.checkSkipNewer->setChecked(false);
         ui.checkSkipNewer->setChecked(false);
         ui.checkSkipExisting->setChecked(false);
         ui.checkCompare->setChecked(true);
         ui.cbCompare->setCurrentIndex(0);
-//        ui.checkVerbose->setChecked(false);
+        // set combobox tooltips
+        ui.cbCompare->setItemData(0, "default", Qt::ToolTipRole);
+        ui.cbCompare->setItemData(1, "--checksum", Qt::ToolTipRole);
+        ui.cbCompare->setItemData(2, "--ignore-size", Qt::ToolTipRole);
+        ui.cbCompare->setItemData(3, "--size-only", Qt::ToolTipRole);
+        ui.cbCompare->setItemData(4, "--checksum --ignore-size", Qt::ToolTipRole);
+//      ui.checkVerbose->setChecked(false);
         ui.checkSameFilesystem->setChecked(false);
         ui.checkDontUpdateModified->setChecked(false);
         ui.spinTransfers->setValue(4);
@@ -359,7 +369,6 @@ void TransferDialog::putJobOptions()
     ui.cbCompare->setItemData(1, "--checksum", Qt::ToolTipRole);
     ui.cbCompare->setItemData(2, "--ignore-size", Qt::ToolTipRole);
     ui.cbCompare->setItemData(3, "--size-only", Qt::ToolTipRole);
-
     ui.cbCompare->setItemData(4, "--checksum --ignore-size", Qt::ToolTipRole);
     // ui.checkVerbose->setChecked(mJobOptions->verbose);
     ui.checkSameFilesystem->setChecked(mJobOptions->sameFilesystem);

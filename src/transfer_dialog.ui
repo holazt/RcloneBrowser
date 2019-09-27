@@ -124,6 +124,9 @@
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QCheckBox" name="checkSameFilesystem">
+            <property name="toolTip">
+             <string>--one-file-system</string>
+            </property>
             <property name="text">
              <string>Don't cross filesystem boundaries</string>
             </property>
@@ -131,6 +134,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="checkDontUpdateModified">
+            <property name="toolTip">
+             <string>--no-update-modtime</string>
+            </property>
             <property name="text">
              <string>Don't update mod-time if files are identical</string>
             </property>
@@ -209,18 +215,21 @@
             </item>
             <item>
              <property name="text">
-              <string>Only size</string>
+              <string extracomment="--size-only">Only size</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Only checksum</string>
+              <string extracomment="--checksum">Only checksum</string>
              </property>
             </item>
            </widget>
           </item>
           <item row="1" column="0" colspan="3">
            <widget class="QCheckBox" name="checkSkipNewer">
+            <property name="toolTip">
+             <string>--update</string>
+            </property>
             <property name="text">
              <string>Skip files that are newer on the destination</string>
             </property>
@@ -229,7 +238,7 @@
           <item row="3" column="0" colspan="2" alignment="Qt::AlignBottom">
            <widget class="QCheckBox" name="checkCompare">
             <property name="toolTip">
-             <string>-ignore-times</string>
+             <string>compare logic</string>
             </property>
             <property name="text">
              <string>Compare</string>
@@ -241,6 +250,9 @@
           </item>
           <item row="2" column="0" colspan="3">
            <widget class="QCheckBox" name="checkSkipExisting">
+            <property name="toolTip">
+             <string>--ignore-existing</string>
+            </property>
             <property name="text">
              <string>Skip all files that exist</string>
             </property>
@@ -279,6 +291,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>copy</string>
+            </property>
             <property name="text">
              <string>Copy</string>
             </property>
@@ -295,6 +310,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>move</string>
+            </property>
             <property name="text">
              <string>Move</string>
             </property>
@@ -307,6 +325,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>sync</string>
             </property>
             <property name="text">
              <string>Sync</string>
@@ -408,6 +429,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>--checkers</string>
+         </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
@@ -440,6 +464,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>--bwlimit</string>
+         </property>
         </widget>
        </item>
        <item row="3" column="0">
@@ -459,6 +486,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>--min-size</string>
          </property>
         </widget>
        </item>
@@ -480,6 +510,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>--min-age</string>
+         </property>
         </widget>
        </item>
        <item row="5" column="0">
@@ -500,6 +533,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>--max-age</string>
+         </property>
         </widget>
        </item>
        <item row="6" column="0">
@@ -519,6 +555,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>--max-depth</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -545,6 +584,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>--contimeout</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -578,6 +620,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>--timeout</string>
+         </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
@@ -606,6 +651,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>--retries</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -639,6 +687,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>--low-level-retries</string>
+         </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
@@ -660,6 +711,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>--transfers</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -694,6 +748,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QCheckBox" name="checkDeleteExcluded">
+         <property name="toolTip">
+          <string>--delete-excluded</string>
+         </property>
          <property name="text">
           <string>Delete excluded files from destination</string>
          </property>
@@ -701,6 +758,9 @@
        </item>
        <item>
         <widget class="QPlainTextEdit" name="textExclude">
+         <property name="toolTip">
+          <string>--exclude</string>
+         </property>
          <property name="lineWrapMode">
           <enum>QPlainTextEdit::NoWrap</enum>
          </property>

@@ -125,6 +125,12 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
     ui.buttonSourceFolder->setVisible(!isDownload);
     ui.buttonDest->setVisible(isDownload);
 
+// Info only - should not be edited
+// would be nice to display it only for Google Drive - todo
+    ui.checkisDriveSharedWithMe->setDisabled(true);
+
+
+    ui.checkisDriveSharedWithMe->setChecked(settings->value("Settings/driveShared", false).toBool());
     // always clear for new jobs
     ui.textDescription->clear();
 
@@ -305,8 +311,16 @@ JobOptions *TransferDialog::getJobOptions()
     mJobOptions->isFolder = mIsFolder;
 
     mJobOptions->description = ui.textDescription->text();
-    auto settings = GetSettings();
-    mJobOptions->DriveSharedWithMe = settings->value("Settings/driveShared", false).toBool();
+ //   auto settings = GetSettings();
+ //   mJobOptions->DriveSharedWithMe = settings->value("Settings/driveShared", false).toBool();
+
+    if (mIsEditMode)
+          mJobOptions->DriveSharedWithMe = ui.checkisDriveSharedWithMe->isChecked();
+    else
+	{
+          auto settings = GetSettings();
+          mJobOptions->DriveSharedWithMe = settings->value("Settings/driveShared", false).toBool();
+	};
 
     return mJobOptions;
 }
@@ -371,6 +385,8 @@ void TransferDialog::putJobOptions()
     ui.textSource->setText(mJobOptions->source);
     ui.textDest->setText(mJobOptions->dest);
     ui.textDescription->setText(mJobOptions->description);
+    //DDBB
+    ui.checkisDriveSharedWithMe->setChecked(mJobOptions->DriveSharedWithMe);
 }
 
 void TransferDialog::done(int r)

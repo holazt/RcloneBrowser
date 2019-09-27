@@ -123,6 +123,22 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
+           <widget class="QCheckBox" name="checkisDriveSharedWithMe">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>--drive-shared-with-me</string>
+            </property>
+            <property name="text">
+             <string>Drive shared with me</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="checkSameFilesystem">
             <property name="toolTip">
              <string>--one-file-system</string>
@@ -794,6 +810,7 @@
   <tabstop>checkSkipExisting</tabstop>
   <tabstop>checkCompare</tabstop>
   <tabstop>cbCompare</tabstop>
+  <tabstop>checkisDriveSharedWithMe</tabstop>
   <tabstop>checkSameFilesystem</tabstop>
   <tabstop>checkDontUpdateModified</tabstop>
   <tabstop>spinTransfers</tabstop>

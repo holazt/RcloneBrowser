@@ -102,6 +102,7 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         {
             ui.refresh->setDisabled(false);
             bool driveShared = ui.checkBoxShared->checkState();
+            ui.mkdir->setDisabled(driveShared);
             ui.rename->setDisabled(topLevel || driveShared);
             ui.move->setDisabled(topLevel || driveShared);
             ui.purge->setDisabled(topLevel || driveShared);

@@ -676,14 +676,17 @@ void MainWindow::addMount(const QString& remote, const QString& folder)
 
     QStringList args;
     args << "mount";
-    args << "--vfs-cache-mode";
-    args << "writes";
 
-   if (driveShared)
-   {
-      args << "--drive-shared-with-me";
-   }
-
+    if (driveShared)
+    {
+       args << "--drive-shared-with-me";
+       args << "--read-only";
+    }
+    else
+    {
+       args << "--vfs-cache-mode";
+       args << "writes";
+    };
 
     args.append(GetRcloneConf());
     if (!opt.isEmpty())

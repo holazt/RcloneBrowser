@@ -266,10 +266,12 @@ void MainWindow::rcloneGetVersion() {
           QString version = p->readAllStandardOutput().trimmed();
 
           // extract rclone version - numbers only
-          QString version_no = version;
-          int lineBreak = version_no.indexOf('\n');
+          QString rclone_info1 = version;
+          QString version_no;
+          int lineBreak = rclone_info1.indexOf('\n');
           if (lineBreak != -1) {
-            version_no.remove(lineBreak, version_no.length() - lineBreak);
+            rclone_info1.remove(lineBreak, rclone_info1.length() - lineBreak);
+            version_no = rclone_info1;
             version_no.replace("rclone v", "");
             version_no.replace("-DEV", "");
           }
@@ -288,9 +290,23 @@ void MainWindow::rcloneGetVersion() {
                                      ".\n\nPlease consider upgrading.");
           };
 #endif
-          mStatusMessage->setText(version + " in " +
-                                  QDir::toNativeSeparators(GetRclone()));
 
+          QStringList lines = version.split("\n", QString::SkipEmptyParts);
+          QString rclone_info2;
+          QString rclone_info3;
+
+          int counter = 0;
+          foreach (QString line, lines) {
+            line = line.trimmed();
+            if (counter == 1)
+              rclone_info2 = line.replace("- ", "");
+            if (counter == 2)
+              rclone_info3 = line.replace("- ", "");
+            counter++;
+          };
+          mStatusMessage->setText(rclone_info1 + " in " +
+                                  QDir::toNativeSeparators(GetRclone()) + ", " +
+                                  rclone_info2 + ", " + rclone_info3);
           rcloneListRemotes();
         } else {
           if (p->error() != QProcess::FailedToStart) {
@@ -696,7 +712,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
   };
 
   //	 default mount is now more generic. all options can be passed via
-  //preferences mount field
+  // preferences mount field
   //       args << "--vfs-cache-mode";
   //       args << "writes";
 

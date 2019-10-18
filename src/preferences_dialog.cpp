@@ -76,13 +76,7 @@ PreferencesDialog::PreferencesDialog(QWidget* parent)
     ui.showFileIcons->setChecked(settings->value("Settings/showFileIcons", true).toBool());
     ui.rowColors->setChecked(settings->value("Settings/rowColors", false).toBool());
     ui.showHidden->setChecked(settings->value("Settings/showHidden", true).toBool());
-
-#ifdef Q_OS_WIN32
-    ui.mount->hide();
-    ui.mountLabel->hide();
-#else
     ui.mount->setText(settings->value("Settings/mount").toString());
-#endif
 }
 
 PreferencesDialog::~PreferencesDialog()

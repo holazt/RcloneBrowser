@@ -45,9 +45,7 @@ MainWindow::MainWindow()
             settings->setValue("Settings/rclone", dialog.getRclone().trimmed());
             settings->setValue("Settings/rcloneConf", dialog.getRcloneConf().trimmed());
             settings->setValue("Settings/stream", dialog.getStream());
-#ifndef Q_OS_WIN32
             settings->setValue("Settings/mount", dialog.getMount());
-#endif
             settings->setValue("Settings/defaultDownloadDir", dialog.getDefaultDownloadDir().trimmed());
             settings->setValue("Settings/alwaysShowInTray", dialog.getAlwaysShowInTray());
             settings->setValue("Settings/closeToTray", dialog.getCloseToTray());

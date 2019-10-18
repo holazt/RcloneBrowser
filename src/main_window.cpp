@@ -450,7 +450,7 @@ bool MainWindow::getConfigPassword(QProcess *p) {
   } else if (output.indexOf("unknown command \"listremotes\"") > 0) {
     QMessageBox::critical(this, qApp->applicationDisplayName(),
                           "It seems rclone version you are using is too "
-                          "old.\nPlease upgrade to at least version 1.34!");
+                          "old.\nPlease upgrade to the latest version");
     return false;
   }
   return false;

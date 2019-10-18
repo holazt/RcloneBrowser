@@ -6,8 +6,8 @@
 
 #include <memory>
 
-#include <QtDebug>
 #include <QtCore>
+#include <QtDebug>
 #include <QtGui>
 #include <QtWidgets>
 

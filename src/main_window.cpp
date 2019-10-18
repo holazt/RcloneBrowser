@@ -679,6 +679,18 @@ void MainWindow::addMount(const QString& remote, const QString& folder)
     QStringList args;
     args << "mount";
 
+    #ifdef Q_OS_WIN64
+    args << "--rc";
+    args << "--rc-addr";
+
+    // calculate remote control interface port based on mount drive letter
+    // this way every mount will have unique port assigned
+    int port_offset = folder[0].toLatin1();
+    unsigned short int rclone_rc_port_base = 19000;
+    unsigned short int rclone_rc_port = rclone_rc_port_base + port_offset;
+    args << "localhost:" + QVariant(rclone_rc_port).toString();
+    #endif
+
     if (driveShared)
     {
        args << "--drive-shared-with-me";

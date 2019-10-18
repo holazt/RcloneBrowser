@@ -1,4 +1,5 @@
 #include "mount_widget.h"
+#include "utils.h"
 
 MountWidget::MountWidget(QProcess* process, const QString& remote, const QString& folder, QWidget* parent)
     : QWidget(parent)
@@ -91,11 +92,33 @@ void MountWidget::cancel()
     }
 
     QString cmd;
+
 #ifdef Q_OS_OSX
     QProcess::startDetached("umount", QStringList() << ui.folder->text());
 #else
-    QProcess::startDetached("fusermount", QStringList() << "-u" << ui.folder->text());
+    #ifdef Q_OS_WIN64
+    QProcess* p = new QProcess();
+    QStringList args;
+    args << "rc";
+    // requires rlone version at least 1.50
+    args << "core/quit";
+
+    args << "--rc-addr";
+    QString folder =  ui.folder->text();
+
+    int port_offset =  folder[0].toLatin1();
+    unsigned short int rclone_rc_port_base = 19000;
+    unsigned short int rclone_rc_port = rclone_rc_port_base + port_offset;
+    args << "localhost:" + QVariant(rclone_rc_port).toString();
+
+    UseRclonePassword(p);
+    p->start(GetRclone(), args, QIODevice::ReadOnly);
+
+    #else
+        QProcess::startDetached("fusermount", QStringList() << "-u" << ui.folder->text());
+    #endif
 #endif
+
     mProcess->waitForFinished();
 
     emit closed();

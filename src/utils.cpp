@@ -4,6 +4,50 @@ static QString gRclone;
 static QString gRcloneConf;
 static QString gRclonePassword;
 
+// Software versions comparison
+// source: https://helloacm.com/how-to-compare-version-numbers-in-c/
+std::vector<std::string> split(const std::string &s, char d) {
+  std::vector<std::string> r;
+  int j = 0;
+  for (unsigned int i = 0; i < s.length(); i++) {
+    if (s[i] == d) {
+      r.push_back(s.substr(j, i - j));
+      j = i + 1;
+    }
+  }
+  r.push_back(s.substr(j));
+  return r;
+}
+
+unsigned int compareVersion(std::string version1, std::string version2) {
+  auto v1 = split(version1, '.');
+  auto v2 = split(version2, '.');
+  unsigned int max = v1.size() > v2.size() ? v1.size() : v2.size();
+  // pad the shorter version string
+  if (v1.size() != max) {
+    for (unsigned int i = max - v1.size(); i--;) {
+      v1.push_back("0");
+    }
+  } else {
+    for (unsigned int i = max - v2.size(); i--;) {
+      v2.push_back("0");
+    }
+  }
+  for (unsigned int i = 0; i < max; i++) {
+    unsigned int n1 = stoi(v1[i]);
+    unsigned int n2 = stoi(v2[i]);
+    if (n1 > n2) {
+      // version1 is higher than version2
+      return 1;
+    } else if (n1 < n2) {
+      // version2 is higher than version1
+      return 2;
+    }
+  }
+  // the same versions
+  return 0;
+}
+
 static QString GetIniFilename() {
   QFileInfo info = qApp->applicationFilePath();
   return info.dir().filePath(info.baseName() + ".ini");

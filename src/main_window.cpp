@@ -264,8 +264,33 @@ void MainWindow::rcloneGetVersion() {
       this, [=](int code, QProcess::ExitStatus) {
         if (code == 0) {
           QString version = p->readAllStandardOutput().trimmed();
+
+          // extract rclone version - numbers only
+          QString version_no = version;
+          int lineBreak = version_no.indexOf('\n');
+          if (lineBreak != -1) {
+            version_no.remove(lineBreak, version_no.length() - lineBreak);
+            version_no.replace("rclone v", "");
+            version_no.replace("-DEV", "");
+          }
+
+#ifdef Q_OS_WIN64
+          // check if required version
+          unsigned int result =
+              compareVersion(version_no.toStdString(), "1.50");
+
+          if (result == 2) {
+            QMessageBox::warning(this, "rclone version",
+                                 "For mount functionality to work you need "
+                                 "rclone version at least 1.50 "
+                                 "and your current version is " +
+                                     version_no +
+                                     ".\n\nPlease consider upgrading.");
+          };
+#endif
           mStatusMessage->setText(version + " in " +
                                   QDir::toNativeSeparators(GetRclone()));
+
           rcloneListRemotes();
         } else {
           if (p->error() != QProcess::FailedToStart) {

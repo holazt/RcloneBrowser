@@ -18,3 +18,5 @@ void SetRclonePassword(const QString &rclonePassword);
 
 QStringList GetDriveSharedWithMe();
 QStringList GetShowHidden();
+
+unsigned int compareVersion(std::string, std::string);

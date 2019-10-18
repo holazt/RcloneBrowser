@@ -35,6 +35,9 @@ MainWindow::MainWindow()
 
     QObject::connect(ui.preferences, &QAction::triggered, this, [=]()
     {
+	// disable window "?" contex help button
+        QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+
         PreferencesDialog dialog(this);
         if (dialog.exec() == QDialog::Accepted)
         {
@@ -45,6 +48,7 @@ MainWindow::MainWindow()
 #ifndef Q_OS_WIN32
             settings->setValue("Settings/mount", dialog.getMount());
 #endif
+            settings->setValue("Settings/defaultDownloadDir", dialog.getDefaultDownloadDir().trimmed());
             settings->setValue("Settings/alwaysShowInTray", dialog.getAlwaysShowInTray());
             settings->setValue("Settings/closeToTray", dialog.getCloseToTray());
             settings->setValue("Settings/notifyFinishedTransfers", dialog.getNotifyFinishedTransfers());

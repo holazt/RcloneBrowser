@@ -15,6 +15,7 @@ public:
     QString getRcloneConf() const;
     QString getStream() const;
     QString getMount() const;
+    QString getDefaultDownloadDir() const;
 
     bool getAlwaysShowInTray() const;
     bool getCloseToTray() const;

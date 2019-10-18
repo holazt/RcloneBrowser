@@ -135,6 +135,13 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
     ui.buttonSourceFolder->setVisible(!isDownload);
     ui.buttonDest->setVisible(isDownload);
 
+    if (isDownload)
+    {
+	//set default destination
+	ui.textDest->setText(QDir::toNativeSeparators(settings->value("Settings/defaultDownloadDir").toString()));
+    };
+
+
 // Info only - should not be edited
 // would be nice to display it only for Google Drive - todo
     ui.checkisDriveSharedWithMe->setDisabled(true);

@@ -40,10 +40,23 @@ PreferencesDialog::PreferencesDialog(QWidget* parent)
         ui.rcloneConf->setText(rcloneConf);
     });
 
+    QObject::connect(ui.defaultDownloadDirBrowse, &QPushButton::clicked, this, [=]()
+    {
+        QString defaultDownloadDir = QFileDialog::getExistingDirectory(this, "Select default download directory",  ui.defaultDownloadDir->text());
+
+        if (defaultDownloadDir.isEmpty())
+        {
+            return;
+        }
+
+        ui.defaultDownloadDir->setText(defaultDownloadDir);
+    });
+
     auto settings = GetSettings();
     ui.rclone->setText(QDir::toNativeSeparators(settings->value("Settings/rclone").toString()));
     ui.rcloneConf->setText(QDir::toNativeSeparators(settings->value("Settings/rcloneConf").toString()));
     ui.stream->setText(settings->value("Settings/stream").toString());
+    ui.defaultDownloadDir->setText(QDir::toNativeSeparators(settings->value("Settings/defaultDownloadDir").toString()));
     ui.showFolderIcons->setChecked(settings->value("Settings/showFolderIcons", true).toBool());
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
@@ -94,6 +107,11 @@ QString PreferencesDialog::getStream() const
 QString PreferencesDialog::getMount() const
 {
     return ui.mount->text();
+}
+
+QString PreferencesDialog::getDefaultDownloadDir() const
+{
+    return QDir::fromNativeSeparators(ui.defaultDownloadDir->text());
 }
 
 bool PreferencesDialog::getAlwaysShowInTray() const

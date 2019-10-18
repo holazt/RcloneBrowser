@@ -137,15 +137,24 @@ TransferDialog::TransferDialog(bool isDownload, const QString& remote, const QDi
 
     if (isDownload)
     {
-	//set default destination
-	ui.textDest->setText(QDir::toNativeSeparators(settings->value("Settings/defaultDownloadDir").toString()));
+	//set default destination if defaultDownloadDir is set
+	QString default_folder = (settings->value("Settings/defaultDownloadDir").toString());
+	if (!default_folder.isEmpty())
+	{
+            if (isFolder)
+            {
+                ui.textDest->setText(QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+            }
+            else
+            {
+                ui.textDest->setText(QDir::toNativeSeparators(default_folder));
+            }
+	}
     };
-
 
 // Info only - should not be edited
 // would be nice to display it only for Google Drive - todo
     ui.checkisDriveSharedWithMe->setDisabled(true);
-
 
     ui.checkisDriveSharedWithMe->setChecked(settings->value("Settings/driveShared", false).toBool());
     // always clear for new jobs

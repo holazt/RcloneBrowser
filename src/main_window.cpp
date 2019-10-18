@@ -47,13 +47,16 @@ MainWindow::MainWindow()
             settings->setValue("Settings/stream", dialog.getStream());
             settings->setValue("Settings/mount", dialog.getMount());
             settings->setValue("Settings/defaultDownloadDir", dialog.getDefaultDownloadDir().trimmed());
+
             settings->setValue("Settings/alwaysShowInTray", dialog.getAlwaysShowInTray());
             settings->setValue("Settings/closeToTray", dialog.getCloseToTray());
             settings->setValue("Settings/notifyFinishedTransfers", dialog.getNotifyFinishedTransfers());
+
             settings->setValue("Settings/showFolderIcons", dialog.getShowFolderIcons());
             settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
             settings->setValue("Settings/rowColors", dialog.getRowColors());
             settings->setValue("Settings/showHidden", dialog.getShowHidden());
+
             SetRclone(dialog.getRclone());
             SetRcloneConf(dialog.getRcloneConf());
             mFirstTime = true;
@@ -691,16 +694,17 @@ void MainWindow::addMount(const QString& remote, const QString& folder)
     args << "localhost:" + QVariant(rclone_rc_port).toString();
     #endif
 
+    // for google drive "shared with me" without --read-only writes go created in main google drive
+    // it is more logical to mount it as read only so there is no confusion
     if (driveShared)
     {
        args << "--drive-shared-with-me";
        args << "--read-only";
-    }
-    else
-    {
-       args << "--vfs-cache-mode";
-       args << "writes";
     };
+
+//	 default mount is now more generic. all options can be passed via preferences mount field
+//       args << "--vfs-cache-mode";
+//       args << "writes";
 
     args.append(GetRcloneConf());
     if (!opt.isEmpty())

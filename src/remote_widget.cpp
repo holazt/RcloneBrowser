@@ -273,11 +273,14 @@ RemoteWidget::RemoteWidget(IconCache* iconCache, const QString& remote, bool isL
         QString path = model->path(index).path();
         QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
+	// disable dialog "?" context help button
+	QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #ifdef Q_OS_WIN32
-        QString folder = QInputDialog::getText(this, "Mount", QString("Drive to mount %1 to").arg(pathMsg), QLineEdit::Normal, "Z:");
+        QString folder = QInputDialog::getText(this, "Mount", QString("(Make sure you have WinFsp-FUSE installed)\n\nDrive to mount %1 to").arg(remote), QLineEdit::Normal, "Z:");
 #else
-        QString folder = QFileDialog::getExistingDirectory(this, QString("Mount %1").arg(pathMsg));
+        QString folder = QFileDialog::getExistingDirectory(this, QString("Mount %1").arg(remote));
 #endif
+
         if (!folder.isEmpty())
         {
             emit addMount(remote + ":" + path, folder);

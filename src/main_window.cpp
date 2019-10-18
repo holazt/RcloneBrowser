@@ -82,14 +82,14 @@ MainWindow::MainWindow()
             this,
             "Rclone Browser",
             QString(
-                R"(<h3>GUI for <a href="http://rclone.org/">rclone</a>, )" RCLONE_BROWSER_VERSION "</h3>"
+                R"(<h3>GUI for rclone, v)" RCLONE_BROWSER_VERSION "</h3>"
                 R"(<p>Copyright &copy; 2019</p>)"
-                R"(<p>Original version by Martins Mozeiko</p>)"
-                R"(<p>Web: <a href="https://mmozeiko.github.io/RcloneBrowser">https://mmozeiko.github.io/RcloneBrowser</a></p>)"
-                R"(<p>Further improvements by DinCahill</p>)"
-                R"(<p>Web: <a href="https://github.com/DinCahill/RcloneBrowser">https://github.com/DinCahill/RcloneBrowser</a></p>)"
-                R"(<p>Latest fixes and packaging by kapitainsky</p>)"
-                R"(<p>Web: <a href="https://github.com/kapitainsky/RcloneBrowser">https://github.com/kapitainsky/RcloneBrowser</a></p>)"
+
+                R"(<p>Current development and maintenance<br /><a href="https://github.com/kapitainsky/RcloneBrowser">kapitainsky</a></p>)"
+
+                R"(<p>New features and fixes<br /><a href="https://github.com/kapitainsky/RcloneBrowser/graphs/contributors">contributors</a></p>)"
+
+                R"(<p>Original version<br /><a href="https://mmozeiko.github.io/RcloneBrowser">Martins Mozeiko</a></p>)"
             )
         );
     });

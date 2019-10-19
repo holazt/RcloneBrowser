@@ -273,9 +273,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString path = model->path(index).path();
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
-    // disable dialog "?" context help button
+#ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-#ifdef Q_OS_WIN32
     QString folder =
         QInputDialog::getText(this, "Mount",
                               QString("(Make sure you have WinFsp-FUSE "

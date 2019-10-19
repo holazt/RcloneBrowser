@@ -34,9 +34,10 @@ MainWindow::MainWindow() {
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
-    // disable window "?" contex help button
+#ifdef Q_OS_WIN64
+    // disable window "?" contex help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-
+#endif
     PreferencesDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
       auto settings = GetSettings();

@@ -22,6 +22,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 #endif
 
   auto settings = GetSettings();
+  QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
   settings->setValue("Settings/driveShared", Qt::Unchecked);
   ui.tree->setAlternatingRowColors(
       settings->value("Settings/rowColors", false).toBool());
@@ -103,7 +104,20 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.move->setDisabled(topLevel || driveShared);
           ui.purge->setDisabled(topLevel || driveShared);
           ui.upload->setDisabled(driveShared);
+
+  #ifdef Q_OS_WIN64
+          // check if required version
+          unsigned int result =
+              compareVersion(rcloneVersion.toStdString(), "1.50");
+          if (result == 2) {
+	          ui.mount->setDisabled(true);
+          } else {
+        	  ui.mount->setDisabled(!isFolder);
+  	  };
+  #else
           ui.mount->setDisabled(!isFolder);
+  #endif
+
           ui.stream->setDisabled(isFolder);
           ui.checkBoxShared->setDisabled(!isGoogle);
           path = model->path(index);

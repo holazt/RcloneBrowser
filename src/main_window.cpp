@@ -278,6 +278,9 @@ void MainWindow::rcloneGetVersion() {
             version_no.replace("rclone v", "");
             version_no.replace("-DEV", "");
           }
+          // save current version in settings
+          auto settings = GetSettings();
+          settings->setValue("Settings/rcloneVersion", version_no);
 
 #ifdef Q_OS_WIN64
           // check if required version
@@ -290,7 +293,7 @@ void MainWindow::rcloneGetVersion() {
                                  "rclone version at least 1.50 "
                                  "and your current version is " +
                                      version_no +
-                                     ".\n\nPlease consider upgrading.");
+                                     ". Mount will be disabled. \n\nPlease consider upgrading.");
           };
 #endif
 

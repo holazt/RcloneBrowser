@@ -133,20 +133,6 @@ TransferDialog::TransferDialog(bool isDownload, const QString &remote,
   ui.buttonSourceFolder->setVisible(!isDownload);
   ui.buttonDest->setVisible(isDownload);
 
-  if (isDownload) {
-    // set default destination if defaultDownloadDir is set
-    QString default_folder =
-        (settings->value("Settings/defaultDownloadDir").toString());
-    if (!default_folder.isEmpty()) {
-      if (isFolder) {
-        ui.textDest->setText(
-            QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
-      } else {
-        ui.textDest->setText(QDir::toNativeSeparators(default_folder));
-      }
-    }
-  };
-
   // Info only - should not be edited
   // would be nice to display it only for Google Drive - todo
   ui.checkisDriveSharedWithMe->setDisabled(true);
@@ -170,8 +156,33 @@ TransferDialog::TransferDialog(bool isDownload, const QString &remote,
     ui.textSource->setDisabled(true);
     putJobOptions();
   } else {
-    (isDownload ? ui.textSource : ui.textDest)
-        ->setText(remote + ":" + path.path());
+
+    // set source and destination using defaults
+    if (isDownload) {
+      // download
+      ui.textSource->setText(remote + ":" + path.path());
+      QString default_folder =
+          (settings->value("Settings/defaultDownloadDir").toString());
+      if (!default_folder.isEmpty()) {
+        if (isFolder) {
+          ui.textDest->setText(
+              QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+        } else {
+          ui.textDest->setText(QDir::toNativeSeparators(default_folder));
+        }
+      }
+    } else {
+      // upload
+      QString default_folder =
+          (settings->value("Settings/defaultUploadDir").toString());
+      ui.textSource->setText(QDir::toNativeSeparators(default_folder));
+      if (!default_folder.isEmpty()) {
+        ui.textDest->setText(
+            remote + ":" + path.filePath(QFileInfo(default_folder).fileName()));
+      } else {
+        ui.textDest->setText(remote + ":" + path.path());
+      }
+    };
   }
 }
 

@@ -48,6 +48,8 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/mount", dialog.getMount());
       settings->setValue("Settings/defaultDownloadDir",
                          dialog.getDefaultDownloadDir().trimmed());
+      settings->setValue("Settings/defaultUploadDir",
+                         dialog.getDefaultUploadDir().trimmed());
 
       settings->setValue("Settings/alwaysShowInTray",
                          dialog.getAlwaysShowInTray());

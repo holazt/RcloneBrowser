@@ -50,6 +50,19 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
         ui.defaultDownloadDir->setText(defaultDownloadDir);
       });
 
+  QObject::connect(
+      ui.defaultUploadDirBrowse, &QPushButton::clicked, this, [=]() {
+        QString defaultUploadDir = QFileDialog::getExistingDirectory(
+            this, "Select default upload directory",
+            ui.defaultUploadDir->text());
+
+        if (defaultUploadDir.isEmpty()) {
+          return;
+        }
+
+        ui.defaultUploadDir->setText(defaultUploadDir);
+      });
+
   auto settings = GetSettings();
   ui.rclone->setText(
       QDir::toNativeSeparators(settings->value("Settings/rclone").toString()));
@@ -60,6 +73,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/mount", "--vfs-cache-mode writes").toString());
   ui.defaultDownloadDir->setText(QDir::toNativeSeparators(
       settings->value("Settings/defaultDownloadDir").toString()));
+  ui.defaultUploadDir->setText(QDir::toNativeSeparators(
+      settings->value("Settings/defaultUploadDir").toString()));
 
   ui.showFolderIcons->setChecked(
       settings->value("Settings/showFolderIcons", true).toBool());
@@ -103,6 +118,11 @@ QString PreferencesDialog::getMount() const { return ui.mount->text(); }
 
 QString PreferencesDialog::getDefaultDownloadDir() const {
   return QDir::fromNativeSeparators(ui.defaultDownloadDir->text());
+}
+
+QString PreferencesDialog::getDefaultUploadDir() const
+{
+    return QDir::fromNativeSeparators(ui.defaultUploadDir->text());
 }
 
 bool PreferencesDialog::getAlwaysShowInTray() const {

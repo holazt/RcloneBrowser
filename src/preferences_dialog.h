@@ -15,6 +15,7 @@ public:
   QString getStream() const;
   QString getMount() const;
   QString getDefaultDownloadDir() const;
+  QString getDefaultUploadDir() const;
 
   bool getAlwaysShowInTray() const;
   bool getCloseToTray() const;

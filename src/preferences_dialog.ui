@@ -185,7 +185,7 @@
       <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="rowColors">
         <property name="text">
-         <string>Alternating row colors</string>
+         <string>Alternating row colours</string>
         </property>
        </widget>
       </item>

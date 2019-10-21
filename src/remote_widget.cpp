@@ -154,6 +154,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg =
         isLocal ? QDir::toNativeSeparators(path.path()) : path.path();
 
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Windows
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     QString name = QInputDialog::getText(
         this, "New Folder", QString("Create folder in %1").arg(pathMsg));
     if (!name.isEmpty()) {
@@ -188,6 +192,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
     QString name = model->data(index, Qt::DisplayRole).toString();
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Window
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     name = QInputDialog::getText(this, "Rename",
                                  QString("New name for %1").arg(pathMsg),
                                  QLineEdit::Normal, name);
@@ -221,6 +229,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
     QString name = model->path(index.parent()).path() + "/";
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Windows
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     name = QInputDialog::getText(this, "Move",
                                  QString("New location for %1").arg(pathMsg),
                                  QLineEdit::Normal, name);
@@ -251,6 +263,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString path = model->path(index).path();
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Windows
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     int button = QMessageBox::question(
         this, "Delete",
         QString("Are you sure you want to delete %1 ?").arg(pathMsg),
@@ -372,7 +388,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                          << "link" << GetRcloneConf() << GetDriveSharedWithMe()
                          << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
-
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Window
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     ProgressDialog progress("Fetch Public Link", "Fetching link for...",
                             pathMsg, &process, this, false, true);
     progress.expand();
@@ -441,7 +460,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                          << "size" << GetRcloneConf() << GetDriveSharedWithMe()
                          << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
-
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Window
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     ProgressDialog progress("Get Size", "Calculating...", pathMsg, &process,
                             this, false);
     progress.expand();
@@ -457,7 +479,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QDir path = model->path(index);
-
+    #ifdef Q_OS_WIN64
+    // disable dialog "?" context help button in Window
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    #endif
     ExportDialog e(remote, path, this);
     if (e.exec() == QDialog::Accepted) {
       QString dst = e.getDestination();

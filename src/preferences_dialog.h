@@ -16,6 +16,8 @@ public:
   QString getMount() const;
   QString getDefaultDownloadDir() const;
   QString getDefaultUploadDir() const;
+  bool getCheckRcloneBrowserUpdates() const;
+  bool getCheckRcloneUpdates() const;
 
   bool getAlwaysShowInTray() const;
   bool getCloseToTray() const;

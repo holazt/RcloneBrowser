@@ -760,7 +760,7 @@ void MainWindow::editSelectedTask() {
   QString path = isDownload ? jo->dest : jo->source;
   qDebug() << "remote:" + remote;
   qDebug() << "path:" + path;
-  TransferDialog td(isDownload, remote, path, jo->isFolder, this, jo, true);
+  TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo, true);
   td.exec();
   // restore the selection to help user keep track of what s/he was doing
   ui.tasksListWidget->selectionModel()->select(selection,

@@ -393,7 +393,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
     QDir path = model->path(index);
 
-    TransferDialog t(false, remote, path, true, this);
+    TransferDialog t(false, false, remote, path, true, this);
     if (t.exec() == QDialog::Accepted) {
       QString src = t.getSource();
       QString dst = t.getDest();
@@ -413,7 +413,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QDir path = model->path(index);
 
-    TransferDialog t(true, remote, path, model->isFolder(index), this);
+    TransferDialog t(true, false, remote, path, model->isFolder(index), this);
     if (t.exec() == QDialog::Accepted) {
       QString src = t.getSource();
       QString dst = t.getDest();
@@ -527,7 +527,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                            ? destPath.filePath(path.dirName())
                            : destPath.path();
 
-        TransferDialog t(false, remote, dest, true, this);
+        TransferDialog t(false, true, remote, dest, true, this);
         t.setSource(path.path());
 
         if (t.exec() == QDialog::Accepted) {

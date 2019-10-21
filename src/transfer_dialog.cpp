@@ -2,9 +2,10 @@
 #include "list_of_job_options.h"
 #include "utils.h"
 
-TransferDialog::TransferDialog(bool isDownload, const QString &remote,
-                               const QDir &path, bool isFolder, QWidget *parent,
-                               JobOptions *task, bool editMode)
+TransferDialog::TransferDialog(bool isDownload, bool isDrop,
+                               const QString &remote, const QDir &path,
+                               bool isFolder, QWidget *parent, JobOptions *task,
+                               bool editMode)
     : QDialog(parent), mIsDownload(isDownload), mIsFolder(isFolder),
       mIsEditMode(editMode), mJobOptions(task) {
   ui.setupUi(this);
@@ -173,15 +174,22 @@ TransferDialog::TransferDialog(bool isDownload, const QString &remote,
       }
     } else {
       // upload
-      QString default_folder =
-          (settings->value("Settings/defaultUploadDir").toString());
-      ui.textSource->setText(QDir::toNativeSeparators(default_folder));
-      if (!default_folder.isEmpty()) {
-        ui.textDest->setText(
-            remote + ":" + path.filePath(QFileInfo(default_folder).fileName()));
+      // if upload initiated from drag and drop we dont use default upload folder
+      if (!isDrop) {
+        QString default_folder =
+            (settings->value("Settings/defaultUploadDir").toString());
+        ui.textSource->setText(QDir::toNativeSeparators(default_folder));
+        if (!default_folder.isEmpty()) {
+          ui.textDest->setText(
+              remote + ":" +
+              path.filePath(QFileInfo(default_folder).fileName()));
+        } else {
+          ui.textDest->setText(remote + ":" + path.path());
+        }
       } else {
+
         ui.textDest->setText(remote + ":" + path.path());
-      }
+      };
     };
   }
 }

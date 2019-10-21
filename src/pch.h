@@ -10,6 +10,7 @@
 #include <QtDebug>
 #include <QtGui>
 #include <QtWidgets>
+#include <QtNetwork>
 
 #ifdef Q_OS_WIN32
 #include <QtWinExtras>

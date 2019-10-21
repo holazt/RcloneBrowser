@@ -75,9 +75,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/defaultDownloadDir").toString()));
   ui.defaultUploadDir->setText(QDir::toNativeSeparators(
       settings->value("Settings/defaultUploadDir").toString()));
+  ui.checkRcloneBrowserUpdates->setChecked(
+      settings->value("Settings/checkRcloneBrowserUpdates", true).toBool());
+  ui.checkRcloneUpdates->setChecked(
+      settings->value("Settings/checkRcloneUpdates", true).toBool());
 
-  ui.showFolderIcons->setChecked(
-      settings->value("Settings/showFolderIcons", true).toBool());
   if (QSystemTrayIcon::isSystemTrayAvailable()) {
     ui.alwaysShowInTray->setChecked(
         settings->value("Settings/alwaysShowInTray", false).toBool());
@@ -94,6 +96,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.notifyFinishedTransfers->setDisabled(true);
   }
 
+  ui.showFolderIcons->setChecked(
+      settings->value("Settings/showFolderIcons", true).toBool());
   ui.showFileIcons->setChecked(
       settings->value("Settings/showFileIcons", true).toBool());
   ui.rowColors->setChecked(
@@ -120,9 +124,16 @@ QString PreferencesDialog::getDefaultDownloadDir() const {
   return QDir::fromNativeSeparators(ui.defaultDownloadDir->text());
 }
 
-QString PreferencesDialog::getDefaultUploadDir() const
-{
-    return QDir::fromNativeSeparators(ui.defaultUploadDir->text());
+QString PreferencesDialog::getDefaultUploadDir() const {
+  return QDir::fromNativeSeparators(ui.defaultUploadDir->text());
+}
+
+bool PreferencesDialog::getCheckRcloneBrowserUpdates() const {
+  return ui.checkRcloneBrowserUpdates->isChecked();
+}
+
+bool PreferencesDialog::getCheckRcloneUpdates() const {
+  return ui.checkRcloneUpdates->isChecked();
 }
 
 bool PreferencesDialog::getAlwaysShowInTray() const {

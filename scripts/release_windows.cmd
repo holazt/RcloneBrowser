@@ -23,6 +23,9 @@ pushd "%ROOT%"
 
 if not exist release mkdir release
 
+if exist "%TARGET%" rd /s /q "%TARGET%"
+if exist "%TARGET%.zip" del "%TARGET%.zip"
+
 if exist build rd /s /q build
 mkdir build
 cd build
@@ -41,10 +44,13 @@ copy "%BUILD%\RcloneBrowser.exe" "%TARGET%"
 windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg "%TARGET%\RcloneBrowser.exe"
 rd /s /q "%TARGET%\imageformats"
 
+copy "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.23.27820\x64\Microsoft.VC142.CRT\vcruntime140_1.dll" "%TARGET%\vcruntime140_1.dll"
+
 (
 echo [Paths]
 echo Prefix = .
 echo LibraryExecutables = .
 echo Plugins = .
 )>"%TARGET%\qt.conf"
+
 "c:\Program Files\7-Zip\7z.exe" a -mx=9 -r -tzip "%TARGET%.zip" "%TARGET%"

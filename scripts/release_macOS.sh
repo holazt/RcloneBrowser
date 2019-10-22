@@ -16,8 +16,10 @@ APP="$TARGET"/"Rclone Browser.app"
 rm -rf "$BUILD"
 mkdir -p "$BUILD"
 cd "$BUILD"
+# brew install cmake qt5
 cmake .. -DCMAKE_PREFIX_PATH="$QTDIR" -DCMAKE_BUILD_TYPE=Release
-make -j4
+# brew install coreutils
+make --jobs=`nproc --all`
 cd build
 "$QTDIR"/bin/macdeployqt rclone-browser.app -executable="rclone-browser.app/Contents/MacOS/rclone-browser" -qmldir=../src/
 cd ../..
@@ -41,6 +43,7 @@ cat >"$APP"/Contents/MacOS/qt.conf <<EOF
 Plugins = Plugins
 EOF
 
+# brew install p7zip
 7za a -mx=9 -r -tzip "$TARGET".zip "$TARGET"
 
-gpg --detach-sign "$TARGET".zip.sig "$TARGET".zip
+## gpg --detach-sign "$TARGET".zip.sig "$TARGET".zip

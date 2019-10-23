@@ -1,11 +1,22 @@
 # Change Log
 
+## [1.6.0] - ????-??-??
+- fixed Windows mount/unmount (requires rclone v1.50+)
+- Rclone Browser checks now for used rclone version (mount is disabled if rclone <v1.50)
+- added default download and upload folders - configurable in settings
+- added available updates' notifications for both Rclone Browser and rclone - can be turned on/off in settings
+- all mount options are configurable via settings - generic "rclone mount remote local" is used without any options specified
+- default mount option (in settings) is "--vfs-cache-mode writes"
+- Google Drive with "shared with me" option on is always mounted as read-only
+- Windows deployment includes now vcruntime140_1.dll runtime for users without VCR installed
+- added ftp, MS Azureblob and Google Photos remote icons
+- modified main application window status bar to save space
+
 ## [1.5.2] - 2019-09-27
 - code cleanup - clean compilation with -Werror enabled, GCC8 compilation fixed
 - add tooltips showing rclone options used to all transfer window options
 - Google "drive shared with me" caused multiple of issues - now all should work
 - as always small cosmetic UI improvements - still plenty to do but core functionality was first
-
 
 ## [1.5.1] - 2019-09-25
 - after task edit initiated by double click main window does not get proper focus back and subsequent Run click might lead to wrong task execution. For time being I disable double click edit - until proper fix is produced.
@@ -73,6 +84,7 @@
 - Mount and unmount folders on macOS and GNU/Linux
 - Optionally minimizes to tray, with notifications when upload/download finishes
 
+[1.6.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.6.0
 [1.5.2]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.2
 [1.5.1]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.1
 [1.5]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5

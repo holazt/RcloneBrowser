@@ -7,13 +7,19 @@ if "%1" == "" (
 )
 
 set ARCH=%1
-call "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat" %ARCH%
+call "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %ARCH%
 
-set QT=C:\Qt\5.8.0-vs2013-%ARCH%
+if "%ARCH%" == "x86" (
+set QT=C:\Qt\5.13.1\msvc2017\
+) else (
+set QT=C:\Qt\5.13.1\msvc2017_64\
+)
 set PATH=%QT%\bin;%PATH%
 
+
 set ROOT="%~dp0.."
-set BUILD="%~dp0..\build\build\Release"
+set BUILD="%~dp0..\build\build\release"
+set CMAKEGEN="Visual Studio 16 2019"
 
 set /p VERSION=<"%ROOT%\VERSION"
 
@@ -26,19 +32,28 @@ if "%ERRORLEVEL%" equ "0" (
 )
 
 if "%ARCH%" == "x86" (
-  set TARGET="%~dp0rclone-browser-%VERSION%-win32"
-  set CMAKEGEN="Visual Studio 12"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win32"
 ) else (
-  set TARGET="%~dp0rclone-browser-%VERSION%-win64"
-  set CMAKEGEN="Visual Studio 12 Win64"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win64"
 )
 
 pushd "%ROOT%"
+
+if not exist release mkdir release
+
+if exist "%TARGET%" rd /s /q "%TARGET%"
+if exist "%TARGET%.zip" del "%TARGET%.zip"
+
 if exist build rd /s /q build
 mkdir build
 cd build
 
-cmake .. -G %CMAKEGEN% -DCMAKE_CONFIGURATION_TYPES="Release"
+if "%ARCH%" == "x86" (
+cmake -G %CMAKEGEN% -A Win32 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=%QT% ..
+) else (
+cmake -G %CMAKEGEN% -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=%QT% ..
+)
+
 cmake --build . --config Release
 popd
 
@@ -52,8 +67,9 @@ copy "%BUILD%\RcloneBrowser.exe" "%TARGET%"
 windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg "%TARGET%\RcloneBrowser.exe"
 rd /s /q "%TARGET%\imageformats"
 
-copy "%VS120COMNTOOLS%..\..\VC\redist\%ARCH%\Microsoft.VC120.CRT\msvcp120.dll" "%TARGET%"
-copy "%VS120COMNTOOLS%..\..\VC\redist\%ARCH%\Microsoft.VC120.CRT\msvcr120.dll" "%TARGET%"
+rem include all runtime dlls
+copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\msvcp140.dll" "%TARGET%\"
+copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\vcruntime140*.dll" "%TARGET%\"
 
 (
 echo [Paths]
@@ -61,5 +77,6 @@ echo Prefix = .
 echo LibraryExecutables = .
 echo Plugins = .
 )>"%TARGET%\qt.conf"
-7za.exe a -mx=9 -r -tzip "%TARGET%.zip" "%TARGET%"
-rd /s /q "%TARGET%"
+
+rem https://www.7-zip.org/
+"c:\Program Files\7-Zip\7z.exe" a -mx=9 -r -tzip "%TARGET%.zip" "%TARGET%"

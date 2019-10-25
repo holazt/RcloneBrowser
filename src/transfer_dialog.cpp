@@ -206,7 +206,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // a lot more sense when/if scheduling and history are added...
     ui.buttonSourceFile->setVisible(false);
     ui.buttonSourceFolder->setVisible(false);
+    ui.buttonDefaultSource->setVisible(false);
+
     ui.buttonDest->setVisible(false);
+    ui.buttonDefaultDest->setVisible(false);
+
     ui.textDest->setDisabled(true);
     ui.textSource->setDisabled(true);
     putJobOptions();

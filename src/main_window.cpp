@@ -31,6 +31,16 @@ MainWindow::MainWindow() {
         settings->value("Settings/notifyFinishedTransfers", true).toBool();
 
     mSystemTray.setVisible(mAlwaysShowInTray);
+
+    // during first run the lastUsed keys might not exist
+    if (!(settings->contains("Settings/lastUsedSourceFolder"))) {
+      // if lastUsedSourceFolder does not exist create new empty key
+      settings->setValue("Settings/lastUsedSourceFolder", "");
+    };
+    if (!(settings->contains("Settings/lastUsedDestFolder"))) {
+      // if lastUsedDestFolder does not exist create new empty key
+      settings->setValue("Settings/lastUsedDestFolder", "");
+    };
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {

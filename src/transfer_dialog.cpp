@@ -17,6 +17,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   ui.buttonSourceFolder->setIcon(style->standardIcon(QStyle::SP_DirIcon));
   ui.buttonDest->setIcon(style->standardIcon(QStyle::SP_DirIcon));
 
+  ui.buttonDefaultSource->setIcon(
+      style->standardIcon(QStyle::SP_DialogCloseButton));
+  ui.buttonDefaultDest->setIcon(
+      style->standardIcon(QStyle::SP_DialogCloseButton));
+
   if (!mIsEditMode) {
     QPushButton *dryRun =
         ui.buttonBox->addButton("&Dry run", QDialogButtonBox::AcceptRole);
@@ -99,23 +104,51 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     QString file = QFileDialog::getOpenFileName(this, "Choose file to upload");
     if (!file.isEmpty()) {
       ui.textSource->setText(QDir::toNativeSeparators(file));
+      ui.textDest->setText(remote + ":" + path.path());
     }
   });
 
   QObject::connect(ui.buttonSourceFolder, &QToolButton::clicked, this, [=]() {
-    QString folder =
-        QFileDialog::getExistingDirectory(this, "Choose folder to upload");
+    auto settings = GetSettings();
+    QString last_used_source_folder =
+        (settings->value("Settings/lastUsedSourceFolder").toString());
+    QString folder = QFileDialog::getExistingDirectory(
+        this, "Choose folder to upload", last_used_source_folder,
+        QFileDialog::ShowDirsOnly);
     if (!folder.isEmpty()) {
+      // store new folder in lastUsedSourceFolder
+      settings->setValue("Settings/lastUsedSourceFolder", folder);
       ui.textSource->setText(QDir::toNativeSeparators(folder));
       ui.textDest->setText(remote + ":" +
                            path.filePath(QFileInfo(folder).fileName()));
     }
   });
 
+  QObject::connect(ui.buttonDefaultSource, &QToolButton::clicked, this, [=]() {
+    auto settings = GetSettings();
+    QString default_folder =
+        (settings->value("Settings/defaultUploadDir").toString());
+    // store default folder in lastUsedSourceFolder
+    settings->setValue("Settings/lastUsedSourceFolder", default_folder);
+    ui.textSource->setText(QDir::toNativeSeparators(default_folder));
+    if (!default_folder.isEmpty()) {
+      ui.textDest->setText(remote + ":" +
+                           path.filePath(QFileInfo(default_folder).fileName()));
+    } else {
+      ui.textDest->setText(remote + ":" + path.path());
+    };
+  });
+
   QObject::connect(ui.buttonDest, &QToolButton::clicked, this, [=]() {
-    QString folder =
-        QFileDialog::getExistingDirectory(this, "Choose destination folder");
+    auto settings = GetSettings();
+    QString last_used_dest_folder =
+        (settings->value("Settings/lastUsedDestFolder").toString());
+    QString folder = QFileDialog::getExistingDirectory(
+        this, "Choose destination folder", last_used_dest_folder,
+        QFileDialog::ShowDirsOnly);
     if (!folder.isEmpty()) {
+      // store new folder in lastUsedDestFolder
+      settings->setValue("Settings/lastUsedDestFolder", folder);
       if (isFolder) {
         ui.textDest->setText(
             QDir::toNativeSeparators(folder + "/" + path.dirName()));
@@ -125,6 +158,24 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     }
   });
 
+  QObject::connect(ui.buttonDefaultDest, &QToolButton::clicked, this, [=]() {
+    auto settings = GetSettings();
+    QString default_folder =
+        (settings->value("Settings/defaultDownloadDir").toString());
+    // store default_folder in lastUsedDestFolder
+    settings->setValue("Settings/lastUsedDestFolder", default_folder);
+    if (!default_folder.isEmpty()) {
+      if (isFolder) {
+        ui.textDest->setText(
+            QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+      } else {
+        ui.textDest->setText(QDir::toNativeSeparators(default_folder));
+      }
+    } else {
+      ui.textDest->setText("");
+    };
+  });
+
   auto settings = GetSettings();
   settings->beginGroup("Transfer");
   ReadSettings(settings.get(), this);
@@ -132,7 +183,10 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   ui.buttonSourceFile->setVisible(!isDownload);
   ui.buttonSourceFolder->setVisible(!isDownload);
+  ui.buttonDefaultSource->setVisible(!isDownload);
+
   ui.buttonDest->setVisible(isDownload);
+  ui.buttonDefaultDest->setVisible(isDownload);
 
   // Info only - should not be edited
   // would be nice to display it only for Google Drive - todo
@@ -161,34 +215,61 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // set source and destination using defaults
     if (isDownload) {
       // download
+
       ui.textSource->setText(remote + ":" + path.path());
+      QString folder;
       QString default_folder =
           (settings->value("Settings/defaultDownloadDir").toString());
-      if (!default_folder.isEmpty()) {
+      QString last_used_dest_folder =
+          (settings->value("Settings/lastUsedDestFolder").toString());
+
+      if (last_used_dest_folder.isEmpty()) {
+        folder = default_folder;
+      } else {
+        folder = last_used_dest_folder;
+      };
+
+      if (!folder.isEmpty()) {
         if (isFolder) {
           ui.textDest->setText(
-              QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+              QDir::toNativeSeparators(folder + "/" + path.dirName()));
         } else {
-          ui.textDest->setText(QDir::toNativeSeparators(default_folder));
+          ui.textDest->setText(QDir::toNativeSeparators(folder));
         }
       }
+
     } else {
       // upload
-      // if upload initiated from drag and drop we dont use default upload folder
+
+      QString folder;
+      QString default_folder =
+          (settings->value("Settings/defaultUploadDir").toString());
+      QString last_used_source_folder =
+          (settings->value("Settings/lastUsedSourceFolder").toString());
+
+      if (last_used_source_folder.isEmpty()) {
+        folder = default_folder;
+      } else {
+        folder = last_used_source_folder;
+      };
+
+      // if upload initiated from drag and drop we dont use default upload
+      // folder
       if (!isDrop) {
-        QString default_folder =
-            (settings->value("Settings/defaultUploadDir").toString());
-        ui.textSource->setText(QDir::toNativeSeparators(default_folder));
-        if (!default_folder.isEmpty()) {
-          ui.textDest->setText(
-              remote + ":" +
-              path.filePath(QFileInfo(default_folder).fileName()));
+        ui.textSource->setText(QDir::toNativeSeparators(folder));
+        if (!folder.isEmpty()) {
+          ui.textDest->setText(remote + ":" +
+                               path.filePath(QFileInfo(folder).fileName()));
         } else {
           ui.textDest->setText(remote + ":" + path.path());
         }
       } else {
-
-        ui.textDest->setText(remote + ":" + path.path());
+        // when dropping to root folder
+        if (path.path() == ".") {
+          ui.textDest->setText(remote + ":");
+        } else {
+          ui.textDest->setText(remote + ":" + path.path());
+        }
       };
     };
   }

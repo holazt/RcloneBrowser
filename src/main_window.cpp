@@ -15,6 +15,11 @@
 MainWindow::MainWindow() {
   ui.setupUi(this);
 
+  #if defined(Q_OS_WIN)
+  // disable "?" WindowContextHelpButton
+  QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+  #endif
+
   mSystemTray.setIcon(qApp->windowIcon());
   {
     auto settings = GetSettings();
@@ -44,10 +49,6 @@ MainWindow::MainWindow() {
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
-#if defined(Q_OS_WIN32)
-    // disable window "?" contex help button in Windows
-    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-#endif
 
     PreferencesDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {

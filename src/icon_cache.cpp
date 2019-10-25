@@ -7,7 +7,7 @@
 IconCache::IconCache(QObject *parent) : QObject(parent) {
   mFileIcon = QFileIconProvider().icon(QFileIconProvider::File);
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
   CoInitializeEx(NULL, COINIT_MULTITHREADED);
 #endif
 
@@ -19,7 +19,7 @@ IconCache::~IconCache() {
   mThread.quit();
   mThread.wait();
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
   CoUninitialize();
 #endif
 }

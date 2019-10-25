@@ -12,7 +12,7 @@
 #include <QtWidgets>
 #include <QtNetwork>
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
 #include <QtWinExtras>
 #endif
 

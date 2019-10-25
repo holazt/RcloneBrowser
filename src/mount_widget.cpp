@@ -85,7 +85,7 @@ void MountWidget::cancel() {
 #ifdef Q_OS_OSX
   QProcess::startDetached("umount", QStringList() << ui.folder->text());
 #else
-#ifdef Q_OS_WIN64
+  #if defined(Q_OS_WIN32)
   QProcess *p = new QProcess();
   QStringList args;
   args << "rc";
@@ -102,11 +102,10 @@ void MountWidget::cancel() {
 
   UseRclonePassword(p);
   p->start(GetRclone(), args, QIODevice::ReadOnly);
-
-#else
+  #else
   QProcess::startDetached("fusermount", QStringList()
                                             << "-u" << ui.folder->text());
-#endif
+  #endif
 #endif
 
   mProcess->waitForFinished();

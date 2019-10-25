@@ -34,7 +34,7 @@ MainWindow::MainWindow() {
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN32)
     // disable window "?" contex help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
@@ -287,7 +287,7 @@ void MainWindow::rcloneGetVersion() {
           auto settings = GetSettings();
           settings->setValue("Settings/rcloneVersion", rclone_version_no);
 
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN32)
           // check if required version
           unsigned int result =
               compareVersion(rclone_version_no.toStdString(), "1.50");
@@ -536,7 +536,6 @@ void MainWindow::rcloneConfig() {
 #endif
 
 #if defined(Q_OS_WIN32)
-
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
   p->setCreateProcessArgumentsModifier(
       [](QProcess::CreateProcessArguments *args) {
@@ -863,7 +862,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
   QStringList args;
   args << "mount";
 
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN32)
   args << "--rc";
   args << "--rc-addr";
 

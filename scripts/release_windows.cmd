@@ -1,11 +1,25 @@
 @echo off
 setlocal enabledelayedexpansion
 
+if "%1" == "" (
+  echo No architecture x86 or x64 specified in cmdline!
+  goto :eof
+)
+
+set ARCH=%1
+call "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %ARCH%
+
+if "%ARCH%" == "x86" (
+set QT=C:\Qt\5.13.1\msvc2017\
+) else (
 set QT=C:\Qt\5.13.1\msvc2017_64\
+)
 set PATH=%QT%\bin;%PATH%
 
+
 set ROOT="%~dp0.."
-set BUILD="%~dp0..\build\build\Release"
+set BUILD="%~dp0..\build\build\release"
+set CMAKEGEN="Visual Studio 16 2019"
 
 set /p VERSION=<"%ROOT%\VERSION"
 
@@ -17,7 +31,11 @@ if "%ERRORLEVEL%" equ "0" (
   set VERSION=%VERSION%-!COMMIT!
 )
 
-set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win64"
+if "%ARCH%" == "x86" (
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win32"
+) else (
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win64"
+)
 
 pushd "%ROOT%"
 
@@ -30,7 +48,12 @@ if exist build rd /s /q build
 mkdir build
 cd build
 
-cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=%QT% ..
+if "%ARCH%" == "x86" (
+cmake -G %CMAKEGEN% -A Win32 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=%QT% ..
+) else (
+cmake -G %CMAKEGEN% -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=%QT% ..
+)
+
 cmake --build . --config Release
 popd
 
@@ -44,7 +67,9 @@ copy "%BUILD%\RcloneBrowser.exe" "%TARGET%"
 windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg "%TARGET%\RcloneBrowser.exe"
 rd /s /q "%TARGET%\imageformats"
 
-copy "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.23.27820\x64\Microsoft.VC142.CRT\vcruntime140_1.dll" "%TARGET%\vcruntime140_1.dll"
+rem include all runtime dlls
+copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\msvcp140.dll" "%TARGET%\"
+copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\vcruntime140*.dll" "%TARGET%\"
 
 (
 echo [Paths]
@@ -53,4 +78,5 @@ echo LibraryExecutables = .
 echo Plugins = .
 )>"%TARGET%\qt.conf"
 
+rem https://www.7-zip.org/
 "c:\Program Files\7-Zip\7z.exe" a -mx=9 -r -tzip "%TARGET%.zip" "%TARGET%"

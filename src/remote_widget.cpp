@@ -13,13 +13,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.setupUi(this);
 
   QString root = isLocal ? "/" : QString();
-
-#ifndef Q_OS_WIN32
   isLocal = false;
-#endif
-#ifdef Q_OS_WIN64
-  isLocal = false;
-#endif
 
   auto settings = GetSettings();
   QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
@@ -105,7 +99,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.purge->setDisabled(topLevel || driveShared);
           ui.upload->setDisabled(driveShared);
 
-  #ifdef Q_OS_WIN64
+  #if defined(Q_OS_WIN32)
           // check if required version
           unsigned int result =
               compareVersion(rcloneVersion.toStdString(), "1.50");
@@ -154,7 +148,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg =
         isLocal ? QDir::toNativeSeparators(path.path()) : path.path();
 
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif
@@ -192,7 +186,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
     QString name = model->data(index, Qt::DisplayRole).toString();
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Window
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif
@@ -229,7 +223,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
     QString name = model->path(index.parent()).path() + "/";
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif
@@ -263,7 +257,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString path = model->path(index).path();
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif
@@ -303,7 +297,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString path = model->path(index).path();
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Windows
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     QString folder =
@@ -388,7 +382,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                          << "link" << GetRcloneConf() << GetDriveSharedWithMe()
                          << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Window
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif
@@ -460,7 +454,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                          << "size" << GetRcloneConf() << GetDriveSharedWithMe()
                          << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Window
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif
@@ -479,7 +473,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QDir path = model->path(index);
-    #ifdef Q_OS_WIN64
+    #if defined(Q_OS_WIN32)
     // disable dialog "?" context help button in Window
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     #endif

@@ -67,9 +67,15 @@ copy "%BUILD%\RcloneBrowser.exe" "%TARGET%"
 windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg "%TARGET%\RcloneBrowser.exe"
 rd /s /q "%TARGET%\imageformats"
 
-rem include all runtime dlls
+rem include all MSVCruntime dlls
 copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\msvcp140.dll" "%TARGET%\"
 copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\vcruntime140*.dll" "%TARGET%\"
+
+rem for Windows 32 bits build include relevant openssl libraries
+if "%ARCH%" == "x86" (
+copy "c:\Program Files (x86)\openssl-1.1.1d-win32\libssl-1_1.dll" "%TARGET%\"
+copy "c:\Program Files (x86)\openssl-1.1.1d-win32\libcrypto-1_1.dll" "%TARGET%\"
+)
 
 (
 echo [Paths]

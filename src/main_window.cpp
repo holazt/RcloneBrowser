@@ -231,7 +231,10 @@ MainWindow::MainWindow() {
   QMenu *trayMenu = new QMenu(this);
   QObject::connect(trayMenu->addAction("&Show"), &QAction::triggered, this,
                    [=]() {
-                     showNormal();
+                     MainWindow::setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+                     MainWindow::show(); //bring window to top on OSX
+                     MainWindow::raise(); //bring window from minimized state on OSX
+                     MainWindow::activateWindow(); //bring window to front/unminimize on windows
                      mSystemTray.setVisible(mAlwaysShowInTray);
 #ifdef Q_OS_OSX
                      osxShowDockIcon();

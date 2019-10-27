@@ -9,8 +9,8 @@
 #include <QtCore>
 #include <QtDebug>
 #include <QtGui>
-#include <QtWidgets>
 #include <QtNetwork>
+#include <QtWidgets>
 
 #if defined(Q_OS_WIN32)
 #include <QtWinExtras>

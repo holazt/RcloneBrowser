@@ -15,10 +15,10 @@
 MainWindow::MainWindow() {
   ui.setupUi(this);
 
-  #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   // disable "?" WindowContextHelpButton
   QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-  #endif
+#endif
 
   mSystemTray.setIcon(qApp->windowIcon());
   {
@@ -57,7 +57,6 @@ MainWindow::MainWindow() {
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
-
     PreferencesDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
       auto settings = GetSettings();
@@ -242,17 +241,19 @@ MainWindow::MainWindow() {
   });
 
   QMenu *trayMenu = new QMenu(this);
-  QObject::connect(trayMenu->addAction("&Show"), &QAction::triggered, this,
-                   [=]() {
-                     MainWindow::setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
-                     MainWindow::show(); //bring window to top on OSX
-                     MainWindow::raise(); //bring window from minimized state on OSX
-                     MainWindow::activateWindow(); //bring window to front/unminimize on windows
-                     mSystemTray.setVisible(mAlwaysShowInTray);
+  QObject::connect(
+      trayMenu->addAction("&Show"), &QAction::triggered, this, [=]() {
+        MainWindow::setWindowState((windowState() & ~Qt::WindowMinimized) |
+                                   Qt::WindowActive);
+        MainWindow::show();  // bring window to top on OSX
+        MainWindow::raise(); // bring window from minimized state on OSX
+        MainWindow::activateWindow(); // bring window to front/unminimize on
+                                      // windows
+        mSystemTray.setVisible(mAlwaysShowInTray);
 #ifdef Q_OS_OSX
-                     osxShowDockIcon();
+        osxShowDockIcon();
 #endif
-                   });
+      });
   QObject::connect(trayMenu->addAction("&Quit"), &QAction::triggered, this,
                    &QWidget::close);
   mSystemTray.setContextMenu(trayMenu);
@@ -404,7 +405,7 @@ void MainWindow::rcloneGetVersion() {
           };
 
           // dont check if already checked today (once per day only)
-            if (!(last_check == current_date)) {
+          if (!(last_check == current_date)) {
             // remmber when last checked
             settings->setValue("Settings/lastRcloneUpdateCheck", current_date);
 
@@ -484,7 +485,7 @@ void MainWindow::rcloneGetVersion() {
           };
 
           // dont check if already checked today (once per day only)
-            if (!(last_check == current_date)) {
+          if (!(last_check == current_date)) {
             // remmber when last checked
             settings->setValue("Settings/lastRcloneBrowserUpdateCheck",
                                current_date);
@@ -786,7 +787,8 @@ void MainWindow::editSelectedTask() {
   QString path = isDownload ? jo->dest : jo->source;
   qDebug() << "remote:" + remote;
   qDebug() << "path:" + path;
-  TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo, true);
+  TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo,
+                    true);
   td.exec();
   // restore the selection to help user keep track of what s/he was doing
   ui.tasksListWidget->selectionModel()->select(selection,

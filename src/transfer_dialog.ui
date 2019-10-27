@@ -181,7 +181,7 @@
           <item>
            <widget class="QLabel" name="label_12">
             <property name="text">
-             <string>Extra arguments:</string>
+             <string>Extra options:</string>
             </property>
            </widget>
           </item>

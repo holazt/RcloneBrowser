@@ -219,7 +219,8 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // set source and destination using defaults
     if (isDownload) {
       // download
-
+      ui.textExtra->setText(
+          settings->value("Settings/defaultDownloadOptions").toString());
       ui.textSource->setText(remote + ":" + path.path());
       QString folder;
       QString default_folder =
@@ -244,7 +245,8 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
     } else {
       // upload
-
+      ui.textExtra->setText(
+          settings->value("Settings/defaultUploadOptions").toString());
       QString folder;
       QString default_folder =
           (settings->value("Settings/defaultUploadDir").toString());

@@ -75,6 +75,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/defaultDownloadDir").toString()));
   ui.defaultUploadDir->setText(QDir::toNativeSeparators(
       settings->value("Settings/defaultUploadDir").toString()));
+  ui.defaultDownloadOptions->setText(
+      settings->value("Settings/defaultDownloadOptions").toString());
+  ui.defaultUploadOptions->setText(
+      settings->value("Settings/defaultUploadOptions").toString());
+
   ui.checkRcloneBrowserUpdates->setChecked(
       settings->value("Settings/checkRcloneBrowserUpdates", true).toBool());
   ui.checkRcloneUpdates->setChecked(
@@ -126,6 +131,14 @@ QString PreferencesDialog::getDefaultDownloadDir() const {
 
 QString PreferencesDialog::getDefaultUploadDir() const {
   return QDir::fromNativeSeparators(ui.defaultUploadDir->text());
+}
+
+QString PreferencesDialog::getDefaultDownloadOptions() const {
+  return ui.defaultDownloadOptions->text();
+}
+
+QString PreferencesDialog::getDefaultUploadOptions() const {
+  return ui.defaultUploadOptions->text();
 }
 
 bool PreferencesDialog::getCheckRcloneBrowserUpdates() const {

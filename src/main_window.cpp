@@ -46,6 +46,14 @@ MainWindow::MainWindow() {
       // if lastUsedDestFolder does not exist create new empty key
       settings->setValue("Settings/lastUsedDestFolder", "");
     };
+    if (!(settings->contains("Settings/defaultDownloadOptions"))) {
+      // if defaultDownloadOptions does not exist create new empty key
+      settings->setValue("Settings/defaultDownloadOptions", "");
+    };
+    if (!(settings->contains("Settings/defaultUploadOptions"))) {
+      // if defaultDownloadOptions does not exist create new empty key
+      settings->setValue("Settings/defaultUploadOptions", "");
+    };
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
@@ -62,6 +70,11 @@ MainWindow::MainWindow() {
                          dialog.getDefaultDownloadDir().trimmed());
       settings->setValue("Settings/defaultUploadDir",
                          dialog.getDefaultUploadDir().trimmed());
+      settings->setValue("Settings/defaultDownloadOptions",
+                         dialog.getDefaultDownloadOptions().trimmed());
+      settings->setValue("Settings/defaultUploadOptions",
+                         dialog.getDefaultUploadOptions().trimmed());
+
       settings->setValue("Settings/checkRcloneBrowserUpdates",
                          dialog.getCheckRcloneBrowserUpdates());
       settings->setValue("Settings/checkRcloneUpdates",

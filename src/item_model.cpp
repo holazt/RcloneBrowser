@@ -526,21 +526,16 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
   timer->start(100);
   UseRclonePassword(lsd);
   UseRclonePassword(lsl);
-  QString path = parent->path.path();
-  if (path.trimmed().length() == 0) {
-    path = "/";
-  } else if (path.at(0) != '/') {
-    path = "/" + path;
-  }
 
   lsd->start(GetRclone(),
              QStringList() << "lsd" << GetRcloneConf() << GetDriveSharedWithMe()
-                           << GetShowHidden() << mRemote + ":" + path,
+                           << GetShowHidden()
+                           << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
   lsl->start(GetRclone(),
              QStringList() << "lsl" << GetRcloneConf() << GetDriveSharedWithMe()
                            << GetShowHidden() << "--max-depth"
-                           << "1" << mRemote + ":" + path,
+                           << "1" << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
 }
 

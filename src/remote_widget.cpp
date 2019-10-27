@@ -12,8 +12,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     : QWidget(parent) {
   ui.setupUi(this);
 
-  QString root = isLocal ? "/" : QString();
+  QString root = "/";
+
+#ifndef Q_OS_WIN32
   isLocal = false;
+#endif
 
   auto settings = GetSettings();
   QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
@@ -99,18 +102,18 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.purge->setDisabled(topLevel || driveShared);
           ui.upload->setDisabled(driveShared);
 
-  #if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32)
           // check if required version
           unsigned int result =
               compareVersion(rcloneVersion.toStdString(), "1.50");
           if (result == 2) {
-	          ui.mount->setDisabled(true);
+            ui.mount->setDisabled(true);
           } else {
-        	  ui.mount->setDisabled(!isFolder);
-  	  };
-  #else
+            ui.mount->setDisabled(!isFolder);
+          };
+#else
           ui.mount->setDisabled(!isFolder);
-  #endif
+#endif
 
           ui.stream->setDisabled(isFolder);
           ui.checkBoxShared->setDisabled(!isGoogle);

@@ -1,19 +1,23 @@
 # Change Log
 
-## [1.5.3] - 2019-10-24
-- Windows only update - include all required runtime dll files
-
-## [1.6.0] - ????-??-??
+## [1.6.0] - 2019-10-27
 - fixed Windows mount/unmount (requires rclone v1.50+)
-- Rclone Browser checks now for used rclone version (mount is disabled if rclone <v1.50)
-- added default download and upload folders - configurable in settings
+- Rclone Browser checks now for used rclone version (mount is disabled in Windows if rclone <v1.50)
+- added default download/upload folders - configurable in settings
+- add default download/upload extra options - configurable in settings
 - added available updates' notifications for both Rclone Browser and rclone - can be turned on/off in settings
 - all mount options are configurable via settings - generic "rclone mount remote local" is used without any options specified
 - default mount option (in settings) is "--vfs-cache-mode writes"
 - Google Drive with "shared with me" option on is always mounted as read-only
-- Windows deployment includes now vcruntime140_1.dll runtime for users without VCR installed
+- Windows deployment includes now all required runtime files for users without MSVCR installed
 - added ftp, MS Azureblob and Google Photos remote icons
 - modified main application window status bar to save space
+- released binary for Windows 32 bits
+- released binary for armhf 32 bits - for Raspberry Pi running raspbian
+- bunch of usual small tweaks and fixes
+
+## [1.5.3] - 2019-10-24
+- Windows only update - include all required runtime dll files
 
 ## [1.5.2] - 2019-09-27
 - code cleanup - clean compilation with -Werror enabled, GCC8 compilation fixed
@@ -88,6 +92,7 @@
 - Optionally minimizes to tray, with notifications when upload/download finishes
 
 [1.6.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.6.0
+[1.5.3]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.3
 [1.5.2]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.2
 [1.5.1]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.1
 [1.5]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5

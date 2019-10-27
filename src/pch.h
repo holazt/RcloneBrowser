@@ -6,12 +6,13 @@
 
 #include <memory>
 
-#include <QtDebug>
 #include <QtCore>
+#include <QtDebug>
 #include <QtGui>
 #include <QtWidgets>
+#include <QtNetwork>
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
 #include <QtWinExtras>
 #endif
 

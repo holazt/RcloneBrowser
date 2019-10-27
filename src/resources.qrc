@@ -14,9 +14,12 @@
     <file>images/mega.png</file>
     <file>images/onedrive.png</file>
     <file>images/s3.png</file>
+    <file>images/ftp.png</file>
     <file>images/sftp.png</file>
     <file>images/swift.png</file>
     <file>images/unknown.png</file>
     <file>images/yandex.png</file>
+    <file>images/azureblob.png</file>
+    <file>images/google_photos.png</file>
   </qresource>
 </RCC>

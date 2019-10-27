@@ -2,6 +2,6 @@
 
 #include "pch.h"
 
-QIcon osxGetIcon(const QString& extension);
+QIcon osxGetIcon(const QString &extension);
 void osxHideDockIcon();
 void osxShowDockIcon();

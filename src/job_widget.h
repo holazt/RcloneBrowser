@@ -3,31 +3,32 @@
 #include "pch.h"
 #include "ui_job_widget.h"
 
-class JobWidget : public QWidget
-{
-    Q_OBJECT
+class JobWidget : public QWidget {
+  Q_OBJECT
 
 public:
-    JobWidget(QProcess* process, const QString& info, const QStringList& args, const QString& source, const QString& dest, QWidget* parent = nullptr);
-    ~JobWidget();
+  JobWidget(QProcess *process, const QString &info, const QStringList &args,
+            const QString &source, const QString &dest,
+            QWidget *parent = nullptr);
+  ~JobWidget();
 
-    void showDetails();
+  void showDetails();
 
 public slots:
-    void cancel();
+  void cancel();
 
 signals:
-    void finished(const QString& info);
-    void closed();
+  void finished(const QString &info);
+  void closed();
 
 private:
-    Ui::JobWidget ui;
+  Ui::JobWidget ui;
 
-    bool mRunning = true;
-    QProcess* mProcess;
-    int mLines = 0;
+  bool mRunning = true;
+  QProcess *mProcess;
+  int mLines = 0;
 
-    QStringList mArgs;
-    QHash<QString, QLabel*> mActive;
-    QSet<QLabel*> mUpdated;
+  QStringList mArgs;
+  QHash<QString, QLabel *> mActive;
+  QSet<QLabel *> mUpdated;
 };

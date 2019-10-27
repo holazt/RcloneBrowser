@@ -61,6 +61,16 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="5">
+       <widget class="QToolButton" name="buttonDefaultSource">
+        <property name="toolTip">
+         <string>Restore default upload folder</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1" colspan="2">
        <widget class="QLineEdit" name="textSource"/>
       </item>
@@ -94,6 +104,16 @@
        <widget class="QToolButton" name="buttonDest">
         <property name="toolTip">
          <string>Choose folder</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QToolButton" name="buttonDefaultDest">
+        <property name="toolTip">
+         <string>Restore default download folder</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0; }</string>
@@ -161,7 +181,7 @@
           <item>
            <widget class="QLabel" name="label_12">
             <property name="text">
-             <string>Extra arguments:</string>
+             <string>Extra options:</string>
             </property>
            </widget>
           </item>
@@ -799,8 +819,10 @@
   <tabstop>textSource</tabstop>
   <tabstop>buttonSourceFile</tabstop>
   <tabstop>buttonSourceFolder</tabstop>
+  <tabstop>buttonDefaultSource</tabstop>
   <tabstop>textDest</tabstop>
   <tabstop>buttonDest</tabstop>
+  <tabstop>buttonDefaultDest</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>rbCopy</tabstop>
   <tabstop>rbMove</tabstop>

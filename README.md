@@ -1,10 +1,12 @@
-RcloneBrowser
-=============
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/RcloneBrowserLongLogo1.png" width=80%>
 
-[![Travis CI Build Status][img1]][1] [![AppVeyor Build Status][img2]][2] [![Downloads][img3]][3] [![Release][img4]][4] [![License][img5]][5] [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/kapitainsky)
+[![Travis CI Build Status][img1]][1] [![AppVeyor Build Status][img2]][2] [![Downloads][img3]][3] [![Release][img4]][4] [![License][img5]][5] <img src="https://img.shields.io/badge/Qt-cmake-green.svg"> [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/kapitainsky)
 
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/rclone_128.png)
 
+
+
+Rclone browser
+==============
 Simple cross platfrom GUI for [rclone](https://rclone.org/) command line tool.
 
 Supports macOS, GNU/Linux and Windows.
@@ -20,7 +22,7 @@ Features
 * All rclone commands are executed asynchronously, no freezing GUI
 * File hierarchy is lazily cached in memory, for faster traversal of folders
 * Allows to upload, download, create new folders, rename or delete files and folders
-* Allows to calculate size of folder, export list of files and copy rclone copmmand to clipboard
+* Allows to calculate size of folder, export list of files and copy rclone command to clipboard
 * Can process multiple upload or download jobs in background
 * Drag & drop support for dragging files from local file explorer for uploading
 * Streaming media files for playback in player like [vlc][6] or similar
@@ -31,31 +33,41 @@ Features
 * For remotes supporting public link sharing has an option (right-click menu) to fetch it
 * Supports tasks. Created jobs can be saved and run or edited later. 
 
-Below sample screenshots:
-
-
+Sample screenshots
+-------------------
 ### macOS
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot24.png)
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot23.png)
+<p align="center">
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot24.png" width=100%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot23.png" width=75%>
+</p>
+
 
 ### Linux
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot21.png)
-
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot22.png)
-
-
-
+<p align="center">
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot21.png" width=65%>
+</p>
+</br>
+<p align="center">
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot22.png" width=65%>
+</p>
+</br>
 
 
 ### Windows
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot25.PNG)
+<p align="center">
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot25.PNG" width=100%>
+</p>
+</br>
+<p align="center">
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot26.PNG" width=65%>
+</p>
+</br>
 
-![alt text](https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot26.PNG)
 
 
-Download
---------
-Get Windows, macOS and Ubuntu/Debian package on [releases][3] page.
+How to get it
+--------------
+Get Windows, macOS and Ubuntu/Debian (including Raspberry Pi version) packages on [releases][3]' page.
 
 All released binaries are signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key).
 
@@ -66,31 +78,39 @@ Other GNU/Linux users will need to build from source. Actually in my opinion for
 
 Build instructions for Debian/Ubuntu Linux
 ------------------------------------------
-1. Install dependencies `sudo apt install git rclone g++ cmake qtbase5-dev`
-2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+1. Install dependencies `sudo apt install git rclone g++ cmake qtbase5-dev`. If your distro comes with a bit dated rclone version you can always grab the latest from their [downlaods](https://rclone.org/downloads/) page.
+2. Clone required version (1.6.0 in this example) source code from this repo `git clone --branch 1.6.0 https://github.com/kapitainsky/RcloneBrowser.git`
 3. Go to source folder `cd RcloneBrowser`
-4. Create new `build` folder next to `src` folder - `mkdir build && cd build`
+4. Create new `build` folder - `mkdir build && cd build`
 5. Run `cmake ..` from `build` folder to create makefile
 6. Run `cmake --build .` from `build` folder to create binary
+7. Assuming that you are in `./RcloneBrowser/build` folder copy just built binary to more appropriate location `sudo cp ./build/rclone-browser /usr/bin/`
+8. Copy Rclone Browser icon `sudo cp ../src/icon.png /usr/share/pixmaps/rclone-browser.png`
+9. Copy application shortcut `sudo cp ../scripts/rclone-browser.desktop /usr/share/applications/`
 
 
 Build instructions for openSUSE linux
 -------------------------------------
-1. Install dependencies `sudo zypper install git cmake gcc-c++ rclone libQt5Core-devel libQt5Widgets-devel`
-2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+1. Install dependencies `sudo zypper install git cmake gcc-c++ rclone libQt5Core-devel libQt5Widgets-devel rclone`. If your distro comes with a bit dated rclone version you can always grab the latest from their [downlaods](https://rclone.org/downloads/) page.
+2. Clone required version (1.6.0 in this example) source code from this repo `git clone --branch 1.6.0 https://github.com/kapitainsky/RcloneBrowser.git`
 3. Go to source folder `cd RcloneBrowser`
-4. Create new `build` folder next to `src` folder - `mkdir build && cd build`
+4. Create new `build` folder - `mkdir build && cd build`
 5. Run `cmake ..` from `build` folder to create makefile
 6. Run `cmake --build .` from `build` folder to create binary
+7. Assuming that you are in `./RcloneBrowser/build` folder copy just built binary to more appropriate location `sudo cp ./build/rclone-browser /usr/bin/`
+8. Copy Rclone Browser icon `sudo cp ../src/icon.png /usr/share/pixmaps/rclone-browser.png`
+9. Copy application shortcut `sudo cp ../scripts/rclone-browser.desktop /usr/share/applications/`
+
+
 
 Build instructions for macOS
 ----------------------------
 1. If you don't have Homebrew yet install it `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 2. Install dependencies `brew install git cmake rclone qt5`
 3. Set Qt environment variables `export PATH="/usr/local/opt/qt/bin:$PATH" &&  export LDFLAGS="-L/usr/local/opt/qt/lib" &&  export CPPFLAGS="-I/usr/local/opt/qt/include" && export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"`. You can add this to your .bashrc (assuming you use bash) if you want to keep it persistent
-4. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+4. Clone required version (1.6.0 in this example) source code from this repo `git clone --branch 1.6.0 https://github.com/kapitainsky/RcloneBrowser.git`
 5. Go to source folder `cd RcloneBrowser`
-6. Create new `build` folder next to `src` folder - `mkdir build && cd build`
+6. Create new `build` folder - `mkdir build && cd build`
 7. Run `cmake ..` from `build` folder to create makefile
 8. Run `cmake --build .` from `build` folder to create binary
 9. Go to yet another newly created `build` folder `cd build`. Your binary should be here
@@ -104,11 +124,11 @@ Build instructions for Windows
 3. Install latest Qt v5 (64-bit) from [Qt website][10]. You only need "Qt 5.13.1 Prebuilt Components for MSVC 2017 64-bit" (MSVC 2017 64-bit)
 4. Get rclone-browser source code. You either need to install git and clone it or download zip file from [releases][3]
 5. Go to source folder `cd RcloneBrowser`
-6. Create new `build` folder  - `mkdir build` and go there `cd build`
+6. Create new `build` folder  - `mkdir build` and then `cd build`
 7. run `cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=/c/Qt/5.13.1/msvc2017_64 .. && cmake --build . --config Release`
 8. run `c:\Qt\5.13.1\msvc2017_64\bin\windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg ".\build\Release\RcloneBrowser.exe"`
-9. build\Release folder contains now RcloneBrowser.exe binary and all other files required to run it.
-
+9. build\Release folder contains now RcloneBrowser.exe binary and all other files required to run it
+10. If your system does not have required MSVC runtime you can install one from Microsoft [website](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads).
 
 
 History

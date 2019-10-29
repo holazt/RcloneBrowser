@@ -3,6 +3,7 @@ image: 'Visual Studio 2019'
 branches:
   only:
   - master
+  - kptsky_testing
 skip_tags: true
 clone_depth: 1
 build_script:

@@ -67,13 +67,13 @@ Sample screenshots
 
 How to get it
 --------------
-Get Windows, macOS and Ubuntu/Debian (including Raspberry Pi version) packages on [releases][3]' page.
+Get Windows, macOS, Ubuntu/Debian (including Raspberry Pi version) and universal AppImage for all other 64bit Linux versions - on [releases][3]' page.
 
 All released binaries are signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key).
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
 
-Other GNU/Linux users will need to build from source. Actually in my opinion for Linux it is the best option and is real easy. Below are detailed instructions.
+All other systems users will need to build from source. Actually in my opinion for Linux it is the best option and is real easy. Below are detailed instructions.
 
 
 Build instructions for Debian/Ubuntu Linux

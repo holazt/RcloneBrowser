@@ -17,10 +17,8 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   ui.buttonSourceFolder->setIcon(style->standardIcon(QStyle::SP_DirIcon));
   ui.buttonDest->setIcon(style->standardIcon(QStyle::SP_DirIcon));
 
-  ui.buttonDefaultSource->setIcon(
-      style->standardIcon(QStyle::SP_DirHomeIcon));
-  ui.buttonDefaultDest->setIcon(
-      style->standardIcon(QStyle::SP_DirHomeIcon));
+  ui.buttonDefaultSource->setIcon(style->standardIcon(QStyle::SP_DirHomeIcon));
+  ui.buttonDefaultDest->setIcon(style->standardIcon(QStyle::SP_DirHomeIcon));
 
   if (!mIsEditMode) {
     QPushButton *dryRun =

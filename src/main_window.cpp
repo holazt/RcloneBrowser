@@ -50,9 +50,16 @@ MainWindow::MainWindow() {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultDownloadOptions", "");
     };
+#ifdef Q_OS_OSX
+    //for macOS by default exclude .DS_Store files from uploads
+    if (!(settings->contains("Settings/defaultUploadOptions"))) {
+      // if defaultDownloadOptions does not exist create new empty key
+      settings->setValue("Settings/defaultUploadOptions", "--exclude .DS_Store");
+#else
     if (!(settings->contains("Settings/defaultUploadOptions"))) {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultUploadOptions", "");
+#endif
     };
   }
 

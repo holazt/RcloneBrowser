@@ -317,6 +317,11 @@ void MainWindow::rcloneGetVersion() {
             rclone_version_no = rclone_info1;
             rclone_version_no.replace("rclone v", "");
             rclone_version_no.replace("-DEV", "");
+          } else {
+            // for very old rclone versions format was one line only
+            rclone_version_no = rclone_info1.trimmed();
+            rclone_version_no.replace("rclone v", "");
+            rclone_version_no.replace("-DEV", "");
           }
           // save current version no in settings
           auto settings = GetSettings();

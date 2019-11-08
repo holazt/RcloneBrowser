@@ -57,6 +57,7 @@ cd "$BUILD"
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 
 if [ `arch` = "armv7l" ]
+then
 # more processes need swap
 make -j 2
 else

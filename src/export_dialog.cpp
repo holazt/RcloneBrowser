@@ -14,7 +14,6 @@ ExportDialog::ExportDialog(const QString &remote, const QDir &path,
   QObject::connect(ui.buttonBox->button(QDialogButtonBox::RestoreDefaults),
                    &QPushButton::clicked, this, [=]() {
                      ui.rbText->setChecked(true);
-                     ui.checkVerbose->setChecked(false);
                      ui.checkSameFilesystem->setChecked(false);
                      ui.textMinSize->clear();
                      ui.textMinAge->clear();
@@ -61,9 +60,6 @@ bool ExportDialog::onlyFilenames() const { return ui.rbText->isChecked(); }
 QStringList ExportDialog::getOptions() const {
   QStringList list;
   list << "lsl";
-  if (ui.checkVerbose->isChecked()) {
-    list << "--verbose";
-  }
   if (ui.checkSameFilesystem->isChecked()) {
     list << "--one-file-system";
   }

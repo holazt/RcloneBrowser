@@ -219,13 +219,6 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QCheckBox" name="checkVerbose">
-            <property name="text">
-             <string>Verbose output</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -259,7 +252,6 @@
   <tabstop>textMinAge</tabstop>
   <tabstop>textMaxAge</tabstop>
   <tabstop>spinMaxDepth</tabstop>
-  <tabstop>checkVerbose</tabstop>
   <tabstop>checkSameFilesystem</tabstop>
   <tabstop>textExtra</tabstop>
   <tabstop>textExclude</tabstop>

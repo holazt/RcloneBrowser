@@ -651,23 +651,32 @@ void MainWindow::rcloneConfig() {
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
   QString terminal = env.value("TERMINAL");
   if (terminal.isEmpty()) {
-    terminal = QStandardPaths::findExecutable("x-terminal-emulator");
+    terminal = QStandardPaths::findExecutable("gnome-terminal");
     if (terminal.isEmpty()) {
-      QMessageBox::critical(this, "Error",
-                            "Not sure how to launch terminal!\n"
-                            "Please set path to terminal executable in "
-                            "$TERMINAL environment variable.",
-                            QMessageBox::Ok);
-      return;
+      terminal = QStandardPaths::findExecutable("konsole");
+      if (terminal.isEmpty()) {
+        terminal = QStandardPaths::findExecutable("xfce4-terminal");
+        if (terminal.isEmpty()) {
+          terminal = QStandardPaths::findExecutable("xterm");
+          if (terminal.isEmpty()) {
+            terminal = QStandardPaths::findExecutable("x-terminal-emulator");
+            if (terminal.isEmpty()) {
+              QMessageBox::critical(this, "Error",
+                                    "Not sure how to launch terminal!\n"
+                                    "Please set path to terminal executable in "
+                                    "$TERMINAL environment variable.",
+                                    QMessageBox::Ok);
+              return;
+            }
+          }
+        }
+      }
     }
-    p->setArguments(QStringList()
-                    << "-e" << GetRclone() << "config" << GetRcloneConf());
-  } else {
-    p->setArguments(QStringList()
-                    << "-e"
-                    << (GetRclone() + " config " + GetRcloneConf().join(" ")));
   }
 
+  p->setArguments(QStringList()
+                  << "-e"
+                  << (GetRclone() + " config " + GetRcloneConf().join(" ")));
   p->setProgram(terminal);
 #endif
 

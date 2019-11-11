@@ -13,6 +13,10 @@ else()
   add_definitions("-pedantic -Wall -Wextra -Werror -std=c++11")
 endif()
 
+if (APPLE)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+endif()
+
 project(rclone-browser)
 FIND_PACKAGE(Qt5Core REQUIRED)
 FIND_PACKAGE(Qt5Gui REQUIRED)

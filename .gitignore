@@ -2,7 +2,6 @@
 build
 *.user*
 scripts/*.zip
-scripts/*.png
 obj-*-linux-gnu
 debian/files
 debian/debhelper-build-stamp

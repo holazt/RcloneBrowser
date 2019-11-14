@@ -1,6 +1,6 @@
 {
-  "title": "Rclone Browser",
-  "icon": "disk-icon.icns",
+  "title": "Rclone Browser install",
+  "icon": "../src/icon.icns",
   "icon-size": 128,
   "background": "background.png",
   "window": {

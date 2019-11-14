@@ -13,9 +13,18 @@ BUILD="$ROOT"/build
 TARGET=rclone-browser-$VERSION-macOS
 APP="$TARGET"/"Rclone Browser.app"
 
+# clean from previous builds (if for the same version in releases)
 if [ -d "$BUILD" ]; then
   rm -rf "$BUILD"
 fi
+if [ -d $ROOT/release/"$TARGET" ]; then
+  rm -rf $ROOT/release/"$TARGET"*
+fi
+if [ -d $ROOT/release/"Rclone Browser.app" ]; then
+  rm -rf $ROOT/release/"Rclone Browser.app"
+fi
+
+
 
 mkdir -p "$BUILD"
 cd "$BUILD"
@@ -30,9 +39,6 @@ cd ../..
 
 mkdir -p release
 cd release
-if [ -d "$TARGET" ]; then
-  rm -rf "$TARGET"*
-fi
 mkdir "$TARGET"
 cp "$ROOT"/README.md "$TARGET"/Readme.txt
 cp "$ROOT"/CHANGELOG.md "$TARGET"/Changelog.txt
@@ -48,18 +54,19 @@ cat >"$APP"/Contents/MacOS/qt.conf <<EOF
 Plugins = Plugins
 EOF
 
+echo
+echo "Preparing zip file"
 # brew install p7zip
 7za a -mx=9 -r -tzip "$TARGET".zip "$TARGET"
 
 ## gpg --detach-sign "$TARGET".zip.sig "$TARGET".zip
 
-# prepare dmg 'installer'
+echo
+echo "Preparing dmg file"
+# brew install node && npm install -g appdmg
 # https://github.com/LinusU/node-appdmg
-if [ -d "Rclone Browser.app" ]; then
-  rm -rf "Rclone Browser.app"
-fi
-cp -r "$TARGET"/"Rclone Browser.app" .
+cp -R "$TARGET"/"Rclone Browser.app" .
 cd ../scripts
-appdmg ../appdmg.json "$TARGET".dmg
+appdmg ./appdmg.json ../release/"$TARGET".dmg
 cd ../release
 rm -rf "Rclone Browser.app"

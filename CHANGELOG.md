@@ -1,4 +1,17 @@
 # Change Log
+## [1.7.0] - 
+- NEW: portable mode for all operating systems
+- NEW: on Linux multiple terminals are tried for rclone config ($TERMINAL then gnome-terminal followed by konsole, xfce4-terminal, xterm and x-terminal-emulator)
+- NEW: Windows releases have proper installer now
+- NEW: macOS release is provided and dmg file
+- NEW: released binary works on all macOS versions starting with 10.9
+- NEW: Linux release is provided as AppImage only
+- NEW: Enable Qt HighDpiScaling - should help people with high DPI monitors
+- fixe mount/unmount on FreeBSD
+- updated build and install for Linux - now all files will be installed in /usr/local
+- fixed possible crashes when old rclone is used (with different version information output)
+- bunch of usual small tweaks and fixes
+
 
 ## [1.6.0] - 2019-10-27
 - fixed Windows mount/unmount (requires rclone v1.50+)

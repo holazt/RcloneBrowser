@@ -11,6 +11,20 @@ Simple cross platfrom GUI for [rclone](https://rclone.org/) command line tool.
 
 Supports macOS, GNU/Linux and Windows.
 
+Table of contents
+-------------------
+* [Features](https://github.com/kapitainsky/RcloneBrowser#features)
+* [Sample screenshots](https://github.com/kapitainsky/RcloneBrowser#sample-screenshots)
+* [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it)
+* [Build instructions for Linux](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-linux)
+* [Build instructions for FreeBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-freebsd)
+* [Build instructions for macOS](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-macos)
+* [Build instructions for Windows](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-windows)
+* [History](https://github.com/kapitainsky/RcloneBrowser#history)
+* [Code signing certificates donations](https://github.com/kapitainsky/RcloneBrowser#code-signing-certificates-donations)
+* [License](https://github.com/kapitainsky/RcloneBrowser#license)
+
+
 Features
 --------
 
@@ -69,11 +83,36 @@ How to get it
 --------------
 Get Windows, macOS, Ubuntu/Debian (including Raspberry Pi version) and universal AppImage for all other 64bit Linux versions - on [releases][3]' page.
 
-All released binaries are signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key).
+All released binaries are signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key). It allows to verify that provided binaries were created by myself and are unchanged. If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
 
-If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems.
+Starting with the next release I will provide proper installers for Windows releases and for Linux AppImage only. Some explanation on latter... Binaries for Linux desktop applications is a major f*ing pain in the ass... as Linus Torvalds said - [DebConf 14_ QA](https://www.youtube.com/watch?v=5PmHRSeA2c8) at 05:40:
+
+> I'm talking about actual application writers that want to make a package of their application for Linux. And I've seen this firsthand with the other project I've been involved with, which is my divelog application.
+> We make binaries for Windows and OS X. 
+
+He is talking about [Subsurface](https://subsurface-divelog.org). His small side project.
+
+> We basically don't make binaries for Linux. Why? Because binaries for Linux desktop applications is a major f*ing pain in the ass. Right. You don't make binaries for Linux. You make binaries for Fedora 19, Fedora 20, maybe there's even like RHEL 5 from ten years ago, you make binaries for debian stable.
+> Or actually you don't make binaries for debian stable because debian stable has libraries that are so old that anything that was built in the last century doesn't work. But you might make binaries for debian... whatever the codename is for unstable. And even that is a major pain because (...) debian has those rules that you are supposed to use shared libraries. Right.
+
+> And if you don't use shared libraries, getting your package in, like, is just painful. 
+> But using shared libraries is not an option when the libraries are experimental and the libraries are used by two people and one of them is crazy, so every other day some ABI breaks. 
+> So you actually want to just compile one binary and have it work. Preferably forever. And preferably across all Linux distributions. 
+> And I actually think distributions have done a horribly, horribly bad job.
+
+> One of the things that I do on the kernel - and I have to fight this every single release and I think it's sad - we have one rule in the kernel, one rule: we don't break userspace. (...) People break userspace, I get really, really angry. (...) 
+> And then all the distributions come in and they screw it all up. Because they break binary compatibility left and right. 
+> They update glibc and everything breaks. (...) 
+> So that's my rant. And that's what I really fundamentally think needs to change for Linux to work on the desktop because you can't have applications writers to do fifteen billion different versions.
+
+And I totally agree with above. I want to provide binary which works across as many Linux distributions as possible and I dont have time to fight with all mess with different dependencies etc. There are other similar ditribution formats e.g. flatpak but I had to choose one and I decided that AppImage is my best choice. I am not saying that AppImage is the best one but it nicely fits my objectives. You can see comparison of different solutions [here](https://github.com/AppImage/AppImageKit/wiki/Similar-projects#comparison).
+
+If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems. I have tested all of them and you can have your own Linux distribution Rclone Browser running in few minutes.
+
+Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am enirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.
+
 
 
 Build instructions for Linux
@@ -143,10 +182,10 @@ I used DinCahill's changes (https://github.com/DinCahill/RcloneBrowser) as a bas
 
 I have fixed whatever I found still not working and added few minor tweaks. I've recompiled and repackaged everything using latest Qt (5.13.1). This on its own fixed some issues and added new features like support for dark mode in macOS.
 
-Donations 
---------
+Code signing certificates donations 
+---------------------------
 
-And if you enjoy my work you can always buy me a beer:)
+If you would like to donate towards code signing keys please feel free to do it. If I don't raise required $500 I will give all money to some charity. Please see my note regarding it at the end of [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it) section. I will keep all updated with amount raised.
 
 https://www.paypal.me/kapitainsky
 

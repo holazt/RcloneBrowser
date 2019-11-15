@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "qdebug.h"
 
 static QString gRclone;
 static QString gRcloneConf;
@@ -49,13 +50,57 @@ unsigned int compareVersion(std::string version1, std::string version2) {
 }
 
 static QString GetIniFilename() {
-  QFileInfo info = qApp->applicationFilePath();
-  return info.dir().filePath(info.baseName() + ".ini");
+  QFileInfo applicationPath = qApp->applicationFilePath();
+#ifdef Q_OS_OSX
+  qDebug() << QString(applicationPath.absolutePath());
+  // on macOS excecutable file is located in
+  // ./rclone-browser.app/Contents/MasOS/ to get actual bundle folder we have to
+  // traverse three levels up
+  QFileInfo MacOSPath = applicationPath.dir().path();
+  QFileInfo ContentsPath = MacOSPath.dir().path();
+  QFileInfo appBundlePath = ContentsPath.dir().path();
+  //  qDebug() << QString("utils.cpp appBundle.absolutePath: " +
+  //                      appBundlePath.absolutePath());
+  //  qDebug() << QString(
+  //      "utils.cpp ini file:" +
+  //      appBundlePath.dir().filePath(appBundlePath.baseName() + ".ini"));
+  return appBundlePath.dir().filePath(appBundlePath.baseName() + ".ini");
+#else
+#ifdef Q_OS_WIN
+  return applicationPath.dir().filePath(applicationPath.baseName() + ".ini");
+#else
+  QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+  return xdg_config_home + "/rclone-browser/rclone-browser.ini";
+#endif
+#endif
 }
 
-static bool IsPortableMode() {
+bool IsPortableMode() {
   QString ini = GetIniFilename();
-  return QFileInfo(ini).exists();
+  QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+  qDebug() << QString("utils.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
+  QString appimage = qgetenv("APPIMAGE");
+  qDebug() << QString("utils.cpp $APPIMAGE: " + appimage);
+
+  // cat ".config" from $XDG_CONFIG_HOME
+  // it should be the same as appimage if run from AppImage
+  xdg_config_home = xdg_config_home.left(xdg_config_home.length() - 7);
+  qDebug() << QString("utils.cpp $XDG_CONFIG_HOME-7: " + xdg_config_home);
+
+  if (!xdg_config_home.isEmpty() && !appimage.isEmpty() &&
+      xdg_config_home == appimage) {
+
+    return true;
+  }
+
+  if (QFileInfo(ini).exists()) {
+
+    return true;
+  } else {
+    return false;
+  }
+
+  //  return QFileInfo(ini).exists();
 }
 
 std::unique_ptr<QSettings> GetSettings() {
@@ -157,7 +202,20 @@ QStringList GetRcloneConf() {
 
   QString conf = gRcloneConf;
   if (IsPortableMode() && QFileInfo(conf).isRelative()) {
+#ifdef Q_OS_OSX
+    // on macOS excecutable file is located in
+    // ./rclone-browser.app/Contents/MasOS/rclone-browser to get actual bundle
+    // folder we have to traverse three levels up
+    conf = QDir(qApp->applicationDirPath() + "/../../..").filePath(conf);
+#else
+#ifdef Q_OS_WIN
     conf = QDir(qApp->applicationDirPath()).filePath(conf);
+#else
+    QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+    conf = QDir(xdg_config_home + "/..").filePath(conf);
+#endif
+#endif
+    qDebug() << QString("utils.cpp conf: " + conf);
   }
   return QStringList() << "--config" << conf;
 }
@@ -167,7 +225,20 @@ void SetRcloneConf(const QString &rcloneConf) { gRcloneConf = rcloneConf; }
 QString GetRclone() {
   QString rclone = gRclone;
   if (IsPortableMode() && QFileInfo(rclone).isRelative()) {
+#ifdef Q_OS_OSX
+    // on macOS excecutable file is located in
+    // ./rclone-browser.app/Contents/MasOS/rclone-browser to get actual bundle
+    // folder we have to traverse three levels up
+    rclone = QDir(qApp->applicationDirPath() + "/../../..").filePath(rclone);
+#else
+#ifdef Q_OS_WIN
     rclone = QDir(qApp->applicationDirPath()).filePath(rclone);
+#else
+    QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+    rclone = QDir(xdg_config_home + "/..").filePath(rclone);
+#endif
+#endif
+    qDebug() << QString("utils.cpp rclone portable: " + rclone);
   }
 
   return rclone;

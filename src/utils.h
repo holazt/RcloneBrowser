@@ -7,6 +7,8 @@ std::unique_ptr<QSettings> GetSettings();
 void ReadSettings(QSettings *settings, QObject *widget);
 void WriteSettings(QSettings *settings, QObject *widget);
 
+bool IsPortableMode();
+
 QString GetRclone();
 void SetRclone(const QString &rclone);
 

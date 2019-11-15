@@ -10,9 +10,9 @@ set ARCH=%1
 call "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %ARCH%
 
 if "%ARCH%" == "x86" (
-set QT=C:\Qt\5.13.1\msvc2017\
+set QT=C:\Qt\5.13.2\msvc2017\
 ) else (
-set QT=C:\Qt\5.13.1\msvc2017_64\
+set QT=C:\Qt\5.13.2\msvc2017_64\
 )
 set PATH=%QT%\bin;%PATH%
 
@@ -28,13 +28,13 @@ if "%ERRORLEVEL%" equ "0" (
   for /f "tokens=*" %%t in ('git.exe rev-parse --short HEAD') do (
     set COMMIT=%%t
   )
-  set VERSION=%VERSION%-!COMMIT!
+  set VERSION_COMMIT=%VERSION%-!COMMIT!
 )
 
 if "%ARCH%" == "x86" (
-  set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win32"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win32"
 ) else (
-  set TARGET="%~dp0\..\release\rclone-browser-%VERSION%-win64"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win64"
 )
 
 pushd "%ROOT%"
@@ -43,6 +43,7 @@ if not exist release mkdir release
 
 if exist "%TARGET%" rd /s /q "%TARGET%"
 if exist "%TARGET%.zip" del "%TARGET%.zip"
+if exist "%TARGET%-installer.exe" del "%TARGET%-installer.exe"
 
 if exist build rd /s /q build
 mkdir build
@@ -85,4 +86,16 @@ echo Plugins = .
 )>"%TARGET%\qt.conf"
 
 rem https://www.7-zip.org/
+rem create zip archive of all files
 "c:\Program Files\7-Zip\7z.exe" a -mx=9 -r -tzip "%TARGET%.zip" "%TARGET%"
+
+rem create proper installer
+rem Inno Setup installer by https://github.com/jrsoftware/issrc
+rem in case user wants to install both 32bits and 64bits versions we need two AppId
+rem 64bits ;AppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}
+rem 32bits ;AppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}
+if "%ARCH%" == "x86" (
+"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win32" "/dMyAppArch=x86" /O"../release" rclone-browser-win-installer.iss
+) else (
+"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win64" "/dMyAppArch=x64" /O"../release" rclone-browser-win-installer.iss
+)

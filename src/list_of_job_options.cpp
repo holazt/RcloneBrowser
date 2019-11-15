@@ -4,6 +4,7 @@
 #include <qdir.h>
 #include <qlogging.h>
 #include <qstandardpaths.h>
+#include <utils.h>
 
 static QDataStream &operator>>(QDataStream &dataStream, JobOptions &jo);
 static QDataStream &operator<<(QDataStream &dataStream, JobOptions &jo);
@@ -52,13 +53,47 @@ bool ListOfJobOptions::Forget(JobOptions *jo) {
 }
 
 QFile *ListOfJobOptions::GetPersistenceFile(QIODevice::OpenModeFlag mode) {
-  QDir outputDir(
-      QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+
+  QDir outputDir;
+  QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+
+  if (IsPortableMode()) {
+    // in portable mode tasks' file will be saved in the same folder as
+    // excecutable
+#ifdef Q_OS_OSX
+    // on macOS excecutable file is located in
+    // ./rclone-browser.app/Contents/MasOS/
+    // to get actual bundle folder we have
+    // to traverse three levels up
+    outputDir = QDir(qApp->applicationDirPath() + "/../../..");
+#else
+ #ifdef Q_OS_WIN
+    // not macOS
+    outputDir = QDir(qApp->applicationDirPath());
+ #else
+    outputDir = QDir(xdg_config_home + "/rclone-browser");
+ #endif
+#endif
+
+
+
+  } else {
+
+
+    // get data location folder from Qt  - OS dependend
+    outputDir =
+        QDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+
+
+
+  }
+
   if (!outputDir.exists()) {
     outputDir.mkpath(".");
   }
   QString filePath = outputDir.absoluteFilePath(persistenceFileName);
   QFile *file = new QFile(filePath);
+
   if (!file->open(mode)) {
     qDebug() << QString("Could not open ") << file->fileName();
     delete file;

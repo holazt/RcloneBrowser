@@ -15,6 +15,12 @@
 MainWindow::MainWindow() {
   ui.setupUi(this);
 
+  if (IsPortableMode()) {
+    this->setWindowTitle("Rclone Browser - portable mode");
+  } else {
+    this->setWindowTitle("Rclone Browser");
+  }
+
 #if defined(Q_OS_WIN)
   // disable "?" WindowContextHelpButton
   QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
@@ -50,9 +56,17 @@ MainWindow::MainWindow() {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultDownloadOptions", "");
     };
+#ifdef Q_OS_OSX
+    // for macOS by default exclude .DS_Store files from uploads
+    if (!(settings->contains("Settings/defaultUploadOptions"))) {
+      // if defaultDownloadOptions does not exist create new empty key
+      settings->setValue("Settings/defaultUploadOptions",
+                         "--exclude .DS_Store");
+#else
     if (!(settings->contains("Settings/defaultUploadOptions"))) {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultUploadOptions", "");
+#endif
     };
   }
 
@@ -310,6 +324,11 @@ void MainWindow::rcloneGetVersion() {
             rclone_version_no = rclone_info1;
             rclone_version_no.replace("rclone v", "");
             rclone_version_no.replace("-DEV", "");
+          } else {
+            // for very old rclone versions format was one line only
+            rclone_version_no = rclone_info1.trimmed();
+            rclone_version_no.replace("rclone v", "");
+            rclone_version_no.replace("-DEV", "");
           }
           // save current version no in settings
           auto settings = GetSettings();
@@ -344,9 +363,50 @@ void MainWindow::rcloneGetVersion() {
               rclone_info3 = line.replace("- ", "");
             counter++;
           };
+
+
+          QFileInfo appBundlePath;
+#ifdef Q_OS_OSX
+          if (IsPortableMode()) {
+
+            QFileInfo applicationPath = qApp->applicationFilePath();
+            QFileInfo MacOSPath = applicationPath.dir().path();
+            QFileInfo ContentsPath = MacOSPath.dir().path();
+            appBundlePath = ContentsPath.dir().path();
+
+            mStatusMessage->setText(
+                rclone_info1 + " in " +
+                QDir::toNativeSeparators(
+                    GetRclone().replace(appBundlePath.fileName() + "/Contents/MacOS/../../../", "")) +
+                ", " + rclone_info2 + ", " + rclone_info3);
+
+          } else {
+
+            mStatusMessage->setText(rclone_info1 + " in " +
+                                    QDir::toNativeSeparators(GetRclone()) +
+                                    ", " + rclone_info2 + ", " + rclone_info3);
+          }
+#else
+#ifdef Q_OS_WIN
           mStatusMessage->setText(rclone_info1 + " in " +
                                   QDir::toNativeSeparators(GetRclone()) + ", " +
                                   rclone_info2 + ", " + rclone_info3);
+#else
+          if (IsPortableMode()) {
+            QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+            QString appImageConfigFolder = xdg_config_home.right(xdg_config_home.length()-xdg_config_home.lastIndexOf("/"));
+
+            mStatusMessage->setText(rclone_info1 + " in " +
+                                  QDir::toNativeSeparators(GetRclone().replace(appImageConfigFolder + "/..",  "")) + ", " +
+                                  rclone_info2 + ", " + rclone_info3);
+          } else {
+            mStatusMessage->setText(rclone_info1 + " in " +
+                                  QDir::toNativeSeparators(GetRclone()) + ", " +
+                                  rclone_info2 + ", " + rclone_info3);
+         }
+#endif
+#endif
+
           rcloneListRemotes();
         } else {
           if (p->error() != QProcess::FailedToStart) {
@@ -359,7 +419,7 @@ void MainWindow::rcloneGetVersion() {
             return;
           }
 
-          if (firstTime) {
+            if (firstTime) {
             if (p->error() == QProcess::FailedToStart) {
               QMessageBox::information(
                   this, "Error",
@@ -591,23 +651,32 @@ void MainWindow::rcloneConfig() {
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
   QString terminal = env.value("TERMINAL");
   if (terminal.isEmpty()) {
-    terminal = QStandardPaths::findExecutable("x-terminal-emulator");
+    terminal = QStandardPaths::findExecutable("gnome-terminal");
     if (terminal.isEmpty()) {
-      QMessageBox::critical(this, "Error",
-                            "Not sure how to launch terminal!\n"
-                            "Please set path to terminal executable in "
-                            "$TERMINAL environment variable.",
-                            QMessageBox::Ok);
-      return;
+      terminal = QStandardPaths::findExecutable("konsole");
+      if (terminal.isEmpty()) {
+        terminal = QStandardPaths::findExecutable("xfce4-terminal");
+        if (terminal.isEmpty()) {
+          terminal = QStandardPaths::findExecutable("xterm");
+          if (terminal.isEmpty()) {
+            terminal = QStandardPaths::findExecutable("x-terminal-emulator");
+            if (terminal.isEmpty()) {
+              QMessageBox::critical(this, "Error",
+                                    "Not sure how to launch terminal!\n"
+                                    "Please set path to terminal executable in "
+                                    "$TERMINAL environment variable.",
+                                    QMessageBox::Ok);
+              return;
+            }
+          }
+        }
+      }
     }
-    p->setArguments(QStringList()
-                    << "-e" << GetRclone() << "config" << GetRcloneConf());
-  } else {
-    p->setArguments(QStringList()
-                    << "-e"
-                    << (GetRclone() + " config " + GetRcloneConf().join(" ")));
   }
 
+  p->setArguments(QStringList()
+                  << "-e"
+                  << (GetRclone() + " config " + GetRcloneConf().join(" ")));
   p->setProgram(terminal);
 #endif
 

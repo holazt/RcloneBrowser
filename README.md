@@ -94,7 +94,7 @@ Build instructions for Linux
 
 Build instructions for FreeBSD
 ------------------------------
-1. Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-qmake`.
+1. Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-qmake`
 2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3. Go to source folder `cd RcloneBrowser`
 4. Create new build folder - `mkdir build && cd build`

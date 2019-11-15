@@ -73,34 +73,36 @@ All released binaries are signed with my [PGP key](https://github.com/kapitainsk
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
 
-All other systems users will need to build from source. Actually in my opinion for Linux it is the best option and is real easy. Below are detailed instructions.
+If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems.
 
 
-Build instructions for Debian/Ubuntu Linux
+Build instructions for Linux
 ------------------------------------------
-1. Install dependencies `sudo apt install git rclone g++ cmake qtbase5-dev`. If your distro comes with a bit dated rclone version you can always grab the latest from their [downlaods](https://rclone.org/downloads/) page.
-2. Clone required version (1.6.0 in this example) source code from this repo `git clone --branch 1.6.0 https://github.com/kapitainsky/RcloneBrowser.git`
+1. Install dependencies:
+* Debian/Ubuntu and derivatives: `sudo apt update && sudo apt -y install git g++ cmake make qtdeclarative5-dev` 
+* Suse/OpenSuse: `sudo zypper ref && sudo zypper --non-interactive install git cmake make gcc-c++ libQt5Core-devel libQt5Widgets-devel libQt5Network-devel`
+* RHEL/CentOS: `sudo yum -y install git gcc-c++ cmake make qt5-qtdeclarative`
+* Fedora: `sudo dnf -y install git g++ cmake make qt5-qtdeclarative-devel`
+* Arch/Manjaro: `sudo pacman -Sy --noconfirm --needed git gcc cmake make qt5-declarative`
+2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3. Go to source folder `cd RcloneBrowser`
-4. Create new `build` folder - `mkdir build && cd build`
-5. Run `cmake ..` from `build` folder to create makefile
-6. Run `cmake --build .` from `build` folder to create binary
-7. Assuming that you are in `./RcloneBrowser/build` folder copy just built binary to more appropriate location `sudo cp ./build/rclone-browser /usr/bin/`
-8. Copy Rclone Browser icon `sudo cp ../src/icon.png /usr/share/pixmaps/rclone-browser.png`
-9. Copy application shortcut `sudo cp ../scripts/rclone-browser.desktop /usr/share/applications/`
+4. Create new build folder - `mkdir build && cd build`
+5. Run `cmake ..` from build folder to create makefile
+6. Run `make` from build folder to create binary
+7. Install `sudo make install`
 
 
-Build instructions for openSUSE linux
--------------------------------------
-1. Install dependencies `sudo zypper install git cmake gcc-c++ rclone libQt5Core-devel libQt5Widgets-devel rclone`. If your distro comes with a bit dated rclone version you can always grab the latest from their [downlaods](https://rclone.org/downloads/) page.
-2. Clone required version (1.6.0 in this example) source code from this repo `git clone --branch 1.6.0 https://github.com/kapitainsky/RcloneBrowser.git`
+Build instructions for FreeBSD
+------------------------------
+1. Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-qmake`.
+2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3. Go to source folder `cd RcloneBrowser`
-4. Create new `build` folder - `mkdir build && cd build`
-5. Run `cmake ..` from `build` folder to create makefile
-6. Run `cmake --build .` from `build` folder to create binary
-7. Assuming that you are in `./RcloneBrowser/build` folder copy just built binary to more appropriate location `sudo cp ./build/rclone-browser /usr/bin/`
-8. Copy Rclone Browser icon `sudo cp ../src/icon.png /usr/share/pixmaps/rclone-browser.png`
-9. Copy application shortcut `sudo cp ../scripts/rclone-browser.desktop /usr/share/applications/`
+4. Create new build folder - `mkdir build && cd build`
+5. Run `cmake ..` from build folder to create makefile
+6. Run `make` from build folder to create binary
+7. Install `sudo make install`
 
+Note: For rclone remotes mount to work please see this forum [thread](https://forum.rclone.org/t/failed-to-mount-fuse-fs-freebsd/7723/9). For me it was enough to run `sudo sysctl vfs.usermount=1`
 
 
 Build instructions for macOS
@@ -108,12 +110,12 @@ Build instructions for macOS
 1. If you don't have Homebrew yet install it `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 2. Install dependencies `brew install git cmake rclone qt5`
 3. Set Qt environment variables `export PATH="/usr/local/opt/qt/bin:$PATH" &&  export LDFLAGS="-L/usr/local/opt/qt/lib" &&  export CPPFLAGS="-I/usr/local/opt/qt/include" && export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"`. You can add this to your .bashrc (assuming you use bash) if you want to keep it persistent
-4. Clone required version (1.6.0 in this example) source code from this repo `git clone --branch 1.6.0 https://github.com/kapitainsky/RcloneBrowser.git`
+4. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 5. Go to source folder `cd RcloneBrowser`
-6. Create new `build` folder - `mkdir build && cd build`
-7. Run `cmake ..` from `build` folder to create makefile
-8. Run `cmake --build .` from `build` folder to create binary
-9. Go to yet another newly created `build` folder `cd build`. Your binary should be here
+6. Create new build folder - `mkdir build && cd build`
+7. Run `cmake ..` from build folder to create makefile
+8. Run `cmake --build .` from build folder to create binary
+9. Go to yet another newly created build folder `cd build`. Your binary should be here
 10. Package your binary with Qt libraries to create self-contained application `macdeployqt rclone-browser.app -executable="rclone-browser.app/Contents/MacOS/rclone-browser" -qmldir=../src/`. Without this step binary won't work without Qt installed
 
 
@@ -121,12 +123,12 @@ Build instructions for Windows
 ------------------------------
 1. Get [Visual Studio 2019][8] - you need "Desktop development with C++" module only
 2. Install [CMake][9]
-3. Install latest Qt v5 (64-bit) from [Qt website][10]. You only need "Qt 5.13.1 Prebuilt Components for MSVC 2017 64-bit" (MSVC 2017 64-bit)
+3. Install latest Qt v5 (64-bit) from [Qt website][10]. You only need "Qt 5.13.2 Prebuilt Components for MSVC 2017 64-bit" (MSVC 2017 64-bit)
 4. Get rclone-browser source code. You either need to install git and clone it or download zip file from [releases][3]
 5. Go to source folder `cd RcloneBrowser`
-6. Create new `build` folder  - `mkdir build` and then `cd build`
-7. run `cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=/c/Qt/5.13.1/msvc2017_64 .. && cmake --build . --config Release`
-8. run `c:\Qt\5.13.1\msvc2017_64\bin\windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg ".\build\Release\RcloneBrowser.exe"`
+6. Create new build folder  - `mkdir build` and then `cd build`
+7. run `cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=/c/Qt/5.13.2/msvc2017_64 .. && cmake --build . --config Release`
+8. run `c:\Qt\5.13.2\msvc2017_64\bin\windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg ".\build\Release\RcloneBrowser.exe"`
 9. build\Release folder contains now RcloneBrowser.exe binary and all other files required to run it
 10. If your system does not have required MSVC runtime you can install one from Microsoft [website](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads).
 

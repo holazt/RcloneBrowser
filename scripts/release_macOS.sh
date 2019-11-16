@@ -40,10 +40,10 @@ cd ../..
 mkdir -p release
 cd release
 mkdir "$TARGET"
-cp "$ROOT"/README.md "$TARGET"/Readme.txt
-cp "$ROOT"/CHANGELOG.md "$TARGET"/Changelog.txt
-cp "$ROOT"/LICENSE "$TARGET"/License.txt
 cp -R "$BUILD"/build/rclone-browser.app "$APP"
+cp "$ROOT"/README.md "$APP"/Readme.txt
+cp "$ROOT"/CHANGELOG.md "$APP"/Changelog.txt
+cp "$ROOT"/LICENSE "$APP"/License.txt
 mv "$APP"/Contents/MacOS/rclone-browser "$APP"/Contents/MacOS/"Rclone Browser"
 
 sed -i .bak 's/rclone-browser/Rclone Browser/g' "$APP"/Contents/Info.plist

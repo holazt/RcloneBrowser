@@ -71,7 +71,7 @@ cd "$TEMP_BASE/$TARGET"
 
 # metainfo file
 mkdir $TEMP_BASE/$TARGET/AppDir/usr/share/metainfo
-cp $ROOT/scripts/rclone-browser.appdata.xml $TEMP_BASE/$TARGET/AppDir/usr/share/metainfo/
+cp $ROOT/assets/rclone-browser.appdata.xml $TEMP_BASE/$TARGET/AppDir/usr/share/metainfo/
 
 
 if [ `arch` = "armv7l" ]

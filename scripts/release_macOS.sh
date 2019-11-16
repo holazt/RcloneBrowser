@@ -67,6 +67,6 @@ echo "Preparing dmg file"
 # https://github.com/LinusU/node-appdmg
 cp -R "$TARGET"/"Rclone Browser.app" .
 cd ../scripts
-appdmg ./appdmg.json ../release/"$TARGET".dmg
+appdmg ../assets/appdmg.json ../release/"$TARGET".dmg
 cd ../release
 rm -rf "Rclone Browser.app"

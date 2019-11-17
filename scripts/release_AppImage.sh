@@ -57,7 +57,7 @@ if ls $ROOT/release/rclone-browser-$VERSION-*.AppImage > /dev/null 2>&1; then
 
   if [ `arch` = "i686" ]
   then
-    rm $ROOT/release/rclone-browser-$VERSION-linux-386.AppImage;
+    rm $ROOT/release/rclone-browser-$VERSION-linux-i386.AppImage;
   fi
 
   if [ `arch` = "x86_64" ]
@@ -119,7 +119,7 @@ fi
 # x86 build
 if [ `arch` = "i686" ]
 then
-rename 's/i386/linux-386/' Rclone_Browser*
+rename 's/i386/linux-i386/' Rclone_Browser*
 fi
 
 # x86_64 build

@@ -261,7 +261,7 @@
       <item row="5" column="0">
        <widget class="QCheckBox" name="forceLightMode">
         <property name="text">
-         <string>Force use light theme</string>
+         <string>Force light theme</string>
         </property>
        </widget>
       </item>

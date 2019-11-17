@@ -145,6 +145,9 @@ QStringList JobOptions::getOptions() const {
   list << "--stats"
        << "1s";
 
+  list << "--stats-file-name-length"
+       << "0";
+
   list << source;
   list << dest;
 

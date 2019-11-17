@@ -166,7 +166,19 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         QProgressBar *bar;
         if (it == mActive.end()) {
           label = new QLabel();
-          label->setText(name);
+
+          QString nameTrimmed;
+
+          if (name.length() > 47)
+            {
+              nameTrimmed = name.left(25) + "..." + name.right(19);
+            }
+          else
+           {
+             nameTrimmed=name;
+           }
+
+          label->setText(nameTrimmed);
 
           bar = new QProgressBar();
           bar->setMinimum(0);
@@ -184,7 +196,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         }
 
         bar->setValue(rxProgress2.cap(2).toInt());
-        bar->setToolTip("ETA: " + rxProgress2.cap(3));
+        bar->setToolTip(name + "\nETA: " + rxProgress2.cap(3));
 
         mUpdated.insert(label);
       }

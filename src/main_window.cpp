@@ -747,11 +747,21 @@ void MainWindow::rcloneListRemotes() {
             QString name = parts[0].trimmed();
             QString type = parts[1].trimmed();
             QString tooltip = type;
+            auto uisettings = GetSettings();
+            bool forceLight =
+              uisettings->value("Settings/forceLightMode").toBool();
+
+            QString img_add;
+            if (!forceLight) {
+              img_add = "_inv";
+            } else {
+              img_add = "";
+            }
 
             QString path =
-                ":/remotes/images/" + type.replace(' ', '_') + ".png";
+                ":/remotes/images/" + type.replace(' ', '_') + img_add + ".png";
             QIcon icon(QFile(path).exists() ? path
-                                            : ":/remotes/images/unknown.png");
+                                            : ":/remotes/images/unknown" + img_add + ".png");
 
             QListWidgetItem *item = new QListWidgetItem(icon, name);
             item->setData(Qt::UserRole, type);

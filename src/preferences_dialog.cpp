@@ -110,7 +110,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
   ui.forceLightMode->setChecked(
-      settings->value("Settings/forceLightMode", false).toBool());
+      settings->value("Settings/forceLightMode", true).toBool());
 }
 
 PreferencesDialog::~PreferencesDialog() {}

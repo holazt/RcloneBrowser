@@ -1,5 +1,4 @@
 #include "job_options.h"
-#include <qdebug.h>
 #include <qexception.h>
 #include <qlogging.h>
 #ifdef _WIN32

@@ -1,6 +1,5 @@
 #include "list_of_job_options.h"
 #include <QDataStream>
-#include <qdebug.h>
 #include <qdir.h>
 #include <qlogging.h>
 #include <qstandardpaths.h>
@@ -31,11 +30,11 @@ bool ListOfJobOptions::Persist(JobOptions *jo) {
   if (isNew)
     this->tasks.append(jo);
   else {
-    int ix = tasks.indexOf(jo);
-    JobOptions *old = tasks[ix];
-    qDebug() << QString("old [%1] New [%2]")
-                    .arg(old->description)
-                    .arg(jo->description);
+//    int ix = tasks.indexOf(jo);
+//    JobOptions *old = tasks[ix];
+//    qDebug() << QString("old [%1] New [%2]")
+//                    .arg(old->description)
+//                    .arg(jo->description);
   }
   PersistToUserData();
   return isNew;
@@ -47,7 +46,7 @@ bool ListOfJobOptions::Forget(JobOptions *jo) {
     return false;
   int ix = tasks.indexOf(jo);
   tasks.removeAt(ix);
-  qDebug() << QString("removed [%1]").arg(jo->description);
+//  qDebug() << QString("removed [%1]").arg(jo->description);
   PersistToUserData();
   return isKnown;
 }
@@ -95,7 +94,7 @@ QFile *ListOfJobOptions::GetPersistenceFile(QIODevice::OpenModeFlag mode) {
   QFile *file = new QFile(filePath);
 
   if (!file->open(mode)) {
-    qDebug() << QString("Could not open ") << file->fileName();
+//    qDebug() << QString("Could not open ") << file->fileName();
     delete file;
     file = nullptr;
   }
@@ -115,7 +114,7 @@ bool ListOfJobOptions::RestoreFromUserData(ListOfJobOptions &dataIn) {
       instream >> *jo;
       dataIn.tasks.append(jo);
     } catch (SerializationException &ex) {
-      qDebug() << QString("failed to restore tasks: ") << ex.Message;
+//      qDebug() << QString("failed to restore tasks: ") << ex.Message;
       file->close();
       delete file;
       return false;

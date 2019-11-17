@@ -1,5 +1,4 @@
 #include "utils.h"
-#include "qdebug.h"
 
 static QString gRclone;
 static QString gRcloneConf;
@@ -52,7 +51,7 @@ unsigned int compareVersion(std::string version1, std::string version2) {
 static QString GetIniFilename() {
   QFileInfo applicationPath = qApp->applicationFilePath();
 #ifdef Q_OS_OSX
-  qDebug() << QString(applicationPath.absolutePath());
+//  qDebug() << QString(applicationPath.absolutePath());
   // on macOS excecutable file is located in
   // ./rclone-browser.app/Contents/MasOS/ to get actual bundle folder we have to
   // traverse three levels up
@@ -78,14 +77,14 @@ static QString GetIniFilename() {
 bool IsPortableMode() {
   QString ini = GetIniFilename();
   QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
-  qDebug() << QString("utils.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
+//  qDebug() << QString("utils.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
   QString appimage = qgetenv("APPIMAGE");
-  qDebug() << QString("utils.cpp $APPIMAGE: " + appimage);
+//  qDebug() << QString("utils.cpp $APPIMAGE: " + appimage);
 
   // cat ".config" from $XDG_CONFIG_HOME
   // it should be the same as appimage if run from AppImage
   xdg_config_home = xdg_config_home.left(xdg_config_home.length() - 7);
-  qDebug() << QString("utils.cpp $XDG_CONFIG_HOME-7: " + xdg_config_home);
+//  qDebug() << QString("utils.cpp $XDG_CONFIG_HOME-7: " + xdg_config_home);
 
   if (!xdg_config_home.isEmpty() && !appimage.isEmpty() &&
       xdg_config_home == appimage) {
@@ -215,7 +214,7 @@ QStringList GetRcloneConf() {
     conf = QDir(xdg_config_home + "/..").filePath(conf);
 #endif
 #endif
-    qDebug() << QString("utils.cpp conf: " + conf);
+//    qDebug() << QString("utils.cpp conf: " + conf);
   }
   return QStringList() << "--config" << conf;
 }
@@ -238,7 +237,7 @@ QString GetRclone() {
     rclone = QDir(xdg_config_home + "/..").filePath(rclone);
 #endif
 #endif
-    qDebug() << QString("utils.cpp rclone portable: " + rclone);
+//    qDebug() << QString("utils.cpp rclone portable: " + rclone);
   }
 
   return rclone;

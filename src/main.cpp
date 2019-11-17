@@ -1,5 +1,4 @@
 #include "main_window.h"
-#include "qdebug.h"
 #include "utils.h"
 
 int main(int argc, char *argv[]) {
@@ -22,8 +21,8 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
   app.setWindowIcon(QIcon(":/icons/icon.png"));
 
   // enforce one instance of Rclone Browser per user
-  qDebug() << QString("main.cpp currentPath: " + QDir::currentPath());
-  qDebug() << QString("main.cpp tempPath:  " + QDir::tempPath());
+//  qDebug() << QString("main.cpp currentPath: " + QDir::currentPath());
+//  qDebug() << QString("main.cpp tempPath:  " + QDir::tempPath());
 
   QString tmpDir;
   QString applicationNameBase;
@@ -31,16 +30,16 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
   QFileInfo applicationUserPath;
 
   QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
-  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
+//  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
 
   QString APPIMAGE = qgetenv("APPIMAGE");
-  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
+//  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
 
   QFileInfo appBundlePath;
 
   if (IsPortableMode()) {
 
-    qDebug() << QString("isPortable is true");
+//    qDebug() << QString("isPortable is true");
     applicationPath = qApp->applicationFilePath();
 #ifdef Q_OS_OSX
     // on macOS excecutable file is located in
@@ -137,7 +136,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
         0x80004004); // exit immediately if folder not writable
   }
 
-  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
+//  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
 
   // not most elegant as fixed name but in reality not big deal
   QLockFile lockFile(tmpDir + "/.RcloneBrowser_4q6RgLs2RpbJA.lock");

@@ -28,8 +28,11 @@ MainWindow::MainWindow() {
 
 #if defined(Q_OS_WIN)
   QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",QSettings::NativeFormat);
+  auto uisettings = GetSettings();
+  bool forceLight =
+    uisettings->value("Settings/forceLightMode").toBool();
 
-  if (settings.value("AppsUseLightTheme")==0) {
+  if (settings.value("AppsUseLightTheme")==0 && !forceLight) {
     qApp->setStyle(QStyleFactory::create("Fusion"));
 
     QPalette darkPalette;
@@ -131,6 +134,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
+      settings->setValue("Settings/forceLightMode", dialog.forceLightMode());
 
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());

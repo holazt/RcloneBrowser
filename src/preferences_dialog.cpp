@@ -109,6 +109,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/rowColors", true).toBool());
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
+  ui.forceLightMode->setChecked(
+      settings->value("Settings/forceLightMode", false).toBool());
 }
 
 PreferencesDialog::~PreferencesDialog() {}
@@ -175,4 +177,8 @@ bool PreferencesDialog::getRowColors() const {
 
 bool PreferencesDialog::getShowHidden() const {
   return ui.showHidden->isChecked();
+}
+
+bool PreferencesDialog::forceLightMode() const {
+  return ui.forceLightMode->isChecked();
 }

@@ -25,7 +25,6 @@ LicenseFile=..\release\{#MyAppDir}\License.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename={#MyAppDir}-installer
 SetupIconFile=..\src\icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma

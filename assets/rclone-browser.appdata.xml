@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2019 Dariusz Bogdanski <dariuszb@me.com> -->
 <component type="desktop-application">
+  <id>org.kapitainsky.rclone-browser</id>
   <metadata_license>Unlicense</metadata_license>
   <project_license>Unlicense</project_license>
   <name>Rclone Browser</name>

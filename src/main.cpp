@@ -20,10 +20,16 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
   app.setOrganizationName("rclone-browser");
   app.setWindowIcon(QIcon(":/icons/icon.png"));
 
-  // enforce one instance of Rclone Browser per user
-//  qDebug() << QString("main.cpp currentPath: " + QDir::currentPath());
-//  qDebug() << QString("main.cpp tempPath:  " + QDir::tempPath());
+// initialize SSL libraries
+// see: https://github.com/linuxdeploy/linuxdeploy-plugin-qt/issues/57
+#if defined(Q_OS_LINUX)
+  QString currentDir=QDir::currentPath();
+  QDir::setCurrent(QCoreApplication::applicationDirPath());
+  QSslSocket::supportsSsl();
+  QDir::setCurrent(currentDir);
+#endif
 
+// enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;
   QFileInfo applicationPath;

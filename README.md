@@ -1,4 +1,4 @@
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/RcloneBrowserLongLogo1.png" width=80%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/RcloneBrowserLongLogo1.png" width="80%" />
 
 [![Travis CI Build Status][img1]][1] [![AppVeyor Build Status][img2]][2] [![Downloads][img3]][3] [![Release][img4]][4] [![License][img5]][5] <img src="https://img.shields.io/badge/Qt-cmake-green.svg"> [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/kapitainsky)
 
@@ -51,32 +51,32 @@ Sample screenshots
 -------------------
 ### macOS
 <p align="center">
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot24.png" width=100%>
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot23.png" width=75%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot24.png" width="100%" />
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot23.png" width="75%" />
 </p>
 
 
 ### Linux
 <p align="center">
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot21.png" width=65%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot21.png" width="65%" />
 </p>
-</br>
+&nbsp;
 <p align="center">
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot22.png" width=65%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot22.png" width="65%" />
 </p>
-</br>
 
 
+&nbsp;
 ### Windows
 <p align="center">
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot25.PNG" width=100%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot25.PNG" width="100%" />
 </p>
-</br>
+&nbsp;
 <p align="center">
-<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot26.PNG" width=65%>
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/screenshot26.PNG" width="65%" />
 </p>
-</br>
 
+&nbsp;
 
 
 How to get it

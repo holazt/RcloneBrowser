@@ -70,9 +70,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/rcloneConf").toString()));
   ui.stream->setText(settings->value("Settings/stream").toString());
 
-  #if defined(Q_OS_OPENBSD)
+  #if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
   ui.mount->setText(
-      settings->value("Settings/mount", "*** rclone does not support mount on openBSD ***").toString());
+      settings->value("Settings/mount", "* mount is not supported by rclone on this system *").toString());
   ui.mount->setDisabled(true);
   #else
   ui.mount->setText(

@@ -112,7 +112,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
             ui.mount->setDisabled(!isFolder);
           };
 #else
+  #if defined(Q_OS_OPENBSD)
+          ui.mount->setDisabled(true);
+  #else
           ui.mount->setDisabled(!isFolder);
+  #endif
 #endif
 
           ui.stream->setDisabled(isFolder);

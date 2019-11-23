@@ -19,6 +19,7 @@ Table of contents
 * [Build instructions for Linux](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-linux)
 * [Build instructions for FreeBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-freebsd)
 * [Build instructions for openBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-openbsd)
+* [Build instructions for NetBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-netbsd)
 * [Build instructions for macOS](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-macos)
 * [Build instructions for Windows](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-windows)
 * [History](https://github.com/kapitainsky/RcloneBrowser#history)
@@ -155,7 +156,21 @@ Build instructions for openBSD
 6. Run `make` from build folder to create binary
 7. Install `sudo make install`
 
-Note: rclone for openBSD does not support `mount` hence this feature is disabled. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+Note: rclone for openBSD does not support `mount` hence this feature is disabled in Rclone Browser. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+
+
+Build instructions for NetBSD
+------------------------------
+1. Install dependencies `sudo pkgin install git cmake qt5-qtdeclarative`
+2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+3. Go to source folder `cd RcloneBrowser`
+4. Create new build folder - `mkdir build && cd build`
+5. Run `cmake .. -DCMAKE_PREFIX_PATH:PATH=/usr/pkg/qt5` from build folder to create makefile
+6. Run `make` from build folder to create binary
+7. Install `sudo make install`
+
+Note: rclone for NetBSD does not support `mount` hence this feature is disabled in Rclone Browser. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+
 
 Build instructions for macOS
 ----------------------------

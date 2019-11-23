@@ -18,6 +18,7 @@ Table of contents
 * [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it)
 * [Build instructions for Linux](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-linux)
 * [Build instructions for FreeBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-freebsd)
+* [Build instructions for openBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-openbsd)
 * [Build instructions for macOS](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-macos)
 * [Build instructions for Windows](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-windows)
 * [History](https://github.com/kapitainsky/RcloneBrowser#history)
@@ -144,6 +145,19 @@ Build instructions for FreeBSD
 Note: For rclone remotes mount to work please see this forum [thread](https://forum.rclone.org/t/failed-to-mount-fuse-fs-freebsd/7723/9). For me it was enough to run `sudo sysctl vfs.usermount=1`
 
 
+Build instructions for openBSD
+------------------------------
+1. Install dependencies `sudo pkg_add git cmake qt5`
+2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+3. Set environment variable needed for cmake build `export CMAKE_PREFIX_PATH="/usr/local/lib/qt5/cmake/"`
+4. Go to source folder `cd RcloneBrowser`
+5. Create new build folder - `mkdir build && cd build`
+6. Run `cmake ..` from build folder to create makefile
+7. Run `make` from build folder to create binary
+8. Install `sudo make install`
+
+Note: rclone for openBSD does not support `mount` hence this feature is disabled. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+
 Build instructions for macOS
 ----------------------------
 1. If you don't have Homebrew yet install it `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
@@ -210,5 +224,6 @@ Anyone is free to copy, modify, publish, use, compile, sell, or distribute this 
 [img3]: https://img.shields.io/github/downloads/kapitainsky/RcloneBrowser/total.svg?maxAge=3600
 [img4]: https://img.shields.io/github/release/kapitainsky/RcloneBrowser.svg?maxAge=3600
 [img5]: https://img.shields.io/github/license/kapitainsky/RcloneBrowser.svg?maxAge=2592000
+[billziss-gh_cgofuse_i18]: https://github.com/billziss-gh/cgofuse/issues/18
 
 

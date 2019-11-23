@@ -149,12 +149,11 @@ Build instructions for openBSD
 ------------------------------
 1. Install dependencies `sudo pkg_add git cmake qt5`
 2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
-3. Set environment variable needed for cmake build `export CMAKE_PREFIX_PATH="/usr/local/lib/qt5/cmake/"`
-4. Go to source folder `cd RcloneBrowser`
-5. Create new build folder - `mkdir build && cd build`
-6. Run `cmake ..` from build folder to create makefile
-7. Run `make` from build folder to create binary
-8. Install `sudo make install`
+3. Go to source folder `cd RcloneBrowser`
+4. Create new build folder - `mkdir build && cd build`
+5. Run `cmake .. -DCMAKE_PREFIX_PATH:PATH=/usr/local/lib/qt5/cmake` from build folder to create makefile
+6. Run `make` from build folder to create binary
+7. Install `sudo make install`
 
 Note: rclone for openBSD does not support `mount` hence this feature is disabled. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
 

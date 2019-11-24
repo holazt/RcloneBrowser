@@ -169,14 +169,11 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
           QString nameTrimmed;
 
-          if (name.length() > 47)
-            {
-              nameTrimmed = name.left(25) + "..." + name.right(19);
-            }
-          else
-           {
-             nameTrimmed=name;
-           }
+          if (name.length() > 47) {
+            nameTrimmed = name.left(25) + "..." + name.right(19);
+          } else {
+            nameTrimmed = name;
+          }
 
           label->setText(nameTrimmed);
 

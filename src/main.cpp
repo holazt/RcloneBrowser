@@ -4,18 +4,18 @@
 int main(int argc, char *argv[]) {
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-static const char ENV_VAR_QT_DEVICE_PIXEL_RATIO[] = "QT_DEVICE_PIXEL_RATIO";
-if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
-        && !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
-        && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
-        && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+  static const char ENV_VAR_QT_DEVICE_PIXEL_RATIO[] = "QT_DEVICE_PIXEL_RATIO";
+  if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO) &&
+      !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR") &&
+      !qEnvironmentVariableIsSet("QT_SCALE_FACTOR") &&
+      !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-}
+  }
 #endif
 
   QApplication app(argc, argv);
 
-//  app.setApplicationDisplayName("Rclone Browser");
+  //  app.setApplicationDisplayName("Rclone Browser");
   app.setApplicationName("rclone-browser");
   app.setOrganizationName("rclone-browser");
   app.setWindowIcon(QIcon(":/icons/icon.png"));
@@ -23,29 +23,29 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
 // initialize SSL libraries
 // see: https://github.com/linuxdeploy/linuxdeploy-plugin-qt/issues/57
 #if defined(Q_OS_LINUX)
-  QString currentDir=QDir::currentPath();
+  QString currentDir = QDir::currentPath();
   QDir::setCurrent(QCoreApplication::applicationDirPath());
   QSslSocket::supportsSsl();
   QDir::setCurrent(currentDir);
 #endif
 
-// enforce one instance of Rclone Browser per user
+  // enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;
   QFileInfo applicationPath;
   QFileInfo applicationUserPath;
 
   QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
-//  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
+  //  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
 
   QString APPIMAGE = qgetenv("APPIMAGE");
-//  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
+  //  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
 
   QFileInfo appBundlePath;
 
   if (IsPortableMode()) {
 
-//    qDebug() << QString("isPortable is true");
+    //    qDebug() << QString("isPortable is true");
     applicationPath = qApp->applicationFilePath();
 #ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
@@ -142,7 +142,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
         0x80004004); // exit immediately if folder not writable
   }
 
-//  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
+  //  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
 
   // not most elegant as fixed name but in reality not big deal
   QLockFile lockFile(tmpDir + "/.RcloneBrowser_4q6RgLs2RpbJA.lock");

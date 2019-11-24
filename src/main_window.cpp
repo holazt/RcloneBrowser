@@ -364,7 +364,6 @@ void MainWindow::rcloneGetVersion() {
             counter++;
           };
 
-
           QFileInfo appBundlePath;
 #ifdef Q_OS_MACOS
           if (IsPortableMode()) {
@@ -376,8 +375,9 @@ void MainWindow::rcloneGetVersion() {
 
             mStatusMessage->setText(
                 rclone_info1 + " in " +
-                QDir::toNativeSeparators(
-                    GetRclone().replace(appBundlePath.fileName() + "/Contents/MacOS/../../../", "")) +
+                QDir::toNativeSeparators(GetRclone().replace(
+                    appBundlePath.fileName() + "/Contents/MacOS/../../../",
+                    "")) +
                 ", " + rclone_info2 + ", " + rclone_info3);
 
           } else {
@@ -419,7 +419,7 @@ void MainWindow::rcloneGetVersion() {
             return;
           }
 
-            if (firstTime) {
+          if (firstTime) {
             if (p->error() == QProcess::FailedToStart) {
               QMessageBox::information(
                   this, "Error",

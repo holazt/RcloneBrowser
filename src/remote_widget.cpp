@@ -112,12 +112,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
             ui.mount->setDisabled(!isFolder);
           };
 #else
-  // mount is not supported by rclone on these systems
-  #if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
+// mount is not supported by rclone on these systems
+#if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
           ui.mount->setDisabled(true);
-  #else
+#else
           ui.mount->setDisabled(!isFolder);
-  #endif
+#endif
 #endif
 
           ui.stream->setDisabled(isFolder);

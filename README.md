@@ -16,6 +16,7 @@ Table of contents
 * [Features](https://github.com/kapitainsky/RcloneBrowser#features)
 * [Sample screenshots](https://github.com/kapitainsky/RcloneBrowser#sample-screenshots)
 * [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it)
+* [Portable vs standard mode](https://github.com/kapitainsky/RcloneBrowser#portable-vs-standard-mode)
 * [Build instructions for Linux](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-linux)
 * [Build instructions for FreeBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-freebsd)
 * [Build instructions for openBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-openbsd)
@@ -83,13 +84,21 @@ Sample screenshots
 
 How to get it
 --------------
-Get Windows, macOS, Ubuntu/Debian (including Raspberry Pi version) and universal AppImage for all other 64bit Linux versions - on [releases][3]' page.
+Get binaries for Windows, macOS and Linux on [releases][3]' page.
+
+Windows versions (64-bit and 32-bit) are compatible with all x86 based Windows OS starting with Windows 7. 
+
+Mac version is compiled to run on all versions of macOS starting with 10.9 - some features like e.g. dark mode only work on systems supporting it. 
+
+Situation with Linux is a bit fuzzier...
+Linux binaries (AppImage) for armhf architecture runs on any Raspberry Pi using raspbian stretch or buster.
+Linux binaries (AppImage) for amd64 and i386 architectures should run on systems using distributions released in the last few years. Amd64 one is built on CentOS 7 (released in 2014) and i386 on Ubuntu 16.04 LTS (released in 2016). The whole idea with AppImage is to build it on the oldest still supported LTS distro – and it should work on all newer OS releases without major problems. But this is Linux. 10000 different distributions… with changes and customizations often only their authors are aware of. So YMMV. I would be happy to hear what (if any) distribution it does not work for.
 
 All released binaries are signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key). It allows to verify that provided binaries were created by myself and are unchanged. If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
 
-Starting with the next release I will provide proper installers for Windows releases and for Linux AppImage only. Some explanation on latter... Binaries for Linux desktop applications is a major f*ing pain in the ass... as Linus Torvalds said - [DebConf 14_ QA](https://www.youtube.com/watch?v=5PmHRSeA2c8) at 05:40:
+Starting with this release I provide proper installers for Windows releases and for Linux AppImage only. Some explanation on latter... Binaries for Linux desktop applications is a major f*ing pain in the ass... as Linus Torvalds said - [DebConf 14_ QA](https://www.youtube.com/watch?v=5PmHRSeA2c8) at 05:40:
 
 > I'm talking about actual application writers that want to make a package of their application for Linux. And I've seen this firsthand with the other project I've been involved with, which is my divelog application.
 > We make binaries for Windows and OS X. 
@@ -113,8 +122,33 @@ And I totally agree with above. I want to provide binary which works across as m
 
 If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems. I have tested all of them and you can have your own Linux distribution Rclone Browser running in few minutes.
 
+
 Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am enirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.
 
+
+Portable vs standard mode
+-----------------------
+
+In standard operations mode all configurations files are stored in the following locations:
+
+macOS:
+* preferences: ~/Library/Preferences/com.rclone-browser.rclone-browser.plist
+* tasks file: ~/Library/Application Support/rclone-browser/rclone-browser/tasks.bin
+* lock file: in $TMPDIR assigned by OS (user unique)
+
+Linux:
+* preferences: ~/.config/rclone-browser/rclone-browser.conf
+* tasks file: ~/.local/share/rclone-browser/rclone-browser/tasks.bin
+* lock file: $TMPDIR environment variable or /tmp if $TMPDIR is not defined
+
+Windows:
+* preferences in registry: Computer\HKEY_CURRENT_USER\Software\rclone-browser\rclone-browser
+* tasks file: %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
+* lock file: %HOMEPATH%\AppData\Local\Temp\
+
+Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` create `RcloneBrowser.ini`. For Linux create a directory with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
+
+In portable mode all configuration files will be stored in the same folder as application (in .config folder on Linux) and rclone and .rclone.conf path can be relative to executable. It means that you can put all required stuff including rclone binary itself on e.g. memory stick and everything will be stored there.
 
 
 Build instructions for Linux

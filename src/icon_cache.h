@@ -23,7 +23,7 @@ private:
 
   QHash<QString, QIcon> mIcons;
 
-#if !defined(Q_OS_WIN32) && !defined(Q_OS_OSX)
+#if !defined(Q_OS_WIN32) && !defined(Q_OS_MACOS)
   QMimeDatabase mMimeDatabase;
 #endif
 };

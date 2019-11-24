@@ -47,7 +47,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
 
 //    qDebug() << QString("isPortable is true");
     applicationPath = qApp->applicationFilePath();
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
     // ./rclone-browser.app/Contents/MasOS/
     // to get actual bundle folder we have
@@ -92,7 +92,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
       msgBox.setIcon(QMessageBox::Warning);
       msgBox.setText("You need write "
                      "access to this folder:\n\n"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                      + appBundlePath.absolutePath() +
 #else
 #ifdef Q_OS_WIN
@@ -102,7 +102,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
 #endif
 #endif
                      "\n\n"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                      "Or remove file:\n\n" +
                      appBundlePath.baseName() +
                      ".ini \n\nfrom the above folder "
@@ -124,7 +124,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
       msgBox.setIcon(QMessageBox::Warning);
       msgBox.setText("You need write "
                      "access to this folder: \n\n"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                      + tmpDir
 #else
 

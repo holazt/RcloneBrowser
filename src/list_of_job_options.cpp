@@ -59,7 +59,7 @@ QFile *ListOfJobOptions::GetPersistenceFile(QIODevice::OpenModeFlag mode) {
   if (IsPortableMode()) {
     // in portable mode tasks' file will be saved in the same folder as
     // excecutable
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
     // ./rclone-browser.app/Contents/MasOS/
     // to get actual bundle folder we have

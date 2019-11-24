@@ -50,7 +50,7 @@ unsigned int compareVersion(std::string version1, std::string version2) {
 
 static QString GetIniFilename() {
   QFileInfo applicationPath = qApp->applicationFilePath();
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
 //  qDebug() << QString(applicationPath.absolutePath());
   // on macOS excecutable file is located in
   // ./rclone-browser.app/Contents/MasOS/ to get actual bundle folder we have to
@@ -201,7 +201,7 @@ QStringList GetRcloneConf() {
 
   QString conf = gRcloneConf;
   if (IsPortableMode() && QFileInfo(conf).isRelative()) {
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
     // ./rclone-browser.app/Contents/MasOS/rclone-browser to get actual bundle
     // folder we have to traverse three levels up
@@ -224,7 +224,7 @@ void SetRcloneConf(const QString &rcloneConf) { gRcloneConf = rcloneConf; }
 QString GetRclone() {
   QString rclone = gRclone;
   if (IsPortableMode() && QFileInfo(rclone).isRelative()) {
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
     // ./rclone-browser.app/Contents/MasOS/rclone-browser to get actual bundle
     // folder we have to traverse three levels up

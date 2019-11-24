@@ -16,7 +16,7 @@
 #include <QtWinExtras>
 #endif
 
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
 #include <QtMacExtras>
 #endif
 

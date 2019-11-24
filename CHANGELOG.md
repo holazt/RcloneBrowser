@@ -17,6 +17,7 @@
 - changed program icon
 - bunch of usual small tweaks and fixes
 
+
 ## [1.6.0] - 2019-10-27
 - fixed Windows mount/unmount (requires rclone v1.50+)
 - Rclone Browser checks now for used rclone version (mount is disabled in Windows if rclone <v1.50)

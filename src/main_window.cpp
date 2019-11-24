@@ -653,13 +653,13 @@ void MainWindow::rcloneConfig() {
   if (terminal.isEmpty()) {
     terminal = QStandardPaths::findExecutable("gnome-terminal");
     if (terminal.isEmpty()) {
-      terminal = QStandardPaths::findExecutable("konsole");
+      terminal = QStandardPaths::findExecutable("xfce4-terminal");
       if (terminal.isEmpty()) {
-        terminal = QStandardPaths::findExecutable("xfce4-terminal");
+        terminal = QStandardPaths::findExecutable("xterm");
         if (terminal.isEmpty()) {
-          terminal = QStandardPaths::findExecutable("xterm");
+          terminal = QStandardPaths::findExecutable("x-terminal-emulator");
           if (terminal.isEmpty()) {
-            terminal = QStandardPaths::findExecutable("x-terminal-emulator");
+            terminal = QStandardPaths::findExecutable("konsole");
             if (terminal.isEmpty()) {
               QMessageBox::critical(this, "Error",
                                     "Not sure how to launch terminal!\n"

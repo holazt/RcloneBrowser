@@ -7,7 +7,7 @@
 - NEW: macOS release is provided as dmg image file
 - NEW: macOS release works on all macOS versions starting with 10.9
 - NEW: portable mode for all operating systems
-- NEW: on Linux multiple terminals are tried for rclone config ($TERMINAL then gnome-terminal followed by konsole, xfce4-terminal, xterm and x-terminal-emulator)
+- NEW: on Linux multiple terminals are tried for rclone config ($TERMINAL then gnome-terminal followed by xfce4-terminal, xterm, x-terminal-emulator and konsole)
 - NEW: Enable Qt HighDpiScaling - should help people with high DPI monitors
 - fixed mount/unmount on FreeBSD
 - disable mount for openBSD (as not supported by rclone)

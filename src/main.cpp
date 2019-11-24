@@ -1,5 +1,4 @@
 #include "main_window.h"
-#include "qdebug.h"
 #include "utils.h"
 
 int main(int argc, char *argv[]) {
@@ -21,28 +20,34 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
   app.setOrganizationName("rclone-browser");
   app.setWindowIcon(QIcon(":/icons/icon.png"));
 
-  // enforce one instance of Rclone Browser per user
-  qDebug() << QString("main.cpp currentPath: " + QDir::currentPath());
-  qDebug() << QString("main.cpp tempPath:  " + QDir::tempPath());
+// initialize SSL libraries
+// see: https://github.com/linuxdeploy/linuxdeploy-plugin-qt/issues/57
+#if defined(Q_OS_LINUX)
+  QString currentDir=QDir::currentPath();
+  QDir::setCurrent(QCoreApplication::applicationDirPath());
+  QSslSocket::supportsSsl();
+  QDir::setCurrent(currentDir);
+#endif
 
+// enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;
   QFileInfo applicationPath;
   QFileInfo applicationUserPath;
 
   QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
-  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
+//  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
 
   QString APPIMAGE = qgetenv("APPIMAGE");
-  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
+//  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
 
   QFileInfo appBundlePath;
 
   if (IsPortableMode()) {
 
-    qDebug() << QString("isPortable is true");
+//    qDebug() << QString("isPortable is true");
     applicationPath = qApp->applicationFilePath();
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
     // ./rclone-browser.app/Contents/MasOS/
     // to get actual bundle folder we have
@@ -87,7 +92,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
       msgBox.setIcon(QMessageBox::Warning);
       msgBox.setText("You need write "
                      "access to this folder:\n\n"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                      + appBundlePath.absolutePath() +
 #else
 #ifdef Q_OS_WIN
@@ -97,7 +102,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
 #endif
 #endif
                      "\n\n"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                      "Or remove file:\n\n" +
                      appBundlePath.baseName() +
                      ".ini \n\nfrom the above folder "
@@ -119,7 +124,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
       msgBox.setIcon(QMessageBox::Warning);
       msgBox.setText("You need write "
                      "access to this folder: \n\n"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                      + tmpDir
 #else
 
@@ -137,7 +142,7 @@ if (!qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)
         0x80004004); // exit immediately if folder not writable
   }
 
-  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
+//  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
 
   // not most elegant as fixed name but in reality not big deal
   QLockFile lockFile(tmpDir + "/.RcloneBrowser_4q6RgLs2RpbJA.lock");

@@ -1,6 +1,6 @@
 #include "icon_cache.h"
 #include "item_model.h"
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
 #include "osx_helper.h"
 #endif
 
@@ -38,7 +38,7 @@ void IconCache::getIcon(Item *item, const QPersistentModelIndex &parent) {
       icon = QtWin::fromHICON(info.hIcon);
       DestroyIcon(info.hIcon);
     }
-#elif defined(Q_OS_OSX)
+#elif defined(Q_OS_MACOS)
     icon = osxGetIcon(ext.toUtf8().constData());
 #else
     QMimeType mime = mMimeDatabase.mimeTypeForFile(

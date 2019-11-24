@@ -8,7 +8,7 @@
 #include "stream_widget.h"
 #include "transfer_dialog.h"
 #include "utils.h"
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
 #include "osx_helper.h"
 #endif
 
@@ -56,7 +56,7 @@ MainWindow::MainWindow() {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultDownloadOptions", "");
     };
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // for macOS by default exclude .DS_Store files from uploads
     if (!(settings->contains("Settings/defaultUploadOptions"))) {
       // if defaultDownloadOptions does not exist create new empty key
@@ -234,7 +234,7 @@ MainWindow::MainWindow() {
                          reason == QSystemTrayIcon::Trigger) {
                        showNormal();
                        mSystemTray.setVisible(mAlwaysShowInTray);
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
                        osxShowDockIcon();
 #endif
                      }
@@ -243,7 +243,7 @@ MainWindow::MainWindow() {
   QObject::connect(&mSystemTray, &QSystemTrayIcon::messageClicked, this, [=]() {
     showNormal();
     mSystemTray.setVisible(mAlwaysShowInTray);
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     osxShowDockIcon();
 #endif
 
@@ -259,12 +259,12 @@ MainWindow::MainWindow() {
       trayMenu->addAction("&Show"), &QAction::triggered, this, [=]() {
         MainWindow::setWindowState((windowState() & ~Qt::WindowMinimized) |
                                    Qt::WindowActive);
-        MainWindow::show();  // bring window to top on OSX
-        MainWindow::raise(); // bring window from minimized state on OSX
+        MainWindow::show();  // bring window to top on macOS
+        MainWindow::raise(); // bring window from minimized state on macOS
         MainWindow::activateWindow(); // bring window to front/unminimize on
                                       // windows
         mSystemTray.setVisible(mAlwaysShowInTray);
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
         osxShowDockIcon();
 #endif
       });
@@ -366,7 +366,7 @@ void MainWindow::rcloneGetVersion() {
 
 
           QFileInfo appBundlePath;
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
           if (IsPortableMode()) {
 
             QFileInfo applicationPath = qApp->applicationFilePath();
@@ -634,7 +634,7 @@ void MainWindow::rcloneConfig() {
   p->setArguments(QStringList() << "config" << GetRcloneConf());
 #endif
 
-#elif defined(Q_OS_OSX)
+#elif defined(Q_OS_MACOS)
   auto tmp = new QFile("/tmp/rclone_config.command");
   tmp->open(QIODevice::WriteOnly);
   QTextStream(tmp) << "#!/bin/sh\n"
@@ -805,7 +805,7 @@ bool MainWindow::canClose() {
 
 void MainWindow::closeEvent(QCloseEvent *ev) {
   if (mCloseToTray && isVisible()) {
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     osxHideDockIcon();
 #endif
     mSystemTray.show();

@@ -1,5 +1,4 @@
 #include "job_options.h"
-#include <qdebug.h>
 #include <qexception.h>
 #include <qlogging.h>
 #ifdef _WIN32
@@ -145,6 +144,9 @@ QStringList JobOptions::getOptions() const {
 
   list << "--stats"
        << "1s";
+
+  list << "--stats-file-name-length"
+       << "0";
 
   list << source;
   list << dest;

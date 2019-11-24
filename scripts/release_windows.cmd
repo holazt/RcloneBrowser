@@ -2,7 +2,15 @@
 setlocal enabledelayedexpansion
 
 if "%1" == "" (
-  echo No architecture x86 or x64 specified in cmdline!
+  echo Please specify x86 ^(32-bit^) or x64 ^(64-bit^) architecture in cmdline
+  goto :eof
+)
+
+set BOTH=0
+if not "%1" == "x86" if not "%1" == "x64" set BOTH=1
+
+if %BOTH% == 1  (
+  echo Only x86 ^(32-bit^) or x64 ^(64-bit^) architectures are supported!
   goto :eof
 )
 
@@ -15,7 +23,6 @@ set QT=C:\Qt\5.13.2\msvc2017\
 set QT=C:\Qt\5.13.2\msvc2017_64\
 )
 set PATH=%QT%\bin;%PATH%
-
 
 set ROOT="%~dp0.."
 set BUILD="%~dp0..\build\build\release"
@@ -32,9 +39,11 @@ if "%ERRORLEVEL%" equ "0" (
 )
 
 if "%ARCH%" == "x86" (
-  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win32"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win-32-bit"
+  set TARGET_EXE="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-32-bit"
 ) else (
-  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win64"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win-64-bit"
+  set TARGET_EXE="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-64-bit"
 )
 
 pushd "%ROOT%"
@@ -43,7 +52,7 @@ if not exist release mkdir release
 
 if exist "%TARGET%" rd /s /q "%TARGET%"
 if exist "%TARGET%.zip" del "%TARGET%.zip"
-if exist "%TARGET%-installer.exe" del "%TARGET%-installer.exe"
+if exist "%TARGET_EXE%.exe" del "%TARGET_EXE%.exe"
 
 if exist build rd /s /q build
 mkdir build
@@ -95,7 +104,7 @@ rem in case user wants to install both 32bits and 64bits versions we need two Ap
 rem 64bits ;AppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}
 rem 32bits ;AppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}
 if "%ARCH%" == "x86" (
-"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win32" "/dMyAppArch=x86" /O"../release" rclone-browser-win-installer.iss
+"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win-32-bit" "/dMyAppArch=x86" /O"../release" /F"rclone-browser-%VERSION_COMMIT%-32-bit" rclone-browser-win-installer.iss
 ) else (
-"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win64" "/dMyAppArch=x64" /O"../release" rclone-browser-win-installer.iss
+"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win-64-bit" "/dMyAppArch=x64" /O"../release" /F"rclone-browser-%VERSION_COMMIT%-64-bit" rclone-browser-win-installer.iss
 )

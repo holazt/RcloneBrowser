@@ -11,6 +11,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/..
 VERSION=`cat $ROOT/VERSION`-`git rev-parse --short HEAD`
 BUILD="$ROOT"/build
 TARGET=rclone-browser-$VERSION-macOS
+DMG=rclone-browser-$VERSION
 APP="$TARGET"/"Rclone Browser.app"
 
 # clean from previous builds (if for the same version in releases)
@@ -19,6 +20,9 @@ if [ -d "$BUILD" ]; then
 fi
 if [ -d $ROOT/release/"$TARGET" ]; then
   rm -rf $ROOT/release/"$TARGET"*
+fi
+if [ -f $ROOT/release/"$DMG".dmg ]; then
+  rm $ROOT/release/"$DMG".dmg
 fi
 if [ -d $ROOT/release/"Rclone Browser.app" ]; then
   rm -rf $ROOT/release/"Rclone Browser.app"
@@ -40,10 +44,10 @@ cd ../..
 mkdir -p release
 cd release
 mkdir "$TARGET"
-cp "$ROOT"/README.md "$TARGET"/Readme.txt
-cp "$ROOT"/CHANGELOG.md "$TARGET"/Changelog.txt
-cp "$ROOT"/LICENSE "$TARGET"/License.txt
 cp -R "$BUILD"/build/rclone-browser.app "$APP"
+cp "$ROOT"/README.md "$APP"/Readme.txt
+cp "$ROOT"/CHANGELOG.md "$APP"/Changelog.txt
+cp "$ROOT"/LICENSE "$APP"/License.txt
 mv "$APP"/Contents/MacOS/rclone-browser "$APP"/Contents/MacOS/"Rclone Browser"
 
 sed -i .bak 's/rclone-browser/Rclone Browser/g' "$APP"/Contents/Info.plist
@@ -67,6 +71,6 @@ echo "Preparing dmg file"
 # https://github.com/LinusU/node-appdmg
 cp -R "$TARGET"/"Rclone Browser.app" .
 cd ../scripts
-appdmg ../assets/appdmg.json ../release/"$TARGET".dmg
+appdmg ../assets/appdmg.json ../release/"$DMG".dmg
 cd ../release
 rm -rf "Rclone Browser.app"

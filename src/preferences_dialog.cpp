@@ -69,8 +69,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.rcloneConf->setText(QDir::toNativeSeparators(
       settings->value("Settings/rcloneConf").toString()));
   ui.stream->setText(settings->value("Settings/stream").toString());
+
+  #if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
+  ui.mount->setText(
+      settings->value("Settings/mount", "* mount is not supported by rclone on this system *").toString());
+  ui.mount->setDisabled(true);
+  #else
   ui.mount->setText(
       settings->value("Settings/mount", "--vfs-cache-mode writes").toString());
+  #endif
+
   ui.defaultDownloadDir->setText(QDir::toNativeSeparators(
       settings->value("Settings/defaultDownloadDir").toString()));
   ui.defaultUploadDir->setText(QDir::toNativeSeparators(

@@ -16,10 +16,11 @@ Table of contents
 * [Features](https://github.com/kapitainsky/RcloneBrowser#features)
 * [Sample screenshots](https://github.com/kapitainsky/RcloneBrowser#sample-screenshots)
 * [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it)
-* [Portable vs standard mode](https://github.com/kapitainsky/RcloneBrowser#portable_vs_standard_mode)
+* [Portable vs standard mode](https://github.com/kapitainsky/RcloneBrowser#portable-vs-standard-mode)
 * [Build instructions for Linux](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-linux)
 * [Build instructions for FreeBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-freebsd)
 * [Build instructions for openBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-openbsd)
+* [Build instructions for NetBSD](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-netbsd)
 * [Build instructions for macOS](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-macos)
 * [Build instructions for Windows](https://github.com/kapitainsky/RcloneBrowser#build-instructions-for-windows)
 * [History](https://github.com/kapitainsky/RcloneBrowser#history)
@@ -121,6 +122,7 @@ And I totally agree with above. I want to provide binary which works across as m
 
 If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems. I have tested all of them and you can have your own Linux distribution Rclone Browser running in few minutes.
 
+
 Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am enirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.
 
 
@@ -144,10 +146,9 @@ Windows:
 * tasks file: %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
 * lock file: %HOMEPATH%\AppData\Local\Temp\
 
-To enable portable mode you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` create `RcloneBrowser.ini`. For Linux create a directory with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
+Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` create `RcloneBrowser.ini`. For Linux create a directory with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
 
-In portable mode all configuration files will be stored in the same folder as application (in .config folder on Linux) and 
-rclone and .rclone.conf path can be relative to executable. It means that you can put all required stuff including rclone binary itself on e.g. memory stick and everything will be stored there.
+In portable mode all configuration files will be stored in the same folder as application (in .config folder on Linux) and rclone and .rclone.conf path can be relative to executable. It means that you can put all required stuff including rclone binary itself on e.g. memory stick and everything will be stored there.
 
 
 Build instructions for Linux
@@ -183,14 +184,27 @@ Build instructions for openBSD
 ------------------------------
 1. Install dependencies `sudo pkg_add git cmake qt5`
 2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
-3. Set environment variable needed for cmake build `export CMAKE_PREFIX_PATH="/usr/local/lib/qt5/cmake/"`
-4. Go to source folder `cd RcloneBrowser`
-5. Create new build folder - `mkdir build && cd build`
-6. Run `cmake ..` from build folder to create makefile
-7. Run `make` from build folder to create binary
-8. Install `sudo make install`
+3. Go to source folder `cd RcloneBrowser`
+4. Create new build folder - `mkdir build && cd build`
+5. Run `cmake .. -DCMAKE_PREFIX_PATH:PATH=/usr/local/lib/qt5/cmake` from build folder to create makefile
+6. Run `make` from build folder to create binary
+7. Install `sudo make install`
 
-Note: rclone for openBSD does not support `mount` hence this feature is disabled. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+Note: rclone for openBSD does not support `mount` hence this feature is disabled in Rclone Browser. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+
+
+Build instructions for NetBSD
+------------------------------
+1. Install dependencies `sudo pkgin install git cmake qt5-qtdeclarative`
+2. Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
+3. Go to source folder `cd RcloneBrowser`
+4. Create new build folder - `mkdir build && cd build`
+5. Run `cmake .. -DCMAKE_PREFIX_PATH:PATH=/usr/pkg/qt5` from build folder to create makefile
+6. Run `make` from build folder to create binary
+7. Install `sudo make install`
+
+Note: rclone for NetBSD does not support `mount` hence this feature is disabled in Rclone Browser. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]
+
 
 Build instructions for macOS
 ----------------------------

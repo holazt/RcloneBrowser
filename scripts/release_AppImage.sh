@@ -94,6 +94,11 @@ cd "$TEMP_BASE/$TARGET"
 #mkdir $TEMP_BASE/$TARGET/AppDir/usr/share/metainfo
 #cp $ROOT/assets/rclone-browser.appdata.xml $TEMP_BASE/$TARGET/AppDir/usr/share/metainfo/
 
+# copy info files to AppImage
+cp "$ROOT"/README.md "$TEMP_BASE"/"$TARGET"/AppDir/Readme.md
+cp "$ROOT"/CHANGELOG.md "$TEMP_BASE"/"$TARGET"/AppDir/Changelog.md
+cp "$ROOT"/LICENSE "$TEMP_BASE"/"$TARGET"/AppDir/License.txt
+
 # https://github.com/linuxdeploy/linuxdeploy
 # https://github.com/linuxdeploy/linuxdeploy-plugin-qt
 linuxdeploy --appdir AppDir --desktop-file=AppDir/usr/share/applications/rclone-browser.desktop

@@ -22,7 +22,7 @@ Table of contents
     *   [Windows](https://github.com/kapitainsky/RcloneBrowser#windows-1)
 *   [Portable vs standard mode](https://github.com/kapitainsky/RcloneBrowser#portable-vs-standard-mode)
 *   [History](https://github.com/kapitainsky/RcloneBrowser#history)
-*   [Code signing certificates donations](https://github.com/kapitainsky/RcloneBrowser#code-signing-certificates-donations)  
+*   [Code signing certificates donations](https://github.com/kapitainsky/RcloneBrowser#code-signing-certificates-donations)
 *   [License](https://github.com/kapitainsky/RcloneBrowser#license)
 
 Features
@@ -41,7 +41,7 @@ Features
 *   Streaming media files for playback in player like [vlc][6] or similar
 *   Mount and unmount folders on macOS, GNU/Linux and Windows (for Windows requires [winfsp](http://www.secfs.net/winfsp/))
 *   Optionally minimizes to tray, with notifications when upload/download finishes
-*   Supports portable mode (create .ini file next to executable with same name), rclone and .rclone.conf path now can be relative to executable
+*   Supports portable mode (create .ini file next to executable with same name), rclone and rclone.conf path now can be relative to executable
 *   Supports drive-shared-with-me (Google Drive specific)
 *   For remotes supporting public link sharing has an option (right-click menu) to fetch it
 *   Supports tasks. Created jobs can be saved and run or edited later. 
@@ -214,17 +214,17 @@ In standard operations mode all configurations files are stored in the following
 
 Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` or `RcloneBrowser.app` create `RcloneBrowser.ini`. For Linux create a directory (not a file) with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage file - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
 
-In portable mode all configuration files will be stored in the same folder as application (in .config folder on Linux) and rclone and .rclone.conf path can be relative to executable - so if in preferences in `rclone location` you put `rclone.exe` browser with look for it in folder where application resides. It means that you can put all required stuff including rclone binary itself and its config on e.g. memory stick and everything will be stored there.
+In portable mode all configuration files will be stored in the same folder as application (in .config folder on Linux) and rclone and rclone.conf path can be relative to executable - so if in preferences in `rclone location` you put `rclone.exe` browser with look for it in folder where application resides. It means that you can put all required stuff including rclone binary itself and its config on e.g. memory stick and everything will be stored there.
 
 History
 --------
-I had been rclone-browser user for long time and being annoyed by small not working bits and pieces I decided for DYI approach and this is how this repo was created. Original mmozeiko’s [repository](https://github.com/mmozeiko/RcloneBrowser) had been abandoned and in the meantime rclone changed few things breaking rclone-browser functionality.
+I have been using rclone-browser for long time and being annoyed by small not working bits and pieces I decided for DYI approach and this is how this repo was created. Original mmozeiko’s [repository](https://github.com/mmozeiko/RcloneBrowser) was abandoned and in the meantime rclone changed few things breaking rclone-browser functionality.
 
 I looked around but could not find anything fully working. Some github users made progress in fixing and adding stuff so I built upon it.
 
 I used DinCahill's [fork](https://github.com/DinCahill/RcloneBrowser) as a base for my version.
 
-I fixed whatever I found not working and added tweaks improving functionality. I recompiled and repackaged everything using latest Qt (5.13.1). This on its own fixed some issues and added new features like support for dark mode in macOS. Then followed with more fixes and more features. Rclone Browser was great again:)
+I fixed whatever I found not working and added various tweaks enhancing functionality. I recompiled and repackaged everything using latest Qt (5.13.1) and latest platforms' compilers. This on its own fixed some issues and added new features like support for dark mode in macOS. Then followed with more fixes and more features. Rclone Browser was great again:) and is getting better.
 
 Code signing certificates donations 
 ---------------------------

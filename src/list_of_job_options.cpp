@@ -54,7 +54,6 @@ bool ListOfJobOptions::Forget(JobOptions *jo) {
 QFile *ListOfJobOptions::GetPersistenceFile(QIODevice::OpenModeFlag mode) {
 
   QDir outputDir;
-  QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
 
   if (IsPortableMode()) {
     // in portable mode tasks' file will be saved in the same folder as
@@ -70,6 +69,7 @@ QFile *ListOfJobOptions::GetPersistenceFile(QIODevice::OpenModeFlag mode) {
     // not macOS
     outputDir = QDir(qApp->applicationDirPath());
 #else
+    QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
     outputDir = QDir(xdg_config_home + "/rclone-browser");
 #endif
 #endif

@@ -49,8 +49,8 @@ unsigned int compareVersion(std::string version1, std::string version2) {
 }
 
 static QString GetIniFilename() {
-  QFileInfo applicationPath = qApp->applicationFilePath();
 #ifdef Q_OS_MACOS
+  QFileInfo applicationPath = qApp->applicationFilePath();
   //  qDebug() << QString(applicationPath.absolutePath());
   // on macOS excecutable file is located in
   // ./rclone-browser.app/Contents/MasOS/ to get actual bundle folder we have to
@@ -66,6 +66,7 @@ static QString GetIniFilename() {
   return appBundlePath.dir().filePath(appBundlePath.baseName() + ".ini");
 #else
 #ifdef Q_OS_WIN
+  QFileInfo applicationPath = qApp->applicationFilePath();
   return applicationPath.dir().filePath(applicationPath.baseName() + ".ini");
 #else
   QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");

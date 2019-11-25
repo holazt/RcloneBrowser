@@ -35,23 +35,24 @@ int main(int argc, char *argv[]) {
   QFileInfo applicationPath;
   QFileInfo applicationUserPath;
 
-  QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
-  //  qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
+  // QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+  // qDebug() << QString("main.cpp $XDG_CONFIG_HOME: " + xdg_config_home);
 
-  QString APPIMAGE = qgetenv("APPIMAGE");
-  //  qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
+  // QString APPIMAGE = qgetenv("APPIMAGE");
+  // qDebug() << QString("main.cpp $APPIMAGE: " + APPIMAGE);
 
   QFileInfo appBundlePath;
 
   if (IsPortableMode()) {
 
-    //    qDebug() << QString("isPortable is true");
-    applicationPath = qApp->applicationFilePath();
+    //  qDebug() << QString("isPortable is true");
+    //  applicationPath = qApp->applicationFilePath();
 #ifdef Q_OS_MACOS
     // on macOS excecutable file is located in
     // ./rclone-browser.app/Contents/MasOS/
     // to get actual bundle folder we have
     // to traverse three levels up
+    applicationPath = qApp->applicationFilePath();
     tmpDir = applicationPath.absolutePath() + "/../../..";
 
     // get bundle name
@@ -62,8 +63,10 @@ int main(int argc, char *argv[]) {
 #else
     // not macOS
 #ifdef Q_OS_WIN
+    applicationPath = qApp->applicationFilePath();
     tmpDir = applicationPath.absolutePath();
 #else
+    QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
     tmpDir = xdg_config_home + "/rclone-browser";
     // create ./rclone-browser folder
     if (!QDir(tmpDir).exists()) {
@@ -142,7 +145,7 @@ int main(int argc, char *argv[]) {
         0x80004004); // exit immediately if folder not writable
   }
 
-  //  qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
+  // qDebug() << QString("main.cpp tmpDir:  " + tmpDir);
 
   // not most elegant as fixed name but in reality not big deal
   QLockFile lockFile(tmpDir + "/.RcloneBrowser_4q6RgLs2RpbJA.lock");

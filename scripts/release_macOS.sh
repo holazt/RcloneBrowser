@@ -2,13 +2,10 @@
 
 set -e
 
-export LDFLAGS="-L/usr/local/opt/qt/lib"
-export CPPFLAGS="-I/usr/local/opt/qt/include"
-
 QTDIR=/usr/local/opt/qt
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/..
-VERSION=`cat $ROOT/VERSION`-`git rev-parse --short HEAD`
+VERSION=$(cat "$ROOT"/VERSION)-$(git rev-parse --short HEAD)
 BUILD="$ROOT"/build
 TARGET=rclone-browser-$VERSION-macOS
 DMG=rclone-browser-$VERSION
@@ -18,14 +15,14 @@ APP="$TARGET"/"Rclone Browser.app"
 if [ -d "$BUILD" ]; then
   rm -rf "$BUILD"
 fi
-if [ -d $ROOT/release/"$TARGET" ]; then
-  rm -rf $ROOT/release/"$TARGET"*
+if [ -d "$ROOT"/release/"$TARGET" ]; then
+  rm -rf "$ROOT"/release/"$TARGET"*
 fi
-if [ -f $ROOT/release/"$DMG".dmg ]; then
-  rm $ROOT/release/"$DMG".dmg
+if [ -f "$ROOT"/release/"$DMG".dmg ]; then
+  rm "$ROOT"/release/"$DMG".dmg
 fi
-if [ -d $ROOT/release/"Rclone Browser.app" ]; then
-  rm -rf $ROOT/release/"Rclone Browser.app"
+if [ -d "$ROOT"/release/"Rclone Browser.app" ]; then
+  rm -rf "$ROOT"/release/"Rclone Browser.app"
 fi
 
 
@@ -35,7 +32,7 @@ cd "$BUILD"
 # brew install cmake qt5
 cmake .. -DCMAKE_PREFIX_PATH="$QTDIR" -DCMAKE_BUILD_TYPE=Release
 # brew install coreutils
-make --jobs=`nproc --all`
+make --jobs=$(nproc --all)
 cd build
 "$QTDIR"/bin/macdeployqt rclone-browser.app -executable="rclone-browser.app/Contents/MacOS/rclone-browser" -qmldir=../src/
 cd ../..
@@ -45,8 +42,8 @@ mkdir -p release
 cd release
 mkdir "$TARGET"
 cp -R "$BUILD"/build/rclone-browser.app "$APP"
-cp "$ROOT"/README.md "$APP"/Readme.txt
-cp "$ROOT"/CHANGELOG.md "$APP"/Changelog.txt
+cp "$ROOT"/README.md "$APP"/Readme.md
+cp "$ROOT"/CHANGELOG.md "$APP"/Changelog.md
 cp "$ROOT"/LICENSE "$APP"/License.txt
 mv "$APP"/Contents/MacOS/rclone-browser "$APP"/Contents/MacOS/"Rclone Browser"
 

@@ -69,8 +69,8 @@ popd
 
 mkdir "%TARGET%" 2>nul
 
-copy "%ROOT%\README.md" "%TARGET%\Readme.txt"
-copy "%ROOT%\CHANGELOG.md" "%TARGET%\Changelog.txt"
+copy "%ROOT%\README.md" "%TARGET%\Readme.md"
+copy "%ROOT%\CHANGELOG.md" "%TARGET%\Changelog.md"
 copy "%ROOT%\LICENSE" "%TARGET%\License.txt"
 copy "%BUILD%\RcloneBrowser.exe" "%TARGET%"
 

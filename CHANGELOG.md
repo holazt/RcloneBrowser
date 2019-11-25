@@ -1,16 +1,17 @@
 # Change Log
 ## [1.7.0][1.7.0] - 2019-11
--   NEW: all releases are build with the latest Qt 5.13.2
--   NEW: Linux releases are provided as AppImage only
--   NEW: Linux 32 bit release
--   NEW: Windows releases have proper installer - implemented using [Inno Setup](https://github.com/jrsoftware/issrc)
--   NEW: macOS release is provided as dmg image file
--   NEW: macOS release works on all macOS versions starting with 10.9
--   NEW: portable mode for all operating systems
+-   NEW: built all releases with the latest Qt 5.13.2
+-   NEW: changed Linux releases format to AppImage only
+-   NEW: changed macOS release format to dmg image file
+-   NEW: added installer for Windows releases - implemented using [Inno Setup](https://github.com/jrsoftware/issrc)
+-   NEW: added Linux i386 release
+-   NEW: changed macOS release compilation options to make it work on all macOS versions starting with 10.9
+-   NEW: added portable mode for macOS and Linux
 -   NEW: on Linux multiple terminals are tried for rclone config ($TERMINAL then gnome-terminal followed by xfce4-terminal, xterm, x-terminal-emulator and konsole)
--   NEW: Enable Qt HighDpiScaling - should help people with high DPI monitors
+-   NEW: Enabled Qt HighDpiScaling - should help people with high DPI monitors
+-   fixed Windows portable mode
 -   fixed mount/unmount on FreeBSD
--   disable mount for openBSD (as not supported by rclone)
+-   disabled mount on OpenBSD and NetBSD (as not supported by rclone)
 -   updated build and install for Linux - now all files will be installed in /usr/local
 -   fixed possible crashes when old rclone is used (with different version information output)
 -   fixed an issue with long file names leading sometimes to innacurate transfer progress bar display

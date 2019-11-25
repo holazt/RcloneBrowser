@@ -26,6 +26,36 @@ MainWindow::MainWindow() {
   QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
 
+#if defined(Q_OS_WIN)
+  QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",QSettings::NativeFormat);
+  auto uisettings = GetSettings();
+  bool forceLight =
+    uisettings->value("Settings/forceLightMode").toBool();
+
+  if (settings.value("AppsUseLightTheme")==0 && !forceLight) {
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window, QColor(53,53,53));
+    darkPalette.setColor(QPalette::WindowText, Qt::white);
+    darkPalette.setColor(QPalette::Base, QColor(25,25,25));
+    darkPalette.setColor(QPalette::AlternateBase, QColor(53,53,53));
+    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
+    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
+    darkPalette.setColor(QPalette::Text, Qt::white);
+    darkPalette.setColor(QPalette::Button, QColor(53,53,53));
+    darkPalette.setColor(QPalette::ButtonText, Qt::white);
+    darkPalette.setColor(QPalette::BrightText, Qt::red);
+    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+
+    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    qApp->setPalette(darkPalette);
+
+    qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+#endif
+
   mSystemTray.setIcon(qApp->windowIcon());
   {
     auto settings = GetSettings();
@@ -104,6 +134,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
+      settings->setValue("Settings/forceLightMode", dialog.forceLightMode());
 
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
@@ -716,11 +747,21 @@ void MainWindow::rcloneListRemotes() {
             QString name = parts[0].trimmed();
             QString type = parts[1].trimmed();
             QString tooltip = type;
+            auto uisettings = GetSettings();
+            bool forceLight =
+              uisettings->value("Settings/forceLightMode").toBool();
+
+            QString img_add;
+            if (!forceLight) {
+              img_add = "_inv";
+            } else {
+              img_add = "";
+            }
 
             QString path =
-                ":/remotes/images/" + type.replace(' ', '_') + ".png";
+                ":/remotes/images/" + type.replace(' ', '_') + img_add + ".png";
             QIcon icon(QFile(path).exists() ? path
-                                            : ":/remotes/images/unknown.png");
+                                            : ":/remotes/images/unknown" + img_add + ".png");
 
             QListWidgetItem *item = new QListWidgetItem(icon, name);
             item->setData(Qt::UserRole, type);

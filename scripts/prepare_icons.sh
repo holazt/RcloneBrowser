@@ -21,7 +21,7 @@ echo "Creating 512 256 128 64 32 16 image sizes"
 SIZES=(512 256 128 64 32 16)
 for s in "${SIZES[@]}"
 do
-  convert rclone-browser.png -resize $s rclone-browser-"$s"x"$s".png
+  convert rclone-browser.png -resize "$s" rclone-browser-"$s"x"$s".png
   optipng -o7 -strip all rclone-browser-"$s"x"$s".png
 done
 

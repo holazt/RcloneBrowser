@@ -32,7 +32,7 @@ fi
 
 # we run it from our project scripts folder
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/..
-VERSION=`cat $ROOT/VERSION`-`git rev-parse --short HEAD`
+VERSION=$(cat "$ROOT"/VERSION)-$(git rev-parse --short HEAD)
 # linuxdeploy uses $VERSION env variable for AppImage name
 export VERSION=$VERSION
 BUILD="$ROOT"/build
@@ -54,38 +54,38 @@ mkdir "$BUILD"
 mkdir -p "$ROOT"/release
 
 # clean current version previous build
-if [ `arch` = "armv7l" ] && [ -f $ROOT/release/rclone-browser-$VERSION-armhf.AppImage ]; then
-  rm $ROOT/release/rclone-browser-$VERSION-linux-armhf.AppImage
+if [ $(arch) = "armv7l" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage ]; then
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-armhf.AppImage
 fi
 
-if [ `arch` = "i686" ] && [ -f $ROOT/release/rclone-browser-$VERSION-i386.AppImage ]; then
-  rm $ROOT/release/rclone-browser-$VERSION-linux-i386.AppImage
+if [ $(arch) = "i686" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage ]; then
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-i386.AppImage
 fi
 
-if [ `arch` = "x86_64" ] && [ -f $ROOT/release/rclone-browser-$VERSION-x86_64.AppImage ]; then
-  rm $ROOT/release/rclone-browser-$VERSION-linux-amd64.AppImage
+if [ $(arch) = "x86_64" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage ]; then
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-amd64.AppImage
 fi
 
 # build and install to temporary AppDir folder
 cd "$BUILD"
 
-if [ `arch` = "armv7l" ]; then
+if [ $(arch) = "armv7l" ]; then
   # more threads need swap on 1GB RAM RPi
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr
   make -j 2
 fi
 
-if [ `arch` = "x86_64" ]; then
+if [ $(arch) = "x86_64" ]; then
   /opt/cmake/cmake-3.15.5-Linux-x86_64/bin/cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-  make --jobs=`nproc --all`
+  make --jobs=$(nproc --all)
 fi
 
-if [ `arch` = "i686" ]; then
+if [ $(arch) = "i686" ]; then
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-  make --jobs=`nproc --all`
+  make --jobs=$(nproc --all)
 fi
 
-make install DESTDIR=$TEMP_BASE/$TARGET/AppDir
+make install DESTDIR="$TEMP_BASE"/"$TARGET"/AppDir
 
 # prepare AppImage
 cd "$TEMP_BASE/$TARGET"
@@ -99,7 +99,7 @@ cd "$TEMP_BASE/$TARGET"
 linuxdeploy --appdir AppDir --desktop-file=AppDir/usr/share/applications/rclone-browser.desktop
 linuxdeploy-plugin-qt --appdir AppDir
 
-if [ `arch` != "armv7l" ]
+if [ $(arch) != "armv7l" ]
 then
   # we add openssl 1.1.1 libs needed for distros still using openssl 1.0
   cp /opt/openssl-1.1.1/lib/libssl.so.1.1 ./AppDir/usr/bin/
@@ -111,22 +111,22 @@ linuxdeploy-plugin-appimage --appdir=AppDir
 
 
 # raspberry pi build
-if [ `arch` = "armv7l" ]; then
+if [ $(arch) = "armv7l" ]; then
   rename 's/Rclone_Browser/rclone-browser/' Rclone_Browser*
 fi
 
 # x86 build
-if [ `arch` = "i686" ]; then
+if [ $(arch) = "i686" ]; then
   rename 's/Rclone_Browser/rclone-browser/' Rclone_Browser*
 fi
 
 # x86_64 build
-if [ `arch` = "x86_64" ]; then
+if [ $(arch) = "x86_64" ]; then
   rename Rclone_Browser rclone-browser Rclone_Browser*
 fi
 
-cp *AppImage $ROOT/release/
+cp ./*AppImage "$ROOT"/release/
 
 # clean AppImage temporary folder
 cd ..
-rm -rf $TARGET
+rm -rf "$TARGET"

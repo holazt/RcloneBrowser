@@ -120,8 +120,19 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/rowColors", true).toBool());
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
-  ui.forceLightMode->setChecked(
-      settings->value("Settings/forceLightMode", true).toBool());
+  ui.darkMode->setChecked(settings->value("Settings/darkMode", true).toBool());
+
+// dark mode option for all systems but latest macOS
+// on macOS Mojave or newer dark mode is managed by OS
+#if defined(Q_OS_MACOS)
+  QString sysInfo = QSysInfo::productVersion();
+  if (sysInfo == "10.9" || sysInfo == "10.10" || sysInfo == "10.11" ||
+      sysInfo == "10.12" || sysInfo == "10.13") {
+  } else {
+    ui.darkMode->hide();
+    ui.darkMode_info->hide();
+  }
+#endif
 }
 
 PreferencesDialog::~PreferencesDialog() {}
@@ -190,6 +201,6 @@ bool PreferencesDialog::getShowHidden() const {
   return ui.showHidden->isChecked();
 }
 
-bool PreferencesDialog::forceLightMode() const {
-  return ui.forceLightMode->isChecked();
+bool PreferencesDialog::darkMode() const {
+  return ui.darkMode->isChecked();
 }

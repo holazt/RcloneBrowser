@@ -211,10 +211,17 @@
       <string>User Interface</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="6" column="0" colspan="3">
+      <item row="5" column="0" colspan="3">
        <widget class="QLabel" name="info">
         <property name="text">
-         <string>Changing these options will require reopening remote tab or restarting the app.</string>
+         <string>Changing above options will require reopening remote tabs.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="3">
+       <widget class="QLabel" name="darkMode_info">
+        <property name="text">
+         <string>Changing this option will require restarting the app.</string>
         </property>
        </widget>
       </item>
@@ -258,10 +265,10 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QCheckBox" name="forceLightMode">
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="darkMode">
         <property name="text">
-         <string>Force light theme</string>
+         <string>Enable dark mode</string>
         </property>
        </widget>
       </item>
@@ -314,7 +321,7 @@
   <tabstop>showFolderIcons</tabstop>
   <tabstop>showFileIcons</tabstop>
   <tabstop>rowColors</tabstop>
-  <tabstop>forceLightMode</tabstop>
+  <tabstop>darkMode</tabstop>
  </tabstops>
  <resources/>
  <connections>

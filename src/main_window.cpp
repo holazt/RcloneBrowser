@@ -802,14 +802,14 @@ void MainWindow::rcloneListRemotes() {
             // on Windows dark theme changes PM_ListViewIconSize size
             // so we have to adjust
             if (darkModeIni) {
-              size = 1.5 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+              size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
               ui.remotes->setIconSize(QSize(size, size));
             } else {
-              size = 2.25 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+              size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
               ui.remotes->setIconSize(QSize(size, size));
             }
 #else
-             size = 2.25 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+             size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
              ui.remotes->setIconSize(QSize(size, size));
 #endif
 #else
@@ -823,15 +823,15 @@ void MainWindow::rcloneListRemotes() {
 
                // on older macOS we also have to adjust icon size per mode
                if (darkModeIni) {
-                 size = 1.5 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+                 size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "_inv";
                } else {
-                 size = 2.25 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+                 size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "";
                }
 
              } else {
-               size = 2.25 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+               size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
              }
 
              ui.remotes->setIconSize(QSize(size, size));

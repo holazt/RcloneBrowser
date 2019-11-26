@@ -214,7 +214,14 @@
       <item row="5" column="0" colspan="3">
        <widget class="QLabel" name="info">
         <property name="text">
-         <string>Changing these options will require reopening remote tab.</string>
+         <string>Changing above options will require reopening remote tabs.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="3">
+       <widget class="QLabel" name="darkMode_info">
+        <property name="text">
+         <string>Changing this option will require restarting the app.</string>
         </property>
        </widget>
       </item>
@@ -255,6 +262,13 @@
        <widget class="QCheckBox" name="showHidden">
         <property name="text">
          <string>Show hidden files and folders</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="darkMode">
+        <property name="text">
+         <string>Enable dark mode</string>
         </property>
        </widget>
       </item>
@@ -307,6 +321,7 @@
   <tabstop>showFolderIcons</tabstop>
   <tabstop>showFileIcons</tabstop>
   <tabstop>rowColors</tabstop>
+  <tabstop>darkMode</tabstop>
  </tabstops>
  <resources/>
  <connections>

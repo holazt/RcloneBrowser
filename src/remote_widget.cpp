@@ -25,6 +25,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       settings->value("Settings/rowColors", false).toBool());
   ui.checkBoxShared->setChecked(false);
   ui.checkBoxShared->setDisabled(!isGoogle);
+  // hide checkBoxShared for non Google remotes
+  if (!isGoogle){
+    ui.checkBoxShared->hide();
+  }
 
   QStyle *style = QApplication::style();
   ui.refresh->setIcon(style->standardIcon(QStyle::SP_BrowserReload));

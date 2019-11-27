@@ -21,5 +21,23 @@
     <file>images/yandex.png</file>
     <file>images/azureblob.png</file>
     <file>images/google_photos.png</file>
+    <file>images/amazon_cloud_drive_inv.png</file>
+    <file>images/b2_inv.png</file>
+    <file>images/crypt_inv.png</file>
+    <file>images/drive_inv.png</file>
+    <file>images/dropbox_inv.png</file>
+    <file>images/google_cloud_storage_inv.png</file>
+    <file>images/hubic_inv.png</file>
+    <file>images/local_inv.png</file>
+    <file>images/mega_inv.png</file>
+    <file>images/onedrive_inv.png</file>
+    <file>images/s3_inv.png</file>
+    <file>images/ftp_inv.png</file>
+    <file>images/sftp_inv.png</file>
+    <file>images/swift_inv.png</file>
+    <file>images/unknown_inv.png</file>
+    <file>images/yandex_inv.png</file>
+    <file>images/azureblob_inv.png</file>
+    <file>images/google_photos_inv.png</file>
   </qresource>
 </RCC>

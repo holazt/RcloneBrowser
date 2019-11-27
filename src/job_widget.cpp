@@ -193,7 +193,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         }
 
         bar->setValue(rxProgress2.cap(2).toInt());
-        bar->setToolTip(name + "\nETA: " + rxProgress2.cap(3));
+        bar->setToolTip("File name: " + name + "\nFile stats" + rxProgress2.cap(0).mid(rxProgress2.cap(0).indexOf(':')));
 
         mUpdated.insert(label);
       }

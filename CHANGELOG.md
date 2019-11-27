@@ -1,5 +1,5 @@
 # Change Log
-## [1.7.0][1.7.0] - 2019-11
+## [1.7.0][1.7.0] - 2019-11-27
 -   NEW: built all releases with the latest Qt 5.13.2
 -   NEW: changed Linux releases format to AppImage only
 -   NEW: changed macOS release format to dmg image file
@@ -8,11 +8,12 @@
 -   NEW: changed macOS release compilation options to make it work on all macOS versions starting with 10.9
 -   NEW: added portable mode for macOS and Linux
 -   NEW: on Linux multiple terminals are tried for rclone config ($TERMINAL then gnome-terminal followed by xfce4-terminal, xterm, x-terminal-emulator and konsole)
--   NEW: Enabled Qt HighDpiScaling - should help people with high DPI monitors
+-   NEW: enabled Qt HighDpiScaling - should help people with high DPI monitors
+-   NEW: added dark mode - configurable via preferences or system setting (newer macOS) - thank you @noaione for initial PR
 -   fixed Windows portable mode
 -   fixed mount/unmount on FreeBSD
 -   disabled mount on OpenBSD and NetBSD (as not supported by rclone)
--   updated build and install for Linux - now all files will be installed in /usr/local
+-   updated build and install for Linux - now all files will be installed in /usr/local root
 -   fixed possible crashes when old rclone is used (with different version information output)
 -   fixed an issue with long file names leading sometimes to innacurate transfer progress bar display
 -   changed program icon

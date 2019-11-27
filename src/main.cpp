@@ -29,6 +29,25 @@ int main(int argc, char *argv[]) {
   QDir::setCurrent(currentDir);
 #endif
 
+  // remmber darkMode state on app startup
+
+  auto settings = GetSettings();
+  // during first run the darkModeIni key might not exist
+  if (!(settings->contains("Settings/darkModeIni"))) {
+    // if darkModeIni does not exist create new key
+    settings->setValue("Settings/darkModeIni", "false");
+  };
+
+  // during first run the darkMode key might not exist
+  if (!(settings->contains("Settings/darkMode"))) {
+    // if darkMode does not exist create new key
+    settings->setValue("Settings/darkMode", "false");
+  };
+
+  bool darkMode = settings->value("Settings/darkMode").toBool();
+
+  settings->setValue("Settings/darkModeIni", darkMode);
+
   // enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;

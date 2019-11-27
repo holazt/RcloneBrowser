@@ -38,12 +38,13 @@ Features
 *   Can process multiple upload or download jobs in background
 *   Drag & drop support for dragging files from local file explorer for uploading
 *   Streaming media files for playback in player like [vlc][6] or similar
-*   Mount and unmount folders on macOS, GNU/Linux and Windows (for Windows requires [winfsp](http://www.secfs.net/winfsp/))
+*   Mount and unmount folders on macOS, GNU/Linux and Windows (for Windows requires [winfsp](http://www.secfs.net/winfsp/) and for mac [fuse for macOS](https://osxfuse.github.io/))
 *   Optionally minimizes to tray, with notifications when upload/download finishes
 *   Supports portable mode (create .ini file next to executable with same name), rclone and rclone.conf path now can be relative to executable
 *   Supports drive-shared-with-me (Google Drive specific)
 *   For remotes supporting public link sharing has an option (right-click menu) to fetch it
-*   Supports tasks. Created jobs can be saved and run or edited later. 
+*   Supports tasks. Created jobs can be saved and run or edited later.
+*   Configurable dark mode for all systems
 
 Sample screenshots
 -------------------

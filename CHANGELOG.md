@@ -10,12 +10,14 @@
 -   NEW: on Linux multiple terminals are tried for rclone config ($TERMINAL then gnome-terminal followed by xfce4-terminal, xterm, x-terminal-emulator and konsole)
 -   NEW: enabled Qt HighDpiScaling - should help people with high DPI monitors
 -   NEW: added dark mode - configurable via preferences or system setting (newer macOS) - thank you @noaione for initial PR
+-   changed preferences window - added tabs to create more space for new options
 -   fixed Windows portable mode
 -   fixed mount/unmount on FreeBSD
 -   disabled mount on OpenBSD and NetBSD (as not supported by rclone)
 -   updated build and install for Linux - now all files will be installed in /usr/local root
 -   fixed possible crashes when old rclone is used (with different version information output)
--   fixed an issue with long file names leading sometimes to innacurate transfer progress bar display
+-   fixed an issue with long file names leading sometimes to inaccurate transfer progress bar display
+-   added additional info to file progress bar tooltip - individual file stats
 -   changed program icon
 -   bunch of usual small tweaks and fixes
 

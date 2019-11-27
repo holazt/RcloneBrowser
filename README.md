@@ -38,12 +38,13 @@ Features
 *   Can process multiple upload or download jobs in background
 *   Drag & drop support for dragging files from local file explorer for uploading
 *   Streaming media files for playback in player like [vlc][6] or similar
-*   Mount and unmount folders on macOS, GNU/Linux and Windows (for Windows requires [winfsp](http://www.secfs.net/winfsp/))
+*   Mount and unmount folders on macOS, GNU/Linux and Windows (for Windows requires [winfsp](http://www.secfs.net/winfsp/) and for mac [fuse for macOS](https://osxfuse.github.io/))
 *   Optionally minimizes to tray, with notifications when upload/download finishes
 *   Supports portable mode (create .ini file next to executable with same name), rclone and rclone.conf path now can be relative to executable
 *   Supports drive-shared-with-me (Google Drive specific)
 *   For remotes supporting public link sharing has an option (right-click menu) to fetch it
-*   Supports tasks. Created jobs can be saved and run or edited later. 
+*   Supports tasks. Created jobs can be saved and run or edited later.
+*   Configurable dark mode for all systems
 
 Sample screenshots
 -------------------
@@ -115,7 +116,7 @@ And I totally agree with above. I want to provide binary which works across as m
 
 If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems. I have tested all of them and you can have your own Linux distribution Rclone Browser running in no time  - it takes 8 min on Raspberry Pi 3B+, on modern desktop it can be less than a minute.
 
-*Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am enirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
+*Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am entirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
 
 Build instructions
 ------------------
@@ -229,6 +230,8 @@ Code signing certificates donations
 ---------------------------
 
 If you would like to donate towards code signing keys please feel free to [do it](https://www.paypal.me/kapitainsky). If I don't raise required $500 I will give all money to some charity. Please see my note regarding it at the end of [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it) section. I will keep all updated with amount raised.
+
+Raised so far: 6.4 USD (1.3% of the required target)
 
 [1]: https://travis-ci.org/kapitainsky/RcloneBrowser
 [2]: https://ci.appveyor.com/project/kapitainsky/RcloneBrowser

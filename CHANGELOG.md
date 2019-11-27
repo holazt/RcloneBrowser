@@ -17,6 +17,7 @@
 -   updated build and install for Linux - now all files will be installed in /usr/local root
 -   fixed possible crashes when old rclone is used (with different version information output)
 -   fixed an issue with long file names leading sometimes to inaccurate transfer progress bar display
+-   added additional info to file progress bar tooltip - individual file stats
 -   changed program icon
 -   bunch of usual small tweaks and fixes
 

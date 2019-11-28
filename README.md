@@ -1,6 +1,6 @@
 <img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/RcloneBrowserLongLogo1.png" width="80%" />
 
-[![Travis CI Build Status][img1]][1] [![AppVeyor Build Status][img2]][2] [![Downloads][img3]][3] [![Release][img4]][4] <img src="https://img.shields.io/badge/Qt-cmake-green.svg"> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e22f828fc0c94dcf9ddb3d38701d177f)](https://www.codacy.com/manual/kapitainsky/RcloneBrowser?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kapitainsky/RcloneBrowser&amp;utm_campaign=Badge_Grade) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/kapitainsky)
+[![Travis CI Build Status][img1]][1] [![AppVeyor Build Status][img2]][2] [![Downloads][img3]][3] [![Release][img4]][4] <img src="https://img.shields.io/badge/Qt-cmake-green.svg"> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e22f828fc0c94dcf9ddb3d38701d177f)](https://www.codacy.com/manual/kapitainsky/RcloneBrowser?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kapitainsky/RcloneBrowser&amp;utm_campaign=Badge_Grade) [![License][img5]][5] [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/kapitainsky)
 
 Rclone browser
 ==============
@@ -13,13 +13,14 @@ Table of contents
 *   [Features](https://github.com/kapitainsky/RcloneBrowser#features)
 *   [Sample screenshots](https://github.com/kapitainsky/RcloneBrowser#sample-screenshots)
 *   [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it)
+*   [Why AppImage only for Linux](https://github.com/kapitainsky/RcloneBrowser#why-appimage-only-for-linux)
 *   [Build instructions](https://github.com/kapitainsky/RcloneBrowser#build-instructions)
-    *   [Linux](https://github.com/kapitainsky/RcloneBrowser#linux-1)
+    *   [Linux](https://github.com/kapitainsky/RcloneBrowser#linux)
     *   [FreeBSD](https://github.com/kapitainsky/RcloneBrowser#freebsd)
     *   [OpenBSD](https://github.com/kapitainsky/RcloneBrowser#openbsd)
     *   [NetBSD](https://github.com/kapitainsky/RcloneBrowser#netbsd)
-    *   [macOS](https://github.com/kapitainsky/RcloneBrowser#macos-1)
-    *   [Windows](https://github.com/kapitainsky/RcloneBrowser#windows-1)
+    *   [macOS](https://github.com/kapitainsky/RcloneBrowser#macos)
+    *   [Windows](https://github.com/kapitainsky/RcloneBrowser#windows)
 *   [Portable vs standard mode](https://github.com/kapitainsky/RcloneBrowser#portable-vs-standard-mode)
 *   [History](https://github.com/kapitainsky/RcloneBrowser#history)
 *   [Code signing certificates donations](https://github.com/kapitainsky/RcloneBrowser#code-signing-certificates-donations)
@@ -81,18 +82,28 @@ Get binaries for Windows, macOS and Linux on [releases][3]' page.
 
 Windows versions (64-bit and 32-bit) are compatible with all x86 based Windows OS starting with Windows 7. 
 
-Mac version is compiled to run on all versions of macOS starting with 10.9 - some features like e.g. dark mode only work on systems supporting it. 
+Mac version is compiled to run on all versions of macOS starting with 10.9.
 
 Situation with Linux is a bit fuzzier...
-Linux binary (AppImage) for armhf architecture runs on any Raspberry Pi hardware using Raspbian based on Stretch or Buster.
-Linux binaries (AppImage) for amd64 and i386 architectures should run on systems using distributions released in the last few years. Amd64 one is built on CentOS 7 (released in 2014) and i386 on Ubuntu 16.04 LTS (released in 2016).
-The whole idea with AppImage is to build it on the oldest still supported LTS distro – and it should work on all newer OS releases without major problems. So for example for Ubuntu latest AppImage works on Ubuntu 16.04 LTS, 18 and latest 19 releases and for Debian on Stretch and Buster. With other distributions I only tested major ones latest releases. So YMMV. This is Linux. 10000 different distributions… with changes and customizations often only their authors are aware of. I would be happy to hear what distribution it does not work for.
+Linux binary ([AppImage](https://appimage.org/)) for armhf architecture runs on any Raspberry Pi hardware using Raspbian based on Stretch or Buster.
 
-All released binaries are signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key). It allows to verify that provided binaries were created by myself (authenticity) and are unchanged (integrity). If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
+Linux binaries (AppImage) for x86_64 and i386 architectures should run on systems using distributions released in the last few years. x86_64 one is built on CentOS 7 (released in 2014) and i386 on Ubuntu 16.04 LTS (released in 2016).
+
+The whole idea with AppImage is to build it on the oldest still supported LTS distro – and it should work on all newer OS releases. AppImage contains an aplication and all the files the app needs to run. In other words, each AppImage has no dependencies other than what is included in the base operating system.
+
+In practical terms it means that for example for Ubuntu Rclone Browser AppImage works on all versions starting with 16.04 LTS and for Debian starting with Stretch. With other distributions YMMV but I test major ones like Suse or Fedora. This is Linux. 10000 different distributions… with changes and customizations often only their authors are aware of. I would be happy to hear what distribution it does not work for.
+
+For all released binaries file with hashes signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key) is provided. It allows to verify that provided binaries were created by myself (authenticity) and are unchanged (integrity). If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
 
-Starting with this release I provide proper installers for Windows, dmg image for macOS and [AppImage](https://appimage.org/) only for Linux. Some explanation on latter... Binaries for Linux desktop applications is a major f*ing pain in the ass... as Linus Torvalds said - [DebConf 14_ QA](https://www.youtube.com/watch?v=5PmHRSeA2c8) at 05:40:
+*Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am entirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
+
+Why AppImage only for Linux
+----------------------------
+Starting with version 1.7.0 Linux binaries are only available in [AppImage](https://appimage.org/) format. Some explanation on this... 
+
+Binaries for Linux desktop applications is a major f*ing pain in the ass... as Linus Torvalds said - [DebConf 14_ QA](https://www.youtube.com/watch?v=5PmHRSeA2c8) at 05:40:
 
 > I'm talking about actual application writers that want to make a package of their application for Linux. And I've seen this firsthand with the other project I've been involved with, which is my divelog application.
 > We make binaries for Windows and OS X. 
@@ -116,13 +127,11 @@ And I totally agree with above. I want to provide binary which works across as m
 
 If for whatever reason you are not happy or your system is not covered with provided binaries you can easily build Rclone Browser for yourself. Especially on Unix-like systems it is very easy. Please see below step by step instructions for major operating systems. I have tested all of them and you can have your own Linux distribution Rclone Browser running in no time  - it takes 8 min on Raspberry Pi 3B+, on modern desktop it can be less than a minute.
 
-*Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am entirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
-
 Build instructions
 ------------------
 
 ### Linux
-1.  Install dependencies:
+1.  Install dependencies for your particular distribution:
     *   **Debian/Ubuntu and derivatives**: `sudo apt update && sudo apt -y install git g++ cmake make qtdeclarative5-dev` 
     *   **Suse/OpenSuse**: `sudo zypper ref && sudo zypper --non-interactive install git cmake make gcc-c++ libQt5Core-devel libQt5Widgets-devel libQt5Network-devel`
     *   **RHEL/CentOS**: `sudo yum -y install git gcc-c++ cmake make qt5-qtdeclarative`
@@ -199,18 +208,18 @@ In standard operations mode all configurations files are stored in the following
 
 *   macOS:
     *   preferences: ~/Library/Preferences/com.rclone-browser.rclone-browser.plist
-    *   tasks file: ~/Library/Application Support/rclone-browser/rclone-browser/tasks.bin
-    *   lock file: in $TMPDIR assigned by OS (user unique)
+    *   tasks file:  ~/Library/Application Support/rclone-browser/rclone-browser/tasks.bin
+    *   lock file:   in $TMPDIR assigned by OS
 
-*   Linux:
+*   Linux/BSD:
     *   preferences: ~/.config/rclone-browser/rclone-browser.conf
-    *   tasks file: ~/.local/share/rclone-browser/rclone-browser/tasks.bin
-    *   lock file: $TMPDIR environment variable or /tmp if $TMPDIR is not defined
+    *   tasks file:  ~/.local/share/rclone-browser/rclone-browser/tasks.bin
+    *   lock file:   in $TMPDIR or /tmp if $TMPDIR is not defined
 
 *   Windows:
-    *   preferences in registry: Computer\HKEY_CURRENT_USER\Software\rclone-browser\rclone-browser
-    *   tasks file: %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
-    *   lock file: %HOMEPATH%\AppData\Local\Temp\
+    *   preferences: in registry Computer\HKEY_CURRENT_USER\Software\rclone-browser\rclone-browser
+    *   tasks file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
+    *   lock file:   %HOMEPATH%\AppData\Local\Temp\
 
 Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` or `RcloneBrowser.app` create `RcloneBrowser.ini`. For Linux create a directory (not a file) with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage file - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
 
@@ -247,5 +256,5 @@ Raised so far: 6.4 USD (1.3% of the required target)
 [img2]: https://ci.appveyor.com/api/projects/status/cclx7jc48t4u4x9u?svg=true
 [img3]: https://img.shields.io/github/downloads/kapitainsky/RcloneBrowser/total.svg?maxAge=3600
 [img4]: https://img.shields.io/github/release/kapitainsky/RcloneBrowser.svg?maxAge=3600
-[img5]: https://img.shields.io/github/license/kapitainsky/RcloneBrowser.svg?maxAge=2592000
+[img5]: https://img.shields.io/github/license/kapitainsky/RcloneBrowser.svg?maxAge=3600
 [billziss-gh_cgofuse_i18]: https://github.com/billziss-gh/cgofuse/issues/18

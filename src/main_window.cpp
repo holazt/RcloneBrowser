@@ -170,7 +170,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
-      settings->setValue("Settings/darkMode", dialog.darkMode());
+      settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
 
       SetRclone(dialog.getRclone());

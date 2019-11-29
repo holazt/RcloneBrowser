@@ -211,7 +211,7 @@ bool PreferencesDialog::getShowHidden() const {
   return ui.showHidden->isChecked();
 }
 
-bool PreferencesDialog::darkMode() const { return ui.darkMode->isChecked(); }
+bool PreferencesDialog::getDarkMode() const { return ui.darkMode->isChecked(); }
 
 QString PreferencesDialog::getIconSize() const {
   if (ui.cb_small->isChecked()) {

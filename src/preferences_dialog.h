@@ -30,7 +30,7 @@ public:
   bool getShowFileIcons() const;
   bool getRowColors() const;
   bool getShowHidden() const;
-  bool darkMode() const;
+  bool getDarkMode() const;
   QString getIconSize() const;
 
 private:

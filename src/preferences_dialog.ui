@@ -395,7 +395,7 @@
         </sizepolicy>
        </property>
        <property name="title">
-        <string>Remotes icons</string>
+        <string>Remotes icons size</string>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>

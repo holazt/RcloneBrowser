@@ -48,6 +48,12 @@ int main(int argc, char *argv[]) {
 
   settings->setValue("Settings/darkModeIni", darkMode);
 
+  // during first run the iconSize key might not exist
+  if (!(settings->contains("Settings/iconSize"))) {
+    // if iconSize does not exist create new key
+    settings->setValue("Settings/iconSize", "medium");
+  };
+
   // enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;

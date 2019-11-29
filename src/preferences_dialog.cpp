@@ -133,6 +133,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.darkMode_info->hide();
   }
 #endif
+
+  if ((settings->value("Settings/iconSize").toString()) == "small") {
+    ui.cb_small->setChecked(true);
+  } else {
+    if (settings->value("Settings/iconSize").toString() == "large") {
+      ui.cb_large->setChecked(true);
+    } else {
+      ui.cb_medium->setChecked(true);
+    }
+  }
 }
 
 PreferencesDialog::~PreferencesDialog() {}
@@ -201,6 +211,16 @@ bool PreferencesDialog::getShowHidden() const {
   return ui.showHidden->isChecked();
 }
 
-bool PreferencesDialog::darkMode() const {
-  return ui.darkMode->isChecked();
+bool PreferencesDialog::darkMode() const { return ui.darkMode->isChecked(); }
+
+QString PreferencesDialog::getIconSize() const {
+  if (ui.cb_small->isChecked()) {
+    return "small";
+  } else {
+    if (ui.cb_large->isChecked()) {
+      return "large";
+    } else {
+      return "medium";
+    }
+  }
 }

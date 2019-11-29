@@ -171,6 +171,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
       settings->setValue("Settings/darkMode", dialog.darkMode());
+      settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
 
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
@@ -771,6 +772,7 @@ void MainWindow::rcloneListRemotes() {
 
           auto settings = GetSettings();
           bool darkModeIni = settings->value("Settings/darkModeIni").toBool();
+          QString iconSize = settings->value("Settings/iconSize").toString();
 
           for (const QString &line : items) {
             if (line.isEmpty()) {
@@ -789,6 +791,29 @@ void MainWindow::rcloneListRemotes() {
             QString img_add = "";
             int size;
 
+            // medium scale by default
+            double darkModeIconScale = 1.333;
+            double lightModeiconScale = 2;
+            // to avoid "variable not used" compiler error
+            if (darkModeIconScale == lightModeiconScale) {
+            };
+
+            // set icons scale based on iconSize value
+            if (iconSize == "small") {
+              lightModeiconScale = 1.5;
+              darkModeIconScale = 1;
+            }
+
+            if (iconSize == "medium") {
+              lightModeiconScale = 2;
+              darkModeIconScale = 1.333;
+            }
+
+            if (iconSize == "large") {
+              lightModeiconScale = 3;
+              darkModeIconScale = 2;
+            }
+
 #if !defined(Q_OS_MACOS)
             // _inv only for dark mode
             // we use darkModeIni to apply mode active at startup
@@ -802,15 +827,15 @@ void MainWindow::rcloneListRemotes() {
             // on Windows dark theme changes PM_ListViewIconSize size
             // so we have to adjust
             if (darkModeIni) {
-              size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
-              ui.remotes->setIconSize(QSize(size, size));
+              size = darkModeIconScale *
+                     style->pixelMetric(QStyle::PM_ListViewIconSize);
             } else {
-              size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
-              ui.remotes->setIconSize(QSize(size, size));
+              size = lightModeiconScale *
+                     style->pixelMetric(QStyle::PM_ListViewIconSize);
             }
 #else
-             size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
-             ui.remotes->setIconSize(QSize(size, size));
+             // for Linux/BSD PM_ListViewIconSize stays the same
+             size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
 #endif
 #else
              QString sysInfo = QSysInfo::productVersion();
@@ -823,19 +848,19 @@ void MainWindow::rcloneListRemotes() {
 
                // on older macOS we also have to adjust icon size per mode
                if (darkModeIni) {
-                 size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+                 size = darkModeIconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "_inv";
                } else {
-                 size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+                 size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "";
                }
 
              } else {
-               size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+               // for macOS > 10.13 native dark mode does not change IconSize base
+               size = 1.5 * lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
              }
-
-             ui.remotes->setIconSize(QSize(size, size));
 #endif
+            ui.remotes->setIconSize(QSize(size, size));
 
             QString path =
                 ":/remotes/images/" + type.replace(' ', '_') + img_add + ".png";

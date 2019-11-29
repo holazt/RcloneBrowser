@@ -31,6 +31,7 @@ public:
   bool getRowColors() const;
   bool getShowHidden() const;
   bool darkMode() const;
+  QString getIconSize() const;
 
 private:
   Ui::PreferencesDialog ui;

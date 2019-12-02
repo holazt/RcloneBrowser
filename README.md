@@ -94,11 +94,11 @@ The whole idea with AppImage is to build it on the oldest still supported LTS di
 In practical terms it means that for example for Ubuntu Rclone Browser AppImage works on all versions starting with 16.04 LTS and for Debian starting with Stretch. With other distributions YMMV but I test major ones like Suse or Fedora. This is Linux. 10000 different distributions… with changes and customizations often only their authors are aware of. I would be happy to hear what distribution it does not work for.
 
 To make life easier when using AppImages on Linux, you can use [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher) which monitors your system for downloaded AppImages and provides several useful benifits including:
-* AppImage desktop integration
+*   AppImage desktop integration
 > AppImageLauncher allows you to integrate AppImages you download into your application menu or launcher to make it easier for you to launch them. It also takes care of moving them into a central location, where you can find them later if you need access to them again.
-* Update management
+*   Update management
 > AppImageLauncher provides a simple to use update mechanism. After desktop integration, the context menu of the AppImage's entry in the application launcher will have an entry for updating that launches a little helper tool that uses AppImageUpdate internally. Just click the entry and have the tool search and apply updates.
-* Easy removal of AppImages from system
+*   Easy removal of AppImages from system
 > Removing integrated AppImages is pretty simple, too. Similar to updating AppImages, you will find an entry in the context menu in the application launcher that triggers a removal tool. You will be asked to confirm the removal. If you choose to do so, the desktop integration is undone, and the file is removed from your system.
 
 For all released binaries file with hashes signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key) is provided. It allows to verify that provided binaries were created by myself (authenticity) and are unchanged (integrity). If you would like to have properly signed releases with code signing certificates please see note at the end of this section.

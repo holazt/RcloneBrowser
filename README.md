@@ -80,7 +80,7 @@ How to get it
 --------------
 Get binaries for Windows, macOS and Linux on [releases][3]' page.
 
-Windows versions (64-bit and 32-bit) are compatible with all x86 based Windows OS starting with Windows 7. 
+Windows installers (64-bit and 32-bit) are compatible with all x86 based Windows OS starting with Windows 7. If for whatever reason somebody would prefer not to run installer all files can be extracted using [innoextract](https://constexpr.org/innoextract/).
 
 Mac version is compiled to run on all versions of macOS starting with 10.9.
 
@@ -96,6 +96,8 @@ In practical terms it means that for example for Ubuntu Rclone Browser AppImage 
 For all released binaries file with hashes signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key) is provided. It allows to verify that provided binaries were created by myself (authenticity) and are unchanged (integrity). If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
+
+FreeBSD has its verion available from [freshports](https://www.freshports.org/net/rclone-browser) website.
 
 *Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am entirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
 

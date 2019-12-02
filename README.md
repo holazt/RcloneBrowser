@@ -97,7 +97,7 @@ For all released binaries file with hashes signed with my [PGP key](https://gith
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
 
-FreeBSD has its verion available from [freshports](https://www.freshports.org/net/rclone-browser) website.
+FreeBSD has its version available from [freshports](https://www.freshports.org/net/rclone-browser) website.
 
 *Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am entirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
 

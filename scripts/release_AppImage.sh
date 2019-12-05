@@ -55,15 +55,15 @@ mkdir -p "$ROOT"/release
 
 # clean current version previous build
 if [ $(arch) = "armv7l" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-armhf.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage
 fi
 
 if [ $(arch) = "i686" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-i386.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage
 fi
 
 if [ $(arch) = "x86_64" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-amd64.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-amd64.AppImage
 fi
 
 # build and install to temporary AppDir folder

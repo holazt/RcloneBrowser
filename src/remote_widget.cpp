@@ -97,6 +97,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.purge->setDisabled(true);
           ui.mount->setDisabled(true);
           ui.stream->setDisabled(true);
+          ui.upload->setDisabled(true);
+          ui.download->setDisabled(true);
           ui.checkBoxShared->setDisabled(true);
           path = model->path(model->parent(index));
         } else {

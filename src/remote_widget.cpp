@@ -42,6 +42,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
   ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
   ui.getSize->setIcon(style->standardIcon(QStyle::SP_FileDialogInfoView));
+  ui.getTree->setIcon(style->standardIcon(QStyle::SP_FileDialogListView));
   ui.export_->setIcon(style->standardIcon(QStyle::SP_FileDialogDetailedView));
   ui.link->setIcon(style->standardIcon(QStyle::SP_FileLinkIcon));
 
@@ -54,6 +55,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonStream->setDefaultAction(ui.stream);
   ui.buttonUpload->setDefaultAction(ui.upload);
   ui.buttonDownload->setDefaultAction(ui.download);
+  ui.buttonTree->setDefaultAction(ui.getTree);
   ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonExport->setDefaultAction(ui.export_);
 
@@ -130,6 +132,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         }
 
         ui.getSize->setDisabled(!isFolder);
+        ui.getTree->setDisabled(!isFolder);
         ui.export_->setDisabled(!isFolder);
         ui.path->setText(isLocal ? QDir::toNativeSeparators(path.path())
                                  : path.path());
@@ -426,6 +429,31 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
+  QObject::connect(ui.getTree, &QAction::triggered, this, [=]() {
+    auto settings = GetSettings();
+    bool driveShared = ui.checkBoxShared->checkState();
+    (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked)
+                 : settings->setValue("Settings/driveShared", Qt::Unchecked));
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+    QString path = model->path(index).path();
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+
+    QProcess process;
+    UseRclonePassword(&process);
+    process.setProgram(GetRclone());
+    process.setArguments(QStringList()
+                         << "tree" << "-d" << GetRcloneConf() << GetDriveSharedWithMe()
+                         << remote + ":" + path);
+    process.setProcessChannelMode(QProcess::MergedChannels);
+    ProgressDialog progress("Show directories tree", "Processing...", pathMsg, &process,
+                            this, false);
+    progress.expand();
+    progress.allowToClose();
+    progress.resize(1000,600);
+    progress.exec();
+  });
+
   QObject::connect(ui.getSize, &QAction::triggered, this, [=]() {
     auto settings = GetSettings();
     bool driveShared = ui.checkBoxShared->checkState();
@@ -552,6 +580,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         QMenu menu;
         menu.addAction(ui.refresh);
         menu.addAction(ui.getSize);
+        menu.addAction(ui.getTree);
         menu.addAction(ui.export_);
         menu.addSeparator();
         menu.addAction(ui.mkdir);

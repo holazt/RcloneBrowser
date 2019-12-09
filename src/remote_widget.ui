@@ -152,6 +152,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="buttonTree">
+            <property name="text">
+             <string>&amp;Tree</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonExport">
             <property name="text">
              <string>E&amp;xport...</string>
@@ -306,6 +316,11 @@
     <string>&amp;Get Size</string>
    </property>
   </action>
+  <action name="getTree">
+   <property name="text">
+    <string>ShowDir&amp;Tree</string>
+   </property>
+  </action>
   <action name="export_">
    <property name="text">
     <string>E&amp;xport</string>
@@ -337,6 +352,7 @@
   <tabstop>buttonUpload</tabstop>
   <tabstop>buttonDownload</tabstop>
   <tabstop>buttonSize</tabstop>
+  <tabstop>buttonTree</tabstop>
   <tabstop>path</tabstop>
   <tabstop>tree</tabstop>
  </tabstops>

@@ -103,7 +103,9 @@ To make life easier when using AppImages on Linux, you can use [AppImageLauncher
 
 For all released binaries file with hashes signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key) is provided. It allows to verify that provided binaries were created by myself (authenticity) and are unchanged (integrity). If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
 
-ArchLinux users can install latest release from AUR repository: [rclone-browser][7]. It has been updated to this repo.
+ArchLinux users can install latest release from AUR repository: [rclone-browser][7].
+
+Fedora package is now available from [Fedora packages](https://apps.fedoraproject.org/packages/rclone-browser) - simply run `sudo dnf install rclone-browser`
 
 FreeBSD has its version available from [freshports](https://www.freshports.org/net/rclone-browser) website.
 

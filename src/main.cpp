@@ -29,9 +29,34 @@ int main(int argc, char *argv[]) {
   QDir::setCurrent(currentDir);
 #endif
 
-  // remmber darkMode state on app startup
-
   auto settings = GetSettings();
+
+  // initialize proxy settings
+  if (!(settings->contains("Settings/useProxy"))) {
+    settings->setValue("Settings/useProxy", "false");
+  };
+  if (!(settings->contains("Settings/http_proxy"))) {
+    settings->setValue("Settings/http_proxy", "");
+  };
+  if (!(settings->contains("Settings/https_proxy"))) {
+    settings->setValue("Settings/https_proxy", "");
+  };
+  if (!(settings->contains("Settings/no_proxy"))) {
+    settings->setValue("Settings/no_proxy", "");
+  };
+
+  if (settings->value("Settings/useProxy").toBool()) {
+    qputenv("HTTP_PROXY", settings->value("Settings/http_proxy").toByteArray());
+    qputenv("http_proxy", settings->value("Settings/http_proxy").toByteArray());
+    qputenv("HTTPS_PROXY",
+            settings->value("Settings/https_proxy").toByteArray());
+    qputenv("https_proxy",
+            settings->value("Settings/https_proxy").toByteArray());
+    qputenv("NO_PROXY", settings->value("Settings/no_proxy").toByteArray());
+    qputenv("no_proxy", settings->value("Settings/no_proxy").toByteArray());
+  }
+
+  // remmber darkMode state on app startup
   // during first run the darkModeIni key might not exist
   if (!(settings->contains("Settings/darkModeIni"))) {
     // if darkModeIni does not exist create new key

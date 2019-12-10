@@ -173,6 +173,13 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
 
+      settings->setValue("Settings/useProxy", dialog.getUseProxy());
+      settings->setValue("Settings/http_proxy",
+                         dialog.getHttpProxy().trimmed());
+      settings->setValue("Settings/https_proxy",
+                         dialog.getHttpsProxy().trimmed());
+      settings->setValue("Settings/no_proxy", dialog.getNoProxy().trimmed());
+
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
       mFirstTime = true;

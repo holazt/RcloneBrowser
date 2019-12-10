@@ -143,6 +143,23 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       ui.cb_medium->setChecked(true);
     }
   }
+
+  ui.info_2->setText(
+      "See rclone <a "
+      "href=\"https://github.com/rclone/rclone/blob/master/docs/content/"
+      "faq.md#can-i-use-rclone-with-an-http-proxy\">FAQ</a> for details.");
+  ui.info_2->setTextFormat(Qt::RichText);
+  ui.info_2->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  ui.info_2->setOpenExternalLinks(true);
+
+  if (settings->value("Settings/useProxy").toBool()) {
+    ui.useProxy->setChecked(true);
+  } else {
+    ui.useSystemSettings->setChecked(true);
+  }
+  ui.http_proxy->setText(settings->value("Settings/http_proxy").toString());
+  ui.https_proxy->setText(settings->value("Settings/https_proxy").toString());
+  ui.no_proxy->setText(settings->value("Settings/no_proxy").toString());
 }
 
 PreferencesDialog::~PreferencesDialog() {}
@@ -222,5 +239,23 @@ QString PreferencesDialog::getIconSize() const {
     } else {
       return "medium";
     }
+  }
+}
+
+QString PreferencesDialog::getHttpProxy() const {
+  return ui.http_proxy->text();
+}
+
+QString PreferencesDialog::getHttpsProxy() const {
+  return ui.https_proxy->text();
+}
+
+QString PreferencesDialog::getNoProxy() const { return ui.no_proxy->text(); }
+
+bool PreferencesDialog::getUseProxy() const {
+  if (ui.useSystemSettings->isChecked()) {
+    return false;
+  } else {
+    return true;
   }
 }

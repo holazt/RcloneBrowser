@@ -33,6 +33,11 @@ public:
   bool getDarkMode() const;
   QString getIconSize() const;
 
+  bool getUseProxy() const;
+  QString getHttpProxy() const;
+  QString getHttpsProxy() const;
+  QString getNoProxy() const;
+
 private:
   Ui::PreferencesDialog ui;
 };

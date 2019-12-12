@@ -63,7 +63,7 @@ if [ $(arch) = "i686" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-i386.A
 fi
 
 if [ $(arch) = "x86_64" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-amd64.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage
 fi
 
 # build and install to temporary AppDir folder

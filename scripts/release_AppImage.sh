@@ -1,5 +1,38 @@
 #!/bin/bash
 
+# x86_64 build on CentOS 7.7
+  # gcc 7 installed
+  # sudo yum install -y centos-release-scl
+  # sudo yum install -y devtoolset-7-gcc*
+  # run below command before build
+  # scl enable devtoolset-7 bash
+
+  # newer cmake is required than one included in CentOS 7
+  # download from http://www.cmake.org/download
+  # sudo mkdir /opt/cmake
+  # sudo sh cmake-$version.$build-Linux-x86_64.sh --prefix=/opt/cmake
+
+  if [ $(arch) = "x86_64" ]; then
+    CMAKE="/opt/cmake/bin/cmake"
+  fi
+
+# i686 build on Ubuntu 16.04 LTS
+
+# armv7l build on raspbian stretch
+
+# Qt path and flags set in env e.g.:
+# export PATH="/opt/Qt/5.14.0/bin/:$PATH"
+# export CPPFLAGS="-I/opt/Qt/5.14.0/bin/include/"
+# export LDFLAGS="-L/opt/Qt/5.14.0/bin/lib/"
+# export LD_LIBRARY_PATH="/opt/Qt/5.14.0/bin/lib/:$LD_LIBRARY_PATH"
+
+# for x86_64 and i686 platform
+# Qt 5.14.0 uses openssl 1.1 and some older distros still use 1.0
+# we build openssl 1.1.1d from source using following setup:
+# ./config shared --prefix=/opt/openssl-1.1.1/ && make --jobs=`nproc --all` && sudo make install
+# and add to build env
+# export LD_LIBRARY_PATH="/opt/openssl-1.1.1/lib/:$LD_LIBRARY_PATH"
+
 if [ "$1" = "SIGN" ]; then
   export SIGN="1"
 fi
@@ -14,24 +47,6 @@ if [ $(arch) = "x86_64" ]; then
     exit
  fi
 fi
-
-# x86_64 build on CentOS 7.7
-# i686 build on Ubuntu 16.04 LTS
-# armv7l build on raspbian stretch
-
-# Qt path and flags set in env
-# export PATH="/opt/Qt/5.14.0/bin/:$PATH"
-# export CPPFLAGS="-I/opt/Qt/5.14.0/bin/include/"
-# export LDFLAGS="-L/opt/Qt/5.14.0/bin/lib/"
-# export LD_LIBRARY_PATH="/opt/Qt/5.14.0/bin/lib/:$LD_LIBRARY_PATH"
-
-
-# for x86 platform
-# Qt 5.14.0 uses openssl 1.1 and some older distros still use 1.0
-# we build openssl 1.1.1d from source using following setup:
-# ./config shared --prefix=/opt/openssl-1.1.1/ && make --jobs=`nproc --all` && sudo make install
-# and add to build env
-# export LD_LIBRARY_PATH="/opt/openssl-1.1.1/lib/:$LD_LIBRARY_PATH"
 
 # building AppImage in temporary directory to keep system clean
 # use RAM disk if possible (as in: not building on CI system like Travis, and RAM disk is available)
@@ -87,13 +102,7 @@ if [ $(arch) = "armv7l" ]; then
 fi
 
 if [ $(arch) = "x86_64" ]; then
-  # starting with Qt 5.14.0 default gcc on Centos 7 is too old
-  # install gcc 7 on centos 7
-  # sudo yum install -y  centos-release-scl devtoolset-7-gcc*
-  # enable gcc 7 before running this script
-  # scl enable devtoolset-7 bash
-  # latest cmake is required
-  /opt/cmake/cmake-3.15.5-Linux-x86_64/bin/cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  "$CMAKE" .. -DCMAKE_INSTALL_PREFIX=/usr
   make --jobs=$(nproc --all)
 fi
 
@@ -130,7 +139,6 @@ fi
 
 # https://github.com/linuxdeploy/linuxdeploy-plugin-appimage
 linuxdeploy-plugin-appimage --appdir=AppDir
-
 
 # raspberry pi build
 if [ $(arch) = "armv7l" ]; then

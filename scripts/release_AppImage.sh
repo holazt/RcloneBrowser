@@ -9,14 +9,14 @@ fi
 # armv7l build on raspbian stretch
 
 # Qt path and flags set in env
-# export PATH="/opt/Qt/5.13.2/bin/:$PATH"
-# export CPPFLAGS="-I/opt/Qt/5.13.2/bin/include/"
-# export LDFLAGS="-L/opt/Qt/5.13.2/bin/lib/"
-# export LD_LIBRARY_PATH="/opt/Qt/5.13.2/bin/lib/:$LD_LIBRARY_PATH"
+# export PATH="/opt/Qt/5.14.0/bin/:$PATH"
+# export CPPFLAGS="-I/opt/Qt/5.14.0/bin/include/"
+# export LDFLAGS="-L/opt/Qt/5.14.0/bin/lib/"
+# export LD_LIBRARY_PATH="/opt/Qt/5.14.0/bin/lib/:$LD_LIBRARY_PATH"
 
 
 # for x86 platform
-# Qt 5.13.2 uses openssl 1.1 and some older distros still use 1.0
+# Qt 5.14.0 uses openssl 1.1 and some older distros still use 1.0
 # we build openssl 1.1.1d from source using following setup:
 # ./config shared --prefix=/opt/openssl-1.1.1/ && make --jobs=`nproc --all` && sudo make install
 # and add to build env
@@ -76,6 +76,12 @@ if [ $(arch) = "armv7l" ]; then
 fi
 
 if [ $(arch) = "x86_64" ]; then
+  # starting with Qt 5.14.0 default gcc on Centos 7 is too old
+  # install gcc 7 on centos 7
+  # sudo yum install -y  centos-release-scl devtoolset-7-gcc*
+  # enable gcc 7 before running this script
+  # scl enable devtoolset-7 bash
+  # latest cmake is required
   /opt/cmake/cmake-3.15.5-Linux-x86_64/bin/cmake .. -DCMAKE_INSTALL_PREFIX=/usr
   make --jobs=$(nproc --all)
 fi

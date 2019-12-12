@@ -4,6 +4,17 @@ if [ "$1" = "SIGN" ]; then
   export SIGN="1"
 fi
 
+# check gcc version on Centos
+if [ $(arch) = "x86_64" ]; then
+  currentver="$(gcc -dumpversion)"
+  if [ "${currentver:0:1}" -lt "7"  ]; then
+    echo "gcc version 7 or newer required"
+    echo "on Cetos 7 run"
+    echo "scl enable devtoolset-7 bash"
+    exit
+ fi
+fi
+
 # x86_64 build on CentOS 7.7
 # i686 build on Ubuntu 16.04 LTS
 # armv7l build on raspbian stretch

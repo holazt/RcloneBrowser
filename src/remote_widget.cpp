@@ -12,9 +12,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     : QWidget(parent) {
   ui.setupUi(this);
 
-  QString root = "/";
+QString root = isLocal ? "/" : QString();
 
-#ifndef Q_OS_WIN32
+#ifndef Q_OS_WIN
   isLocal = false;
 #endif
 
@@ -612,7 +612,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       drives.insert(path, index);
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)) && !(defined Q_OS_WIN)
     QThread *thread = new QThread(this);
     thread->start();
 

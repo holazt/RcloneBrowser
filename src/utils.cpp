@@ -287,7 +287,9 @@ QStringList GetShowHidden() {
   QStringList showHiddenOption;
   if (!showHidden) {
     showHiddenOption << "--exclude"
-                     << ".*/**";
+                     << ".*/**"
+                     << "--exclude"
+                     << ".*";
   }
   return showHiddenOption;
 }

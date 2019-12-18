@@ -26,7 +26,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.checkBoxShared->setChecked(false);
   ui.checkBoxShared->setDisabled(!isGoogle);
   // hide checkBoxShared for non Google remotes
-  if (!isGoogle){
+  if (!isGoogle) {
     ui.checkBoxShared->hide();
   }
 
@@ -173,9 +173,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QProcess process;
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
-      process.setArguments(QStringList()
-                           << "mkdir" << GetRcloneConf()
-                           << GetDriveSharedWithMe() << remote + ":" + folder);
+      process.setArguments(QStringList() << "mkdir" << GetRcloneConf()
+                                         << GetDriveSharedWithMe()
+                                         << GetDefaultRcloneOptionsList()
+                                         << remote + ":" + folder);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("New Folder", "Creating...", folderMsg, &process,
@@ -205,11 +206,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QProcess process;
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
-      process.setArguments(QStringList()
-                           << "moveto" << GetRcloneConf()
-                           << GetDriveSharedWithMe() << remote + ":" + path
-                           << remote + ":" +
-                                  model->path(index.parent()).filePath(name));
+      process.setArguments(
+          QStringList() << "moveto" << GetRcloneConf() << GetDriveSharedWithMe()
+                        << GetDefaultRcloneOptionsList() << remote + ":" + path
+                        << remote + ":" +
+                               model->path(index.parent()).filePath(name));
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("Rename", "Renaming...", pathMsg, &process, this);
@@ -240,7 +241,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process.setProgram(GetRclone());
       process.setArguments(
           QStringList() << "move" << GetRcloneConf() << GetDriveSharedWithMe()
-                        << remote + ":" + path << remote + ":" + name);
+                        << GetDefaultRcloneOptionsList() << remote + ":" + path
+                        << remote + ":" + name);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("Move", "Moving...", pathMsg, &process, this);
@@ -272,6 +274,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process.setArguments(QStringList()
                            << (model->isFolder(index) ? "purge" : "delete")
                            << GetRcloneConf() << GetDriveSharedWithMe()
+                           << GetDefaultRcloneOptionsList()
                            << remote + ":" + path);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
@@ -376,9 +379,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess process;
     UseRclonePassword(&process);
     process.setProgram(GetRclone());
-    process.setArguments(QStringList()
-                         << "link" << GetRcloneConf() << GetDriveSharedWithMe()
-                         << remote + ":" + path);
+    process.setArguments(
+        QStringList() << "link" << GetRcloneConf() << GetDriveSharedWithMe()
+                      << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog progress("Fetch Public Link", "Fetching link for...",
                             pathMsg, &process, this, false, true);
@@ -444,15 +447,16 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess process;
     UseRclonePassword(&process);
     process.setProgram(GetRclone());
-    process.setArguments(QStringList()
-                         << "tree" << "-d" << GetRcloneConf() << GetDriveSharedWithMe()
-                         << remote + ":" + path);
+    process.setArguments(
+        QStringList() << "tree"
+                      << "-d" << GetRcloneConf() << GetDriveSharedWithMe()
+                      << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
-    ProgressDialog progress("Show directories tree", "Processing...", pathMsg, &process,
-                            this, false);
+    ProgressDialog progress("Show directories tree", "Processing...", pathMsg,
+                            &process, this, false);
     progress.expand();
     progress.allowToClose();
-    progress.resize(1000,600);
+    progress.resize(1000, 600);
     progress.exec();
   });
 
@@ -469,9 +473,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess process;
     UseRclonePassword(&process);
     process.setProgram(GetRclone());
-    process.setArguments(QStringList()
-                         << "size" << GetRcloneConf() << GetDriveSharedWithMe()
-                         << remote + ":" + path);
+    process.setArguments(
+        QStringList() << "size" << GetRcloneConf() << GetDriveSharedWithMe()
+                      << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process.setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog progress("Get Size", "Calculating...", pathMsg, &process,
                             this, false);
@@ -509,7 +513,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process.setProgram(GetRclone());
       process.setArguments(QStringList()
                            << GetRcloneConf() << GetDriveSharedWithMe()
-                           << e.getOptions());
+                           << GetDefaultRcloneOptionsList() << e.getOptions());
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("Export", "Exporting...", dst, &process, this);

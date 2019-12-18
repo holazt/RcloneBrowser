@@ -128,11 +128,16 @@ MainWindow::MainWindow() {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultUploadOptions",
                          "--exclude .DS_Store");
+    };
 #else
     if (!(settings->contains("Settings/defaultUploadOptions"))) {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultUploadOptions", "");
+    };
 #endif
+    if (!(settings->contains("Settings/defaultRcloneOptions"))) {
+      // if defaultRcloneOptions does not exist create new empty key
+      settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
     };
   }
 
@@ -153,6 +158,8 @@ MainWindow::MainWindow() {
                          dialog.getDefaultDownloadOptions().trimmed());
       settings->setValue("Settings/defaultUploadOptions",
                          dialog.getDefaultUploadOptions().trimmed());
+      settings->setValue("Settings/defaultRcloneOptions",
+                         dialog.getDefaultRcloneOptions().trimmed());
 
       settings->setValue("Settings/checkRcloneBrowserUpdates",
                          dialog.getCheckRcloneBrowserUpdates());

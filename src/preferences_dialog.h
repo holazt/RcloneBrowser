@@ -18,6 +18,7 @@ public:
   QString getDefaultUploadDir() const;
   QString getDefaultDownloadOptions() const;
   QString getDefaultUploadOptions() const;
+  QString getDefaultRcloneOptions() const;
 
   bool getCheckRcloneBrowserUpdates() const;
   bool getCheckRcloneUpdates() const;

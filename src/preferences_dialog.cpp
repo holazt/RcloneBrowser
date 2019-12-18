@@ -90,6 +90,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/defaultDownloadOptions").toString());
   ui.defaultUploadOptions->setText(
       settings->value("Settings/defaultUploadOptions").toString());
+  ui.defaultRcloneOptions->setText(
+      settings->value("Settings/defaultRcloneOptions").toString());
 
   ui.checkRcloneBrowserUpdates->setChecked(
       settings->value("Settings/checkRcloneBrowserUpdates", true).toBool());
@@ -190,6 +192,10 @@ QString PreferencesDialog::getDefaultDownloadOptions() const {
 
 QString PreferencesDialog::getDefaultUploadOptions() const {
   return ui.defaultUploadOptions->text();
+}
+
+QString PreferencesDialog::getDefaultRcloneOptions() const {
+  return ui.defaultRcloneOptions->text();
 }
 
 bool PreferencesDialog::getCheckRcloneBrowserUpdates() const {

@@ -1,4 +1,5 @@
 #include "job_options.h"
+#include "utils.h"
 #include <qexception.h>
 #include <qlogging.h>
 #ifdef _WIN32
@@ -147,6 +148,11 @@ QStringList JobOptions::getOptions() const {
 
   list << "--stats-file-name-length"
        << "0";
+
+  QStringList defaultRcloneOptionsList = GetDefaultRcloneOptionsList();
+  if (!defaultRcloneOptionsList.isEmpty()) {
+    list << defaultRcloneOptionsList;
+  }
 
   list << source;
   list << dest;

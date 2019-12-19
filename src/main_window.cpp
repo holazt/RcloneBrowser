@@ -686,6 +686,17 @@ void MainWindow::rcloneGetVersion() {
 }
 
 void MainWindow::rcloneConfig() {
+
+  // for macOS and Linux we have to take care of possible spaces in rclone and
+  // rclone.conf paths by using "" around them
+  QString terminalRcloneCmd;
+  if (!GetRcloneConf().isEmpty()) {
+    terminalRcloneCmd = "\"" + GetRclone() + "\"" + " config" + " --config " +
+                        "\"" + GetRcloneConf().at(1) + "\"";
+  } else {
+    terminalRcloneCmd = "\"" + GetRclone() + "\"" + " config";
+  }
+
 #if defined(Q_OS_WIN32) && (QT_VERSION < QT_VERSION_CHECK(5, 7, 0))
   QProcess::startDetached(GetRclone(), QStringList()
                                            << "config" << GetRcloneConf());
@@ -719,9 +730,7 @@ void MainWindow::rcloneConfig() {
 #elif defined(Q_OS_MACOS)
   auto tmp = new QFile("/tmp/rclone_config.command");
   tmp->open(QIODevice::WriteOnly);
-  QTextStream(tmp) << "#!/bin/sh\n"
-                   << GetRclone() << " config " << GetRcloneConf().join(" ")
-                   << "\n";
+  QTextStream(tmp) << "#!/bin/sh\n" << terminalRcloneCmd << "\n";
   tmp->close();
   tmp->setPermissions(QFileDevice::ReadUser | QFileDevice::WriteUser |
                       QFileDevice::ExeUser | QFileDevice::ReadGroup |
@@ -756,9 +765,7 @@ void MainWindow::rcloneConfig() {
     }
   }
 
-  p->setArguments(QStringList()
-                  << "-e"
-                  << (GetRclone() + " config " + GetRcloneConf().join(" ")));
+  p->setArguments(QStringList() << "-e" << terminalRcloneCmd);
   p->setProgram(terminal);
 #endif
 

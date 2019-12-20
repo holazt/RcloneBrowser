@@ -36,7 +36,7 @@ QString root = isLocal ? "/" : QString();
   ui.rename->setIcon(style->standardIcon(QStyle::SP_FileIcon));
   ui.move->setIcon(style->standardIcon(QStyle::SP_DirOpenIcon));
   ui.purge->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
-  ui.mount->setIcon(style->standardIcon(QStyle::SP_DirLinkIcon));
+  ui.mount->setIcon(style->standardIcon(QStyle::SP_DriveNetIcon));
   ui.stream->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
   ui.upload->setIcon(style->standardIcon(QStyle::SP_ArrowUp));
   ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
@@ -56,6 +56,7 @@ QString root = isLocal ? "/" : QString();
   ui.buttonUpload->setDefaultAction(ui.upload);
   ui.buttonDownload->setDefaultAction(ui.download);
   ui.buttonTree->setDefaultAction(ui.getTree);
+  ui.buttonLink->setDefaultAction(ui.link);
   ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonExport->setDefaultAction(ui.export_);
 

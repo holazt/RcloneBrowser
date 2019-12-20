@@ -1021,8 +1021,8 @@ void MainWindow::editSelectedTask() {
   bool isDownload = (jo->jobType == JobOptions::Download);
   QString remote = isDownload ? jo->source : jo->dest;
   QString path = isDownload ? jo->dest : jo->source;
-  qDebug() << "remote:" + remote;
-  qDebug() << "path:" + path;
+  // qDebug() << "remote:" + remote;
+  // qDebug() << "path:" + path;
   TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo,
                     true);
   td.exec();

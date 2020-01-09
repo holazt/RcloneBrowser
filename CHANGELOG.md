@@ -1,4 +1,16 @@
 # Change Log
+## [1.8.0][1.8.0] - 2019-12-??
+-   NEW: http(s) proxy configuration for rclone
+-   NEW: remotes icons size option selector
+-   NEW: directories tree display for remotes
+-   NEW: rclone extra default options for all operations (e.g. --fast-list)
+-   NEW: added "Public Link" button to remote view
+-   FIXED: option to show hidden files and folders was not always working as expected
+-   FIXED: for sftp server default to home user directory (as normal sftp would do)
+-   FIXED: an issue when on Windows local remote only allowed to browse drive C:
+-   FIXED: problem using rclone and rclone.conf when path contained spaces
+-   bunch of usual small tweaks and fixes
+
 ## [1.7.0][1.7.0] - 2019-11-27
 -   NEW: built all releases with the latest Qt 5.13.2
 -   NEW: changed Linux releases format to AppImage only
@@ -112,6 +124,7 @@
 -   Mount and unmount folders on macOS and GNU/Linux
 -   Optionally minimizes to tray, with notifications when upload/download finishes
 
+[1.8.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.8.0
 [1.7.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.7.0
 [1.6.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.6.0
 [1.5.3]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.5.3

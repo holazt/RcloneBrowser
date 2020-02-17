@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -62,6 +62,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone config&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>&amp;Config...</string>
@@ -93,6 +96,9 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;open remote&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>&amp;Open</string>
             </property>
@@ -117,8 +123,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>624</width>
-             <height>285</height>
+             <width>610</width>
+             <height>299</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -192,7 +198,7 @@
              <x>0</x>
              <y>0</y>
              <width>646</width>
-             <height>307</height>
+             <height>327</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -200,7 +206,7 @@
              <widget class="QListWidget" name="tasksListWidget"/>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="tasks" stretch=""/>
+             <layout class="QVBoxLayout" name="tasks"/>
             </item>
             <item>
              <widget class="QWidget" name="tasksActionBar" native="true">
@@ -357,7 +363,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>31</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

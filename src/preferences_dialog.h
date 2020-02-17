@@ -18,6 +18,7 @@ public:
   QString getDefaultUploadDir() const;
   QString getDefaultDownloadOptions() const;
   QString getDefaultUploadOptions() const;
+  QString getDefaultRcloneOptions() const;
 
   bool getCheckRcloneBrowserUpdates() const;
   bool getCheckRcloneUpdates() const;
@@ -30,7 +31,13 @@ public:
   bool getShowFileIcons() const;
   bool getRowColors() const;
   bool getShowHidden() const;
-  bool darkMode() const;
+  bool getDarkMode() const;
+  QString getIconSize() const;
+
+  bool getUseProxy() const;
+  QString getHttpProxy() const;
+  QString getHttpsProxy() const;
+  QString getNoProxy() const;
 
 private:
   Ui::PreferencesDialog ui;

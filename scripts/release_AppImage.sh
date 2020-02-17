@@ -1,26 +1,52 @@
 #!/bin/bash
 
-if [ "$1" = "SIGN" ]; then
-  export SIGN="1"
-fi
-
 # x86_64 build on CentOS 7.7
+  # gcc 7 installed
+  # sudo yum install -y centos-release-scl
+  # sudo yum install -y devtoolset-7-gcc*
+  # run below command before build
+  # scl enable devtoolset-7 bash
+
+  # newer cmake is required than one included in CentOS 7
+  # download from http://www.cmake.org/download
+  # sudo mkdir /opt/cmake
+  # sudo sh cmake-$version.$build-Linux-x86_64.sh --prefix=/opt/cmake
+
+  if [ $(arch) = "x86_64" ]; then
+    CMAKE="/opt/cmake/bin/cmake"
+  fi
+
 # i686 build on Ubuntu 16.04 LTS
+
 # armv7l build on raspbian stretch
 
-# Qt path and flags set in env
-# export PATH="/opt/Qt/5.13.2/bin/:$PATH"
-# export CPPFLAGS="-I/opt/Qt/5.13.2/bin/include/"
-# export LDFLAGS="-L/opt/Qt/5.13.2/bin/lib/"
-# export LD_LIBRARY_PATH="/opt/Qt/5.13.2/bin/lib/:$LD_LIBRARY_PATH"
+# Qt path and flags set in env e.g.:
+# export PATH="/opt/Qt/5.14.0/bin/:$PATH"
+# export CPPFLAGS="-I/opt/Qt/5.14.0/bin/include/"
+# export LDFLAGS="-L/opt/Qt/5.14.0/bin/lib/"
+# export LD_LIBRARY_PATH="/opt/Qt/5.14.0/bin/lib/:$LD_LIBRARY_PATH"
 
-
-# for x86 platform
-# Qt 5.13.2 uses openssl 1.1 and some older distros still use 1.0
+# for x86_64 and i686 platform
+# Qt 5.14.0 uses openssl 1.1 and some older distros still use 1.0
 # we build openssl 1.1.1d from source using following setup:
 # ./config shared --prefix=/opt/openssl-1.1.1/ && make --jobs=`nproc --all` && sudo make install
 # and add to build env
 # export LD_LIBRARY_PATH="/opt/openssl-1.1.1/lib/:$LD_LIBRARY_PATH"
+
+if [ "$1" = "SIGN" ]; then
+  export SIGN="1"
+fi
+
+# check gcc version on Centos
+if [ $(arch) = "x86_64" ]; then
+  currentver="$(gcc -dumpversion)"
+  if [ "${currentver:0:1}" -lt "7"  ]; then
+    echo "gcc version 7 or newer required"
+    echo "on Cetos 7 run"
+    echo "scl enable devtoolset-7 bash"
+    exit
+ fi
+fi
 
 # building AppImage in temporary directory to keep system clean
 # use RAM disk if possible (as in: not building on CI system like Travis, and RAM disk is available)
@@ -55,15 +81,15 @@ mkdir -p "$ROOT"/release
 
 # clean current version previous build
 if [ $(arch) = "armv7l" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-armhf.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage
 fi
 
 if [ $(arch) = "i686" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-i386.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage
 fi
 
 if [ $(arch) = "x86_64" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-amd64.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage
 fi
 
 # build and install to temporary AppDir folder
@@ -76,7 +102,7 @@ if [ $(arch) = "armv7l" ]; then
 fi
 
 if [ $(arch) = "x86_64" ]; then
-  /opt/cmake/cmake-3.15.5-Linux-x86_64/bin/cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  "$CMAKE" .. -DCMAKE_INSTALL_PREFIX=/usr
   make --jobs=$(nproc --all)
 fi
 
@@ -113,7 +139,6 @@ fi
 
 # https://github.com/linuxdeploy/linuxdeploy-plugin-appimage
 linuxdeploy-plugin-appimage --appdir=AppDir
-
 
 # raspberry pi build
 if [ $(arch) = "armv7l" ]; then

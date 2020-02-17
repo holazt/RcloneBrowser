@@ -795,7 +795,7 @@
        <item>
         <widget class="QPlainTextEdit" name="textExclude">
          <property name="toolTip">
-          <string>--exclude</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;every line represents --exclude pattern&lt;/p&gt;&lt;p&gt;example patterns:&lt;/p&gt;&lt;p&gt;file.jpg&lt;br/&gt;/pictures/new/*.png&lt;br/&gt;/dir1/dir2/**&lt;br/&gt;&amp;quot;/directory with spaces&amp;quot;&lt;/p&gt;&lt;p&gt;check rclone online documentation for details.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="lineWrapMode">
           <enum>QPlainTextEdit::NoWrap</enum>

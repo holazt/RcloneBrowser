@@ -128,11 +128,16 @@ MainWindow::MainWindow() {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultUploadOptions",
                          "--exclude .DS_Store");
+    };
 #else
     if (!(settings->contains("Settings/defaultUploadOptions"))) {
       // if defaultDownloadOptions does not exist create new empty key
       settings->setValue("Settings/defaultUploadOptions", "");
+    };
 #endif
+    if (!(settings->contains("Settings/defaultRcloneOptions"))) {
+      // if defaultRcloneOptions does not exist create new empty key
+      settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
     };
   }
 
@@ -153,6 +158,8 @@ MainWindow::MainWindow() {
                          dialog.getDefaultDownloadOptions().trimmed());
       settings->setValue("Settings/defaultUploadOptions",
                          dialog.getDefaultUploadOptions().trimmed());
+      settings->setValue("Settings/defaultRcloneOptions",
+                         dialog.getDefaultRcloneOptions().trimmed());
 
       settings->setValue("Settings/checkRcloneBrowserUpdates",
                          dialog.getCheckRcloneBrowserUpdates());
@@ -170,7 +177,15 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
-      settings->setValue("Settings/darkMode", dialog.darkMode());
+      settings->setValue("Settings/darkMode", dialog.getDarkMode());
+      settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
+
+      settings->setValue("Settings/useProxy", dialog.getUseProxy());
+      settings->setValue("Settings/http_proxy",
+                         dialog.getHttpProxy().trimmed());
+      settings->setValue("Settings/https_proxy",
+                         dialog.getHttpsProxy().trimmed());
+      settings->setValue("Settings/no_proxy", dialog.getNoProxy().trimmed());
 
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
@@ -671,6 +686,17 @@ void MainWindow::rcloneGetVersion() {
 }
 
 void MainWindow::rcloneConfig() {
+
+  // for macOS and Linux we have to take care of possible spaces in rclone and
+  // rclone.conf paths by using "" around them
+  QString terminalRcloneCmd;
+  if (!GetRcloneConf().isEmpty()) {
+    terminalRcloneCmd = "\"" + GetRclone() + "\"" + " config" + " --config " +
+                        "\"" + GetRcloneConf().at(1) + "\"";
+  } else {
+    terminalRcloneCmd = "\"" + GetRclone() + "\"" + " config";
+  }
+
 #if defined(Q_OS_WIN32) && (QT_VERSION < QT_VERSION_CHECK(5, 7, 0))
   QProcess::startDetached(GetRclone(), QStringList()
                                            << "config" << GetRcloneConf());
@@ -704,9 +730,7 @@ void MainWindow::rcloneConfig() {
 #elif defined(Q_OS_MACOS)
   auto tmp = new QFile("/tmp/rclone_config.command");
   tmp->open(QIODevice::WriteOnly);
-  QTextStream(tmp) << "#!/bin/sh\n"
-                   << GetRclone() << " config " << GetRcloneConf().join(" ")
-                   << "\n";
+  QTextStream(tmp) << "#!/bin/sh\n" << terminalRcloneCmd << "\n";
   tmp->close();
   tmp->setPermissions(QFileDevice::ReadUser | QFileDevice::WriteUser |
                       QFileDevice::ExeUser | QFileDevice::ReadGroup |
@@ -741,9 +765,7 @@ void MainWindow::rcloneConfig() {
     }
   }
 
-  p->setArguments(QStringList()
-                  << "-e"
-                  << (GetRclone() + " config " + GetRcloneConf().join(" ")));
+  p->setArguments(QStringList() << "-e" << terminalRcloneCmd);
   p->setProgram(terminal);
 #endif
 
@@ -771,6 +793,7 @@ void MainWindow::rcloneListRemotes() {
 
           auto settings = GetSettings();
           bool darkModeIni = settings->value("Settings/darkModeIni").toBool();
+          QString iconSize = settings->value("Settings/iconSize").toString();
 
           for (const QString &line : items) {
             if (line.isEmpty()) {
@@ -789,6 +812,29 @@ void MainWindow::rcloneListRemotes() {
             QString img_add = "";
             int size;
 
+            // medium scale by default
+            double darkModeIconScale = 1.333;
+            double lightModeiconScale = 2;
+            // to avoid "variable not used" compiler error
+            if (darkModeIconScale == lightModeiconScale) {
+            };
+
+            // set icons scale based on iconSize value
+            if (iconSize == "small") {
+              lightModeiconScale = 1.5;
+              darkModeIconScale = 1;
+            }
+
+            if (iconSize == "medium") {
+              lightModeiconScale = 2;
+              darkModeIconScale = 1.333;
+            }
+
+            if (iconSize == "large") {
+              lightModeiconScale = 3;
+              darkModeIconScale = 2;
+            }
+
 #if !defined(Q_OS_MACOS)
             // _inv only for dark mode
             // we use darkModeIni to apply mode active at startup
@@ -802,15 +848,15 @@ void MainWindow::rcloneListRemotes() {
             // on Windows dark theme changes PM_ListViewIconSize size
             // so we have to adjust
             if (darkModeIni) {
-              size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
-              ui.remotes->setIconSize(QSize(size, size));
+              size = darkModeIconScale *
+                     style->pixelMetric(QStyle::PM_ListViewIconSize);
             } else {
-              size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
-              ui.remotes->setIconSize(QSize(size, size));
+              size = lightModeiconScale *
+                     style->pixelMetric(QStyle::PM_ListViewIconSize);
             }
 #else
-             size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
-             ui.remotes->setIconSize(QSize(size, size));
+             // for Linux/BSD PM_ListViewIconSize stays the same
+             size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
 #endif
 #else
              QString sysInfo = QSysInfo::productVersion();
@@ -823,19 +869,19 @@ void MainWindow::rcloneListRemotes() {
 
                // on older macOS we also have to adjust icon size per mode
                if (darkModeIni) {
-                 size = 2 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+                 size = darkModeIconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "_inv";
                } else {
-                 size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+                 size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "";
                }
 
              } else {
-               size = 3 * style->pixelMetric(QStyle::PM_ListViewIconSize);
+               // for macOS > 10.13 native dark mode does not change IconSize base
+               size = 1.5 * lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
              }
-
-             ui.remotes->setIconSize(QSize(size, size));
 #endif
+            ui.remotes->setIconSize(QSize(size, size));
 
             QString path =
                 ":/remotes/images/" + type.replace(' ', '_') + img_add + ".png";
@@ -975,8 +1021,8 @@ void MainWindow::editSelectedTask() {
   bool isDownload = (jo->jobType == JobOptions::Download);
   QString remote = isDownload ? jo->source : jo->dest;
   QString path = isDownload ? jo->dest : jo->source;
-  qDebug() << "remote:" + remote;
-  qDebug() << "path:" + path;
+  // qDebug() << "remote:" + remote;
+  // qDebug() << "path:" + path;
   TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo,
                     true);
   td.exec();

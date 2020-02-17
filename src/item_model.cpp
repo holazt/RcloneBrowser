@@ -529,13 +529,14 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   lsd->start(GetRclone(),
              QStringList() << "lsd" << GetRcloneConf() << GetDriveSharedWithMe()
-                           << GetShowHidden()
+                           << GetShowHidden() << GetDefaultRcloneOptionsList()
                            << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
   lsl->start(GetRclone(),
              QStringList() << "lsl" << GetRcloneConf() << GetDriveSharedWithMe()
                            << GetShowHidden() << "--max-depth"
-                           << "1" << mRemote + ":" + parent->path.path(),
+                           << "1" << GetDefaultRcloneOptionsList()
+                           << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
 }
 

@@ -34,7 +34,11 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
     if (mRunning) {
       int button = QMessageBox::question(
           this, "Unmount",
-          QString("Do you want to umount %1 folder?").arg(folder),
+#if defined(Q_OS_WIN)
+          QString("Do you want to unmount %1 drive?").arg(folder),
+#else
+          QString("Do you want to unmount %1 folder?").arg(folder),
+#endif
           QMessageBox::Yes | QMessageBox::No);
       if (button == QMessageBox::Yes) {
         cancel();

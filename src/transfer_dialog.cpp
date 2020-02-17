@@ -67,8 +67,18 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         ui.spinLowLevelRetries->setValue(10);
         ui.checkDeleteExcluded->setChecked(false);
         ui.textExclude->clear();
-        ui.textExtra->clear();
+        auto settings = GetSettings();
+        if (isDownload) {
+          // download
+          ui.textExtra->setText(
+              settings->value("Settings/defaultDownloadOptions").toString());
+        } else {
+          // upload
+          ui.textExtra->setText(
+              settings->value("Settings/defaultUploadOptions").toString());
+        }
       });
+
   ui.buttonBox->button(QDialogButtonBox::RestoreDefaults)->click();
 
   QObject::connect(saveTask, &QPushButton::clicked, this, [=]() {

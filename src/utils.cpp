@@ -268,13 +268,28 @@ QStringList GetDriveSharedWithMe() {
   return driveSharedOption;
 }
 
+QStringList GetDefaultRcloneOptionsList() {
+  auto settings = GetSettings();
+  QString defaultRcloneOptions =
+      settings->value("Settings/defaultRcloneOptions").toString();
+  QStringList defaultRcloneOptionsList;
+  if (!defaultRcloneOptions.isEmpty()) {
+    for (auto arg : defaultRcloneOptions.split(' ')) {
+      defaultRcloneOptionsList << arg;
+    }
+  }
+  return defaultRcloneOptionsList;
+}
+
 QStringList GetShowHidden() {
   auto settings = GetSettings();
   bool showHidden = settings->value("Settings/showHidden", true).toBool();
   QStringList showHiddenOption;
   if (!showHidden) {
     showHiddenOption << "--exclude"
-                     << ".*/**";
+                     << ".*/**"
+                     << "--exclude"
+                     << ".*";
   }
   return showHiddenOption;
 }

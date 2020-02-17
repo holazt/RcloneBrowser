@@ -1,5 +1,5 @@
 # Change Log
-## [1.8.0][1.8.0] - 2019-12-??
+## [1.8.0][1.8.0] - 2020-02-17
 -   NEW: http(s) proxy configuration for rclone
 -   NEW: remotes icons size option selector
 -   NEW: directories tree display for remotes
@@ -9,6 +9,7 @@
 -   FIXED: for sftp server default to home user directory (as normal sftp would do)
 -   FIXED: an issue when on Windows local remote only allowed to browse drive C:
 -   FIXED: problem using rclone and rclone.conf when path contained spaces
+-   FIXED: bandwidth box on jobs tab is too small for fast connections
 -   bunch of usual small tweaks and fixes
 
 ## [1.7.0][1.7.0] - 2019-11-27

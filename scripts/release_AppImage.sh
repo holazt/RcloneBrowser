@@ -129,8 +129,8 @@ cp "$ROOT"/LICENSE "$TEMP_BASE"/"$TARGET"/AppDir/License.txt
 
 # https://github.com/linuxdeploy/linuxdeploy
 # https://github.com/linuxdeploy/linuxdeploy-plugin-qt
-linuxdeploy --appdir AppDir --desktop-file=AppDir/usr/share/applications/rclone-browser.desktop
-linuxdeploy-plugin-qt --appdir AppDir
+linuxdeploy --appdir AppDir --desktop-file=AppDir/usr/share/applications/rclone-browser.desktop --plugin qt
+#linuxdeploy-plugin-qt --appdir AppDir
 
 if [ $(arch) != "armv7l" ]
 then

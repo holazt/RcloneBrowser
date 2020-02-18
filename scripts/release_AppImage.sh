@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # x86_64 build on CentOS 7.7
   # gcc 7 installed
   # sudo yum install -y centos-release-scl

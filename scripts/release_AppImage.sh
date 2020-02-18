@@ -81,15 +81,15 @@ mkdir -p "$ROOT"/release
 
 # clean current version previous build
 if [ $(arch) = "armv7l" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-armhf.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-raspberrypi-armhf.AppImage
 fi
 
 if [ $(arch) = "i686" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-i386.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-i386.AppImage
 fi
 
 if [ $(arch) = "x86_64" ] && [ -f "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage ]; then
-  rm "$ROOT"/release/rclone-browser-"$VERSION"-x86_64.AppImage
+  rm "$ROOT"/release/rclone-browser-"$VERSION"-linux-x86_64.AppImage
 fi
 
 # build and install to temporary AppDir folder
@@ -142,16 +142,19 @@ linuxdeploy-plugin-appimage --appdir=AppDir
 
 # raspberry pi build
 if [ $(arch) = "armv7l" ]; then
+  rename 's/armhf/raspberrypi-armhf/' Rclone_Browser*
   rename 's/Rclone_Browser/rclone-browser/' Rclone_Browser*
 fi
 
 # x86 build
 if [ $(arch) = "i686" ]; then
+  rename 's/i386/linux-i386/' Rclone_Browser*
   rename 's/Rclone_Browser/rclone-browser/' Rclone_Browser*
 fi
 
 # x86_64 build
 if [ $(arch) = "x86_64" ]; then
+  rename x86_64 linux-x86_64 Rclone_Browser*
   rename Rclone_Browser rclone-browser Rclone_Browser*
 fi
 

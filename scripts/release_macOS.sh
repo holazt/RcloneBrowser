@@ -7,8 +7,8 @@ QTDIR=/usr/local/opt/qt
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/..
 VERSION=$(cat "$ROOT"/VERSION)-$(git rev-parse --short HEAD)
 BUILD="$ROOT"/build
-TARGET=rclone-browser-$VERSION-macOS
-DMG=rclone-browser-$VERSION
+TARGET=rclone-browser-$VERSION-macos
+DMG=rclone-browser-$VERSION-macos
 APP="$TARGET"/"Rclone Browser.app"
 
 # clean from previous builds (if for the same version in releases)

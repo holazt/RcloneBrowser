@@ -6,12 +6,25 @@ branches:
   - kptsky_testing
 skip_tags: true
 clone_depth: 1
+
+environment:
+  matrix:
+   - configuration: x64
+     BUILD_ARCH: x64
+     BUILD_MSVC: msvc2017_64
+
+   - configuration: Win32
+     BUILD_ARCH: Win32
+     BUILD_MSVC: msvc2017
+
 build_script:
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=C:\Qt\5.13\msvc2017_64 ..
+  - cmake -G "Visual Studio 16 2019" -A %BUILD_ARCH% -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=C:\Qt\5.13\%BUILD_MSVC% ..
   - cmake --build . --config Release
+
 artifacts:
 - path: build/build/Release/RcloneBrowser.exe
+
 test: off
 deploy: off

@@ -39,11 +39,11 @@ if "%ERRORLEVEL%" equ "0" (
 )
 
 if "%ARCH%" == "x86" (
-  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win-32-bit"
-  set TARGET_EXE="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-32-bit"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-windows-32-bit"
+  set TARGET_EXE="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-windows-32-bit"
 ) else (
-  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-win-64-bit"
-  set TARGET_EXE="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-64-bit"
+  set TARGET="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-windows-64-bit"
+  set TARGET_EXE="%~dp0\..\release\rclone-browser-%VERSION_COMMIT%-windows-64-bit"
 )
 
 pushd "%ROOT%"
@@ -104,7 +104,7 @@ rem in case user wants to install both 32bits and 64bits versions we need two Ap
 rem 64bits ;AppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}
 rem 32bits ;AppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}
 if "%ARCH%" == "x86" (
-"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win-32-bit" "/dMyAppArch=x86" /O"../release" /F"rclone-browser-%VERSION_COMMIT%-32-bit" rclone-browser-win-installer.iss
+"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{5644ED3A-6028-47C0-9796-29548EF7CEA3}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-windows-32-bit" "/dMyAppArch=x86" /O"../release" /F"rclone-browser-%VERSION_COMMIT%-windows-32-bit" rclone-browser-win-installer.iss
 ) else (
-"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-win-64-bit" "/dMyAppArch=x64" /O"../release" /F"rclone-browser-%VERSION_COMMIT%-64-bit" rclone-browser-win-installer.iss
+"c:\Program Files (x86)\Inno Setup 6"\iscc "/dMyAppVersion=%VERSION%" "/dMyAppId={{0AF9BF43-8D44-4AFF-AE60-6CECF1BF0D31}" "/dMyAppDir=rclone-browser-%VERSION_COMMIT%-windows-64-bit" "/dMyAppArch=x64" /O"../release" /F"rclone-browser-%VERSION_COMMIT%-windows-64-bit" rclone-browser-win-installer.iss
 )

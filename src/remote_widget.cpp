@@ -523,6 +523,7 @@ QString root = isLocal ? "/" : QString();
       QObject::connect(&progress, &ProgressDialog::outputAvailable, this,
                        [=](const QString &output) {
                          QTextStream out(file);
+                         out.setCodec("UTF-8");
 
                          for (const auto &line : output.split('\n')) {
                            if (re.exactMatch(line.trimmed())) {

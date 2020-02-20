@@ -39,5 +39,7 @@
     <file>images/yandex_inv.png</file>
     <file>images/azureblob_inv.png</file>
     <file>images/google_photos_inv.png</file>
+    <file>images/cache.png</file>
+    <file>images/cache_inv.png</file>
   </qresource>
 </RCC>

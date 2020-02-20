@@ -49,5 +49,7 @@
     <file>images/sharefile_inv.png</file>
     <file>images/jottacloud.png</file>
     <file>images/jottacloud_inv.png</file>
+    <file>images/sugarsync.png</file>
+    <file>images/sugarsync_inv.png</file>
   </qresource>
 </RCC>

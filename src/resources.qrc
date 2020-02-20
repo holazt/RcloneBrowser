@@ -51,5 +51,25 @@
     <file>images/jottacloud_inv.png</file>
     <file>images/sugarsync.png</file>
     <file>images/sugarsync_inv.png</file>
+    <file>images/mailru.png</file>
+    <file>images/mailru_inv.png</file>
+    <file>images/putio.png</file>
+    <file>images/putio_inv.png</file>
+    <file>images/premiumizeme.png</file>
+    <file>images/premiumizeme_inv.png</file>
+    <file>images/pcloud.png</file>
+    <file>images/pcloud_inv.png</file>
+    <file>images/opendrive.png</file>
+    <file>images/opendrive_inv.png</file>
+    <file>images/qingstor.png</file>
+    <file>images/qingstor_inv.png</file>
+    <file>images/fichier.png</file>
+    <file>images/fichier_inv.png</file>
+    <file>images/koofr.png</file>
+    <file>images/koofr_inv.png</file>
+    <file>images/memory.png</file>
+    <file>images/memory_inv.png</file>
+    <file>images/http.png</file>
+    <file>images/http_inv.png</file>
   </qresource>
 </RCC>

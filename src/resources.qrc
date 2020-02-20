@@ -45,5 +45,7 @@
     <file>images/webdav_inv.png</file>
     <file>images/box.png</file>
     <file>images/box_inv.png</file>
+    <file>images/sharefile.png</file>
+    <file>images/sharefile_inv.png</file>
   </qresource>
 </RCC>

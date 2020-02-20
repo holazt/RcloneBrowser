@@ -43,5 +43,7 @@
     <file>images/cache_inv.png</file>
     <file>images/webdav.png</file>
     <file>images/webdav_inv.png</file>
+    <file>images/box.png</file>
+    <file>images/box_inv.png</file>
   </qresource>
 </RCC>

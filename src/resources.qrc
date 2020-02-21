@@ -75,5 +75,7 @@
     <file>images/chunker_inv.png</file>
     <file>images/alias.png</file>
     <file>images/alias_inv.png</file>
+    <file>images/union.png</file>
+    <file>images/union_inv.png</file>
   </qresource>
 </RCC>

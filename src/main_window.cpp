@@ -1026,6 +1026,14 @@ void MainWindow::listTasks() {
 
   ui.tasksListWidget->clear();
 
+  // make tasks list flow (wrap) in its window
+  ui.tasksListWidget->setViewMode(QListWidget::ListMode);
+  ui.tasksListWidget->setResizeMode(QListView::Adjust);
+  ui.tasksListWidget->setWrapping(true);
+
+  // enable drag and drop reordering (there is no persistence of order implemented yet)
+  ui.tasksListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
 
   for (JobOptions *jo : ljo->getTasks()) {

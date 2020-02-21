@@ -3,6 +3,26 @@
     <file>icon.png</file>
   </qresource>
   <qresource prefix="remotes">
+    <file>images/qbutton_icons/refresh.png</file>
+    <file>images/qbutton_icons/mkdir.png</file>
+    <file>images/qbutton_icons/rename.png</file>
+    <file>images/qbutton_icons/move.png</file>
+    <file>images/qbutton_icons/purge.png</file>
+    <file>images/qbutton_icons/mount.png</file>
+    <file>images/qbutton_icons/stream.png</file>
+    <file>images/qbutton_icons/upload.png</file>
+    <file>images/qbutton_icons/download.png</file>
+    <file>images/qbutton_icons/getsize.png</file>
+    <file>images/qbutton_icons/gettree.png</file>
+    <file>images/qbutton_icons/export.png</file>
+    <file>images/qbutton_icons/link.png</file>
+
+    <file>images/qbutton_icons/arrowup.png</file>
+    <file>images/qbutton_icons/arrowdown.png</file>
+    <file>images/qbutton_icons/run.png</file>
+    <file>images/qbutton_icons/file.png</file>
+    <file>images/qbutton_icons/edit.png</file>
+
     <file>images/amazon_cloud_drive.png</file>
     <file>images/b2.png</file>
     <file>images/crypt.png</file>

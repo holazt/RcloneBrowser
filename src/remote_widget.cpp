@@ -33,21 +33,20 @@ QString root = isLocal ? "/" : QString();
     ui.checkBoxShared->hide();
   }
 
-  QStyle *style = QApplication::style();
-  ui.refresh->setIcon(style->standardIcon(QStyle::SP_BrowserReload));
-  ui.mkdir->setIcon(style->standardIcon(QStyle::SP_FileDialogNewFolder));
-  ui.rename->setIcon(style->standardIcon(QStyle::SP_FileIcon));
-  ui.move->setIcon(style->standardIcon(QStyle::SP_ToolBarHorizontalExtensionButton));
-  ui.purge->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
-  ui.mount->setIcon(style->standardIcon(QStyle::SP_DriveHDIcon));
-  ui.stream->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
-  ui.upload->setIcon(style->standardIcon(QStyle::SP_ArrowUp));
-  ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
-  ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
-  ui.getSize->setIcon(style->standardIcon(QStyle::SP_FileDialogInfoView));
-  ui.getTree->setIcon(style->standardIcon(QStyle::SP_FileDialogListView));
-  ui.export_->setIcon(style->standardIcon(QStyle::SP_FileDialogDetailedView));
-  ui.link->setIcon(style->standardIcon(QStyle::SP_FileLinkIcon));
+//  QStyle *style = QApplication::style();
+  ui.refresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
+  ui.mkdir->setIcon(QIcon(":remotes/images/qbutton_icons/mkdir.png"));
+  ui.rename->setIcon(QIcon(":remotes/images/qbutton_icons/rename.png"));
+  ui.move->setIcon(QIcon(":remotes/images/qbutton_icons/move.png"));
+  ui.purge->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
+  ui.mount->setIcon(QIcon(":remotes/images/qbutton_icons/mount.png"));
+  ui.stream->setIcon(QIcon(":remotes/images/qbutton_icons/stream.png"));
+  ui.upload->setIcon(QIcon(":remotes/images/qbutton_icons/upload.png"));
+  ui.download->setIcon(QIcon(":remotes/images/qbutton_icons/download.png"));
+  ui.getSize->setIcon(QIcon(":remotes/images/qbutton_icons/getsize.png"));
+  ui.getTree->setIcon(QIcon(":remotes/images/qbutton_icons/gettree.png"));
+  ui.export_->setIcon(QIcon(":remotes/images/qbutton_icons/export.png"));
+  ui.link->setIcon(QIcon(":remotes/images/qbutton_icons/link.png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
   ui.buttonMkdir->setDefaultAction(ui.mkdir);

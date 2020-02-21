@@ -295,12 +295,17 @@ MainWindow::MainWindow() {
                    &ListOfJobOptions::tasksListUpdated, this,
                    &MainWindow::listTasks);
 
-  QStyle *style = QApplication::style();
-  ui.buttonDeleteTask->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
-  ui.buttonEditTask->setIcon(style->standardIcon(QStyle::SP_FileIcon));
-  ui.buttonRunTask->setIcon(style->standardIcon(QStyle::SP_CommandLink));
-  mUploadIcon = style->standardIcon(QStyle::SP_ArrowUp);
-  mDownloadIcon = style->standardIcon(QStyle::SP_ArrowDown);
+  ui.buttonDeleteTask->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
+  ui.buttonEditTask->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
+  ui.buttonRunTask->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
+
+  QPixmap pixmap(":remotes/images/qbutton_icons/arrowup.png");
+  QIcon arrowup(pixmap);
+  mUploadIcon = arrowup;
+
+  QPixmap pixmap1(":remotes/images/qbutton_icons/arrowdown.png");
+  QIcon arrowdown(pixmap1);
+  mDownloadIcon = arrowdown;
 
   ui.tabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
   ui.tabs->tabBar()->setTabButton(0, QTabBar::LeftSide, nullptr);

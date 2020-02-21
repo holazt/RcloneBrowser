@@ -179,6 +179,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
+      settings->setValue("Settings/iconsLayout", dialog.getIconsLayout().trimmed());
 
       settings->setValue("Settings/useProxy", dialog.getUseProxy());
       settings->setValue("Settings/http_proxy",
@@ -778,6 +779,23 @@ void MainWindow::rcloneConfig() {
 void MainWindow::rcloneListRemotes() {
   ui.remotes->clear();
 
+  auto settings = GetSettings();
+  QString iconsLayout = settings->value("Settings/iconsLayout").toString();
+
+  if (iconsLayout == "tiles") {
+    ui.remotes->setViewMode(QListWidget::IconMode);
+    // disable drag and drop
+    ui.remotes->setMovement(QListView::Static);
+    // always adjust icons after the window is resized
+    ui.remotes->setResizeMode(QListView::Adjust);
+    ui.remotes->setWrapping(true);
+    ui.remotes->setSpacing(10);
+  } else {
+    ui.remotes->setViewMode(QListWidget::ListMode);
+    ui.remotes->setResizeMode(QListView::Adjust);
+    ui.remotes->setWrapping(true);
+  }
+
   QProcess *p = new QProcess();
 
   QObject::connect(
@@ -821,18 +839,18 @@ void MainWindow::rcloneListRemotes() {
 
             // set icons scale based on iconSize value
             if (iconSize == "small") {
-              lightModeiconScale = 1.5;
-              darkModeIconScale = 1;
+              lightModeiconScale = 1.5*2;
+              darkModeIconScale = 1*2;
             }
 
             if (iconSize == "medium") {
-              lightModeiconScale = 2;
-              darkModeIconScale = 1.333;
+              lightModeiconScale = 2*2;
+              darkModeIconScale = 1.333*2;
             }
 
             if (iconSize == "large") {
-              lightModeiconScale = 3;
-              darkModeIconScale = 2;
+              lightModeiconScale = 3*2;
+              darkModeIconScale = 2*2;
             }
 
 #if !defined(Q_OS_MACOS)
@@ -989,6 +1007,7 @@ void MainWindow::closeEvent(QCloseEvent *ev) {
 }
 
 void MainWindow::listTasks() {
+
   ui.tasksListWidget->clear();
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();

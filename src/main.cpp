@@ -79,6 +79,12 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/iconSize", "medium");
   };
 
+  // during first run the iconsLayout key might not exist
+  if (!(settings->contains("Settings/iconsLayout"))) {
+    // if iconsLayout does not exist create new key
+    settings->setValue("Settings/iconsLayout", "list");
+  };
+
   // enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;

@@ -146,6 +146,12 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     }
   }
 
+  if ((settings->value("Settings/iconsLayout").toString()) == "list") {
+    ui.cb_list->setChecked(true);
+  } else {
+    ui.cb_tiles->setChecked(true);
+  }
+
   ui.info_2->setText(
       "See rclone <a "
       "href=\"https://github.com/rclone/rclone/blob/master/docs/content/"
@@ -245,6 +251,14 @@ QString PreferencesDialog::getIconSize() const {
     } else {
       return "medium";
     }
+  }
+}
+
+QString PreferencesDialog::getIconsLayout() const {
+  if (ui.cb_list->isChecked()) {
+    return "list";
+  } else {
+      return "tiles";
   }
 }
 

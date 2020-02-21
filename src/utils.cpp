@@ -274,8 +274,11 @@ QStringList GetDefaultRcloneOptionsList() {
       settings->value("Settings/defaultRcloneOptions").toString();
   QStringList defaultRcloneOptionsList;
   if (!defaultRcloneOptions.isEmpty()) {
-    for (auto arg : defaultRcloneOptions.split(' ')) {
-      defaultRcloneOptionsList << arg;
+    QRegExp separator("--");
+    for (auto arg : defaultRcloneOptions.split(separator)) {
+      if (!arg.isEmpty()) {
+        defaultRcloneOptionsList << "--"+arg;
+      }
     }
   }
   return defaultRcloneOptionsList;

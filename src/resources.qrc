@@ -71,5 +71,9 @@
     <file>images/memory_inv.png</file>
     <file>images/http.png</file>
     <file>images/http_inv.png</file>
+    <file>images/chunker.png</file>
+    <file>images/chunker_inv.png</file>
+    <file>images/alias.png</file>
+    <file>images/alias_inv.png</file>
   </qresource>
 </RCC>

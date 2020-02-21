@@ -285,10 +285,20 @@ MainWindow::MainWindow() {
                    [=]() { editSelectedTask(); });
 
   QObject::connect(ui.buttonDeleteTask, &QPushButton::clicked, this, [=]() {
-    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
-        ui.tasksListWidget->currentItem());
-    JobOptions *jo = item->GetData();
-    ListOfJobOptions::getInstance()->Forget(jo);
+
+
+     JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
+         ui.tasksListWidget->currentItem());
+     JobOptions *jo = item->GetData();
+
+   int button = QMessageBox::question(
+        this, "Delete",
+        QString("Are you sure you want to delete this task?\n\n" + jo->description),
+        QMessageBox::Yes | QMessageBox::No);
+   if (button == QMessageBox::Yes) {
+     ListOfJobOptions::getInstance()->Forget(jo);
+   }
+
   });
 
   QObject::connect(ListOfJobOptions::getInstance(),

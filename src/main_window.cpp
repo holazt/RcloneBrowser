@@ -178,6 +178,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
+      settings->setValue("Settings/buttonStyle", dialog.getButtonStyle().trimmed());
       settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
       settings->setValue("Settings/iconsLayout", dialog.getIconsLayout().trimmed());
 

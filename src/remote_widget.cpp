@@ -19,6 +19,9 @@ QString root = isLocal ? "/" : QString();
 #endif
 
   auto settings = GetSettings();
+
+  QString buttonStyle = settings->value("Settings/buttonStyle").toString();
+
   QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
   settings->setValue("Settings/driveShared", Qt::Unchecked);
   ui.tree->setAlternatingRowColors(
@@ -34,9 +37,9 @@ QString root = isLocal ? "/" : QString();
   ui.refresh->setIcon(style->standardIcon(QStyle::SP_BrowserReload));
   ui.mkdir->setIcon(style->standardIcon(QStyle::SP_FileDialogNewFolder));
   ui.rename->setIcon(style->standardIcon(QStyle::SP_FileIcon));
-  ui.move->setIcon(style->standardIcon(QStyle::SP_DirOpenIcon));
+  ui.move->setIcon(style->standardIcon(QStyle::SP_ToolBarHorizontalExtensionButton));
   ui.purge->setIcon(style->standardIcon(QStyle::SP_TrashIcon));
-  ui.mount->setIcon(style->standardIcon(QStyle::SP_DriveNetIcon));
+  ui.mount->setIcon(style->standardIcon(QStyle::SP_DriveHDIcon));
   ui.stream->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
   ui.upload->setIcon(style->standardIcon(QStyle::SP_ArrowUp));
   ui.download->setIcon(style->standardIcon(QStyle::SP_ArrowDown));
@@ -59,6 +62,106 @@ QString root = isLocal ? "/" : QString();
   ui.buttonLink->setDefaultAction(ui.link);
   ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonExport->setDefaultAction(ui.export_);
+
+  if (buttonStyle == "textandicon") {
+    ui.buttonRefresh->setFixedSize(QSize(68, 68));
+    ui.buttonRefresh->setIconSize(QSize(32, 32));
+    ui.buttonMkdir->setFixedSize(QSize(68, 68));
+    ui.buttonMkdir->setIconSize(QSize(32, 32));
+    ui.buttonRename->setFixedSize(QSize(68, 68));
+    ui.buttonRename->setIconSize(QSize(32, 32));
+    ui.buttonMove->setFixedSize(QSize(68, 68));
+    ui.buttonMove->setIconSize(QSize(32, 32));
+    ui.buttonPurge->setFixedSize(QSize(68, 68));
+    ui.buttonPurge->setIconSize(QSize(32, 32));
+    ui.buttonMount->setFixedSize(QSize(68, 68));
+    ui.buttonMount->setIconSize(QSize(32, 32));
+    ui.buttonStream->setFixedSize(QSize(68, 68));
+    ui.buttonStream->setIconSize(QSize(32, 32));
+    ui.buttonUpload->setFixedSize(QSize(68, 68));
+    ui.buttonUpload->setIconSize(QSize(32, 32));
+    ui.buttonDownload->setFixedSize(QSize(68, 68));
+    ui.buttonDownload->setIconSize(QSize(32, 32));
+    ui.buttonTree->setFixedSize(QSize(68, 68));
+    ui.buttonTree->setIconSize(QSize(32, 32));
+    ui.buttonLink->setFixedSize(QSize(68, 68));
+    ui.buttonLink->setIconSize(QSize(32, 32));
+    ui.buttonSize->setFixedSize(QSize(68, 68));
+    ui.buttonSize->setIconSize(QSize(32, 32));
+    ui.buttonExport->setFixedSize(QSize(68, 68));
+    ui.buttonExport->setIconSize(QSize(32, 32));
+  } else {
+
+         if (buttonStyle == "textonly") {
+
+    ui.buttonRefresh->setFixedSize(QSize(64, 24));
+    ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonMkdir->setFixedSize(QSize(64, 24));
+    ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonRename->setFixedSize(QSize(64, 24));
+    ui.buttonRename->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonMove->setFixedSize(QSize(64, 24));
+    ui.buttonMove->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonPurge->setFixedSize(QSize(64, 24));
+    ui.buttonPurge->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonMount->setFixedSize(QSize(64, 24));
+    ui.buttonMount->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonStream->setFixedSize(QSize(64, 24));
+    ui.buttonStream->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonUpload->setFixedSize(QSize(64, 24));
+    ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonDownload->setFixedSize(QSize(64, 24));
+    ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonTree->setFixedSize(QSize(64, 24));
+    ui.buttonTree->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonLink->setFixedSize(QSize(64, 24));
+    ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonSize->setFixedSize(QSize(64, 24));
+    ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ui.buttonExport->setFixedSize(QSize(64, 24));
+    ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    } else {
+    ui.buttonRefresh->setFixedSize(QSize(40, 40));
+    ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonRefresh->setIconSize(QSize(32, 32));
+    ui.buttonMkdir->setFixedSize(QSize(40, 40));
+    ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonMkdir->setIconSize(QSize(32, 32));
+    ui.buttonRename->setFixedSize(QSize(40, 40));
+    ui.buttonRename->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonRename->setIconSize(QSize(32, 32));
+    ui.buttonMove->setFixedSize(QSize(40, 40));
+    ui.buttonMove->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonMove->setIconSize(QSize(32, 32));
+    ui.buttonPurge->setFixedSize(QSize(40, 40));
+    ui.buttonPurge->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonPurge->setIconSize(QSize(32, 32));
+    ui.buttonMount->setFixedSize(QSize(40, 40));
+    ui.buttonMount->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonMount->setIconSize(QSize(32, 32));
+    ui.buttonStream->setFixedSize(QSize(40, 40));
+    ui.buttonStream->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonStream->setIconSize(QSize(32, 32));
+    ui.buttonUpload->setFixedSize(QSize(40, 40));
+    ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonUpload->setIconSize(QSize(32, 32));
+    ui.buttonDownload->setFixedSize(QSize(40, 40));
+    ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonDownload->setIconSize(QSize(32, 32));
+    ui.buttonTree->setFixedSize(QSize(40, 40));
+    ui.buttonTree->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonTree->setIconSize(QSize(32, 32));
+    ui.buttonLink->setFixedSize(QSize(40, 40));
+    ui.buttonLink->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonLink->setIconSize(QSize(32, 32));
+    ui.buttonSize->setFixedSize(QSize(40, 40));
+    ui.buttonSize->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonSize->setIconSize(QSize(32, 32));
+    ui.buttonExport->setFixedSize(QSize(40, 40));
+    ui.buttonExport->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui.buttonExport->setIconSize(QSize(32, 32));
+  }
+}
 
   ui.tree->sortByColumn(0, Qt::AscendingOrder);
   ui.tree->header()->setSectionsMovable(false);

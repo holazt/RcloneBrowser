@@ -85,6 +85,12 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/iconsLayout", "list");
   };
 
+  // during first run the buttonstyle key might not exist
+  if (!(settings->contains("Settings/buttonStyle"))) {
+    // if buttonstyle does not exist create new key
+    settings->setValue("Settings/buttonStyle", "icononly");
+  };
+
   // enforce one instance of Rclone Browser per user
   QString tmpDir;
   QString applicationNameBase;

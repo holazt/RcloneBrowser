@@ -136,6 +136,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   }
 #endif
 
+  if ((settings->value("Settings/buttonStyle").toString()) == "icononly") {
+    ui.cb_icononly->setChecked(true);
+  } else {
+    if (settings->value("Settings/buttonStyle").toString() == "textonly") {
+      ui.cb_textonly->setChecked(true);
+    } else {
+      ui.cb_textandicon->setChecked(true);
+    }
+  }
+
   if ((settings->value("Settings/iconSize").toString()) == "small") {
     ui.cb_small->setChecked(true);
   } else {
@@ -241,6 +251,18 @@ bool PreferencesDialog::getShowHidden() const {
 }
 
 bool PreferencesDialog::getDarkMode() const { return ui.darkMode->isChecked(); }
+
+QString PreferencesDialog::getButtonStyle() const {
+  if (ui.cb_icononly->isChecked()) {
+    return "icononly";
+  } else {
+    if (ui.cb_textandicon->isChecked()) {
+      return "textandicon";
+    } else {
+      return "textonly";
+    }
+  }
+}
 
 QString PreferencesDialog::getIconSize() const {
   if (ui.cb_small->isChecked()) {

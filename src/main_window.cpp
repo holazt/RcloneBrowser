@@ -1196,9 +1196,17 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
   //       args << "writes";
 
   args.append(GetRcloneConf());
+
   if (!opt.isEmpty()) {
-    args.append(opt.split(' '));
+    // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1 arg2" --option-3 arg3
+    // should generate "--option-1" "--option-2=\"arg1 arg2\"" "--option-3" "arg3"
+    for (QString arg : opt.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+      if (!arg.isEmpty()) {
+        args << arg;
+      }
+    }
   }
+
   args << remote << folder;
 
   UseRclonePassword(mount);

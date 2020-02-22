@@ -134,10 +134,13 @@ QStringList JobOptions::getOptions() const {
   }
 
   if (!extra.isEmpty()) {
-    for (auto arg : extra.split(' ')) {
-      list << arg;
+     QRegExp separator("--");
+     for (auto arg : extra.split(separator)) {
+       if (!arg.isEmpty()) {
+        list << "--"+arg;
     }
   }
+ }
 
   if (DriveSharedWithMe) {
     list << "--drive-shared-with-me";

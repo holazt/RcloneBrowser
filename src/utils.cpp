@@ -279,7 +279,7 @@ QStringList GetDefaultRcloneOptionsList() {
     // should generate "--option-1" "--option-2=\"arg1 arg2\"" "--option-3" "arg3"
     for (QString arg : defaultRcloneOptions.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
       if (!arg.isEmpty()) {
-        defaultRcloneOptionsList << arg;
+        defaultRcloneOptionsList << arg.replace("\"", "");
       }
     }
   }

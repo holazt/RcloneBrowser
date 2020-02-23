@@ -1202,7 +1202,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
     // should generate "--option-1" "--option-2=\"arg1 arg2\"" "--option-3" "arg3"
     for (QString arg : opt.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
       if (!arg.isEmpty()) {
-        args << arg;
+        args << arg.replace("\"", "");
       }
     }
   }

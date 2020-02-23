@@ -138,7 +138,7 @@ QStringList JobOptions::getOptions() const {
     // should generate "--option-1" "--option-2=\"arg1 arg2\"" "--option-3" "arg3"
     for (QString arg : extra.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
       if (!arg.isEmpty()) {
-        list << arg;
+        list << arg.replace("\"", "");
       }
     }
   }

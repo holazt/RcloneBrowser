@@ -64,7 +64,11 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone config&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>rclone config
+
+if you want to specify which terminal to use
+define $TERMINAL env variable e.g.:
+TERMINAL=&quot;/usr/local/bin/myterminal&quot;</string>
             </property>
             <property name="text">
              <string>&amp;Config...</string>

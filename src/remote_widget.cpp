@@ -21,7 +21,7 @@ QString root = isLocal ? "/" : QString();
   auto settings = GetSettings();
 
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
-
+  QString buttonSize = settings->value("Settings/buttonSize").toString();
   QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
   settings->setValue("Settings/driveShared", Qt::Unchecked);
   ui.tree->setAlternatingRowColors(
@@ -33,7 +33,6 @@ QString root = isLocal ? "/" : QString();
     ui.checkBoxShared->hide();
   }
 
-//  QStyle *style = QApplication::style();
   ui.refresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
   ui.mkdir->setIcon(QIcon(":remotes/images/qbutton_icons/mkdir.png"));
   ui.rename->setIcon(QIcon(":remotes/images/qbutton_icons/rename.png"));
@@ -62,103 +61,122 @@ QString root = isLocal ? "/" : QString();
   ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonExport->setDefaultAction(ui.export_);
 
+  // buttons and icons size
+  int icon_w = 32;
+  int icon_h = 32;
+
   if (buttonStyle == "textandicon") {
-    ui.buttonRefresh->setFixedSize(QSize(68, 68));
-    ui.buttonRefresh->setIconSize(QSize(32, 32));
-    ui.buttonMkdir->setFixedSize(QSize(68, 68));
-    ui.buttonMkdir->setIconSize(QSize(32, 32));
-    ui.buttonRename->setFixedSize(QSize(68, 68));
-    ui.buttonRename->setIconSize(QSize(32, 32));
-    ui.buttonMove->setFixedSize(QSize(68, 68));
-    ui.buttonMove->setIconSize(QSize(32, 32));
-    ui.buttonPurge->setFixedSize(QSize(68, 68));
-    ui.buttonPurge->setIconSize(QSize(32, 32));
-    ui.buttonMount->setFixedSize(QSize(68, 68));
-    ui.buttonMount->setIconSize(QSize(32, 32));
-    ui.buttonStream->setFixedSize(QSize(68, 68));
-    ui.buttonStream->setIconSize(QSize(32, 32));
-    ui.buttonUpload->setFixedSize(QSize(68, 68));
-    ui.buttonUpload->setIconSize(QSize(32, 32));
-    ui.buttonDownload->setFixedSize(QSize(68, 68));
-    ui.buttonDownload->setIconSize(QSize(32, 32));
-    ui.buttonTree->setFixedSize(QSize(68, 68));
-    ui.buttonTree->setIconSize(QSize(32, 32));
-    ui.buttonLink->setFixedSize(QSize(68, 68));
-    ui.buttonLink->setIconSize(QSize(32, 32));
-    ui.buttonSize->setFixedSize(QSize(68, 68));
-    ui.buttonSize->setIconSize(QSize(32, 32));
-    ui.buttonExport->setFixedSize(QSize(68, 68));
-    ui.buttonExport->setIconSize(QSize(32, 32));
+
+     if (buttonSize == "S") {
+        icon_w=26;
+        icon_h=26;
+      }
+
+      if (buttonSize == "M") {
+        icon_w=51;
+        icon_h=51;
+      }
+
+      if (buttonSize == "L") {
+        icon_w=77;
+        icon_h=77;
+      }
+
+      if (buttonSize == "XL") {
+        icon_w=102;
+        icon_h=102;
+      }
+
+      if (buttonSize == "XXL") {
+        icon_w=128;
+        icon_h=128;
+      }
+
+    ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonMkdir->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonRename->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonMove->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonPurge->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonMount->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonStream->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonUpload->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonDownload->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonTree->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonLink->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
+
   } else {
+    if (buttonStyle == "textonly") {
 
-         if (buttonStyle == "textonly") {
+      ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonRename->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonMove->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonPurge->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonMount->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonStream->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonTree->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
 
-    ui.buttonRefresh->setFixedSize(QSize(64, 24));
-    ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonMkdir->setFixedSize(QSize(64, 24));
-    ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonRename->setFixedSize(QSize(64, 24));
-    ui.buttonRename->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonMove->setFixedSize(QSize(64, 24));
-    ui.buttonMove->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonPurge->setFixedSize(QSize(64, 24));
-    ui.buttonPurge->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonMount->setFixedSize(QSize(64, 24));
-    ui.buttonMount->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonStream->setFixedSize(QSize(64, 24));
-    ui.buttonStream->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonUpload->setFixedSize(QSize(64, 24));
-    ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonDownload->setFixedSize(QSize(64, 24));
-    ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonTree->setFixedSize(QSize(64, 24));
-    ui.buttonTree->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonLink->setFixedSize(QSize(64, 24));
-    ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonSize->setFixedSize(QSize(64, 24));
-    ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ui.buttonExport->setFixedSize(QSize(64, 24));
-    ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
     } else {
-    ui.buttonRefresh->setFixedSize(QSize(40, 40));
-    ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonRefresh->setIconSize(QSize(32, 32));
-    ui.buttonMkdir->setFixedSize(QSize(40, 40));
-    ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonMkdir->setIconSize(QSize(32, 32));
-    ui.buttonRename->setFixedSize(QSize(40, 40));
-    ui.buttonRename->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonRename->setIconSize(QSize(32, 32));
-    ui.buttonMove->setFixedSize(QSize(40, 40));
-    ui.buttonMove->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonMove->setIconSize(QSize(32, 32));
-    ui.buttonPurge->setFixedSize(QSize(40, 40));
-    ui.buttonPurge->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonPurge->setIconSize(QSize(32, 32));
-    ui.buttonMount->setFixedSize(QSize(40, 40));
-    ui.buttonMount->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonMount->setIconSize(QSize(32, 32));
-    ui.buttonStream->setFixedSize(QSize(40, 40));
-    ui.buttonStream->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonStream->setIconSize(QSize(32, 32));
-    ui.buttonUpload->setFixedSize(QSize(40, 40));
-    ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonUpload->setIconSize(QSize(32, 32));
-    ui.buttonDownload->setFixedSize(QSize(40, 40));
-    ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonDownload->setIconSize(QSize(32, 32));
-    ui.buttonTree->setFixedSize(QSize(40, 40));
-    ui.buttonTree->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonTree->setIconSize(QSize(32, 32));
-    ui.buttonLink->setFixedSize(QSize(40, 40));
-    ui.buttonLink->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonLink->setIconSize(QSize(32, 32));
-    ui.buttonSize->setFixedSize(QSize(40, 40));
-    ui.buttonSize->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonSize->setIconSize(QSize(32, 32));
-    ui.buttonExport->setFixedSize(QSize(40, 40));
-    ui.buttonExport->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui.buttonExport->setIconSize(QSize(32, 32));
+    // button style - icononly
+
+      if (buttonSize == "S") {
+        icon_w=26;
+        icon_h=26;
+      }
+
+      if (buttonSize == "M") {
+        icon_w=51;
+        icon_h=51;
+      }
+
+      if (buttonSize == "L") {
+        icon_w=77;
+        icon_h=77;
+      }
+
+      if (buttonSize == "XL") {
+        icon_w=102;
+        icon_h=102;
+      }
+
+      if (buttonSize == "XXL") {
+        icon_w=128;
+        icon_h=128;
+      }
+
+      ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonMkdir->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonRename->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonRename->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonMove->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonMove->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonPurge->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonPurge->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonMount->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonMount->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonStream->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonStream->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonUpload->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDownload->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonTree->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonTree->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonLink->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonLink->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSize->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonExport->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
   }
 }
 

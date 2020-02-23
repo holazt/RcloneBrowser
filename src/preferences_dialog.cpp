@@ -146,20 +146,64 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     }
   }
 
-  if ((settings->value("Settings/iconSize").toString()) == "small") {
-    ui.cb_small->setChecked(true);
-  } else {
-    if (settings->value("Settings/iconSize").toString() == "large") {
-      ui.cb_large->setChecked(true);
-    } else {
-      ui.cb_medium->setChecked(true);
-    }
-  }
-
   if ((settings->value("Settings/iconsLayout").toString()) == "list") {
     ui.cb_list->setChecked(true);
   } else {
     ui.cb_tiles->setChecked(true);
+  }
+
+  if ((settings->value("Settings/fontSize").toString()) == "S") {
+    ui.cb_font_s->setChecked(true);
+  } else {
+      if (settings->value("Settings/fontSize").toString() == "L") {
+        ui.cb_font_l->setChecked(true);
+    } else {
+        if (settings->value("Settings/fontSize").toString() == "XL") {
+          ui.cb_font_xl->setChecked(true);
+      } else {
+          if (settings->value("Settings/fontSize").toString() == "XXL") {
+            ui.cb_font_xxl->setChecked(true);
+        } else {
+          ui.cb_font_m->setChecked(true);
+        }
+      }
+    }
+  }
+
+  if ((settings->value("Settings/buttonSize").toString()) == "S") {
+    ui.cb_button_s->setChecked(true);
+  } else {
+      if (settings->value("Settings/buttonSize").toString() == "L") {
+        ui.cb_button_l->setChecked(true);
+    } else {
+        if (settings->value("Settings/buttonSize").toString() == "XL") {
+          ui.cb_button_xl->setChecked(true);
+      } else {
+          if (settings->value("Settings/buttonSize").toString() == "XXL") {
+            ui.cb_button_xxl->setChecked(true);
+        } else {
+          ui.cb_button_m->setChecked(true);
+        }
+      }
+    }
+  }
+
+  if ((settings->value("Settings/iconSize").toString()) == "S") {
+    ui.cb_remote_s->setChecked(true);
+  } else {
+      if (settings->value("Settings/iconSize").toString() == "L") {
+        ui.cb_remote_l->setChecked(true);
+    } else {
+        if (settings->value("Settings/iconSize").toString() == "XL") {
+          ui.cb_remote_xl->setChecked(true);
+      } else {
+          if (settings->value("Settings/iconSize").toString() == "XXL") {
+            ui.cb_remote_xxl->setChecked(true);
+        } else {
+          ui.cb_remote_m->setChecked(true);
+        }
+      }
+    }
   }
 
   ui.info_2->setText(
@@ -264,23 +308,71 @@ QString PreferencesDialog::getButtonStyle() const {
   }
 }
 
-QString PreferencesDialog::getIconSize() const {
-  if (ui.cb_small->isChecked()) {
-    return "small";
-  } else {
-    if (ui.cb_large->isChecked()) {
-      return "large";
-    } else {
-      return "medium";
-    }
-  }
-}
-
 QString PreferencesDialog::getIconsLayout() const {
   if (ui.cb_list->isChecked()) {
     return "list";
   } else {
       return "tiles";
+  }
+}
+
+QString PreferencesDialog::getFontSize() const {
+  if (ui.cb_font_s->isChecked()) {
+    return "S";
+  } else {
+    if (ui.cb_font_l->isChecked()) {
+      return "L";
+    } else {
+      if (ui.cb_font_xl->isChecked()) {
+        return "XL";
+      } else {
+        if (ui.cb_font_xxl->isChecked()) {
+          return "XXL";
+        } else {
+          return "M";
+        }
+      }
+    }
+  }
+}
+
+QString PreferencesDialog::getButtonSize() const {
+  if (ui.cb_button_s->isChecked()) {
+    return "S";
+  } else {
+    if (ui.cb_button_l->isChecked()) {
+      return "L";
+    } else {
+      if (ui.cb_button_xl->isChecked()) {
+        return "XL";
+      } else {
+        if (ui.cb_button_xxl->isChecked()) {
+          return "XXL";
+        } else {
+          return "M";
+        }
+      }
+    }
+  }
+}
+
+QString PreferencesDialog::getIconSize() const {
+  if (ui.cb_remote_s->isChecked()) {
+    return "S";
+  } else {
+    if (ui.cb_remote_l->isChecked()) {
+      return "L";
+    } else {
+      if (ui.cb_remote_xl->isChecked()) {
+        return "XL";
+      } else {
+        if (ui.cb_remote_xxl->isChecked()) {
+          return "XXL";
+        } else {
+          return "M";
+        }
+      }
+    }
   }
 }
 

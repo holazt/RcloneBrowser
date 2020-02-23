@@ -76,7 +76,18 @@ int main(int argc, char *argv[]) {
   // during first run the iconSize key might not exist
   if (!(settings->contains("Settings/iconSize"))) {
     // if iconSize does not exist create new key
-    settings->setValue("Settings/iconSize", "medium");
+    settings->setValue("Settings/iconSize", "M");
+  } else {
+      // in Rclone Browser 1.8.0 different key values were used - me migrate them small->S etc
+      if ((settings->value("Settings/iconSize").toString()) == "small") {
+        settings->setValue("Settings/iconSize", "S");
+      }
+      if ((settings->value("Settings/iconSize").toString()) == "medium") {
+        settings->setValue("Settings/iconSize", "M");
+      }
+      if ((settings->value("Settings/iconSize").toString()) == "large") {
+        settings->setValue("Settings/iconSize", "L");
+      }
   };
 
   // during first run the iconsLayout key might not exist
@@ -85,11 +96,46 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/iconsLayout", "list");
   };
 
-  // during first run the buttonstyle key might not exist
+  // during first run the buttonStyle key might not exist
   if (!(settings->contains("Settings/buttonStyle"))) {
     // if buttonstyle does not exist create new key
     settings->setValue("Settings/buttonStyle", "icononly");
   };
+
+  // during first run the fontSize key might not exist
+  if (!(settings->contains("Settings/fontSize"))) {
+    // if fontSize does not exist create new key
+    settings->setValue("Settings/fontSize", "S");
+  };
+
+  // during first run the buttonSize key might not exist
+  if (!(settings->contains("Settings/buttonSize"))) {
+    // if buttonSize does not exist create new key
+    settings->setValue("Settings/buttonSize", "S");
+  };
+
+  // set application font size
+  int fontsize = 0;
+
+  if (settings->value("Settings/fontSize").toString() == "S") {
+    fontsize = 0;
+  }
+  if (settings->value("Settings/fontSize").toString() == "M") {
+    fontsize = 2;
+  }
+  if (settings->value("Settings/fontSize").toString() == "L") {
+    fontsize = 8;
+  }
+  if (settings->value("Settings/fontSize").toString() == "XL") {
+    fontsize =18;
+  }
+  if (settings->value("Settings/fontSize").toString() == "XXL") {
+    fontsize = 24;
+  }
+
+  QFont defaultFont = QApplication::font();
+  defaultFont.setPointSize(defaultFont.pointSize() + fontsize);
+  qApp->setFont(defaultFont);
 
   // enforce one instance of Rclone Browser per user
   QString tmpDir;

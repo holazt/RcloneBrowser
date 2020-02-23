@@ -179,8 +179,11 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/buttonStyle", dialog.getButtonStyle().trimmed());
-      settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
       settings->setValue("Settings/iconsLayout", dialog.getIconsLayout().trimmed());
+
+      settings->setValue("Settings/fontSize", dialog.getFontSize().trimmed());
+      settings->setValue("Settings/buttonSize", dialog.getButtonSize().trimmed());
+      settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
 
       settings->setValue("Settings/useProxy", dialog.getUseProxy());
       settings->setValue("Settings/http_proxy",
@@ -854,20 +857,32 @@ void MainWindow::rcloneListRemotes() {
             };
 
             // set icons scale based on iconSize value
-            if (iconSize == "small") {
-              lightModeiconScale = 1.5*2;
-              darkModeIconScale = 1*2;
+            if (iconSize == "S") {
+              lightModeiconScale = 3;
+              darkModeIconScale = 2;
             }
 
-            if (iconSize == "medium") {
-              lightModeiconScale = 2*2;
-              darkModeIconScale = 1.333*2;
+            if (iconSize == "M") {
+              lightModeiconScale = 4;
+              darkModeIconScale = 2.666;
             }
 
-            if (iconSize == "large") {
-              lightModeiconScale = 3*2;
-              darkModeIconScale = 2*2;
+            if (iconSize == "L") {
+              lightModeiconScale = 6;
+              darkModeIconScale = 4;
             }
+
+            if (iconSize == "XL") {
+              lightModeiconScale = 8;
+              darkModeIconScale = 5.333;
+            }
+
+            if (iconSize == "XXL") {
+              lightModeiconScale = 10;
+              darkModeIconScale = 6.666;
+            }
+
+
 
 #if !defined(Q_OS_MACOS)
             // _inv only for dark mode

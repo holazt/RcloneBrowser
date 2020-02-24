@@ -34,6 +34,7 @@ public:
   bool getDarkMode() const;
   QString getButtonStyle() const;
   QString getIconsLayout() const;
+  QString getRemotesColour() const;
 
   QString getFontSize() const;
   QString getButtonSize() const;

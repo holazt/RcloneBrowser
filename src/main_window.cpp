@@ -13,6 +13,7 @@
 #endif
 
 MainWindow::MainWindow() {
+
   ui.setupUi(this);
 
   if (IsPortableMode()) {
@@ -32,28 +33,31 @@ MainWindow::MainWindow() {
 
   // enable dark mode for Windows and Linux
   if (darkMode) {
-    qApp->setStyle(QStyleFactory::create("Fusion"));
 
-    QPalette darkPalette;
-    darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::WindowText, Qt::white);
-    darkPalette.setColor(QPalette::Base, QColor(25, 25, 25));
-    darkPalette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
-    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
-    darkPalette.setColor(QPalette::Text, Qt::white);
-    darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ButtonText, Qt::white);
-    darkPalette.setColor(QPalette::BrightText, Qt::red);
-    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-
-    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
-
-    qApp->setPalette(darkPalette);
-
-    qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; "
-                        "border: 1px solid white; }");
+        qApp->setStyle(QStyleFactory::create("Fusion"));
+        QPalette darkPalette;
+        darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
+        darkPalette.setColor(QPalette::WindowText, Qt::white);
+        darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(127, 127, 127));
+        darkPalette.setColor(QPalette::Base, QColor(42, 42, 42));
+        darkPalette.setColor(QPalette::AlternateBase, QColor(66, 66, 66));
+        darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
+        darkPalette.setColor(QPalette::ToolTipText, Qt::white);
+        darkPalette.setColor(QPalette::Text, Qt::white);
+        darkPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(127, 127, 127));
+        darkPalette.setColor(QPalette::Dark, QColor(35, 35, 35));
+        darkPalette.setColor(QPalette::Shadow, QColor(20, 20, 20));
+        darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
+        darkPalette.setColor(QPalette::ButtonText, Qt::white);
+        darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(127, 127, 127));
+        darkPalette.setColor(QPalette::BrightText, Qt::red);
+        darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+        darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
+        darkPalette.setColor(QPalette::Disabled, QPalette::Highlight, QColor(80, 80, 80));
+        darkPalette.setColor(QPalette::HighlightedText, Qt::white);
+        darkPalette.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor(127, 127, 127));
+        qApp->setPalette(darkPalette);
+        qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white;}");
   }
 
 #else
@@ -180,6 +184,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/buttonStyle", dialog.getButtonStyle().trimmed());
       settings->setValue("Settings/iconsLayout", dialog.getIconsLayout().trimmed());
+      settings->setValue("Settings/remotesColour", dialog.getRemotesColour().trimmed());
 
       settings->setValue("Settings/fontSize", dialog.getFontSize().trimmed());
       settings->setValue("Settings/buttonSize", dialog.getButtonSize().trimmed());
@@ -831,6 +836,7 @@ void MainWindow::rcloneListRemotes() {
           auto settings = GetSettings();
           bool darkModeIni = settings->value("Settings/darkModeIni").toBool();
           QString iconSize = settings->value("Settings/iconSize").toString();
+          QString remotesColour = settings->value("Settings/remotesColour").toString();
 
           for (const QString &line : items) {
             if (line.isEmpty()) {
@@ -878,20 +884,21 @@ void MainWindow::rcloneListRemotes() {
             }
 
             if (iconSize == "XXL") {
-              lightModeiconScale = 10;
-              darkModeIconScale = 6.666;
+              lightModeiconScale = 15;
+              darkModeIconScale = 10;
             }
-
-
 
 #if !defined(Q_OS_MACOS)
             // _inv only for dark mode
             // we use darkModeIni to apply mode active at startup
             if (darkModeIni) {
-              img_add = "_inv";
-
+              if (remotesColour == "white") {
+                img_add = "_inv";
+              } else {
+                img_add = "";
+              }
             } else {
-              img_add = "";
+                img_add = "";
             }
 #if defined(Q_OS_WIN)
             // on Windows dark theme changes PM_ListViewIconSize size
@@ -919,7 +926,11 @@ void MainWindow::rcloneListRemotes() {
                // on older macOS we also have to adjust icon size per mode
                if (darkModeIni) {
                  size = darkModeIconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
-                 img_add = "_inv";
+                 if (remotesColour == "white") {
+                   img_add = "_inv";
+                 } else {
+                   img_add = "";
+                 }
                } else {
                  size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                  img_add = "";

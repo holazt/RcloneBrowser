@@ -85,6 +85,12 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/iconsLayout", "list");
   };
 
+  // during first run the remotesColour key might not exist
+  if (!(settings->contains("Settings/remotesColour"))) {
+    // if remotesColour does not exist create new key
+    settings->setValue("Settings/remotesColour", "black");
+  };
+
   // during first run the buttonStyle key might not exist
   if (!(settings->contains("Settings/buttonStyle"))) {
     // if buttonstyle does not exist create new key

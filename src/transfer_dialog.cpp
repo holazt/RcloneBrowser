@@ -9,16 +9,31 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     : QDialog(parent), mIsDownload(isDownload), mIsFolder(isFolder),
       mIsEditMode(editMode), mJobOptions(task) {
   ui.setupUi(this);
-  resize(0, 0);
+//  resize(0, 0);
+
+//  this->setFixedHeight(this->height());
+
   setWindowTitle(isDownload ? "Download" : "Upload");
 
-  QStyle *style = qApp->style();
-  ui.buttonSourceFile->setIcon(style->standardIcon(QStyle::SP_FileIcon));
-  ui.buttonSourceFolder->setIcon(style->standardIcon(QStyle::SP_DirIcon));
-  ui.buttonDest->setIcon(style->standardIcon(QStyle::SP_DirIcon));
+//  QStyle *style = qApp->style();
 
-  ui.buttonDefaultSource->setIcon(style->standardIcon(QStyle::SP_DirHomeIcon));
-  ui.buttonDefaultDest->setIcon(style->standardIcon(QStyle::SP_DirHomeIcon));
+  ui.buttonSourceFile->setIcon(QIcon(":remotes/images/qbutton_icons/file.png"));
+  ui.buttonSourceFile->setIconSize(QSize(24, 24));
+
+  ui.buttonSourceFolder->setIcon(QIcon(":remotes/images/qbutton_icons/folder.png"));
+  ui.buttonSourceFolder->setIconSize(QSize(24, 24));
+
+  ui.buttonDest->setIcon(QIcon(":remotes/images/qbutton_icons/folder.png"));
+  ui.buttonDest->setIconSize(QSize(24, 24));
+
+
+  ui.buttonDefaultSource->setIcon(QIcon(":remotes/images/qbutton_icons/restore.png"));
+  ui.buttonDefaultSource->setIconSize(QSize(24, 24));
+
+  ui.buttonDefaultDest->setIcon(QIcon(":remotes/images/qbutton_icons/restore.png"));
+  ui.buttonDefaultDest->setIconSize(QSize(24, 24));
+
+
 
   if (!mIsEditMode) {
     QPushButton *dryRun =

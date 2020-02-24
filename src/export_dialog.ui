@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>614</width>
-    <height>358</height>
+    <width>768</width>
+    <height>413</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -47,7 +47,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="textFile"/>
+       <widget class="QLineEdit" name="textFile">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="fileBrowse">
@@ -74,11 +81,8 @@
          <property name="title">
           <string>Format</string>
          </property>
-         <layout class="QFormLayout" name="formLayout_2">
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
            <widget class="QRadioButton" name="rbText">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -94,7 +98,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item>
            <widget class="QRadioButton" name="rbCSV">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -106,6 +110,19 @@
              <string>CSV (with size and datetime)</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -136,7 +153,7 @@
           <item row="3" column="1">
            <widget class="QSpinBox" name="spinMaxDepth">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -162,7 +179,7 @@
           <item row="0" column="1">
            <widget class="QLineEdit" name="textMinSize">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -172,7 +189,7 @@
           <item row="1" column="1">
            <widget class="QLineEdit" name="textMinAge">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -192,7 +209,7 @@
           <item row="2" column="1">
            <widget class="QLineEdit" name="textMaxAge">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -210,7 +227,14 @@
            </widget>
           </item>
           <item row="7" column="0" colspan="2">
-           <widget class="QLineEdit" name="textExtra"/>
+           <widget class="QLineEdit" name="textExtra">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
           <item row="5" column="0" colspan="2">
            <widget class="QCheckBox" name="checkSameFilesystem">

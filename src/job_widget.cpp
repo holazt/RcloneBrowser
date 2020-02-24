@@ -32,8 +32,11 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.showOutput->setArrowType(checked ? Qt::DownArrow : Qt::RightArrow);
       });
 
-  ui.cancel->setIcon(
-      QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton));
+//  ui.cancel->setIcon(
+//      QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton));
+
+  ui.cancel->setIcon(QIcon(":remotes/images/qbutton_icons/cancel.png"));
+  ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
     if (mRunning) {
@@ -49,8 +52,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     }
   });
 
-  ui.copy->setIcon(
-      QApplication::style()->standardIcon(QStyle::SP_FileLinkIcon));
+  ui.copy->setIcon(QIcon(":remotes/images/qbutton_icons/copy.png"));
+  ui.copy->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.copy, &QToolButton::clicked, this, [=]() {
     QClipboard *clipboard = QGuiApplication::clipboard();

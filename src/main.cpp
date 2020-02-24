@@ -77,17 +77,6 @@ int main(int argc, char *argv[]) {
   if (!(settings->contains("Settings/iconSize"))) {
     // if iconSize does not exist create new key
     settings->setValue("Settings/iconSize", "M");
-  } else {
-      // in Rclone Browser 1.8.0 different key values were used - me migrate them small->S etc
-      if ((settings->value("Settings/iconSize").toString()) == "small") {
-        settings->setValue("Settings/iconSize", "S");
-      }
-      if ((settings->value("Settings/iconSize").toString()) == "medium") {
-        settings->setValue("Settings/iconSize", "M");
-      }
-      if ((settings->value("Settings/iconSize").toString()) == "large") {
-        settings->setValue("Settings/iconSize", "L");
-      }
   };
 
   // during first run the iconsLayout key might not exist
@@ -105,33 +94,49 @@ int main(int argc, char *argv[]) {
   // during first run the fontSize key might not exist
   if (!(settings->contains("Settings/fontSize"))) {
     // if fontSize does not exist create new key
-    settings->setValue("Settings/fontSize", "S");
+    settings->setValue("Settings/fontSize", "0");
   };
 
   // during first run the buttonSize key might not exist
   if (!(settings->contains("Settings/buttonSize"))) {
     // if buttonSize does not exist create new key
-    settings->setValue("Settings/buttonSize", "S");
+    settings->setValue("Settings/buttonSize", "1");
   };
 
   // set application font size
   int fontsize = 0;
 
-  if (settings->value("Settings/fontSize").toString() == "S") {
+  if (settings->value("Settings/fontSize").toString() == "0") {
     fontsize = 0;
   }
-  if (settings->value("Settings/fontSize").toString() == "M") {
+  if (settings->value("Settings/fontSize").toString() == "1") {
+    fontsize = 1;
+  }
+  if (settings->value("Settings/fontSize").toString() == "2") {
     fontsize = 2;
   }
-  if (settings->value("Settings/fontSize").toString() == "L") {
+  if (settings->value("Settings/fontSize").toString() == "3") {
+    fontsize = 3;
+  }
+  if (settings->value("Settings/fontSize").toString() == "4") {
+    fontsize = 4;
+  }
+  if (settings->value("Settings/fontSize").toString() == "5") {
+    fontsize = 5;
+  }
+  if (settings->value("Settings/fontSize").toString() == "6") {
+    fontsize = 6;
+  }
+  if (settings->value("Settings/fontSize").toString() == "7") {
+    fontsize = 7;
+  }
+  if (settings->value("Settings/fontSize").toString() == "8") {
     fontsize = 8;
   }
-  if (settings->value("Settings/fontSize").toString() == "XL") {
-    fontsize =18;
+  if (settings->value("Settings/fontSize").toString() == "9") {
+    fontsize = 9;
   }
-  if (settings->value("Settings/fontSize").toString() == "XXL") {
-    fontsize = 24;
-  }
+
 
   QFont defaultFont = QApplication::font();
   defaultFont.setPointSize(defaultFont.pointSize() + fontsize);

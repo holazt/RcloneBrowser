@@ -152,37 +152,47 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.cb_tiles->setChecked(true);
   }
 
-  if ((settings->value("Settings/fontSize").toString()) == "S") {
-    ui.cb_font_s->setChecked(true);
+  QString fontSize = settings->value("Settings/fontSize").toString();
+  if ( fontSize == "9" ) { ui.cb_font_9->setChecked(true);
   } else {
-      if (settings->value("Settings/fontSize").toString() == "L") {
-        ui.cb_font_l->setChecked(true);
+    if ( fontSize == "8" ) {ui.cb_font_8->setChecked(true);
     } else {
-        if (settings->value("Settings/fontSize").toString() == "XL") {
-          ui.cb_font_xl->setChecked(true);
+      if ( fontSize == "7" ) {ui.cb_font_7->setChecked(true);
       } else {
-          if (settings->value("Settings/fontSize").toString() == "XXL") {
-            ui.cb_font_xxl->setChecked(true);
+        if ( fontSize == "6" ) {ui.cb_font_6->setChecked(true);
         } else {
-          ui.cb_font_m->setChecked(true);
+          if ( fontSize == "5" ) {ui.cb_font_5->setChecked(true);
+          } else {
+            if ( fontSize == "4" ) {ui.cb_font_4->setChecked(true);
+            } else {
+              if ( fontSize == "3" ) { ui.cb_font_3->setChecked(true);
+              } else {
+                if ( fontSize == "2" ) { ui.cb_font_2->setChecked(true);
+                } else {
+                  if ( fontSize == "1" ) { ui.cb_font_1->setChecked(true);
+                  } else {
+                      ui.cb_font_0->setChecked(true);
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
   }
 
-  if ((settings->value("Settings/buttonSize").toString()) == "S") {
-    ui.cb_button_s->setChecked(true);
+
+  QString buttonSize = settings->value("Settings/buttonSize").toString();
+  if ( buttonSize == "4" ) { ui.cb_button_4->setChecked(true);
   } else {
-      if (settings->value("Settings/buttonSize").toString() == "L") {
-        ui.cb_button_l->setChecked(true);
+    if ( buttonSize == "3" ) {ui.cb_button_3->setChecked(true);
     } else {
-        if (settings->value("Settings/buttonSize").toString() == "XL") {
-          ui.cb_button_xl->setChecked(true);
+      if ( buttonSize == "2" ) {ui.cb_button_2->setChecked(true);
       } else {
-          if (settings->value("Settings/buttonSize").toString() == "XXL") {
-            ui.cb_button_xxl->setChecked(true);
+        if ( buttonSize == "1" ) {ui.cb_button_1->setChecked(true);
         } else {
-          ui.cb_button_m->setChecked(true);
+            ui.cb_button_0->setChecked(true);
         }
       }
     }
@@ -317,43 +327,24 @@ QString PreferencesDialog::getIconsLayout() const {
 }
 
 QString PreferencesDialog::getFontSize() const {
-  if (ui.cb_font_s->isChecked()) {
-    return "S";
-  } else {
-    if (ui.cb_font_l->isChecked()) {
-      return "L";
-    } else {
-      if (ui.cb_font_xl->isChecked()) {
-        return "XL";
-      } else {
-        if (ui.cb_font_xxl->isChecked()) {
-          return "XXL";
-        } else {
-          return "M";
-        }
-      }
-    }
-  }
+  if (ui.cb_font_1->isChecked()) {return "1";}
+  if (ui.cb_font_2->isChecked()) {return "2";}
+  if (ui.cb_font_3->isChecked()) {return "3";}
+  if (ui.cb_font_4->isChecked()) {return "4";}
+  if (ui.cb_font_5->isChecked()) {return "5";}
+  if (ui.cb_font_6->isChecked()) {return "6";}
+  if (ui.cb_font_7->isChecked()) {return "7";}
+  if (ui.cb_font_8->isChecked()) {return "8";}
+  if (ui.cb_font_9->isChecked()) {return "9";}
+  return "0";
 }
 
 QString PreferencesDialog::getButtonSize() const {
-  if (ui.cb_button_s->isChecked()) {
-    return "S";
-  } else {
-    if (ui.cb_button_l->isChecked()) {
-      return "L";
-    } else {
-      if (ui.cb_button_xl->isChecked()) {
-        return "XL";
-      } else {
-        if (ui.cb_button_xxl->isChecked()) {
-          return "XXL";
-        } else {
-          return "M";
-        }
-      }
-    }
-  }
+  if (ui.cb_button_1->isChecked()) {return "1";}
+  if (ui.cb_button_2->isChecked()) {return "2";}
+  if (ui.cb_button_3->isChecked()) {return "3";}
+  if (ui.cb_button_4->isChecked()) {return "4";}
+  return "0";
 }
 
 QString PreferencesDialog::getIconSize() const {

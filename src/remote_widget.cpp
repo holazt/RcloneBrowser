@@ -62,36 +62,16 @@ QString root = isLocal ? "/" : QString();
   ui.buttonExport->setDefaultAction(ui.export_);
 
   // buttons and icons size
-  int icon_w = 32;
-  int icon_h = 32;
+  int icon_w = 16;
+  int icon_h = 16;
+  if (buttonSize == "0") { icon_w=24;}
+  if (buttonSize == "1") { icon_w=32;}
+  if (buttonSize == "2") { icon_w=48;}
+  if (buttonSize == "3") { icon_w=72;}
+  if (buttonSize == "4") { icon_w=96;}
+  icon_h = icon_w;
 
   if (buttonStyle == "textandicon") {
-
-     if (buttonSize == "S") {
-        icon_w=26;
-        icon_h=26;
-      }
-
-      if (buttonSize == "M") {
-        icon_w=51;
-        icon_h=51;
-      }
-
-      if (buttonSize == "L") {
-        icon_w=77;
-        icon_h=77;
-      }
-
-      if (buttonSize == "XL") {
-        icon_w=102;
-        icon_h=102;
-      }
-
-      if (buttonSize == "XXL") {
-        icon_w=128;
-        icon_h=128;
-      }
-
     ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
     ui.buttonMkdir->setIconSize(QSize(icon_w, icon_h));
     ui.buttonRename->setIconSize(QSize(icon_w, icon_h));
@@ -125,32 +105,6 @@ QString root = isLocal ? "/" : QString();
 
     } else {
     // button style - icononly
-
-      if (buttonSize == "S") {
-        icon_w=26;
-        icon_h=26;
-      }
-
-      if (buttonSize == "M") {
-        icon_w=51;
-        icon_h=51;
-      }
-
-      if (buttonSize == "L") {
-        icon_w=77;
-        icon_h=77;
-      }
-
-      if (buttonSize == "XL") {
-        icon_w=102;
-        icon_h=102;
-      }
-
-      if (buttonSize == "XXL") {
-        icon_w=128;
-        icon_h=128;
-      }
-
       ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
       ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonIconOnly);

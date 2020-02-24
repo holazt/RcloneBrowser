@@ -22,6 +22,10 @@
     <file>images/qbutton_icons/run.png</file>
     <file>images/qbutton_icons/file.png</file>
     <file>images/qbutton_icons/edit.png</file>
+    <file>images/qbutton_icons/folder.png</file>
+    <file>images/qbutton_icons/restore.png</file>
+    <file>images/qbutton_icons/copy.png</file>
+    <file>images/qbutton_icons/cancel.png</file>
 
     <file>images/amazon_cloud_drive.png</file>
     <file>images/b2.png</file>

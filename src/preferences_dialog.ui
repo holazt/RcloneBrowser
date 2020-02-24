@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>751</width>
-    <height>550</height>
+    <width>781</width>
+    <height>612</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>781</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
@@ -90,6 +96,12 @@
           </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="rclone">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone executable file location&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -107,6 +119,12 @@
           </item>
           <item row="12" column="1">
            <widget class="QLineEdit" name="defaultDownloadOptions">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;extra rclone options used for downloads e.g.:&lt;/p&gt;&lt;p&gt;--include *.jpg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -114,6 +132,12 @@
           </item>
           <item row="9" column="1">
            <widget class="QLineEdit" name="defaultDownloadDir">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;default download folder used for transfers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -138,6 +162,12 @@
           </item>
           <item row="4" column="1">
            <widget class="QLineEdit" name="rcloneConf">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone configuration file locaction. if empty default location defined by rclone is used&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -165,6 +195,12 @@
           </item>
           <item row="7" column="1">
            <widget class="QLineEdit" name="mount">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;options used by rclone for remotes mounting e.g:&lt;/p&gt;&lt;p&gt;--vfs-cache-mode writes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -172,6 +208,12 @@
           </item>
           <item row="13" column="1">
            <widget class="QLineEdit" name="defaultUploadOptions">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;extra rclone options used for uploads e.g:&lt;/p&gt;&lt;p&gt;--exclude .DS_Store&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -179,6 +221,12 @@
           </item>
           <item row="11" column="1">
            <widget class="QLineEdit" name="defaultUploadDir">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;default upload folder used for transfers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -213,6 +261,12 @@
           </item>
           <item row="14" column="1">
            <widget class="QLineEdit" name="defaultRcloneOptions">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;extra rclone options used for all but mount operations e.g:&lt;/p&gt;&lt;p&gt;--fast-list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -230,6 +284,12 @@
           </item>
           <item row="6" column="1">
            <widget class="QLineEdit" name="stream">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;location of audio/video player used for streaming e.g.&lt;/p&gt;&lt;p&gt;/Applications/VLC.app -&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -337,7 +397,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Interface style</string>
+       <string>GUI style</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -610,7 +670,7 @@
      </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
-       <string>Interface size</string>
+       <string>GUI size</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
@@ -625,13 +685,20 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Font size (requires application restart)</string>
+          <string>Font size increased by n points (requires application restart)</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QCheckBox" name="cb_font_s">
+           <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>S</string>
+             <string>n=</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_font_0">
+            <property name="text">
+             <string>0</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -645,9 +712,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_m">
+           <widget class="QCheckBox" name="cb_font_1">
             <property name="text">
-             <string>M</string>
+             <string>1</string>
             </property>
             <property name="checked">
              <bool>false</bool>
@@ -658,9 +725,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_l">
+           <widget class="QCheckBox" name="cb_font_2">
             <property name="text">
-             <string>L</string>
+             <string>2</string>
             </property>
             <property name="autoExclusive">
              <bool>true</bool>
@@ -668,9 +735,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_xl">
+           <widget class="QCheckBox" name="cb_font_3">
             <property name="text">
-             <string>XL</string>
+             <string>3</string>
             </property>
             <property name="autoExclusive">
              <bool>true</bool>
@@ -678,9 +745,59 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_xxl">
+           <widget class="QCheckBox" name="cb_font_4">
             <property name="text">
-             <string>XXL</string>
+             <string>4</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_font_5">
+            <property name="text">
+             <string>5</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_font_6">
+            <property name="text">
+             <string>6</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_font_7">
+            <property name="text">
+             <string>7</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_font_8">
+            <property name="text">
+             <string>8</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_font_9">
+            <property name="text">
+             <string>9</string>
             </property>
             <property name="autoExclusive">
              <bool>true</bool>
@@ -735,7 +852,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QCheckBox" name="cb_button_s">
+           <widget class="QCheckBox" name="cb_button_0">
             <property name="text">
              <string>S</string>
             </property>
@@ -748,7 +865,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_m">
+           <widget class="QCheckBox" name="cb_button_1">
             <property name="text">
              <string>M</string>
             </property>
@@ -761,7 +878,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_l">
+           <widget class="QCheckBox" name="cb_button_2">
             <property name="text">
              <string>L</string>
             </property>
@@ -771,7 +888,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_xl">
+           <widget class="QCheckBox" name="cb_button_3">
             <property name="text">
              <string>XL</string>
             </property>
@@ -781,7 +898,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_xxl">
+           <widget class="QCheckBox" name="cb_button_4">
             <property name="text">
              <string>XXL</string>
             </property>
@@ -995,17 +1112,26 @@
           <string>Manual proxy configuration</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="no_proxy">
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="https_proxy">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
-             <string>e.g. localhost,127.0.0.0/8,cs.aliyuncs.com</string>
+             <string>e.g. https://127.0.0.1:1087</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="http_proxy">
-            <property name="toolTip">
-             <string>e.g. http://127.0.0.1:1087</string>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>https_proxy:</string>
+            </property>
+            <property name="buddy">
+             <cstring>https_proxy</cstring>
             </property>
            </widget>
           </item>
@@ -1019,7 +1145,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="4" column="1">
            <widget class="QLabel" name="info_2">
             <property name="text">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1036,22 +1162,44 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="https_proxy">
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="no_proxy">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
-             <string>e.g. https://127.0.0.1:1087</string>
+             <string>e.g. localhost,127.0.0.0/8,cs.aliyuncs.com</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>https_proxy:</string>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="http_proxy">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="buddy">
-             <cstring>https_proxy</cstring>
+            <property name="toolTip">
+             <string>e.g. http://127.0.0.1:1087</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="1">
+           <spacer name="verticalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -1082,6 +1230,12 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

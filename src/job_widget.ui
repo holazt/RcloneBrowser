@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>966</width>
-    <height>449</height>
+    <width>1011</width>
+    <height>294</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,7 +54,7 @@
       <item>
        <widget class="QToolButton" name="copy">
         <property name="toolTip">
-         <string>Copy command to clipboard</string>
+         <string>Copy rclone command to clipboard</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>
@@ -64,7 +64,7 @@
       <item>
        <widget class="QToolButton" name="cancel">
         <property name="toolTip">
-         <string>Cancel</string>
+         <string>Cancel job</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>

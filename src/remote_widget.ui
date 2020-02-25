@@ -182,6 +182,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="buttonInfo">
+            <property name="text">
+             <string>Info</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -313,6 +323,9 @@ rclone mount</string>
    <property name="text">
     <string>&amp;Stream</string>
    </property>
+   <property name="toolTip">
+    <string>Stream file</string>
+   </property>
   </action>
   <action name="mkdir">
    <property name="text">
@@ -368,7 +381,7 @@ rclone purge|delete</string>
     <string>&amp;Size</string>
    </property>
    <property name="toolTip">
-    <string>Get Size
+    <string>Get folder size
 
 rclone size</string>
    </property>
@@ -378,7 +391,7 @@ rclone size</string>
     <string>DirTree</string>
    </property>
    <property name="toolTip">
-    <string>Directories Tree
+    <string>Show folders tree
 
 rclone tree</string>
    </property>
@@ -411,9 +424,19 @@ rclone move</string>
     <string>Link</string>
    </property>
    <property name="toolTip">
-    <string>Public Link
+    <string>Fetch public link
 
 rclone link</string>
+   </property>
+  </action>
+  <action name="getInfo">
+   <property name="text">
+    <string>Info</string>
+   </property>
+   <property name="toolTip">
+    <string>Get remote info
+
+rclone about</string>
    </property>
   </action>
  </widget>

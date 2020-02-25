@@ -46,6 +46,7 @@ QString root = isLocal ? "/" : QString();
   ui.getTree->setIcon(QIcon(":remotes/images/qbutton_icons/gettree.png"));
   ui.export_->setIcon(QIcon(":remotes/images/qbutton_icons/export.png"));
   ui.link->setIcon(QIcon(":remotes/images/qbutton_icons/link.png"));
+  ui.getInfo->setIcon(QIcon(":remotes/images/qbutton_icons/info.png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
   ui.buttonMkdir->setDefaultAction(ui.mkdir);
@@ -60,6 +61,7 @@ QString root = isLocal ? "/" : QString();
   ui.buttonLink->setDefaultAction(ui.link);
   ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonExport->setDefaultAction(ui.export_);
+  ui.buttonInfo->setDefaultAction(ui.getInfo);
 
   // buttons and icons size
   int icon_w = 16;
@@ -85,6 +87,7 @@ QString root = isLocal ? "/" : QString();
     ui.buttonLink->setIconSize(QSize(icon_w, icon_h));
     ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
     ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
 
   } else {
     if (buttonStyle == "textonly") {
@@ -102,6 +105,7 @@ QString root = isLocal ? "/" : QString();
       ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
 
     } else {
     // button style - icononly
@@ -131,6 +135,9 @@ QString root = isLocal ? "/" : QString();
       ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
       ui.buttonExport->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
+
   }
 }
 
@@ -636,6 +643,26 @@ QString root = isLocal ? "/" : QString();
     }
   });
 
+  QObject::connect(ui.getInfo, &QAction::triggered, this, [=]() {
+    auto settings = GetSettings();
+    bool driveShared = ui.checkBoxShared->checkState();
+    (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked)
+                 : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
+    QProcess process;
+    UseRclonePassword(&process);
+    process.setProgram(GetRclone());
+    process.setArguments(
+        QStringList() << "about" << GetRcloneConf() << GetDriveSharedWithMe()
+                      << GetDefaultRcloneOptionsList() << remote + ":");
+    process.setProcessChannelMode(QProcess::MergedChannels);
+    ProgressDialog progress("Get remote Info", "rclone about", remote, &process,
+                            this, false);
+    progress.expand();
+    progress.allowToClose();
+    progress.exec();
+  });
+
   QObject::connect(
       model, &ItemModel::drop, this,
       [=](const QDir &path, const QModelIndex &parent) {
@@ -678,6 +705,7 @@ QString root = isLocal ? "/" : QString();
         menu.addAction(ui.getSize);
         menu.addAction(ui.getTree);
         menu.addAction(ui.export_);
+        menu.addAction(ui.getInfo);
         menu.addSeparator();
         menu.addAction(ui.mkdir);
         menu.addAction(ui.rename);

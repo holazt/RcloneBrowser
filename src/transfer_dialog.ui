@@ -7,14 +7,8 @@
     <x>0</x>
     <y>0</y>
     <width>954</width>
-    <height>615</height>
+    <height>633</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -25,12 +19,6 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QWidget" name="pathGroup" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="1" column="3">
        <widget class="QToolButton" name="buttonDest">
@@ -164,12 +152,6 @@
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -180,24 +162,12 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QGroupBox" name="groupBox_3">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="title">
           <string/>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item alignment="Qt::AlignTop">
            <widget class="QGroupBox" name="modeGroup">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="title">
              <string>Mode</string>
             </property>
@@ -227,7 +197,7 @@
                 </sizepolicy>
                </property>
                <property name="toolTip">
-                <string>move</string>
+                <string>rclone move</string>
                </property>
                <property name="text">
                 <string>Move</string>
@@ -243,7 +213,7 @@
                 </sizepolicy>
                </property>
                <property name="toolTip">
-                <string>copy</string>
+                <string>rclone copy</string>
                </property>
                <property name="text">
                 <string>Copy</string>
@@ -262,7 +232,7 @@
                 </sizepolicy>
                </property>
                <property name="toolTip">
-                <string>sync</string>
+                <string>rclone sync</string>
                </property>
                <property name="text">
                 <string>Sync</string>
@@ -309,37 +279,12 @@
           </item>
           <item alignment="Qt::AlignTop">
            <widget class="QGroupBox" name="skipFilesGroup">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="title">
              <string>Skip files</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_4">
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item row="1" column="0" colspan="3">
-              <widget class="QCheckBox" name="checkSkipNewer">
-               <property name="toolTip">
-                <string>--update</string>
-               </property>
-               <property name="text">
-                <string>Skip files that are newer on the destination</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2" alignment="Qt::AlignVCenter">
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="2" column="1">
               <widget class="QComboBox" name="cbCompare">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="currentText">
                 <string>Size &amp; mod-time</string>
                </property>
@@ -370,30 +315,17 @@
                </item>
               </widget>
              </item>
-             <item row="2" column="0" colspan="3">
-              <widget class="QCheckBox" name="checkSkipExisting">
+             <item row="0" column="0" colspan="2">
+              <widget class="QCheckBox" name="checkSkipNewer">
                <property name="toolTip">
-                <string>--ignore-existing</string>
+                <string>--update</string>
                </property>
                <property name="text">
-                <string>Skip all files that exist</string>
+                <string>Skip files that are newer on the destination</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="3">
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="3" column="0" colspan="2">
+             <item row="2" column="0">
               <widget class="QCheckBox" name="checkCompare">
                <property name="toolTip">
                 <string>compare logic</string>
@@ -406,7 +338,17 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="2">
+             <item row="1" column="0" colspan="2">
+              <widget class="QCheckBox" name="checkSkipExisting">
+               <property name="toolTip">
+                <string>--ignore-existing</string>
+               </property>
+               <property name="text">
+                <string>Skip all files that exist</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
               <spacer name="verticalSpacer_5">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -414,6 +356,19 @@
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="2">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
                  <height>20</height>
                 </size>
                </property>
@@ -443,12 +398,6 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="title">
           <string>Other</string>
          </property>
@@ -463,10 +412,16 @@
           <item>
            <widget class="QLineEdit" name="textExtra">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;extra options applied to rclone during transfer&lt;/p&gt;&lt;p&gt;e.g. --filter &amp;quot;- *.bak&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -486,10 +441,16 @@
           <item>
            <widget class="QLineEdit" name="textDescription">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
             </property>
             <property name="text">
              <string/>
@@ -500,12 +461,6 @@
            <widget class="QCheckBox" name="checkisDriveSharedWithMe">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
             </property>
             <property name="toolTip">
              <string>--drive-shared-with-me</string>
@@ -520,12 +475,6 @@
           </item>
           <item>
            <widget class="QCheckBox" name="checkSameFilesystem">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="toolTip">
              <string>--one-file-system</string>
             </property>
@@ -536,12 +485,6 @@
           </item>
           <item>
            <widget class="QCheckBox" name="checkDontUpdateModified">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="toolTip">
              <string>--no-update-modtime</string>
             </property>

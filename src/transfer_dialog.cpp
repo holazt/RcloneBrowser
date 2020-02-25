@@ -9,9 +9,8 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     : QDialog(parent), mIsDownload(isDownload), mIsFolder(isFolder),
       mIsEditMode(editMode), mJobOptions(task) {
   ui.setupUi(this);
-//  resize(0, 0);
 
-//  this->setFixedHeight(this->height());
+  resize(0, 0);
 
   setWindowTitle(isDownload ? "Download" : "Upload");
 

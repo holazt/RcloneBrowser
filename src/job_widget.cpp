@@ -33,20 +33,38 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
   ui.output->setVisible(false);
 
+  ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+  ui.showDetails->setIconSize(QSize(24, 24));
+  ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+  ui.showOutput->setIconSize(QSize(24, 24));
+
   QObject::connect(
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
         ui.details->setVisible(checked);
-        ui.showDetails->setArrowType(checked ? Qt::DownArrow : Qt::RightArrow);
+
+      if (checked) {
+        ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+        ui.showDetails->setIconSize(QSize(24, 24));
+      } else {
+        ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+        ui.showDetails->setIconSize(QSize(24, 24));
+      }
+
       });
 
   QObject::connect(
       ui.showOutput, &QToolButton::toggled, this, [=](bool checked) {
         ui.output->setVisible(checked);
-        ui.showOutput->setArrowType(checked ? Qt::DownArrow : Qt::RightArrow);
-      });
 
-//  ui.cancel->setIcon(
-//      QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton));
+      if (checked) {
+        ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+        ui.showOutput->setIconSize(QSize(24, 24));
+      } else {
+        ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+        ui.showOutput->setIconSize(QSize(24, 24));
+      }
+
+      });
 
   ui.cancel->setIcon(QIcon(":remotes/images/qbutton_icons/cancel.png"));
   ui.cancel->setIconSize(QSize(24, 24));

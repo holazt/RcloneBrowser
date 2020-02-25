@@ -27,6 +27,8 @@
     <file>images/qbutton_icons/restore.png</file>
     <file>images/qbutton_icons/copy.png</file>
     <file>images/qbutton_icons/cancel.png</file>
+    <file>images/qbutton_icons/vrightarrow.png</file>
+    <file>images/qbutton_icons/vdownarrow.png</file>
 
     <file>images/amazon_cloud_drive.png</file>
     <file>images/b2.png</file>

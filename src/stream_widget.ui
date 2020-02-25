@@ -41,7 +41,7 @@
          <enum>Qt::ToolButtonTextBesideIcon</enum>
         </property>
         <property name="arrowType">
-         <enum>Qt::RightArrow</enum>
+         <enum>Qt::NoArrow</enum>
         </property>
        </widget>
       </item>
@@ -105,7 +105,7 @@
          <enum>Qt::ToolButtonTextBesideIcon</enum>
         </property>
         <property name="arrowType">
-         <enum>Qt::RightArrow</enum>
+         <enum>Qt::NoArrow</enum>
         </property>
        </widget>
       </item>

@@ -409,7 +409,7 @@ QString root = isLocal ? "/" : QString();
 
     bool streamConfirmed =
         settings->value("Settings/streamConfirmed", false).toBool();
-    QString stream = settings->value("Settings/stream", "mpv -").toString();
+    QString stream = settings->value("Settings/stream", "vlc -").toString();
     if (!streamConfirmed) {
       QString result = QInputDialog::getText(
           this, "Stream",

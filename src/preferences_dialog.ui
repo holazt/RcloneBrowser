@@ -12,7 +12,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>850</width>
+    <width>820</width>
     <height>0</height>
    </size>
   </property>
@@ -181,6 +181,13 @@
             </property>
            </widget>
           </item>
+          <item row="6" column="2">
+           <widget class="QToolButton" name="streamBrowse">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
           <item row="7" column="1">
            <widget class="QLineEdit" name="mount">
             <property name="sizePolicy">
@@ -279,7 +286,7 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;location of audio/video player used for streaming e.g.&lt;/p&gt;&lt;p&gt;/Applications/VLC.app -&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;location of audio/video player used for streaming e.g.&lt;/p&gt;&lt;p&gt;/Applications/VLC.app -&lt;br/&gt;/usr/local/bin/vlc -&lt;br/&gt;&amp;quot;c:\Program Files\VideoLAN\VLC\vlc.exe&amp;quot; -&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -1236,8 +1243,6 @@
          </layout>
         </widget>
        </item>
-
-
        <item>
         <spacer name="verticalSpacer_5a">
          <property name="orientation">
@@ -1254,11 +1259,6 @@
          </property>
         </spacer>
        </item>
-
-
-
-
-
        <item>
         <widget class="QLabel" name="info_4">
          <property name="sizePolicy">

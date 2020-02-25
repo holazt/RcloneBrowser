@@ -324,7 +324,9 @@ rclone mount</string>
     <string>&amp;Stream</string>
    </property>
    <property name="toolTip">
-    <string>Stream file</string>
+    <string>Stream file
+
+rclone cat</string>
    </property>
   </action>
   <action name="mkdir">

@@ -53,6 +53,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.rcloneConf->setText(rcloneConf);
   });
 
+  QObject::connect(ui.streamBrowse, &QPushButton::clicked, this, [=]() {
+    QString stream = QFileDialog::getOpenFileName(
+        this, "Select player for streaming", ui.stream->text());
+    if (stream.isEmpty()) {
+      return;
+    }
+
+    ui.stream->setText(stream + " -");
+  });
+
   QObject::connect(
       ui.defaultDownloadDirBrowse, &QPushButton::clicked, this, [=]() {
         QString defaultDownloadDir = QFileDialog::getExistingDirectory(

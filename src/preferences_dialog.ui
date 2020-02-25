@@ -6,19 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
-    <height>697</height>
+    <width>820</width>
+    <height>631</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>781</width>
+    <width>850</width>
     <height>0</height>
    </size>
   </property>
@@ -28,12 +22,6 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -454,12 +442,6 @@
          <layout class="QGridLayout" name="gridLayout">
           <item row="1" column="0" colspan="2">
            <widget class="QCheckBox" name="showFileIcons">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display files as icons&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -542,12 +524,6 @@
         <widget class="QGroupBox" name="groupBox_9">
          <property name="enabled">
           <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
          </property>
          <property name="title">
           <string>Interface buttons' style</string>
@@ -727,6 +703,19 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_gui_style">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_3">
@@ -738,12 +727,6 @@
         <widget class="QGroupBox" name="font_size">
          <property name="enabled">
           <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
          </property>
          <property name="title">
           <string>Font size increased by n points (requires application restart)</string>
@@ -902,12 +885,6 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="title">
           <string>Buttons icons size (requires tab reopening)</string>
          </property>
@@ -1004,12 +981,6 @@
         <widget class="QGroupBox" name="groupBox_5">
          <property name="enabled">
           <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
          </property>
          <property name="title">
           <string>Remotes icons size</string>
@@ -1128,12 +1099,6 @@
           </item>
           <item row="0" column="0" colspan="2">
            <widget class="QCheckBox" name="useSystemSettings">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone will use OS defined internet access&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -1173,57 +1138,7 @@
           <string>Manual proxy configuration</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="https_proxy">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>e.g. https://127.0.0.1:1087</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>https_proxy:</string>
-            </property>
-            <property name="buddy">
-             <cstring>https_proxy</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>http_proxy:</string>
-            </property>
-            <property name="buddy">
-             <cstring>http_proxy</cstring>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="1">
-           <widget class="QLabel" name="info_2">
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>no_proxy:</string>
-            </property>
-            <property name="buddy">
-             <cstring>no_proxy</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
            <widget class="QLineEdit" name="no_proxy">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
@@ -1235,6 +1150,19 @@
              <string>e.g. localhost,127.0.0.0/8,cs.aliyuncs.com</string>
             </property>
            </widget>
+          </item>
+          <item row="7" column="2">
+           <spacer name="verticalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="http_proxy">
@@ -1249,24 +1177,96 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <spacer name="verticalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+          <item row="6" column="1" colspan="2">
+           <widget class="QLabel" name="info_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
-           </spacer>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="https_proxy">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>e.g. https://127.0.0.1:1087</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>http_proxy:</string>
+            </property>
+            <property name="buddy">
+             <cstring>http_proxy</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>https_proxy:</string>
+            </property>
+            <property name="buddy">
+             <cstring>https_proxy</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>no_proxy:</string>
+            </property>
+            <property name="buddy">
+             <cstring>no_proxy</cstring>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
        </item>
+
+
+       <item>
+        <spacer name="verticalSpacer_5a">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+
+
+
+
+
        <item>
         <widget class="QLabel" name="info_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>For proxy settings changes to take effect Rclone Browser has to be restarted.</string>
          </property>
@@ -1277,10 +1277,13 @@
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
-           <height>0</height>
+           <width>0</width>
+           <height>300</height>
           </size>
          </property>
         </spacer>

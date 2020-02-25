@@ -2,7 +2,21 @@
 #include "utils.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
+
   ui.setupUi(this);
+
+// dark mode option for all systems but latest macOS
+// on macOS Mojave or newer dark mode is managed by OS
+#if defined(Q_OS_MACOS)
+  QString sysInfo = QSysInfo::productVersion();
+  if (sysInfo == "10.9" || sysInfo == "10.10" || sysInfo == "10.11" ||
+      sysInfo == "10.12" || sysInfo == "10.13") {
+  } else {
+    ui.darkMode->hide();
+    ui.darkMode_info->hide();
+    ui.remotes_colour->hide();
+  }
+#endif
 
   resize(0, 0);
 
@@ -80,8 +94,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
           .toString());
   ui.mount->setDisabled(true);
 #else
-  ui.mount->setText(
-      settings->value("Settings/mount", "--vfs-cache-mode writes").toString());
+  ui.mount->setText(settings->value("Settings/mount").toString());
 #endif
 
   ui.defaultDownloadDir->setText(QDir::toNativeSeparators(
@@ -125,19 +138,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
   ui.darkMode->setChecked(settings->value("Settings/darkMode", true).toBool());
-
-// dark mode option for all systems but latest macOS
-// on macOS Mojave or newer dark mode is managed by OS
-#if defined(Q_OS_MACOS)
-  QString sysInfo = QSysInfo::productVersion();
-  if (sysInfo == "10.9" || sysInfo == "10.10" || sysInfo == "10.11" ||
-      sysInfo == "10.12" || sysInfo == "10.13") {
-  } else {
-    ui.darkMode->hide();
-    ui.darkMode_info->hide();
-    ui.remotes_colour->hide();
-  }
-#endif
 
   if ((settings->value("Settings/buttonStyle").toString()) == "icononly") {
     ui.cb_icononly->setChecked(true);

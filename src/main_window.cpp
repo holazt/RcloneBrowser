@@ -1005,7 +1005,7 @@ bool MainWindow::canClose() {
   int button =
       QMessageBox::question(this, "Rclone Browser",
                             QString("There are %1 job(s) running.\n"
-                                    "Do you want to stop them and quit?")
+                                    "\nDo you want to stop them and quit?")
                                 .arg(mJobCount),
                             QMessageBox::Yes | QMessageBox::No);
 
@@ -1078,8 +1078,22 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
   JobOptions *jo = item->GetData();
   jo->dryRun = dryrun;
   QStringList args = jo->getOptions();
-  addTransfer(QString("%1 %2").arg(jo->operation).arg(jo->source), jo->source,
-              jo->dest, args);
+
+  QString info;
+  QString operation;
+
+  if (int(jo->operation) == 1 ) operation = "Copy";
+  if (int(jo->operation) == 2 ) operation = "Move";
+  if (int(jo->operation) == 3 ) operation = "Sync";
+
+  if (dryrun) {
+    info = QString("Dry run, task: \"%1\", %2 from %3").arg(jo->description).arg(operation.toLower()).arg(jo->source);
+  } else {
+    info = QString("Task: \"%1\", %2 from %3").arg(jo->description).arg(operation).arg(jo->source);
+  }
+
+  addTransfer(info, jo->source, jo->dest, args);
+
 }
 
 void MainWindow::editSelectedTask() {

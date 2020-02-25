@@ -12,8 +12,21 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   mArgs.append(args);
 
   ui.source->setText(source);
+  ui.source->setToolTip(source);
+
   ui.dest->setText(dest);
-  ui.info->setText(info);
+  ui.dest->setToolTip(dest);
+
+  QString infoTrimmed;
+
+  if (info.length() > 140) {
+    infoTrimmed = info.left(57) + "..." + info.right(80);
+  } else {
+     infoTrimmed = info;
+  }
+
+  ui.info->setText(infoTrimmed);
+  ui.info->setToolTip(info);
 
   ui.details->setVisible(false);
 
@@ -42,7 +55,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     if (mRunning) {
       int button = QMessageBox::question(
           this, "Transfer",
-          QString("rclone process is still running. Do you want to cancel it?"),
+          QString("rclone process is still running.\n\nDo you want to cancel it?"),
           QMessageBox::Yes | QMessageBox::No);
       if (button == QMessageBox::Yes) {
         cancel();

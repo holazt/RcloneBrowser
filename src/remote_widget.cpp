@@ -484,8 +484,14 @@ QString root = isLocal ? "/" : QString();
       QString dst = t.getDest();
 
       QStringList args = t.getOptions();
-      emit addTransfer(QString("%1 from %2").arg(t.getMode()).arg(src), src,
-                       dst, args);
+      QString info;
+
+      if (args.value(1) == "--dry-run") {
+        info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+      } else {
+        info = QString("%1 from %2").arg(t.getMode()).arg(src);
+      }
+      emit addTransfer(info, src, dst, args);
     }
   });
 
@@ -504,8 +510,16 @@ QString root = isLocal ? "/" : QString();
       QString dst = t.getDest();
 
       QStringList args = t.getOptions();
-      emit addTransfer(QString("%1 %2").arg(t.getMode()).arg(src), src, dst,
-                       args);
+
+      QString info;
+
+      if (args.value(1) == "--dry-run") {
+        info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+      } else {
+        info = QString("%1 from %2").arg(t.getMode()).arg(src);
+      }
+
+      emit addTransfer(info, src, dst, args);
     }
   });
 

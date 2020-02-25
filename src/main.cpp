@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
   // during first run the fontSize key might not exist
   if (!(settings->contains("Settings/fontSize"))) {
     // if fontSize does not exist create new key
-    settings->setValue("Settings/fontSize", "0");
+    settings->setValue("Settings/fontSize", "2");
   };
 
   // during first run the buttonSize key might not exist

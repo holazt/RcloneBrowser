@@ -93,6 +93,16 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                    this, [=](int status, QProcess::ExitStatus) {
                      mProcess->deleteLater();
                      mRunning = false;
+
+                     QString info = "Mounted "  + ui.info->text();
+                     QString infoTrimmed;
+                     if (info.length() > 140) {
+                       infoTrimmed = info.left(57) + "..." + info.right(80);
+                     } else {
+                       infoTrimmed = info;
+                     }
+                     ui.info->setText(infoTrimmed);
+
                      if (status == 0) {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: black; }");
@@ -151,16 +161,5 @@ void MountWidget::cancel() {
       "QToolButton { border: 0; color: black; }");
   ui.showDetails->setText("Finished");
   ui.cancel->setToolTip("Close");
-
-  QString info = "Mounted "  + ui.info->text();
-  QString infoTrimmed;
-
-  if (info.length() > 140) {
-    infoTrimmed = info.left(57) + "..." + info.right(80);
-  } else {
-     infoTrimmed = info;
-  }
-
-  ui.info->setText(infoTrimmed);
 
 }

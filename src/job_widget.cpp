@@ -278,5 +278,9 @@ void JobWidget::cancel() {
   mProcess->kill();
   mProcess->waitForFinished();
 
-  emit closed();
+  ui.showDetails->setStyleSheet(
+    "QToolButton { border: 0; color: red; }");
+  ui.showDetails->setText("Cancelled");
+  ui.cancel->setToolTip("Close");
+
 }

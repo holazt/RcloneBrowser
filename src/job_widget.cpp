@@ -22,7 +22,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   if (info.length() > 140) {
     infoTrimmed = info.left(57) + "..." + info.right(80);
   } else {
-     infoTrimmed = info;
+    infoTrimmed = info;
   }
 
   ui.info->setText(infoTrimmed);
@@ -33,37 +33,41 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
   ui.output->setVisible(false);
 
-  ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+  ui.showDetails->setIcon(
+      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
   ui.showDetails->setIconSize(QSize(24, 24));
-  ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+  ui.showOutput->setIcon(
+      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
   ui.showOutput->setIconSize(QSize(24, 24));
 
   QObject::connect(
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
         ui.details->setVisible(checked);
 
-      if (checked) {
-        ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
-        ui.showDetails->setIconSize(QSize(24, 24));
-      } else {
-        ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
-        ui.showDetails->setIconSize(QSize(24, 24));
-      }
-
+        if (checked) {
+          ui.showDetails->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showDetails->setIconSize(QSize(24, 24));
+        } else {
+          ui.showDetails->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showDetails->setIconSize(QSize(24, 24));
+        }
       });
 
   QObject::connect(
       ui.showOutput, &QToolButton::toggled, this, [=](bool checked) {
         ui.output->setVisible(checked);
 
-      if (checked) {
-        ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
-        ui.showOutput->setIconSize(QSize(24, 24));
-      } else {
-        ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
-        ui.showOutput->setIconSize(QSize(24, 24));
-      }
-
+        if (checked) {
+          ui.showOutput->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showOutput->setIconSize(QSize(24, 24));
+        } else {
+          ui.showOutput->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showOutput->setIconSize(QSize(24, 24));
+        }
       });
 
   ui.cancel->setIcon(QIcon(":remotes/images/qbutton_icons/cancel.png"));
@@ -73,7 +77,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     if (mRunning) {
       int button = QMessageBox::question(
           this, "Transfer",
-          QString("rclone process is still running.\n\nDo you want to cancel it?"),
+          QString(
+              "rclone process is still running.\n\nDo you want to cancel it?"),
           QMessageBox::Yes | QMessageBox::No);
       if (button == QMessageBox::Yes) {
         cancel();
@@ -227,7 +232,9 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         }
 
         bar->setValue(rxProgress2.cap(2).toInt());
-        bar->setToolTip("File name: " + name + "\nFile stats" + rxProgress2.cap(0).mid(rxProgress2.cap(0).indexOf(':')));
+        bar->setToolTip(
+            "File name: " + name + "\nFile stats" +
+            rxProgress2.cap(0).mid(rxProgress2.cap(0).indexOf(':')));
 
         mUpdated.insert(label);
       }
@@ -278,9 +285,7 @@ void JobWidget::cancel() {
   mProcess->kill();
   mProcess->waitForFinished();
 
-  ui.showDetails->setStyleSheet(
-    "QToolButton { border: 0; color: red; }");
+  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: red; }");
   ui.showDetails->setText("Cancelled");
   ui.cancel->setToolTip("Close");
-
 }

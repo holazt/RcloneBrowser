@@ -12,7 +12,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     : QWidget(parent) {
   ui.setupUi(this);
 
-QString root = isLocal ? "/" : QString();
+  QString root = isLocal ? "/" : QString();
 
 #ifndef Q_OS_WIN
   isLocal = false;
@@ -66,11 +66,21 @@ QString root = isLocal ? "/" : QString();
   // buttons and icons size
   int icon_w = 16;
   int icon_h = 16;
-  if (buttonSize == "0") { icon_w=24;}
-  if (buttonSize == "1") { icon_w=32;}
-  if (buttonSize == "2") { icon_w=48;}
-  if (buttonSize == "3") { icon_w=72;}
-  if (buttonSize == "4") { icon_w=96;}
+  if (buttonSize == "0") {
+    icon_w = 24;
+  }
+  if (buttonSize == "1") {
+    icon_w = 32;
+  }
+  if (buttonSize == "2") {
+    icon_w = 48;
+  }
+  if (buttonSize == "3") {
+    icon_w = 72;
+  }
+  if (buttonSize == "4") {
+    icon_w = 96;
+  }
   icon_h = icon_w;
 
   if (buttonStyle == "textandicon") {
@@ -108,7 +118,7 @@ QString root = isLocal ? "/" : QString();
       ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
 
     } else {
-    // button style - icononly
+      // button style - icononly
       ui.buttonRefresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
       ui.buttonMkdir->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -137,9 +147,8 @@ QString root = isLocal ? "/" : QString();
       ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
       ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
-
+    }
   }
-}
 
   ui.tree->sortByColumn(0, Qt::AscendingOrder);
   ui.tree->header()->setSectionsMovable(false);
@@ -652,9 +661,9 @@ QString root = isLocal ? "/" : QString();
     QProcess process;
     UseRclonePassword(&process);
     process.setProgram(GetRclone());
-    process.setArguments(
-        QStringList() << "about" << GetRcloneConf() << GetDriveSharedWithMe()
-                      << GetDefaultRcloneOptionsList() << remote + ":");
+    process.setArguments(QStringList()
+                         << "about" << GetRcloneConf() << GetDriveSharedWithMe()
+                         << GetDefaultRcloneOptionsList() << remote + ":");
     process.setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog progress("Get remote Info", "rclone about", remote, &process,
                             this, false);

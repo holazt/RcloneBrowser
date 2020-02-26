@@ -34,30 +34,36 @@ MainWindow::MainWindow() {
   // enable dark mode for Windows and Linux
   if (darkMode) {
 
-        qApp->setStyle(QStyleFactory::create("Fusion"));
-        QPalette darkPalette;
-        darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
-        darkPalette.setColor(QPalette::WindowText, Qt::white);
-        darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(127, 127, 127));
-        darkPalette.setColor(QPalette::Base, QColor(42, 42, 42));
-        darkPalette.setColor(QPalette::AlternateBase, QColor(66, 66, 66));
-        darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
-        darkPalette.setColor(QPalette::ToolTipText, Qt::white);
-        darkPalette.setColor(QPalette::Text, Qt::white);
-        darkPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(127, 127, 127));
-        darkPalette.setColor(QPalette::Dark, QColor(35, 35, 35));
-        darkPalette.setColor(QPalette::Shadow, QColor(20, 20, 20));
-        darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
-        darkPalette.setColor(QPalette::ButtonText, Qt::white);
-        darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(127, 127, 127));
-        darkPalette.setColor(QPalette::BrightText, Qt::red);
-        darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-        darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
-        darkPalette.setColor(QPalette::Disabled, QPalette::Highlight, QColor(80, 80, 80));
-        darkPalette.setColor(QPalette::HighlightedText, Qt::white);
-        darkPalette.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor(127, 127, 127));
-        qApp->setPalette(darkPalette);
-        qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white;}");
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
+    darkPalette.setColor(QPalette::WindowText, Qt::white);
+    darkPalette.setColor(QPalette::Disabled, QPalette::WindowText,
+                         QColor(127, 127, 127));
+    darkPalette.setColor(QPalette::Base, QColor(42, 42, 42));
+    darkPalette.setColor(QPalette::AlternateBase, QColor(66, 66, 66));
+    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
+    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
+    darkPalette.setColor(QPalette::Text, Qt::white);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Text,
+                         QColor(127, 127, 127));
+    darkPalette.setColor(QPalette::Dark, QColor(35, 35, 35));
+    darkPalette.setColor(QPalette::Shadow, QColor(20, 20, 20));
+    darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
+    darkPalette.setColor(QPalette::ButtonText, Qt::white);
+    darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText,
+                         QColor(127, 127, 127));
+    darkPalette.setColor(QPalette::BrightText, Qt::red);
+    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::Disabled, QPalette::Highlight,
+                         QColor(80, 80, 80));
+    darkPalette.setColor(QPalette::HighlightedText, Qt::white);
+    darkPalette.setColor(QPalette::Disabled, QPalette::HighlightedText,
+                         QColor(127, 127, 127));
+    qApp->setPalette(darkPalette);
+    qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; "
+                        "border: 1px solid white;}");
   }
 
 #else
@@ -182,12 +188,16 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
-      settings->setValue("Settings/buttonStyle", dialog.getButtonStyle().trimmed());
-      settings->setValue("Settings/iconsLayout", dialog.getIconsLayout().trimmed());
-      settings->setValue("Settings/remotesColour", dialog.getRemotesColour().trimmed());
+      settings->setValue("Settings/buttonStyle",
+                         dialog.getButtonStyle().trimmed());
+      settings->setValue("Settings/iconsLayout",
+                         dialog.getIconsLayout().trimmed());
+      settings->setValue("Settings/remotesColour",
+                         dialog.getRemotesColour().trimmed());
 
       settings->setValue("Settings/fontSize", dialog.getFontSize().trimmed());
-      settings->setValue("Settings/buttonSize", dialog.getButtonSize().trimmed());
+      settings->setValue("Settings/buttonSize",
+                         dialog.getButtonSize().trimmed());
       settings->setValue("Settings/iconSize", dialog.getIconSize().trimmed());
 
       settings->setValue("Settings/useProxy", dialog.getUseProxy());
@@ -293,27 +303,26 @@ MainWindow::MainWindow() {
                    [=]() { editSelectedTask(); });
 
   QObject::connect(ui.buttonDeleteTask, &QPushButton::clicked, this, [=]() {
+    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
+        ui.tasksListWidget->currentItem());
+    JobOptions *jo = item->GetData();
 
-
-     JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
-         ui.tasksListWidget->currentItem());
-     JobOptions *jo = item->GetData();
-
-   int button = QMessageBox::question(
+    int button = QMessageBox::question(
         this, "Delete",
-        QString("Are you sure you want to delete this task?\n\n" + jo->description),
+        QString("Are you sure you want to delete this task?\n\n" +
+                jo->description),
         QMessageBox::Yes | QMessageBox::No);
-   if (button == QMessageBox::Yes) {
-     ListOfJobOptions::getInstance()->Forget(jo);
-   }
-
+    if (button == QMessageBox::Yes) {
+      ListOfJobOptions::getInstance()->Forget(jo);
+    }
   });
 
   QObject::connect(ListOfJobOptions::getInstance(),
                    &ListOfJobOptions::tasksListUpdated, this,
                    &MainWindow::listTasks);
 
-  ui.buttonDeleteTask->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
+  ui.buttonDeleteTask->setIcon(
+      QIcon(":remotes/images/qbutton_icons/purge.png"));
   ui.buttonEditTask->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
   ui.buttonRunTask->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
 
@@ -836,7 +845,8 @@ void MainWindow::rcloneListRemotes() {
           auto settings = GetSettings();
           bool darkModeIni = settings->value("Settings/darkModeIni").toBool();
           QString iconSize = settings->value("Settings/iconSize").toString();
-          QString remotesColour = settings->value("Settings/remotesColour").toString();
+          QString remotesColour =
+              settings->value("Settings/remotesColour").toString();
 
           for (const QString &line : items) {
             if (line.isEmpty()) {
@@ -898,7 +908,7 @@ void MainWindow::rcloneListRemotes() {
                 img_add = "";
               }
             } else {
-                img_add = "";
+              img_add = "";
             }
 #if defined(Q_OS_WIN)
             // on Windows dark theme changes PM_ListViewIconSize size
@@ -966,7 +976,8 @@ void MainWindow::rcloneListRemotes() {
 
   UseRclonePassword(p);
   p->start(GetRclone(),
-           QStringList() << "listremotes" << GetRcloneConf() << GetDefaultRcloneOptionsList() <<"--long"
+           QStringList() << "listremotes" << GetRcloneConf()
+                         << GetDefaultRcloneOptionsList() << "--long"
                          << "--ask-password=false",
            QIODevice::ReadOnly);
 }
@@ -1058,7 +1069,8 @@ void MainWindow::listTasks() {
   ui.tasksListWidget->setSpacing(5);
   ui.tasksListWidget->setWrapping(true);
 
-  // enable drag and drop reordering (there is no persistence of order implemented yet)
+  // enable drag and drop reordering (there is no persistence of order
+  // implemented yet)
   ui.tasksListWidget->setDragDropMode(QAbstractItemView::InternalMove);
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
@@ -1083,18 +1095,26 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
   QString info;
   QString operation;
 
-  if (int(jo->operation) == 1 ) operation = "Copy";
-  if (int(jo->operation) == 2 ) operation = "Move";
-  if (int(jo->operation) == 3 ) operation = "Sync";
+  if (int(jo->operation) == 1)
+    operation = "Copy";
+  if (int(jo->operation) == 2)
+    operation = "Move";
+  if (int(jo->operation) == 3)
+    operation = "Sync";
 
   if (dryrun) {
-    info = QString("Dry run, task: \"%1\", %2 from %3").arg(jo->description).arg(operation.toLower()).arg(jo->source);
+    info = QString("Dry run, task: \"%1\", %2 from %3")
+               .arg(jo->description)
+               .arg(operation.toLower())
+               .arg(jo->source);
   } else {
-    info = QString("Task: \"%1\", %2 from %3").arg(jo->description).arg(operation).arg(jo->source);
+    info = QString("Task: \"%1\", %2 from %3")
+               .arg(jo->description)
+               .arg(operation)
+               .arg(jo->source);
   }
 
   addTransfer(info, jo->source, jo->dest, args);
-
 }
 
 void MainWindow::editSelectedTask() {
@@ -1239,8 +1259,9 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
   args.append(GetRcloneConf());
 
   if (!opt.isEmpty()) {
-    // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1 arg2" --option-3 arg3
-    // should generate "--option-1" "--option-2=\"arg1 arg2\"" "--option-3" "arg3"
+    // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1
+    // arg2" --option-3 arg3 should generate "--option-1" "--option-2=\"arg1
+    // arg2\"" "--option-3" "arg3"
     for (QString arg : opt.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
       if (!arg.isEmpty()) {
         args << arg.replace("\"", "");

@@ -143,7 +143,6 @@ int main(int argc, char *argv[]) {
     fontsize = 9;
   }
 
-
   QFont defaultFont = QApplication::font();
   defaultFont.setPointSize(defaultFont.pointSize() + fontsize);
   qApp->setFont(defaultFont);

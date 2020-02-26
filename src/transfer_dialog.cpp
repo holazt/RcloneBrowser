@@ -14,25 +14,25 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   setWindowTitle(isDownload ? "Download" : "Upload");
 
-//  QStyle *style = qApp->style();
+  //  QStyle *style = qApp->style();
 
   ui.buttonSourceFile->setIcon(QIcon(":remotes/images/qbutton_icons/file.png"));
   ui.buttonSourceFile->setIconSize(QSize(24, 24));
 
-  ui.buttonSourceFolder->setIcon(QIcon(":remotes/images/qbutton_icons/folder.png"));
+  ui.buttonSourceFolder->setIcon(
+      QIcon(":remotes/images/qbutton_icons/folder.png"));
   ui.buttonSourceFolder->setIconSize(QSize(24, 24));
 
   ui.buttonDest->setIcon(QIcon(":remotes/images/qbutton_icons/folder.png"));
   ui.buttonDest->setIconSize(QSize(24, 24));
 
-
-  ui.buttonDefaultSource->setIcon(QIcon(":remotes/images/qbutton_icons/restore.png"));
+  ui.buttonDefaultSource->setIcon(
+      QIcon(":remotes/images/qbutton_icons/restore.png"));
   ui.buttonDefaultSource->setIconSize(QSize(24, 24));
 
-  ui.buttonDefaultDest->setIcon(QIcon(":remotes/images/qbutton_icons/restore.png"));
+  ui.buttonDefaultDest->setIcon(
+      QIcon(":remotes/images/qbutton_icons/restore.png"));
   ui.buttonDefaultDest->setIconSize(QSize(24, 24));
-
-
 
   if (!mIsEditMode) {
     QPushButton *dryRun =

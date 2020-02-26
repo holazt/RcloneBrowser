@@ -6,14 +6,13 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
-
   QString info = QString("%1 on %2").arg(remote).arg(folder);
   QString infoTrimmed;
 
   if (info.length() > 140) {
     infoTrimmed = info.left(57) + "..." + info.right(80);
   } else {
-     infoTrimmed = info;
+    infoTrimmed = info;
   }
 
   ui.info->setText(infoTrimmed);
@@ -30,19 +29,23 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
   ui.output->setVisible(false);
 
-  ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+  ui.showDetails->setIcon(
+      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
   ui.showDetails->setIconSize(QSize(24, 24));
-  ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+  ui.showOutput->setIcon(
+      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
   ui.showOutput->setIconSize(QSize(24, 24));
 
   QObject::connect(
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
         ui.details->setVisible(checked);
         if (checked) {
-          ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showDetails->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         } else {
-          ui.showDetails->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showDetails->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         }
       });
@@ -51,10 +54,12 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
       ui.showOutput, &QToolButton::toggled, this, [=](bool checked) {
         ui.output->setVisible(checked);
         if (checked) {
-          ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showOutput->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         } else {
-          ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showOutput->setIcon(
+              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         }
       });
@@ -94,7 +99,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                      mProcess->deleteLater();
                      mRunning = false;
 
-                     QString info = "Mounted "  + ui.info->text();
+                     QString info = "Mounted " + ui.info->text();
                      QString infoTrimmed;
                      if (info.length() > 140) {
                        infoTrimmed = info.left(57) + "..." + info.right(80);
@@ -157,9 +162,7 @@ void MountWidget::cancel() {
 
   mProcess->waitForFinished();
 
-  ui.showDetails->setStyleSheet(
-      "QToolButton { border: 0; color: black; }");
+  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: black; }");
   ui.showDetails->setText("Finished");
   ui.cancel->setToolTip("Close");
-
 }

@@ -1055,6 +1055,7 @@ void MainWindow::listTasks() {
   // make tasks list flow (wrap) in its window
   ui.tasksListWidget->setViewMode(QListWidget::ListMode);
   ui.tasksListWidget->setResizeMode(QListView::Adjust);
+  ui.tasksListWidget->setSpacing(5);
   ui.tasksListWidget->setWrapping(true);
 
   // enable drag and drop reordering (there is no persistence of order implemented yet)

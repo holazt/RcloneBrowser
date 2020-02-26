@@ -34,6 +34,12 @@
       </property>
       <item>
        <widget class="QToolButton" name="showDetails">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>
         </property>

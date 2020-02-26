@@ -35,6 +35,8 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.showOutput->setIcon(QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
   ui.showOutput->setIconSize(QSize(24, 24));
 
+  ui.cancel->setToolTip("Stop streaming");
+
   QObject::connect(
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
         ui.details->setVisible(checked);
@@ -84,11 +86,35 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   QObject::connect(mRclone,
                    static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
                        &QProcess::finished),
-                   this, [=]() {
+                   this, [=](int status, QProcess::ExitStatus) {
+
                      mRclone->deleteLater();
                      mRunning = false;
+
+
+                     QString info = "Streaming "  + ui.info->text();
+                     QString infoTrimmed;
+                     if (info.length() > 140) {
+                       infoTrimmed = info.left(57) + "..." + info.right(80);
+                     } else {
+                       infoTrimmed = info;
+                     }
+                     ui.info->setText(infoTrimmed);
+
+                     if (status == 0 || status == 9) {
+                       ui.showDetails->setStyleSheet(
+                           "QToolButton { border: 0; color: black; }");
+                       ui.showDetails->setText("Finished");
+                     } else {
+                       ui.showDetails->setStyleSheet(
+                           "QToolButton { border: 0; color: red; }");
+                       ui.showDetails->setText("Error");
+                     }
+
+                     ui.cancel->setToolTip("Close");
+
                      emit finished();
-                     emit closed();
+           //          emit closed();
                    });
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; }");

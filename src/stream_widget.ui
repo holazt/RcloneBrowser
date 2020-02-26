@@ -34,6 +34,12 @@
       </property>
       <item>
        <widget class="QToolButton" name="showDetails">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
@@ -128,7 +134,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Folder:</string>
+         <string>Streaming app:</string>
         </property>
         <property name="buddy">
          <cstring>stream</cstring>
@@ -144,7 +150,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Remote:</string>
+         <string>Remote content:</string>
         </property>
         <property name="buddy">
          <cstring>remote</cstring>

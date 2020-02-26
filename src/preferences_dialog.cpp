@@ -59,8 +59,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     if (stream.isEmpty()) {
       return;
     }
-
-    ui.stream->setText(stream + " -");
+    ui.stream->setText("\"" + stream + "\"" + " -");
   });
 
   QObject::connect(

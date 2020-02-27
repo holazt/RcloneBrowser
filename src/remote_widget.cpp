@@ -18,6 +18,17 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   isLocal = false;
 #endif
 
+#ifdef Q_OS_WIN
+  // as with Fusion style in Windows QTreeView font size does not scale 
+  // with QApplication::font() changes we control it manually using style sheet
+
+  QFont defaultFont = QApplication::font();
+  int fontSize = defaultFont.pointSize() + 3;
+
+  QString fontStyleSheet = QString("QTreeView { font-size: %1px;}").arg(fontSize);
+  ui.tree->setStyleSheet(fontStyleSheet);
+#endif
+
   auto settings = GetSettings();
 
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();

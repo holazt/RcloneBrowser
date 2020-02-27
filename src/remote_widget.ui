@@ -62,6 +62,16 @@
            </widget>
           </item>
           <item>
+           <widget class="Line" name="line_2">
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonMkdir">
             <property name="text">
              <string>Mkdir</string>
@@ -98,6 +108,16 @@
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
            </widget>
           </item>
@@ -142,6 +162,16 @@
            </widget>
           </item>
           <item>
+           <widget class="Line" name="line_3">
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonSize">
             <property name="text">
              <string>Size</string>
@@ -175,16 +205,6 @@
            <widget class="QToolButton" name="buttonExport">
             <property name="text">
              <string>Export</string>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextUnderIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="buttonInfo">
-            <property name="text">
-             <string>Info</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -248,6 +268,16 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonInfo">
+            <property name="text">
+             <string>Info</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

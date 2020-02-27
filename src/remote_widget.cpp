@@ -711,10 +711,6 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
         QMenu menu;
         menu.addAction(ui.refresh);
-        menu.addAction(ui.getSize);
-        menu.addAction(ui.getTree);
-        menu.addAction(ui.export_);
-        menu.addAction(ui.getInfo);
         menu.addSeparator();
         menu.addAction(ui.mkdir);
         menu.addAction(ui.rename);
@@ -725,7 +721,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         menu.addAction(ui.stream);
         menu.addAction(ui.upload);
         menu.addAction(ui.download);
+        menu.addSeparator();
+        menu.addAction(ui.getSize);
+        menu.addAction(ui.getTree);
         menu.addAction(ui.link);
+        menu.addAction(ui.export_);
+        menu.addSeparator();
+        menu.addAction(ui.getInfo);
         menu.exec(ui.tree->viewport()->mapToGlobal(pos));
       });
 

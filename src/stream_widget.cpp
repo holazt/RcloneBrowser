@@ -15,11 +15,14 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   }
 
   ui.info->setText(remoteTrimmed);
+  ui.info->setCursorPosition(0);
 
   ui.stream->setText(stream);
+  ui.stream->setCursorPosition(0);
   ui.stream->setToolTip(stream);
 
   ui.remote->setText(remote);
+  ui.remote->setCursorPosition(0);
   ui.remote->setToolTip(remote);
 
   ui.details->setVisible(false);
@@ -102,6 +105,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                        infoTrimmed = info;
                      }
                      ui.info->setText(infoTrimmed);
+                     ui.info->setCursorPosition(0);
 
                      if (status == 0 || status == 9) {
                        ui.showDetails->setStyleSheet(

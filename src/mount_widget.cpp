@@ -16,11 +16,15 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   }
 
   ui.info->setText(infoTrimmed);
+  ui.info->setCursorPosition(0);
+
 
   ui.remote->setText(remote);
+  ui.remote->setCursorPosition(0);
   ui.remote->setToolTip(remote);
 
   ui.folder->setText(folder);
+  ui.folder->setCursorPosition(0);
   ui.folder->setToolTip(folder);
 
   ui.details->setVisible(false);
@@ -106,6 +110,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                        infoTrimmed = info;
                      }
                      ui.info->setText(infoTrimmed);
+                     ui.info->setCursorPosition(0);
 
                      if (status == 0) {
                        ui.showDetails->setStyleSheet(

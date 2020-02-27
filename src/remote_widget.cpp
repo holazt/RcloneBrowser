@@ -115,7 +115,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonTextOnly);
 
     } else {
       // button style - icononly

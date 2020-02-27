@@ -26,7 +26,6 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   }
 
   ui.info->setText(infoTrimmed);
-  ui.info->setToolTip(info);
 
   ui.details->setVisible(false);
 
@@ -78,7 +77,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
       int button = QMessageBox::question(
           this, "Transfer",
           QString(
-              "rclone process is still running.\n\nDo you want to cancel it?"),
+              "rclone process is still running.\n\nDo you want to stop it?"),
           QMessageBox::Yes | QMessageBox::No);
       if (button == QMessageBox::Yes) {
         cancel();
@@ -257,11 +256,11 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                      if (status == 0) {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: black; }");
-                       ui.showDetails->setText("Finished");
+                       ui.showDetails->setText("  Finished");
                      } else {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: red; }");
-                       ui.showDetails->setText("Error");
+                       ui.showDetails->setText("  Error");
                      }
 
                      ui.cancel->setToolTip("Close");
@@ -270,7 +269,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                    });
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; }");
-  ui.showDetails->setText("Running");
+  ui.showDetails->setText("  Running");
 }
 
 JobWidget::~JobWidget() {}
@@ -286,6 +285,6 @@ void JobWidget::cancel() {
   mProcess->waitForFinished();
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: red; }");
-  ui.showDetails->setText("Cancelled");
+  ui.showDetails->setText("  Stopped");
   ui.cancel->setToolTip("Close");
 }

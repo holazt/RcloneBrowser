@@ -15,7 +15,6 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   }
 
   ui.info->setText(remoteTrimmed);
-  ui.info->setToolTip(remote);
 
   ui.stream->setText(stream);
   ui.stream->setToolTip(stream);
@@ -107,11 +106,11 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                      if (status == 0 || status == 9) {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: black; }");
-                       ui.showDetails->setText("Finished");
+                       ui.showDetails->setText("  Finished");
                      } else {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: red; }");
-                       ui.showDetails->setText("Error");
+                       ui.showDetails->setText("  Error");
                      }
 
                      ui.cancel->setToolTip("Close");
@@ -121,7 +120,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                    });
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; }");
-  ui.showDetails->setText("Streaming");
+  ui.showDetails->setText("  Streaming");
 }
 
 StreamWidget::~StreamWidget() {}

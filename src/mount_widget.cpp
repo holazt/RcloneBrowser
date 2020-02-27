@@ -16,7 +16,6 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   }
 
   ui.info->setText(infoTrimmed);
-  ui.info->setToolTip(info);
 
   ui.remote->setText(remote);
   ui.remote->setToolTip(remote);
@@ -111,18 +110,18 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                      if (status == 0) {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: black; }");
-                       ui.showDetails->setText("Finished");
+                       ui.showDetails->setText("  Finished");
                      } else {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: red; }");
-                       ui.showDetails->setText("Error");
+                       ui.showDetails->setText("  Error");
                      }
                      ui.cancel->setToolTip("Close");
                      emit finished();
                    });
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; }");
-  ui.showDetails->setText("Mounted");
+  ui.showDetails->setText("  Mounted");
 }
 
 MountWidget::~MountWidget() {}
@@ -163,6 +162,6 @@ void MountWidget::cancel() {
   mProcess->waitForFinished();
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: black; }");
-  ui.showDetails->setText("Finished");
+  ui.showDetails->setText("  Finished");
   ui.cancel->setToolTip("Close");
 }

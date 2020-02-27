@@ -489,7 +489,10 @@ void MainWindow::rcloneGetVersion() {
             QFileInfo ContentsPath = MacOSPath.dir().path();
             appBundlePath = ContentsPath.dir().path();
 
-            mStatusMessage->setText(
+            mStatusMessage->setText(rclone_info1 + ", " + rclone_info2 + ", " +
+                                    rclone_info3);
+
+            mStatusMessage->setToolTip(
                 rclone_info1 + " in " +
                 QDir::toNativeSeparators(GetRclone().replace(
                     appBundlePath.fileName() + "/Contents/MacOS/../../../",
@@ -498,27 +501,45 @@ void MainWindow::rcloneGetVersion() {
 
           } else {
 
-            mStatusMessage->setText(rclone_info1 + " in " +
-                                    QDir::toNativeSeparators(GetRclone()) +
-                                    ", " + rclone_info2 + ", " + rclone_info3);
+            mStatusMessage->setText(rclone_info1 + ", " + rclone_info2 + ", " +
+                                    rclone_info3);
+
+            mStatusMessage->setToolTip(
+                rclone_info1 + " in " + QDir::toNativeSeparators(GetRclone()) +
+                ", " + rclone_info2 + ", " + rclone_info3);
           }
 #else
 #ifdef Q_OS_WIN
-          mStatusMessage->setText(rclone_info1 + " in " +
+          mStatusMessage->setText(rclone_info1 + ", " +
+                                  rclone_info2 + ", " + rclone_info3);
+
+
+          mStatusMessage->setToolTip(rclone_info1 + " in " +
                                   QDir::toNativeSeparators(GetRclone()) + ", " +
                                   rclone_info2 + ", " + rclone_info3);
+
 #else
           if (IsPortableMode()) {
             QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
             QString appImageConfigFolder = xdg_config_home.right(xdg_config_home.length()-xdg_config_home.lastIndexOf("/"));
 
-            mStatusMessage->setText(rclone_info1 + " in " +
+            mStatusMessage->setText(rclone_info1 + ", " +
+                                  rclone_info2 + ", " + rclone_info3);
+
+            mStatusMessage->setToolTip(rclone_info1 + " in " +
                                   QDir::toNativeSeparators(GetRclone().replace(appImageConfigFolder + "/..",  "")) + ", " +
                                   rclone_info2 + ", " + rclone_info3);
+
+
           } else {
-            mStatusMessage->setText(rclone_info1 + " in " +
+            mStatusMessage->setText(rclone_info1 + ", " +
+                                  rclone_info2 + ", " + rclone_info3);
+
+            mStatusMessage->setToolTip(rclone_info1 + " in " +
                                   QDir::toNativeSeparators(GetRclone()) + ", " +
                                   rclone_info2 + ", " + rclone_info3);
+
+
          }
 #endif
 #endif

@@ -58,6 +58,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="progress_info">
+        <property name="styleSheet">
+         <string notr="true">color: green; font-weight: bold;</string>
+        </property>
+        <property name="text">
+         <string>(0%)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLineEdit" name="info">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

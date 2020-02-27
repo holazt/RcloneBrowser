@@ -12,9 +12,11 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   mArgs.append(args);
 
   ui.source->setText(source);
+  ui.source->setCursorPosition(0);
   ui.source->setToolTip(source);
 
   ui.dest->setText(dest);
+  ui.dest->setCursorPosition(0);
   ui.dest->setToolTip(dest);
 
   QString infoTrimmed;
@@ -26,6 +28,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   }
 
   ui.info->setText(infoTrimmed);
+  ui.info->setCursorPosition(0);
 
   ui.details->setVisible(false);
 
@@ -150,6 +153,10 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.bandwidth->setText(rxSize2.cap(6));
         ui.eta->setText(rxSize2.cap(8));
         ui.totalsize->setText(rxSize2.cap(3) + " " + rxSize2.cap(4));
+
+        ui.progress_info->setStyleSheet("QLabel { color: green; font-weight: bold;}");
+        ui.progress_info->setText("(" + rxSize2.cap(5) + ")");
+
       } else if (rxErrors.exactMatch(line)) {
         ui.errors->setText(rxErrors.cap(1));
       } else if (rxChecks.exactMatch(line)) {
@@ -257,10 +264,12 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: black; }");
                        ui.showDetails->setText("  Finished");
+                       ui.progress_info->hide();
                      } else {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: red; }");
                        ui.showDetails->setText("  Error");
+                       ui.progress_info->hide();
                      }
 
                      ui.cancel->setToolTip("Close");
@@ -268,7 +277,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                      emit finished(ui.info->text());
                    });
 
-  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; }");
+  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; font-weight: bold;}");
   ui.showDetails->setText("  Running");
 }
 
@@ -286,5 +295,6 @@ void JobWidget::cancel() {
 
   ui.showDetails->setStyleSheet("QToolButton { border: 0; color: red; }");
   ui.showDetails->setText("  Stopped");
+  ui.progress_info->hide();
   ui.cancel->setToolTip("Close");
 }

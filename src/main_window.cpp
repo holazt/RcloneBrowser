@@ -295,8 +295,10 @@ MainWindow::MainWindow() {
   ui.actionOpen->setIcon(QIcon(":remotes/images/qbutton_icons/open_remote.png"));
   ui.actionConfig->setIcon(QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
 
-
+#if defined(Q_OS_MACOS)
   auto settings = GetSettings();
+#endif
+
   bool sortTask = settings->value("Settings/sortTask").toBool();
 
   if (sortTask) {

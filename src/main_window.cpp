@@ -1330,15 +1330,6 @@ void MainWindow::listTasks() {
     ui.buttonDryrunTask->setDisabled(true);
   }
 
-  foreach (auto i, items) {
-
-    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(i);
-
-    //    qDebug() << i;
-    //    qDebug() << item;
-    JobOptions *jo = item->GetData();
-  }
-
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
 
   for (JobOptions *jo : ljo->getTasks()) {

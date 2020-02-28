@@ -35,6 +35,8 @@
     <file>images/qbutton_icons/unsorted.png</file>
     <file>images/qbutton_icons/sortAZ.png</file>
     <file>images/qbutton_icons/sortZA.png</file>
+    <file>images/qbutton_icons/rclone_config.png</file>
+    <file>images/qbutton_icons/open_remote.png</file>
 
     <file>images/amazon_cloud_drive.png</file>
     <file>images/b2.png</file>

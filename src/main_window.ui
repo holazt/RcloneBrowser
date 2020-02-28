@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -44,41 +44,34 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QListWidget" name="remotes">
-          <property name="editTriggers">
-           <set>QAbstractItemView::NoEditTriggers</set>
-          </property>
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="config">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>rclone config
-
-if you want to specify which terminal to use
-define $TERMINAL env variable e.g.:
-TERMINAL=&quot;/usr/local/bin/myterminal&quot;</string>
-            </property>
+           <widget class="QToolButton" name="refresh">
             <property name="text">
-             <string>&amp;Config...</string>
+             <string>Refresh</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="refresh">
+           <widget class="QToolButton" name="config">
             <property name="text">
-             <string>Refresh</string>
+             <string>Config</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="open">
+            <property name="text">
+             <string>Open</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -96,19 +89,45 @@ TERMINAL=&quot;/usr/local/bin/myterminal&quot;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="open">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
+           <widget class="QToolButton" name="buttonPrefs">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;open remote&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Preferences&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>&amp;Open</string>
+             <string>Prefs</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>5</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QListWidget" name="remotes">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -391,13 +410,34 @@ TERMINAL=&quot;/usr/local/bin/myterminal&quot;</string>
     <string>Sort by name</string>
    </property>
   </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="toolTip">
+    <string>Refresh remotes view</string>
+   </property>
+  </action>
+  <action name="actionConfig">
+   <property name="text">
+    <string>Config</string>
+   </property>
+   <property name="toolTip">
+    <string>rclone config</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open remote</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>tabs</tabstop>
   <tabstop>remotes</tabstop>
-  <tabstop>config</tabstop>
-  <tabstop>refresh</tabstop>
-  <tabstop>open</tabstop>
   <tabstop>jobsArea</tabstop>
  </tabstops>
  <resources/>

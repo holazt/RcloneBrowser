@@ -291,11 +291,13 @@ MainWindow::MainWindow() {
   ui.actionRun->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
   ui.actionEdit->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
   ui.actionDelete->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
+  ui.actionRefresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
+  ui.actionOpen->setIcon(QIcon(":remotes/images/qbutton_icons/open_remote.png"));
+  ui.actionConfig->setIcon(QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
+
 
   auto settings = GetSettings();
   bool sortTask = settings->value("Settings/sortTask").toBool();
-
-  qDebug() << "original: " << sortTask;
 
   if (sortTask) {
 
@@ -304,13 +306,7 @@ MainWindow::MainWindow() {
     ui.buttonSortTask->setToolTip("Sort Descending");
       ui.tasksListWidget->setSortingEnabled(true);
       ui.tasksListWidget->sortItems(Qt::AscendingOrder);
-
-
-
-
-
   } else {
-
     ui.actionSortTask->setIcon(QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
     ui.buttonSortTask->setToolTip("Sort Ascending");
       ui.tasksListWidget->setSortingEnabled(true);
@@ -322,9 +318,17 @@ MainWindow::MainWindow() {
   ui.buttonEditTask->setDefaultAction(ui.actionEdit);
   ui.buttonDeleteTask->setDefaultAction(ui.actionDelete);
   ui.buttonSortTask->setDefaultAction(ui.actionSortTask);
+  ui.refresh->setDefaultAction(ui.actionRefresh);
+  ui.open->setDefaultAction(ui.actionOpen);
+  ui.config->setDefaultAction(ui.actionConfig);
+  ui.buttonPrefs->setDefaultAction(ui.preferences);
 
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
   QString buttonSize = settings->value("Settings/buttonSize").toString();
+
+
+  ui.buttonPrefs->setIcon(QIcon(":remotes/images/qbutton_icons/preferences.png"));
+
 
   // buttons and icons size
   int icon_w = 16;
@@ -352,6 +356,10 @@ MainWindow::MainWindow() {
     ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
     ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
     ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
+ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
+ui.refresh->setIconSize(QSize(icon_w, icon_h));
+ui.open->setIconSize(QSize(icon_w, icon_h));
+ui.config->setIconSize(QSize(icon_w, icon_h));
 
   } else {
     if (buttonStyle == "textonly") {
@@ -360,6 +368,12 @@ MainWindow::MainWindow() {
       ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonTextOnly);
+ui.refresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
+ui.open->setToolButtonStyle(Qt::ToolButtonTextOnly);
+ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
+
+
     } else {
       // button style - icononly
       ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -372,6 +386,14 @@ MainWindow::MainWindow() {
       ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
       ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
+ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonIconOnly);
+ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
+ui.refresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
+ui.refresh->setIconSize(QSize(icon_w, icon_h));
+ui.open->setToolButtonStyle(Qt::ToolButtonIconOnly);
+ui.open->setIconSize(QSize(icon_w, icon_h));
+ui.config->setToolButtonStyle(Qt::ToolButtonIconOnly);
+ui.config->setIconSize(QSize(icon_w, icon_h));
     }
   }
 

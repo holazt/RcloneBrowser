@@ -255,6 +255,7 @@ MainWindow::MainWindow() {
                    &MainWindow::rcloneListRemotes);
 
   QObject::connect(ui.open, &QPushButton::clicked, this, [=]() {
+  if ( ui.remotes->selectedItems().size() != 0 ) {
     auto item = ui.remotes->selectedItems().front();
     QString type = item->data(Qt::UserRole).toString();
     QString name = item->text();
@@ -271,6 +272,7 @@ MainWindow::MainWindow() {
 
     int index = ui.tabs->addTab(remote, name);
     ui.tabs->setCurrentIndex(index);
+  }
   });
 
   QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs,
@@ -325,9 +327,12 @@ MainWindow::MainWindow() {
   ui.config->setDefaultAction(ui.actionConfig);
   ui.buttonPrefs->setDefaultAction(ui.preferences);
 
+  // open remote should be not active when there is
+  // no foucs on any e.g. after start
+  ui.open->setEnabled(false);
+
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
   QString buttonSize = settings->value("Settings/buttonSize").toString();
-
 
   ui.buttonPrefs->setIcon(QIcon(":remotes/images/qbutton_icons/preferences.png"));
 

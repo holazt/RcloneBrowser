@@ -109,6 +109,12 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/buttonSize", "1");
   };
 
+  // during first run the sortTask key might not exist
+  if (!(settings->contains("Settings/sortTask"))) {
+    // if sortTask does not exist create new key
+    settings->setValue("Settings/sortTask", "false");
+  };
+
   // set application font size
   int fontsize = 0;
 

@@ -244,11 +244,13 @@ MainWindow::MainWindow() {
   QObject::connect(
       ui.remotes, &QListWidget::currentItemChanged, this,
       [=](QListWidgetItem *current) { ui.open->setEnabled(current != NULL); });
+
   QObject::connect(ui.remotes, &QListWidget::itemActivated, ui.open,
                    &QPushButton::clicked);
 
   QObject::connect(ui.config, &QPushButton::clicked, this,
                    &MainWindow::rcloneConfig);
+
   QObject::connect(ui.refresh, &QPushButton::clicked, this,
                    &MainWindow::rcloneListRemotes);
 
@@ -282,49 +284,246 @@ MainWindow::MainWindow() {
                      ui.buttonDryrunTask->setEnabled(current != nullptr);
                    });
 
-  QObject::connect(ui.buttonRunTask, &QPushButton::clicked, this, [=]() {
-    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
-        ui.tasksListWidget->currentItem());
-    runItem(item);
-  });
-  QObject::connect(ui.buttonDryrunTask, &QPushButton::clicked, this, [=]() {
-    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
-        ui.tasksListWidget->currentItem());
-    runItem(item, true);
-  });
-
-  //    QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked,
-  //    this, [=]()
-  //    {
-  //        editSelectedTask();
-  //    });
-
-  QObject::connect(ui.buttonEditTask, &QPushButton::clicked, this,
+  QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this,
                    [=]() { editSelectedTask(); });
 
-  QObject::connect(ui.buttonDeleteTask, &QPushButton::clicked, this, [=]() {
-    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
-        ui.tasksListWidget->currentItem());
-    JobOptions *jo = item->GetData();
+  ui.actionDryRun->setIcon(QIcon(":remotes/images/qbutton_icons/dryrun.png"));
+  ui.actionRun->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
+  ui.actionEdit->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
+  ui.actionDelete->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
 
-    int button = QMessageBox::question(
-        this, "Delete",
-        QString("Are you sure you want to delete this task?\n\n" +
-                jo->description),
-        QMessageBox::Yes | QMessageBox::No);
-    if (button == QMessageBox::Yes) {
-      ListOfJobOptions::getInstance()->Forget(jo);
+  auto settings = GetSettings();
+  bool sortTask = settings->value("Settings/sortTask").toBool();
+
+  qDebug() << "original: " << sortTask;
+
+  if (sortTask) {
+
+    ui.actionSortTask->setIcon(
+        QIcon(":remotes/images/qbutton_icons/sortZA.png"));
+    ui.buttonSortTask->setToolTip("Sort Descending");
+      ui.tasksListWidget->setSortingEnabled(true);
+      ui.tasksListWidget->sortItems(Qt::AscendingOrder);
+
+
+
+
+
+  } else {
+
+    ui.actionSortTask->setIcon(QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
+    ui.buttonSortTask->setToolTip("Sort Ascending");
+      ui.tasksListWidget->setSortingEnabled(true);
+      ui.tasksListWidget->sortItems(Qt::DescendingOrder);
+  }
+
+  ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
+  ui.buttonRunTask->setDefaultAction(ui.actionRun);
+  ui.buttonEditTask->setDefaultAction(ui.actionEdit);
+  ui.buttonDeleteTask->setDefaultAction(ui.actionDelete);
+  ui.buttonSortTask->setDefaultAction(ui.actionSortTask);
+
+  QString buttonStyle = settings->value("Settings/buttonStyle").toString();
+  QString buttonSize = settings->value("Settings/buttonSize").toString();
+
+  // buttons and icons size
+  int icon_w = 16;
+  int icon_h = 16;
+  if (buttonSize == "0") {
+    icon_w = 24;
+  }
+  if (buttonSize == "1") {
+    icon_w = 32;
+  }
+  if (buttonSize == "2") {
+    icon_w = 48;
+  }
+  if (buttonSize == "3") {
+    icon_w = 72;
+  }
+  if (buttonSize == "4") {
+    icon_w = 96;
+  }
+  icon_h = icon_w;
+
+  if (buttonStyle == "textandicon") {
+    ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
+
+  } else {
+    if (buttonStyle == "textonly") {
+      ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonRunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    } else {
+      // button style - icononly
+      ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonRunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
+    }
+  }
+
+  QObject::connect(ui.tasksListWidget, &QWidget::customContextMenuRequested,
+                   this, [=](const QPoint &pos) {
+                     QMenu menu;
+                     menu.addAction(ui.actionEdit);
+                     menu.addSeparator();
+                     menu.addAction(ui.actionDryRun);
+                     menu.addSeparator();
+                     menu.addAction(ui.actionRun);
+                     menu.addSeparator();
+                     menu.addAction(ui.actionDelete);
+                     menu.exec(
+                         ui.tasksListWidget->viewport()->mapToGlobal(pos));
+                   });
+
+  QObject::connect(ui.actionSortTask, &QAction::triggered, this, [=]() {
+    auto settings = GetSettings();
+    bool sortTask = settings->value("Settings/sortTask").toBool();
+
+    qDebug() << "Before : " << sortTask;
+
+    if (sortTask) {
+      ui.actionSortTask->setIcon(
+          QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
+    ui.buttonSortTask->setToolTip("Sort Ascending");
+      ui.tasksListWidget->setSortingEnabled(true);
+      ui.tasksListWidget->sortItems(Qt::DescendingOrder);
+      settings->setValue("Settings/sortTask", "false");
+    } else {
+      ui.actionSortTask->setIcon(
+          QIcon(":remotes/images/qbutton_icons/sortZA.png"));
+      settings->setValue("Settings/sortTask", "true");
+      ui.tasksListWidget->setSortingEnabled(true);
+      ui.tasksListWidget->sortItems(Qt::AscendingOrder);
+    ui.buttonSortTask->setToolTip("Sort Descending");
+    }
+
+    qDebug() << "New : " << settings->value("Settings/sortTask").toBool();
+
+  });
+
+  QObject::connect(ui.actionEdit, &QAction::triggered, this, [=]() {
+    auto items = ui.tasksListWidget->selectedItems();
+
+    if (items.count() != 1) {
+      QMessageBox::information(this, tr("Edit task"),
+                               tr("Please select one task to edit"));
+    }
+
+    else {
+      editSelectedTask();
+    }
+  });
+
+  QObject::connect(ui.actionDryRun, &QAction::triggered, this, [=]() {
+    auto items = ui.tasksListWidget->selectedItems();
+
+    QString itemsToRun;
+
+    foreach (auto i, items) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(i);
+      JobOptions *jo = item->GetData();
+      itemsToRun = itemsToRun + jo->description + "\n";
+    }
+
+    if (items.count() > 0) {
+      int button = QMessageBox::warning(
+          this, "Run",
+          QString("Are you sure you want to dry run following task(s)?\n\n" +
+                  itemsToRun),
+          QMessageBox::Yes | QMessageBox::No);
+      if (button == QMessageBox::Yes) {
+        qDebug() << "List to dry run:\n";
+        foreach (auto i, items) {
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(i);
+          runItem(item, true);
+        }
+      }
+    }
+    ui.tasksListWidget->setFocus();
+  });
+
+  QObject::connect(ui.actionRun, &QAction::triggered, this, [=]() {
+    auto items = ui.tasksListWidget->selectedItems();
+
+    QString itemsToRun;
+
+    foreach (auto i, items) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(i);
+      JobOptions *jo = item->GetData();
+      itemsToRun = itemsToRun + jo->description + "\n";
+    }
+
+    if (items.count() > 0) {
+      int button = QMessageBox::warning(
+          this, "Run",
+          QString("Are you sure you want to dry run following task(s)?\n\n" +
+                  itemsToRun),
+          QMessageBox::No | QMessageBox::Yes);
+      if (button == QMessageBox::Yes) {
+        qDebug() << "List to run:\n";
+        foreach (auto i, items) {
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(i);
+          runItem(item);
+        }
+      }
+    }
+    ui.tasksListWidget->setFocus();
+  });
+
+  QObject::connect(ui.actionDelete, &QAction::triggered, this, [=]() {
+    auto items = ui.tasksListWidget->selectedItems();
+
+    QString itemsToDelete;
+
+    foreach (auto i, items) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(i);
+      JobOptions *jo = item->GetData();
+      itemsToDelete = itemsToDelete + jo->description + "\n";
+    }
+
+    if (items.count() > 0) {
+      int button = QMessageBox::warning(
+          this, "Delete",
+          QString("Are you sure you want to delete following task(s)?\n\n" +
+                  itemsToDelete),
+          QMessageBox::No | QMessageBox::Yes);
+
+      if (button == QMessageBox::Yes) {
+        foreach (auto i, items) {
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(i);
+          JobOptions *jo = item->GetData();
+          qDebug() << jo->description;
+          ListOfJobOptions::getInstance()->Forget(jo);
+        }
+      } else {
+        ui.tasksListWidget->setFocus();
+      }
     }
   });
 
   QObject::connect(ListOfJobOptions::getInstance(),
                    &ListOfJobOptions::tasksListUpdated, this,
                    &MainWindow::listTasks);
-
-  ui.buttonDeleteTask->setIcon(
-      QIcon(":remotes/images/qbutton_icons/purge.png"));
-  ui.buttonEditTask->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
-  ui.buttonRunTask->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
 
   QPixmap pixmap(":remotes/images/qbutton_icons/arrowup.png");
   QIcon arrowup(pixmap);
@@ -1092,7 +1291,31 @@ void MainWindow::listTasks() {
 
   // enable drag and drop reordering (there is no persistence of order
   // implemented yet)
-  ui.tasksListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+  // ui.tasksListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+
+  auto items = ui.tasksListWidget->selectedItems();
+  if (items.count() != 0) {
+    ui.buttonDeleteTask->setDisabled(false);
+    ui.buttonEditTask->setDisabled(false);
+    ui.buttonRunTask->setDisabled(false);
+    ui.buttonDryrunTask->setDisabled(false);
+
+  } else {
+    ui.buttonDeleteTask->setDisabled(true);
+    ui.buttonEditTask->setDisabled(true);
+    ui.buttonRunTask->setDisabled(true);
+    ui.buttonDryrunTask->setDisabled(true);
+  }
+
+  foreach (auto i, items) {
+
+    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(i);
+
+    //    qDebug() << i;
+    //    qDebug() << item;
+    JobOptions *jo = item->GetData();
+    qDebug() << jo->description;
+  }
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
 
@@ -1104,6 +1327,26 @@ void MainWindow::listTasks() {
         jo->description);
     ui.tasksListWidget->addItem(item);
   }
+
+  /*
+  if (ui.tasksListWidget->count() > 0) {
+    ui.tasksListWidget->item(0)->setSelected(true);
+  }
+  ui.tasksListWidget->setFocus();
+  */
+
+  //  ui.tasksListWidget->setFocus();
+
+  // if (ui.tasksListWidget->currentItem()) {
+
+  // ui.tasksListWidget->setCurrentItem(ui.tasksListWidget->currentItem());
+
+  // ui.tasksListWidget->setCurrentItem(ui.tasksListWidget->item(0));
+  // ui.tasksListWidget->currentItem()->setSelected(true);
+  // ui.tasksListWidget->setFocus();
+  //}
+
+  // ui.buttonEditTask->setDefaultAction(ui.edit);
 }
 
 void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
@@ -1139,21 +1382,32 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
 }
 
 void MainWindow::editSelectedTask() {
-  auto selection = ui.tasksListWidget->selectionModel()->currentIndex();
-  JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(
-      ui.tasksListWidget->currentItem());
-  JobOptions *jo = item->GetData();
-  bool isDownload = (jo->jobType == JobOptions::Download);
-  QString remote = isDownload ? jo->source : jo->dest;
-  QString path = isDownload ? jo->dest : jo->source;
-  // qDebug() << "remote:" + remote;
-  // qDebug() << "path:" + path;
-  TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo,
-                    true);
-  td.exec();
+
+  auto items = ui.tasksListWidget->selectedItems();
+
+  // remember which item we edit
+  int selection = (ui.tasksListWidget->selectionModel()->currentIndex()).row();
+
+  foreach (auto i, items) {
+
+    JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(i);
+
+    JobOptions *jo = item->GetData();
+    qDebug() << jo->description;
+    bool isDownload = (jo->jobType == JobOptions::Download);
+    QString remote = isDownload ? jo->source : jo->dest;
+    QString path = isDownload ? jo->dest : jo->source;
+    // qDebug() << "remote:" + remote;
+    // qDebug() << "path:" + path;
+    TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo,
+                      true);
+    td.exec();
+  }
+
   // restore the selection to help user keep track of what s/he was doing
-  ui.tasksListWidget->selectionModel()->select(selection,
-                                               QItemSelectionModel::Select);
+  ui.tasksListWidget->setCurrentItem(ui.tasksListWidget->item(selection));
+  ui.tasksListWidget->setFocus();
+
   // edit mode on the TransferDialog suppresses the usual Accept buttons
   // and the Save Task button closes it... so there is nothing more to do here
 }

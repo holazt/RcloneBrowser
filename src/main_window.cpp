@@ -255,24 +255,24 @@ MainWindow::MainWindow() {
                    &MainWindow::rcloneListRemotes);
 
   QObject::connect(ui.open, &QPushButton::clicked, this, [=]() {
-  if ( ui.remotes->selectedItems().size() != 0 ) {
-    auto item = ui.remotes->selectedItems().front();
-    QString type = item->data(Qt::UserRole).toString();
-    QString name = item->text();
-    bool isLocal = type == "local";
-    bool isGoogle = type == "drive";
+    if (ui.remotes->selectedItems().size() != 0) {
+      auto item = ui.remotes->selectedItems().front();
+      QString type = item->data(Qt::UserRole).toString();
+      QString name = item->text();
+      bool isLocal = type == "local";
+      bool isGoogle = type == "drive";
 
-    auto remote = new RemoteWidget(&mIcons, name, isLocal, isGoogle, ui.tabs);
-    QObject::connect(remote, &RemoteWidget::addMount, this,
-                     &MainWindow::addMount);
-    QObject::connect(remote, &RemoteWidget::addStream, this,
-                     &MainWindow::addStream);
-    QObject::connect(remote, &RemoteWidget::addTransfer, this,
-                     &MainWindow::addTransfer);
+      auto remote = new RemoteWidget(&mIcons, name, isLocal, isGoogle, ui.tabs);
+      QObject::connect(remote, &RemoteWidget::addMount, this,
+                       &MainWindow::addMount);
+      QObject::connect(remote, &RemoteWidget::addStream, this,
+                       &MainWindow::addStream);
+      QObject::connect(remote, &RemoteWidget::addTransfer, this,
+                       &MainWindow::addTransfer);
 
-    int index = ui.tabs->addTab(remote, name);
-    ui.tabs->setCurrentIndex(index);
-  }
+      int index = ui.tabs->addTab(remote, name);
+      ui.tabs->setCurrentIndex(index);
+    }
   });
 
   QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs,
@@ -294,8 +294,10 @@ MainWindow::MainWindow() {
   ui.actionEdit->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
   ui.actionDelete->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
   ui.actionRefresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
-  ui.actionOpen->setIcon(QIcon(":remotes/images/qbutton_icons/open_remote.png"));
-  ui.actionConfig->setIcon(QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
+  ui.actionOpen->setIcon(
+      QIcon(":remotes/images/qbutton_icons/open_remote.png"));
+  ui.actionConfig->setIcon(
+      QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
 
 #if defined(Q_OS_MACOS)
   auto settings = GetSettings();
@@ -308,13 +310,14 @@ MainWindow::MainWindow() {
     ui.actionSortTask->setIcon(
         QIcon(":remotes/images/qbutton_icons/sortZA.png"));
     ui.buttonSortTask->setToolTip("Sort Descending");
-      ui.tasksListWidget->setSortingEnabled(true);
-      ui.tasksListWidget->sortItems(Qt::AscendingOrder);
+    ui.tasksListWidget->setSortingEnabled(true);
+    ui.tasksListWidget->sortItems(Qt::AscendingOrder);
   } else {
-    ui.actionSortTask->setIcon(QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
+    ui.actionSortTask->setIcon(
+        QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
     ui.buttonSortTask->setToolTip("Sort Ascending");
-      ui.tasksListWidget->setSortingEnabled(true);
-      ui.tasksListWidget->sortItems(Qt::DescendingOrder);
+    ui.tasksListWidget->setSortingEnabled(true);
+    ui.tasksListWidget->sortItems(Qt::DescendingOrder);
   }
 
   ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
@@ -334,8 +337,8 @@ MainWindow::MainWindow() {
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
   QString buttonSize = settings->value("Settings/buttonSize").toString();
 
-  ui.buttonPrefs->setIcon(QIcon(":remotes/images/qbutton_icons/preferences.png"));
-
+  ui.buttonPrefs->setIcon(
+      QIcon(":remotes/images/qbutton_icons/preferences.png"));
 
   // buttons and icons size
   int icon_w = 16;
@@ -363,10 +366,10 @@ MainWindow::MainWindow() {
     ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
     ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
     ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
-ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
-ui.refresh->setIconSize(QSize(icon_w, icon_h));
-ui.open->setIconSize(QSize(icon_w, icon_h));
-ui.config->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
+    ui.refresh->setIconSize(QSize(icon_w, icon_h));
+    ui.open->setIconSize(QSize(icon_w, icon_h));
+    ui.config->setIconSize(QSize(icon_w, icon_h));
 
   } else {
     if (buttonStyle == "textonly") {
@@ -375,11 +378,10 @@ ui.config->setIconSize(QSize(icon_w, icon_h));
       ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
-ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonTextOnly);
-ui.refresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
-ui.open->setToolButtonStyle(Qt::ToolButtonTextOnly);
-ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
-
+      ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.refresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.open->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
 
     } else {
       // button style - icononly
@@ -393,14 +395,14 @@ ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
       ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
-ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonIconOnly);
-ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
-ui.refresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
-ui.refresh->setIconSize(QSize(icon_w, icon_h));
-ui.open->setToolButtonStyle(Qt::ToolButtonIconOnly);
-ui.open->setIconSize(QSize(icon_w, icon_h));
-ui.config->setToolButtonStyle(Qt::ToolButtonIconOnly);
-ui.config->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
+      ui.refresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.refresh->setIconSize(QSize(icon_w, icon_h));
+      ui.open->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.open->setIconSize(QSize(icon_w, icon_h));
+      ui.config->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.config->setIconSize(QSize(icon_w, icon_h));
     }
   }
 
@@ -422,12 +424,10 @@ ui.config->setIconSize(QSize(icon_w, icon_h));
     auto settings = GetSettings();
     bool sortTask = settings->value("Settings/sortTask").toBool();
 
-    qDebug() << "Before : " << sortTask;
-
     if (sortTask) {
       ui.actionSortTask->setIcon(
           QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
-    ui.buttonSortTask->setToolTip("Sort Ascending");
+      ui.buttonSortTask->setToolTip("Sort Ascending");
       ui.tasksListWidget->setSortingEnabled(true);
       ui.tasksListWidget->sortItems(Qt::DescendingOrder);
       settings->setValue("Settings/sortTask", "false");
@@ -437,11 +437,8 @@ ui.config->setIconSize(QSize(icon_w, icon_h));
       settings->setValue("Settings/sortTask", "true");
       ui.tasksListWidget->setSortingEnabled(true);
       ui.tasksListWidget->sortItems(Qt::AscendingOrder);
-    ui.buttonSortTask->setToolTip("Sort Descending");
+      ui.buttonSortTask->setToolTip("Sort Descending");
     }
-
-    qDebug() << "New : " << settings->value("Settings/sortTask").toBool();
-
   });
 
   QObject::connect(ui.actionEdit, &QAction::triggered, this, [=]() {
@@ -476,7 +473,6 @@ ui.config->setIconSize(QSize(icon_w, icon_h));
                   itemsToRun),
           QMessageBox::Yes | QMessageBox::No);
       if (button == QMessageBox::Yes) {
-        qDebug() << "List to dry run:\n";
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
@@ -506,7 +502,6 @@ ui.config->setIconSize(QSize(icon_w, icon_h));
                   itemsToRun),
           QMessageBox::No | QMessageBox::Yes);
       if (button == QMessageBox::Yes) {
-        qDebug() << "List to run:\n";
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
@@ -541,7 +536,6 @@ ui.config->setIconSize(QSize(icon_w, icon_h));
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
           JobOptions *jo = item->GetData();
-          qDebug() << jo->description;
           ListOfJobOptions::getInstance()->Forget(jo);
         }
       } else {
@@ -1343,7 +1337,6 @@ void MainWindow::listTasks() {
     //    qDebug() << i;
     //    qDebug() << item;
     JobOptions *jo = item->GetData();
-    qDebug() << jo->description;
   }
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
@@ -1422,7 +1415,6 @@ void MainWindow::editSelectedTask() {
     JobOptionsListWidgetItem *item = static_cast<JobOptionsListWidgetItem *>(i);
 
     JobOptions *jo = item->GetData();
-    qDebug() << jo->description;
     bool isDownload = (jo->jobType == JobOptions::Download);
     QString remote = isDownload ? jo->source : jo->dest;
     QString path = isDownload ? jo->dest : jo->source;

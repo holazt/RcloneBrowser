@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
   // during first run the iconsLayout key might not exist
   if (!(settings->contains("Settings/iconsLayout"))) {
     // if iconsLayout does not exist create new key
-    settings->setValue("Settings/iconsLayout", "list");
+    settings->setValue("Settings/iconsLayout", "tiles");
   };
 
   // during first run the remotesColour key might not exist

@@ -606,8 +606,14 @@ MainWindow::MainWindow() {
         osxShowDockIcon();
 #endif
       });
+
   QObject::connect(trayMenu->addAction("&Quit"), &QAction::triggered, this,
-                   &QWidget::close);
+                   [=]() {
+                     if (canClose()) {
+                       QApplication::quit();
+                     }
+                   });
+
   mSystemTray.setContextMenu(trayMenu);
 
   mStatusMessage = new QLabel();
@@ -1440,7 +1446,8 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         if (mNotifyFinishedTransfers) {
           qApp->alert(this);
           mLastFinished = widget;
-          mSystemTray.showMessage("Transfer finished", info, QSystemTrayIcon::Information);
+          mSystemTray.showMessage("Transfer finished", info,
+                                  QSystemTrayIcon::Information);
         }
 
         if (--mJobCount == 0) {

@@ -91,7 +91,7 @@
           <item>
            <widget class="QToolButton" name="buttonPrefs">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Preferences&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rclone Browser preferences&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Prefs</string>
@@ -242,6 +242,9 @@
           </item>
           <item>
            <widget class="QToolButton" name="buttonSortTask">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sort tasks&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Sort</string>
             </property>
@@ -363,6 +366,9 @@
    <property name="text">
     <string>&amp;Preferences...</string>
    </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rclone Browser preferences&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::PreferencesRole</enum>
    </property>
@@ -425,7 +431,7 @@
     <string>Config</string>
    </property>
    <property name="toolTip">
-    <string>rclone config</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone config&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;if you want to specify which terminal to use&lt;/p&gt;&lt;p&gt;define $TERMINAL env variable e.g.:&lt;/p&gt;&lt;p&gt;TERMINAL=/usr/local/bin/myterminal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionOpen">

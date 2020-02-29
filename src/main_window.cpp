@@ -306,7 +306,6 @@ MainWindow::MainWindow() {
   bool sortTask = settings->value("Settings/sortTask").toBool();
 
   if (sortTask) {
-
     ui.actionSortTask->setIcon(
         QIcon(":remotes/images/qbutton_icons/sortZA.png"));
     ui.buttonSortTask->setToolTip("Sort Descending");
@@ -1334,6 +1333,22 @@ void MainWindow::listTasks() {
     ui.buttonEditTask->setDisabled(true);
     ui.buttonRunTask->setDisabled(true);
     ui.buttonDryrunTask->setDisabled(true);
+  }
+
+  auto settings = GetSettings();
+  bool sortTask = settings->value("Settings/sortTask").toBool();
+  if (sortTask) {
+    ui.actionSortTask->setIcon(
+        QIcon(":remotes/images/qbutton_icons/sortZA.png"));
+    ui.buttonSortTask->setToolTip("Sort Descending");
+    ui.tasksListWidget->setSortingEnabled(true);
+    ui.tasksListWidget->sortItems(Qt::AscendingOrder);
+  } else {
+    ui.actionSortTask->setIcon(
+        QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
+    ui.buttonSortTask->setToolTip("Sort Ascending");
+    ui.tasksListWidget->setSortingEnabled(true);
+    ui.tasksListWidget->sortItems(Qt::DescendingOrder);
   }
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();

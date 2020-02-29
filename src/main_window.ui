@@ -415,7 +415,7 @@
     <string>Sort</string>
    </property>
    <property name="toolTip">
-    <string>Sort by name</string>
+    <string>Sort tasks</string>
    </property>
   </action>
   <action name="actionRefresh">

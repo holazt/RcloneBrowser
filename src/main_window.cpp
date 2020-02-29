@@ -1440,7 +1440,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         if (mNotifyFinishedTransfers) {
           qApp->alert(this);
           mLastFinished = widget;
-          mSystemTray.showMessage("Transfer finished", info);
+          mSystemTray.showMessage("Transfer finished", info, QSystemTrayIcon::Information);
         }
 
         if (--mJobCount == 0) {

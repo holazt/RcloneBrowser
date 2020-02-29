@@ -570,7 +570,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                       << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress =
-        new ProgressDialog("Show directories tree", "Processing... ", "rclone tree" +
+        new ProgressDialog("Show directories tree", "Processing... ", "rclone tree " +
                            remote + ":" + pathMsg, process, this, false);
     progress->expand();
     progress->allowToClose();

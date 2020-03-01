@@ -259,10 +259,9 @@ MainWindow::MainWindow() {
       auto item = ui.remotes->selectedItems().front();
       QString type = item->data(Qt::UserRole).toString();
       QString name = item->text();
-      bool isLocal = type == "local";
-      bool isGoogle = type == "drive";
+      QString remoteType = type;
 
-      auto remote = new RemoteWidget(&mIcons, name, isLocal, isGoogle, ui.tabs);
+      auto remote = new RemoteWidget(&mIcons, name, remoteType, ui.tabs);
       QObject::connect(remote, &RemoteWidget::addMount, this,
                        &MainWindow::addMount);
       QObject::connect(remote, &RemoteWidget::addStream, this,

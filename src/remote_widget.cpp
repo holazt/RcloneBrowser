@@ -8,9 +8,12 @@
 #include "utils.h"
 
 RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
-                           bool isLocal, bool isGoogle, QWidget *parent)
+                           const QString &remoteType, QWidget *parent)
     : QWidget(parent) {
   ui.setupUi(this);
+
+  bool isLocal = remoteType == "local";
+  bool isGoogle = remoteType == "drive";
 
   QString root = isLocal ? "/" : QString();
 

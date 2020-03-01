@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>768</width>
-    <height>413</height>
+    <width>760</width>
+    <height>439</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,9 +29,16 @@
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QWidget" name="pathGroup" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="label_13">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="2" column="6">
+       <widget class="QToolButton" name="fileBrowse">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_file">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -46,20 +53,42 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLineEdit" name="textFile">
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_source">
+        <property name="text">
+         <string>Source:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="src">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">* { background-color: rgba(0, 0, 0, 0); }</string>
+        </property>
+        <property name="frame">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
-      <item>
-       <widget class="QToolButton" name="fileBrowse">
-        <property name="text">
-         <string>...</string>
+      <item row="2" column="2">
+       <widget class="QLineEdit" name="textFile">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
        </widget>
       </item>
@@ -267,7 +296,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>textFile</tabstop>
   <tabstop>fileBrowse</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>rbText</tabstop>

@@ -11,6 +11,9 @@ ExportDialog::ExportDialog(const QString &remote, const QDir &path,
 
   mTarget = remote + ":" + path.path();
 
+  ui.src->setText(mTarget);
+  ui.src->setCursorPosition(0);
+
   QObject::connect(ui.buttonBox->button(QDialogButtonBox::RestoreDefaults),
                    &QPushButton::clicked, this, [=]() {
                      ui.rbText->setChecked(true);

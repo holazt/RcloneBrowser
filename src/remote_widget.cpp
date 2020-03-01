@@ -1,4 +1,5 @@
 #include "remote_widget.h"
+#include "check_dialog.h"
 #include "export_dialog.h"
 #include "icon_cache.h"
 #include "item_model.h"
@@ -57,10 +58,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.stream->setIcon(QIcon(":remotes/images/qbutton_icons/stream.png"));
   ui.upload->setIcon(QIcon(":remotes/images/qbutton_icons/upload.png"));
   ui.download->setIcon(QIcon(":remotes/images/qbutton_icons/download.png"));
+  ui.actionCheck->setIcon(QIcon(":remotes/images/qbutton_icons/check.png"));
   ui.getSize->setIcon(QIcon(":remotes/images/qbutton_icons/getsize.png"));
   ui.getTree->setIcon(QIcon(":remotes/images/qbutton_icons/gettree.png"));
-  ui.export_->setIcon(QIcon(":remotes/images/qbutton_icons/export.png"));
   ui.link->setIcon(QIcon(":remotes/images/qbutton_icons/link.png"));
+  ui.export_->setIcon(QIcon(":remotes/images/qbutton_icons/export.png"));
   ui.getInfo->setIcon(QIcon(":remotes/images/qbutton_icons/info.png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
@@ -72,9 +74,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonStream->setDefaultAction(ui.stream);
   ui.buttonUpload->setDefaultAction(ui.upload);
   ui.buttonDownload->setDefaultAction(ui.download);
+  ui.buttonCheck->setDefaultAction(ui.actionCheck);
+  ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonTree->setDefaultAction(ui.getTree);
   ui.buttonLink->setDefaultAction(ui.link);
-  ui.buttonSize->setDefaultAction(ui.getSize);
   ui.buttonExport->setDefaultAction(ui.export_);
   ui.buttonInfo->setDefaultAction(ui.getInfo);
 
@@ -108,10 +111,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.buttonStream->setIconSize(QSize(icon_w, icon_h));
     ui.buttonUpload->setIconSize(QSize(icon_w, icon_h));
     ui.buttonDownload->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
     ui.buttonTree->setIconSize(QSize(icon_w, icon_h));
     ui.buttonLink->setIconSize(QSize(icon_w, icon_h));
-    ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
     ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonCheck->setIconSize(QSize(icon_w, icon_h));
     ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
 
   } else {
@@ -126,10 +130,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonStream->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonUpload->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonTree->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonSize->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonCheck->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonTextOnly);
 
     } else {
@@ -152,14 +157,16 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonUpload->setIconSize(QSize(icon_w, icon_h));
       ui.buttonDownload->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonDownload->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSize->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
       ui.buttonTree->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonTree->setIconSize(QSize(icon_w, icon_h));
       ui.buttonLink->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonLink->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonSize->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonSize->setIconSize(QSize(icon_w, icon_h));
       ui.buttonExport->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonCheck->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonCheck->setIconSize(QSize(icon_w, icon_h));
       ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
     }
@@ -242,6 +249,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         ui.getSize->setDisabled(!isFolder);
         ui.getTree->setDisabled(!isFolder);
         ui.export_->setDisabled(!isFolder);
+        ui.actionCheck->setDisabled(!isFolder);
         ui.path->setText(isLocal ? QDir::toNativeSeparators(path.path())
                                  : path.path());
       });
@@ -682,6 +690,50 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
+  QObject::connect(ui.actionCheck, &QAction::triggered, this, [=]() {
+    auto settings = GetSettings();
+    bool driveShared = ui.checkBoxShared->checkState();
+    (driveShared ? settings->setValue("Settings/driveShared", Qt::Checked)
+                 : settings->setValue("Settings/driveShared", Qt::Unchecked));
+
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+    QString path_info = model->path(index).path();
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path_info) : path_info;
+
+    QDir path = model->path(index);
+    CheckDialog e(remote, path, remoteType, this);
+
+    if (e.exec() == QDialog::Accepted) {
+      QString source = e.getSource();
+
+      QProcess *process = new QProcess;
+      UseRclonePassword(process);
+      process->setProgram(GetRclone());
+
+      process->setArguments(QStringList() << GetRcloneConf() << e.getOptions()
+                                          << GetDriveSharedWithMe()
+                                          << GetDefaultRcloneOptionsList());
+      process->setProcessChannelMode(QProcess::MergedChannels);
+
+      QString checkcommand = "Integity check";
+      if (!e.isCheck()) {
+        checkcommand = "Integrity cryptcheck";
+      }
+
+      ProgressDialog *progress =
+          new ProgressDialog(checkcommand, "Running... ",
+                             "rclone " + e.getOptions().join(" ") + " " +
+                                 GetDriveSharedWithMe().join(" ") + " " +
+                                 GetDefaultRcloneOptionsList().join(" "),
+                             process, this, false);
+
+      progress->expand();
+      progress->allowToClose();
+      progress->show();
+    }
+  });
+
   QObject::connect(ui.getInfo, &QAction::triggered, this, [=]() {
     auto settings = GetSettings();
     bool driveShared = ui.checkBoxShared->checkState();
@@ -759,6 +811,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         menu.addAction(ui.getTree);
         menu.addAction(ui.link);
         menu.addAction(ui.export_);
+        menu.addAction(ui.actionCheck);
         menu.addSeparator();
         menu.addAction(ui.getInfo);
         menu.exec(ui.tree->viewport()->mapToGlobal(pos));

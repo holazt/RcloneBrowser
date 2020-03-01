@@ -36,6 +36,7 @@ set(UI
   remote_widget.ui
   transfer_dialog.ui
   export_dialog.ui
+  check_dialog.ui
   progress_dialog.ui
   job_widget.ui
   mount_widget.ui
@@ -48,6 +49,7 @@ set(MOC
   remote_widget.h
   transfer_dialog.h
   export_dialog.h
+  check_dialog.h
   progress_dialog.h
   job_widget.h
   mount_widget.h
@@ -71,6 +73,7 @@ set(SOURCE
   remote_widget.cpp
   transfer_dialog.cpp
   export_dialog.cpp
+  check_dialog.cpp
   progress_dialog.cpp
   job_widget.cpp
   mount_widget.cpp

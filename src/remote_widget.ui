@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>912</width>
+    <width>940</width>
     <height>552</height>
    </rect>
   </property>
@@ -205,6 +205,16 @@
            <widget class="QToolButton" name="buttonExport">
             <property name="text">
              <string>Export</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonCheck">
+            <property name="text">
+             <string>Check</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -469,6 +479,14 @@ rclone link</string>
     <string>Get remote info
 
 rclone about</string>
+   </property>
+  </action>
+  <action name="actionCheck">
+   <property name="text">
+    <string>Check</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check remote's integrity&lt;/p&gt;&lt;p&gt;rclone check/cryptcheck&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

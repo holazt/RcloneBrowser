@@ -466,7 +466,7 @@ MainWindow::MainWindow() {
 
     if (items.count() > 0) {
       int button = QMessageBox::warning(
-          this, "Run",
+          this, "Dry run",
           QString("Are you sure you want to dry run following task(s)?\n\n" +
                   itemsToRun),
           QMessageBox::Yes | QMessageBox::No);
@@ -496,7 +496,7 @@ MainWindow::MainWindow() {
     if (items.count() > 0) {
       int button = QMessageBox::warning(
           this, "Run",
-          QString("Are you sure you want to dry run following task(s)?\n\n" +
+          QString("Are you sure you want to run following task(s)?\n\n" +
                   itemsToRun),
           QMessageBox::No | QMessageBox::Yes);
       if (button == QMessageBox::Yes) {

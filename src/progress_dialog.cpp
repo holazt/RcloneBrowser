@@ -16,6 +16,8 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
       "QLabel { color: green; font-weight: bold; }");
 
   ui.labelInfo->setText(message);
+  ui.labelInfo->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  ui.labelInfo->setWordWrap(true);
 
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 

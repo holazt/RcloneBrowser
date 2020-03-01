@@ -110,8 +110,12 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
     }
     ui.output->appendPlainText(output);
 
-    ui.labelOperation->setVisible(false);
-    ;
+
+ ui.labelOperation->setStyleSheet(
+      "QLabel { color: black; font-weight: bold; }");
+ ui.labelOperation->setText("Finished ");
+
+//    ui.labelOperation->setVisible(false);
 
     emit outputAvailable(output);
   });

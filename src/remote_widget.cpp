@@ -19,13 +19,14 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 #endif
 
 #ifdef Q_OS_WIN
-  // as with Fusion style in Windows QTreeView font size does not scale 
+  // as with Fusion style in Windows QTreeView font size does not scale
   // with QApplication::font() changes we control it manually using style sheet
 
   QFont defaultFont = QApplication::font();
   int fontSize = defaultFont.pointSize() + 3;
 
-  QString fontStyleSheet = QString("QTreeView { font-size: %1px;}").arg(fontSize);
+  QString fontStyleSheet =
+      QString("QTreeView { font-size: %1px;}").arg(fontSize);
   ui.tree->setStyleSheet(fontStyleSheet);
 #endif
 
@@ -486,8 +487,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                       << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress =
-        new ProgressDialog("Fetch Public Link", "Fetching...", "Public link for: " +
-                           remote + ":" + pathMsg, process, this, false, true);
+        new ProgressDialog("Fetch Public Link", "Running... ",
+                           "Public link for: " + remote + ":" + pathMsg,
+                           process, this, false, true);
     progress->expand();
     progress->allowToClose();
     progress->show();
@@ -569,9 +571,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                       << "-d" << GetRcloneConf() << GetDriveSharedWithMe()
                       << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
-    ProgressDialog *progress =
-        new ProgressDialog("Show directories tree", "Processing... ", "rclone tree " +
-                           remote + ":" + pathMsg, process, this, false);
+    ProgressDialog *progress = new ProgressDialog(
+        "Show directories tree", "Running... ",
+        "rclone tree " + remote + ":" + pathMsg, process, this, false);
     progress->expand();
     progress->allowToClose();
     progress->resize(1000, 600);
@@ -595,9 +597,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         QStringList() << "size" << GetRcloneConf() << GetDriveSharedWithMe()
                       << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
-    ProgressDialog *progress =
-        new ProgressDialog("Get Size", "Calculating... ",
-                           "Size of: " + remote + ":" + pathMsg, process, this, false);
+    ProgressDialog *progress = new ProgressDialog(
+        "Get Size", "Running... ", "Size of: " + remote + ":" + pathMsg,
+        process, this, false);
 
     progress->expand();
     progress->allowToClose();
@@ -611,8 +613,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                  : settings->setValue("Settings/driveShared", Qt::Unchecked));
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+    QString path_info = model->path(index).path();
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path_info) : path_info;
+
     QDir path = model->path(index);
     ExportDialog e(remote, path, this);
+
     if (e.exec() == QDialog::Accepted) {
       QString dst = e.getDestination();
       bool txt = e.onlyFilenames();
@@ -636,8 +643,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                             << GetDefaultRcloneOptionsList() << e.getOptions());
       process->setProcessChannelMode(QProcess::MergedChannels);
 
-      ProgressDialog *progress =
-          new ProgressDialog("Export", "Exporting...", dst, process, this, false);
+      ProgressDialog *progress = new ProgressDialog(
+          "Export", "Running... ",
+          "Exporting content of " + remote + ":" + pathMsg + "\nto " + dst,
+          process, this, false);
 
       file->setParent(progress);
 
@@ -685,7 +694,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setProcessChannelMode(QProcess::MergedChannels);
 
     ProgressDialog *progress = new ProgressDialog(
-        "Get remote Info", "Processing... ", "rclone about " + remote + ":", process, this, false);
+        "Get remote Info", "Runnning... ", "rclone about " + remote + ":",
+        process, this, false);
 
     progress->expand();
     progress->allowToClose();

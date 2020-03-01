@@ -38,6 +38,8 @@
     <file>images/qbutton_icons/rclone_config.png</file>
     <file>images/qbutton_icons/open_remote.png</file>
 
+    <file>images/program_icons/rclone-browser512.png</file>
+
     <file>images/amazon_cloud_drive.png</file>
     <file>images/b2.png</file>
     <file>images/crypt.png</file>

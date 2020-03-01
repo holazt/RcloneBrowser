@@ -1460,8 +1460,20 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         if (mNotifyFinishedTransfers) {
           qApp->alert(this);
           mLastFinished = widget;
-          mSystemTray.showMessage("Transfer finished", info,
-                                  QSystemTrayIcon::Information);
+
+#if defined(Q_OS_WIN)
+          mSystemTray.showMessage(
+              "Rclone Browser - Transfer finished", info,
+              QIcon(":remotes/images/program_icons/rclone-browser512.png"));
+#else
+#if defined(Q_OS_MACOS)
+          mSystemTray.showMessage(
+              "Rclone Browser - Transfer finished", info);
+#else
+          mSystemTray.showMessage(
+              "Rclone Browser - Transfer finished", info, QSystemTrayIcon::Information);
+#endif
+#endif
         }
 
         if (--mJobCount == 0) {

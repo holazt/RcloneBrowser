@@ -239,12 +239,6 @@
           </item>
           <item>
            <widget class="QComboBox" name="cb_GoogleDriveMode">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="currentIndex">
              <number>0</number>
             </property>

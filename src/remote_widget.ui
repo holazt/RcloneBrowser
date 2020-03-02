@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
+    <width>1064</width>
     <height>552</height>
    </rect>
   </property>
@@ -238,13 +238,31 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBoxShared">
-            <property name="toolTip">
-             <string>Show Google Drive &quot;Shared with Me&quot;</string>
+           <widget class="QComboBox" name="cb_GoogleDriveMode">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="text">
-             <string>Shared</string>
+            <property name="currentIndex">
+             <number>0</number>
             </property>
+            <item>
+             <property name="text">
+              <string>Main</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Shared with me</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Trash</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item>
@@ -517,5 +535,22 @@ rclone about</string>
   <tabstop>tree</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cb_GoogleDriveMode</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>shared</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>881</x>
+     <y>27</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

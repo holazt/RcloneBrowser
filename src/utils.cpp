@@ -260,10 +260,15 @@ void SetRclonePassword(const QString &rclonePassword) {
 
 QStringList GetDriveSharedWithMe() {
   auto settings = GetSettings();
-  bool driveShared = settings->value("Settings/driveShared", false).toBool();
+  QString googleDriveMode = settings->value("Settings/remoteMode", "main").toString();
+
   QStringList driveSharedOption;
-  if (driveShared) {
+
+  if (googleDriveMode == "shared") {
     driveSharedOption << "--drive-shared-with-me";
+  }
+  if (googleDriveMode == "trash") {
+    driveSharedOption << "--drive-trashed-only";
   }
   return driveSharedOption;
 }

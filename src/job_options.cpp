@@ -17,7 +17,7 @@ JobOptions::JobOptions()
       dontUpdateModified(false), maxDepth(0), deleteExcluded(false),
       isFolder(false) {}
 
-const qint32 JobOptions::classVersion = 3;
+const qint32 JobOptions::classVersion = 4;
 
 JobOptions::~JobOptions() {}
 
@@ -145,8 +145,24 @@ QStringList JobOptions::getOptions() const {
     }
   }
 
-  if (DriveSharedWithMe) {
-    list << "--drive-shared-with-me";
+  // get Google Drive mode option
+  if (remoteType == "drive") {
+    if (remoteMode == "shared") {
+      list << "--drive-shared-with-me";
+    } else {
+      if (remoteMode == "trash") {
+        list << "--drive-trashed-only";
+      } else {
+        if (remoteMode == "main") {
+        } else {
+          // older tasks dont't have googleDriveMode
+          // and value from DriveSharedWithMe has to be used
+          if (DriveSharedWithMe) {
+            list << "--drive-shared-with-me";
+          }
+        }
+      }
+    }
   }
 
   list << "--stats"

@@ -4,10 +4,13 @@
 
 TransferDialog::TransferDialog(bool isDownload, bool isDrop,
                                const QString &remote, const QDir &path,
-                               bool isFolder, QWidget *parent, JobOptions *task,
-                               bool editMode)
+                               bool isFolder, const QString &remoteType,
+                               const QString &remoteMode, QWidget *parent,
+                               JobOptions *task, bool editMode)
     : QDialog(parent), mIsDownload(isDownload), mIsFolder(isFolder),
-      mIsEditMode(editMode), mJobOptions(task) {
+      mIsEditMode(editMode), mRemoteMode(remoteMode), mRemoteType(remoteType),
+      mJobOptions(task) {
+
   ui.setupUi(this);
 
   resize(0, 0);
@@ -210,13 +213,17 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   ui.buttonDest->setVisible(isDownload);
   ui.buttonDefaultDest->setVisible(isDownload);
 
-  // Info only - should not be edited
-  // would be nice to display it only for Google Drive - todo
-  ui.checkisDriveSharedWithMe->setDisabled(true);
+  // remoteType != "" applies tasks saved before remoteType was introduced
+  if (!(remoteType == "")) {
+    if (!(remoteType == "drive")) {
 
-  ui.checkisDriveSharedWithMe->setChecked(
-      settings->value("Settings/driveShared", false).toBool());
-  // always clear for new jobs
+      qDebug() << QString("Hiding: ");
+      ui.googleDriveMode->setVisible(false);
+      ui.googleDriveModeLabel->setVisible(false);
+    }
+  }
+
+  ui.googleDriveMode->setText(remoteMode);
   ui.textDescription->clear();
 
   if (mIsEditMode && mJobOptions != nullptr) {
@@ -430,17 +437,8 @@ JobOptions *TransferDialog::getJobOptions() {
   mJobOptions->isFolder = mIsFolder;
 
   mJobOptions->description = ui.textDescription->text();
-  //   auto settings = GetSettings();
-  //   mJobOptions->DriveSharedWithMe = settings->value("Settings/driveShared",
-  //   false).toBool();
-
-  if (mIsEditMode)
-    mJobOptions->DriveSharedWithMe = ui.checkisDriveSharedWithMe->isChecked();
-  else {
-    auto settings = GetSettings();
-    mJobOptions->DriveSharedWithMe =
-        settings->value("Settings/driveShared", false).toBool();
-  };
+  mJobOptions->remoteType = mRemoteType;
+  mJobOptions->remoteMode = mRemoteMode;
 
   return mJobOptions;
 }
@@ -503,8 +501,17 @@ void TransferDialog::putJobOptions() {
   ui.textSource->setText(mJobOptions->source);
   ui.textDest->setText(mJobOptions->dest);
   ui.textDescription->setText(mJobOptions->description);
-  // DDBB
-  ui.checkisDriveSharedWithMe->setChecked(mJobOptions->DriveSharedWithMe);
+
+  if (mJobOptions->remoteMode == "") {
+    // task saved before googleDriveMode was added
+    if (mJobOptions->DriveSharedWithMe) {
+      ui.googleDriveMode->setText("shared");
+    } else {
+      ui.googleDriveMode->setText("main");
+    }
+  } else {
+    ui.googleDriveMode->setText(mJobOptions->remoteMode);
+  }
 }
 
 void TransferDialog::done(int r) {

@@ -115,6 +115,18 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/sortTask", "false");
   };
 
+  // during first run the remoteMode key might not exist
+  if (!(settings->contains("Settings/remoteMode"))) {
+    // if remoteMode does not exist create new key
+    settings->setValue("Settings/remoteMode", "main");
+  };
+
+  // during first run the remoteType key might not exist
+  if (!(settings->contains("Settings/remoteType"))) {
+    // if remoteType does not exist create new key
+    settings->setValue("Settings/remoteType", "main");
+  };
+
   // set application font size
   int fontsize = 0;
 

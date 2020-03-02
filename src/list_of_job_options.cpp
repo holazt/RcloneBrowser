@@ -153,7 +153,7 @@ QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {
          << jo.connectTimeout << jo.idleTimeout << jo.retries
          << jo.lowLevelRetries << jo.deleteExcluded << jo.excluded << jo.extra
          << jo.DriveSharedWithMe << jo.source << jo.dest << jo.isFolder
-         << jo.uniqueId;
+         << jo.uniqueId << jo.remoteMode << jo.remoteType;
 
   return stream;
 }
@@ -184,9 +184,14 @@ QDataStream &operator>>(QDataStream &stream, JobOptions &jo) {
   // stream value
   if (actualVersion >= 2) {
     stream >> jo.isFolder;
-    if (actualVersion >= 3) {
-      stream >> jo.uniqueId;
-    }
+  }
+
+  if (actualVersion >= 3) {
+    stream >> jo.uniqueId;
+  }
+  if (actualVersion >= 4) {
+    stream >> jo.remoteMode;
+    stream >> jo.remoteType;
   }
 
   return stream;

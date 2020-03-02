@@ -59,6 +59,8 @@ public:
   bool isFolder;
   QUuid uniqueId;
   bool DriveSharedWithMe;
+  QString remoteMode;
+  QString remoteType;
 
   void setJobType(bool isDownload) {
     jobType = (isDownload) ? Download : Upload;

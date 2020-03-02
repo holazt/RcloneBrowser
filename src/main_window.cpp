@@ -1427,12 +1427,16 @@ void MainWindow::editSelectedTask() {
 
     JobOptions *jo = item->GetData();
     bool isDownload = (jo->jobType == JobOptions::Download);
+    QString remoteType = (jo->remoteType);
+    QString remoteMode = (jo->remoteMode);
+
     QString remote = isDownload ? jo->source : jo->dest;
     QString path = isDownload ? jo->dest : jo->source;
     // qDebug() << "remote:" + remote;
     // qDebug() << "path:" + path;
-    TransferDialog td(isDownload, false, remote, path, jo->isFolder, this, jo,
-                      true);
+
+    TransferDialog td(isDownload, false, remote, path, jo->isFolder, remoteType,
+                      remoteMode, this, jo, true);
     td.exec();
   }
 

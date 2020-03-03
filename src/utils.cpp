@@ -258,7 +258,7 @@ void SetRclonePassword(const QString &rclonePassword) {
   gRclonePassword = rclonePassword;
 }
 
-QStringList GetDriveSharedWithMe() {
+QStringList GetRemoteModeRcloneOptions() {
   auto settings = GetSettings();
   QString googleDriveMode = settings->value("Settings/remoteMode", "main").toString();
 

@@ -44,7 +44,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
   QString buttonSize = settings->value("Settings/buttonSize").toString();
   QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
-  settings->setValue("Settings/remoteMode", Qt::Unchecked);
+  settings->setValue("Settings/remoteMode", "main");
   ui.tree->setAlternatingRowColors(
       settings->value("Settings/rowColors", false).toBool());
 
@@ -222,13 +222,18 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         } else {
           ui.refresh->setDisabled(false);
 
-          bool driveShared = (ui.cb_GoogleDriveMode->currentIndex() != 0);
+          bool driveModeButtons = false;
 
-          ui.mkdir->setDisabled(driveShared);
-          ui.rename->setDisabled(topLevel || driveShared);
-          ui.move->setDisabled(topLevel || driveShared);
-          ui.purge->setDisabled(topLevel || driveShared);
-          ui.upload->setDisabled(driveShared);
+          if (remoteType == "drive") {
+            // for Google Drive --drive-shared-with-me is read only
+            driveModeButtons = (ui.cb_GoogleDriveMode->currentIndex() == 1);
+          }
+
+          ui.mkdir->setDisabled(driveModeButtons);
+          ui.rename->setDisabled(topLevel || driveModeButtons);
+          ui.move->setDisabled(topLevel || driveModeButtons);
+          ui.purge->setDisabled(topLevel || driveModeButtons);
+          ui.upload->setDisabled(driveModeButtons);
 
 #if defined(Q_OS_WIN32)
           // check if required version
@@ -266,36 +271,15 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       });
 
   QObject::connect(ui.refresh, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     model->refresh(index);
   });
 
   QObject::connect(ui.mkdir, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
     if (!model->isFolder(index)) {
@@ -314,7 +298,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
       process.setArguments(QStringList() << "mkdir" << GetRcloneConf()
-                                         << GetDriveSharedWithMe()
+                                         << GetRemoteModeRcloneOptions()
                                          << GetDefaultRcloneOptionsList()
                                          << remote + ":" + folder);
       process.setProcessChannelMode(QProcess::MergedChannels);
@@ -328,18 +312,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.rename, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -355,7 +328,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
       process.setArguments(
-          QStringList() << "moveto" << GetRcloneConf() << GetDriveSharedWithMe()
+          QStringList() << "moveto" << GetRcloneConf()
+                        << GetRemoteModeRcloneOptions()
                         << GetDefaultRcloneOptionsList() << remote + ":" + path
                         << remote + ":" +
                                model->path(index.parent()).filePath(name));
@@ -369,18 +343,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.move, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -395,10 +358,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QProcess process;
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
-      process.setArguments(
-          QStringList() << "move" << GetRcloneConf() << GetDriveSharedWithMe()
-                        << GetDefaultRcloneOptionsList() << remote + ":" + path
-                        << remote + ":" + name);
+      process.setArguments(QStringList()
+                           << "move" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions()
+                           << GetDefaultRcloneOptionsList()
+                           << remote + ":" + path << remote + ":" + name);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("Move", "Moving...", pathMsg, &process, this);
@@ -409,18 +373,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.purge, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -437,7 +390,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process.setProgram(GetRclone());
       process.setArguments(QStringList()
                            << (model->isFolder(index) ? "purge" : "delete")
-                           << GetRcloneConf() << GetDriveSharedWithMe()
+                           << GetRcloneConf() << GetRemoteModeRcloneOptions()
                            << GetDefaultRcloneOptionsList()
                            << remote + ":" + path);
       process.setProcessChannelMode(QProcess::MergedChannels);
@@ -454,18 +407,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.mount, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -484,27 +426,17 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 #endif
 
     if (!folder.isEmpty()) {
-      emit addMount(remote + ":" + path, folder);
+      emit addMount(remote + ":" + path, folder, remoteType);
     }
   });
 
   QObject::connect(ui.stream, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QString path = model->path(index).path();
 
+    auto settings = GetSettings();
     bool streamConfirmed =
         settings->value("Settings/streamConfirmed", false).toBool();
     QString stream = settings->value("Settings/stream", "vlc -").toString();
@@ -527,18 +459,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.link, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -548,9 +469,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess *process = new QProcess;
     UseRclonePassword(process);
     process->setProgram(GetRclone());
-    process->setArguments(
-        QStringList() << "link" << GetRcloneConf() << GetDriveSharedWithMe()
-                      << GetDefaultRcloneOptionsList() << remote + ":" + path);
+    process->setArguments(QStringList() << "link" << GetRcloneConf()
+                                        << GetRemoteModeRcloneOptions()
+                                        << GetDefaultRcloneOptionsList()
+                                        << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress =
         new ProgressDialog("Fetch Public Link", "Running... ",
@@ -562,24 +484,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.upload, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-
-    QString _remoteMode;
-
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      _remoteMode = "main";
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      _remoteMode = "shared";
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      _remoteMode = "trash";
-      break;
-    }
+    QString _remoteMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -607,24 +513,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.download, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-
-    QString _remoteMode;
-
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      _remoteMode = "main";
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      _remoteMode = "shared";
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      _remoteMode = "trash";
-      break;
-    }
+    QString _remoteMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QDir path = model->path(index);
@@ -650,18 +540,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.getTree, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
     QString path = model->path(index).path();
@@ -672,7 +552,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setProgram(GetRclone());
     process->setArguments(
         QStringList() << "tree"
-                      << "-d" << GetRcloneConf() << GetDriveSharedWithMe()
+                      << "-d" << GetRcloneConf() << GetRemoteModeRcloneOptions()
                       << GetDefaultRcloneOptionsList() << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress = new ProgressDialog(
@@ -685,18 +565,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.getSize, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -706,9 +575,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess *process = new QProcess;
     UseRclonePassword(process);
     process->setProgram(GetRclone());
-    process->setArguments(
-        QStringList() << "size" << GetRcloneConf() << GetDriveSharedWithMe()
-                      << GetDefaultRcloneOptionsList() << remote + ":" + path);
+    process->setArguments(QStringList() << "size" << GetRcloneConf()
+                                        << GetRemoteModeRcloneOptions()
+                                        << GetDefaultRcloneOptionsList()
+                                        << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress = new ProgressDialog(
         "Get Size", "Running... ", "Size of: " + remote + ":" + pathMsg,
@@ -720,18 +590,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.export_, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -760,7 +619,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       UseRclonePassword(process);
       process->setProgram(GetRclone());
       process->setArguments(QStringList()
-                            << GetRcloneConf() << GetDriveSharedWithMe()
+                            << GetRcloneConf() << GetRemoteModeRcloneOptions()
                             << GetDefaultRcloneOptionsList() << e.getOptions());
       process->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -801,18 +660,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.actionCheck, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -830,7 +678,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process->setProgram(GetRclone());
 
       process->setArguments(QStringList() << GetRcloneConf() << e.getOptions()
-                                          << GetDriveSharedWithMe()
+                                          << GetRemoteModeRcloneOptions()
                                           << GetDefaultRcloneOptionsList());
       process->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -842,7 +690,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ProgressDialog *progress =
           new ProgressDialog(checkcommand, "Running... ",
                              "rclone " + e.getOptions().join(" ") + " " +
-                                 GetDriveSharedWithMe().join(" ") + " " +
+                                 GetRemoteModeRcloneOptions().join(" ") + " " +
                                  GetDefaultRcloneOptionsList().join(" "),
                              process, this, false);
 
@@ -853,25 +701,15 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.getInfo, &QAction::triggered, this, [=]() {
-    auto settings = GetSettings();
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QProcess *process = new QProcess;
     UseRclonePassword(process);
     process->setProgram(GetRclone());
-    process->setArguments(
-        QStringList() << "about" << GetRcloneConf() << GetDriveSharedWithMe()
-                      << GetDefaultRcloneOptionsList() << remote + ":");
+    process->setArguments(QStringList()
+                          << "about" << GetRcloneConf()
+                          << GetRemoteModeRcloneOptions()
+                          << GetDefaultRcloneOptionsList() << remote + ":");
     process->setProcessChannelMode(QProcess::MergedChannels);
 
     ProgressDialog *progress = new ProgressDialog(
@@ -883,56 +721,35 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     progress->show();
   });
 
-  QObject::connect(model, &ItemModel::drop, this,
-                   [=](const QDir &path, const QModelIndex &parent) {
-                     auto settings = GetSettings();
-                     switch (ui.cb_GoogleDriveMode->currentIndex()) {
-                     case 0:
-                       settings->setValue("Settings/remoteMode", "main");
-                       break;
-                     case 1:
-                       settings->setValue("Settings/remoteMode", "shared");
-                       break;
-                     case 2:
-                       settings->setValue("Settings/remoteMode", "trash");
-                       break;
-                     }
+  QObject::connect(
+      model, &ItemModel::drop, this,
+      [=](const QDir &path, const QModelIndex &parent) {
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
-                     qApp->setActiveWindow(this);
-                     QDir destPath = model->path(parent);
-                     QString dest = QFileInfo(path.path()).isDir()
-                                        ? destPath.filePath(path.dirName())
-                                        : destPath.path();
+        qApp->setActiveWindow(this);
+        QDir destPath = model->path(parent);
+        QString dest = QFileInfo(path.path()).isDir()
+                           ? destPath.filePath(path.dirName())
+                           : destPath.path();
 
-                     TransferDialog t(false, true, remote, dest, true,
-                                      remoteType, remoteMode, this);
-                     t.setSource(path.path());
+        TransferDialog t(false, true, remote, dest, true, remoteType,
+                         remoteMode, this);
+        t.setSource(path.path());
 
-                     if (t.exec() == QDialog::Accepted) {
-                       QString src = t.getSource();
-                       QString dst = t.getDest();
+        if (t.exec() == QDialog::Accepted) {
+          QString src = t.getSource();
+          QString dst = t.getDest();
 
-                       QStringList args = t.getOptions();
-                       emit addTransfer(
-                           QString("%1 from %2").arg(t.getMode()).arg(src), src,
+          QStringList args = t.getOptions();
+          emit addTransfer(QString("%1 from %2").arg(t.getMode()).arg(src), src,
                            dst, args);
-                     }
-                   });
+        }
+      });
 
   QObject::connect(ui.tree, &QWidget::customContextMenuRequested, this,
                    [=](const QPoint &pos) {
-                     auto settings = GetSettings();
-                     switch (ui.cb_GoogleDriveMode->currentIndex()) {
-                     case 0:
-                       settings->setValue("Settings/remoteMode", "main");
-                       break;
-                     case 1:
-                       settings->setValue("Settings/remoteMode", "shared");
-                       break;
-                     case 2:
-                       settings->setValue("Settings/remoteMode", "trash");
-                       break;
-                     }
+                     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(),
+                                   remoteType);
 
                      QMenu menu;
                      menu.addAction(ui.refresh);
@@ -1012,42 +829,31 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.shared, &QAction::triggered, [=]() {
+    /*
+      // connected when QComboBox cb_GoogleDriveMode emits signal
+     currentIndexChanged(int)
+      // in remote_widget.ui configured via in Qt Creator
+     <connections>
+      <connection>
+       <sender>cb_GoogleDriveMode</sender>
+       <signal>currentIndexChanged(int)</signal>
+       <receiver>shared</receiver>
+       <slot>trigger()</slot>
+       <hints>
+        <hint type="sourcelabel">
+         <x>881</x>
+         <y>27</y>
+        </hint>
+        <hint type="destinationlabel">
+         <x>-1</x>
+         <y>-1</y>
+        </hint>
+       </hints>
+      </connection>
+     </connections>
+    */
 
-/*
-  // connected when QComboBox cb_GoogleDriveMode emits signal currentIndexChanged(int)
-  // in remote_widget.ui configured via in Qt Creator
- <connections>
-  <connection>
-   <sender>cb_GoogleDriveMode</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>shared</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>881</x>
-     <y>27</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
-*/
-    auto settings = GetSettings();
-
-    switch (ui.cb_GoogleDriveMode->currentIndex()) {
-    case 0:
-      settings->setValue("Settings/remoteMode", "main");
-      break;
-    case 1:
-      settings->setValue("Settings/remoteMode", "shared");
-      break;
-    case 2:
-      settings->setValue("Settings/remoteMode", "trash");
-      break;
-    }
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QModelIndex top = index;
@@ -1062,3 +868,30 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 }
 
 RemoteWidget::~RemoteWidget() {}
+
+QString setRemoteMode(int index, QString remoteType) {
+
+  QString mode = "main";
+
+  if (remoteType == "drive") {
+
+    auto settings = GetSettings();
+    switch (index) {
+
+    case 0:
+      settings->setValue("Settings/remoteMode", "main");
+      mode = "main";
+      break;
+    case 1:
+      settings->setValue("Settings/remoteMode", "shared");
+      mode = "shared";
+      break;
+    case 2:
+      settings->setValue("Settings/remoteMode", "trash");
+      mode = "trash";
+      break;
+    }
+  }
+
+  return mode;
+}

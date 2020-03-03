@@ -1512,7 +1512,8 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   transfer->start(GetRclone(), GetRcloneConf() + args, QIODevice::ReadOnly);
 }
 
-void MainWindow::addMount(const QString &remote, const QString &folder) {
+void MainWindow::addMount(const QString &remote, const QString &folder,
+                          const QString &remoteType) {
   QProcess *mount = new QProcess(this);
   mount->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -1550,7 +1551,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
 
   auto settings = GetSettings();
   QString opt = settings->value("Settings/mount").toString();
-  bool driveShared = settings->value("Settings/driveShared").toBool();
+  QString driveSharedMode = settings->value("Settings/remoteMode").toString();
 
   QStringList args;
   args << "mount";
@@ -1570,9 +1571,17 @@ void MainWindow::addMount(const QString &remote, const QString &folder) {
   // for google drive "shared with me" without --read-only writes go created in
   // main google drive it is more logical to mount it as read only so there is
   // no confusion
-  if (driveShared) {
-    args << "--drive-shared-with-me";
-    args << "--read-only";
+
+  if (remoteType == "drive") {
+
+    if (driveSharedMode == "shared") {
+      args << "--drive-shared-with-me";
+      args << "--read-only";
+    }
+
+    if (driveSharedMode == "trash") {
+      args << "--drive-trashed-only";
+    }
   };
 
   //	 default mount is now more generic. all options can be passed via

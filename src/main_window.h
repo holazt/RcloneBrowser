@@ -22,7 +22,7 @@ private slots:
 
   void addTransfer(const QString &message, const QString &source,
                    const QString &dest, const QStringList &args);
-  void addMount(const QString &remote, const QString &folder);
+  void addMount(const QString &remote, const QString &folder, const QString &remoteType);
   void addStream(const QString &remote, const QString &stream);
 
 private:

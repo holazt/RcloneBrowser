@@ -10,6 +10,7 @@ public:
   StreamWidget(QProcess *rclone, QProcess *player, const QString &remote,
                const QString &stream, QWidget *parent = nullptr);
   ~StreamWidget();
+  bool isRunning = true;
 
 public slots:
   void cancel();
@@ -21,7 +22,6 @@ signals:
 private:
   Ui::StreamWidget ui;
 
-  bool mRunning = true;
   QProcess *mRclone;
   QProcess *mPlayer;
 };

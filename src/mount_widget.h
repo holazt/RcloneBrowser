@@ -10,6 +10,7 @@ public:
   MountWidget(QProcess *process, const QString &remote, const QString &folder,
               QWidget *parent = nullptr);
   ~MountWidget();
+  bool isRunning = true;
 
 public slots:
   void cancel();
@@ -21,6 +22,5 @@ signals:
 private:
   Ui::MountWidget ui;
 
-  bool mRunning = true;
   QProcess *mProcess;
 };

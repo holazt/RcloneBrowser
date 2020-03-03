@@ -13,6 +13,7 @@ public:
   ~JobWidget();
 
   void showDetails();
+  bool isRunning = true;
 
 public slots:
   void cancel();
@@ -24,7 +25,6 @@ signals:
 private:
   Ui::JobWidget ui;
 
-  bool mRunning = true;
   QProcess *mProcess;
   int mLines = 0;
 

@@ -71,7 +71,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
-    if (mRunning) {
+    if (isRunning) {
       int button = QMessageBox::question(
           this, "Unmount",
 #if defined(Q_OS_WIN)
@@ -100,7 +100,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                        &QProcess::finished),
                    this, [=](int status, QProcess::ExitStatus) {
                      mProcess->deleteLater();
-                     mRunning = false;
+                     isRunning = false;
 
                      QString info = "Mounted " + ui.info->text();
                      QString infoTrimmed;
@@ -132,7 +132,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 MountWidget::~MountWidget() {}
 
 void MountWidget::cancel() {
-  if (!mRunning) {
+  if (!isRunning) {
     return;
   }
 

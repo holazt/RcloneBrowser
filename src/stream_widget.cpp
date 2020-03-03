@@ -72,7 +72,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
-    if (mRunning) {
+    if (isRunning) {
       int button = QMessageBox::question(
           this, "Stop", QString("Do you want to stop %1 stream?").arg(remote),
           QMessageBox::Yes | QMessageBox::No);
@@ -95,7 +95,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                        &QProcess::finished),
                    this, [=](int status, QProcess::ExitStatus) {
                      mRclone->deleteLater();
-                     mRunning = false;
+                     isRunning = false;
 
                      QString info = "Streaming " + ui.info->text();
                      QString infoTrimmed;
@@ -130,7 +130,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
 StreamWidget::~StreamWidget() {}
 
 void StreamWidget::cancel() {
-  if (!mRunning) {
+  if (!isRunning) {
     return;
   }
 

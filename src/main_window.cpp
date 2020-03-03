@@ -21,13 +21,14 @@ MainWindow::MainWindow() {
     this->setWindowTitle("Rclone Browser");
   }
 
+  auto settings = GetSettings();
+
 #if defined(Q_OS_WIN)
   // disable "?" WindowContextHelpButton
   QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
 
 #if !defined(Q_OS_MACOS)
-  auto settings = GetSettings();
   bool darkMode = settings->value("Settings/darkMode").toBool();
 
   // enable dark mode for Windows and Linux
@@ -102,52 +103,174 @@ MainWindow::MainWindow() {
 #endif
 
   mSystemTray.setIcon(qApp->windowIcon());
-  {
-    auto settings = GetSettings();
-    if (settings->contains("MainWindow/geometry")) {
-      restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
-    }
-    SetRclone(settings->value("Settings/rclone").toString());
-    SetRcloneConf(settings->value("Settings/rcloneConf").toString());
+  if (settings->contains("MainWindow/geometry")) {
+    restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
+  }
+  SetRclone(settings->value("Settings/rclone").toString());
+  SetRcloneConf(settings->value("Settings/rcloneConf").toString());
 
-    mAlwaysShowInTray =
-        settings->value("Settings/alwaysShowInTray", false).toBool();
-    mCloseToTray = settings->value("Settings/closeToTray", false).toBool();
-    mNotifyFinishedTransfers =
-        settings->value("Settings/notifyFinishedTransfers", true).toBool();
+  mAlwaysShowInTray =
+      settings->value("Settings/alwaysShowInTray", false).toBool();
+  mCloseToTray = settings->value("Settings/closeToTray", false).toBool();
+  mNotifyFinishedTransfers =
+      settings->value("Settings/notifyFinishedTransfers", true).toBool();
 
-    mSystemTray.setVisible(mAlwaysShowInTray);
+  mSystemTray.setVisible(mAlwaysShowInTray);
 
-    // during first run the lastUsed keys might not exist
-    if (!(settings->contains("Settings/lastUsedSourceFolder"))) {
-      // if lastUsedSourceFolder does not exist create new empty key
-      settings->setValue("Settings/lastUsedSourceFolder", "");
-    };
-    if (!(settings->contains("Settings/lastUsedDestFolder"))) {
-      // if lastUsedDestFolder does not exist create new empty key
-      settings->setValue("Settings/lastUsedDestFolder", "");
-    };
-    if (!(settings->contains("Settings/defaultDownloadOptions"))) {
-      // if defaultDownloadOptions does not exist create new empty key
-      settings->setValue("Settings/defaultDownloadOptions", "");
-    };
+  // during first run the lastUsed keys might not exist
+  if (!(settings->contains("Settings/lastUsedSourceFolder"))) {
+    // if lastUsedSourceFolder does not exist create new empty key
+    settings->setValue("Settings/lastUsedSourceFolder", "");
+  };
+  if (!(settings->contains("Settings/lastUsedDestFolder"))) {
+    // if lastUsedDestFolder does not exist create new empty key
+    settings->setValue("Settings/lastUsedDestFolder", "");
+  };
+  if (!(settings->contains("Settings/defaultDownloadOptions"))) {
+    // if defaultDownloadOptions does not exist create new empty key
+    settings->setValue("Settings/defaultDownloadOptions", "");
+  };
 #ifdef Q_OS_MACOS
-    // for macOS by default exclude .DS_Store files from uploads
-    if (!(settings->contains("Settings/defaultUploadOptions"))) {
-      // if defaultDownloadOptions does not exist create new empty key
-      settings->setValue("Settings/defaultUploadOptions",
-                         "--exclude .DS_Store");
-    };
+  // for macOS by default exclude .DS_Store files from uploads
+  if (!(settings->contains("Settings/defaultUploadOptions"))) {
+    // if defaultDownloadOptions does not exist create new empty key
+    settings->setValue("Settings/defaultUploadOptions", "--exclude .DS_Store");
+  };
 #else
-    if (!(settings->contains("Settings/defaultUploadOptions"))) {
-      // if defaultDownloadOptions does not exist create new empty key
-      settings->setValue("Settings/defaultUploadOptions", "");
-    };
+  if (!(settings->contains("Settings/defaultUploadOptions"))) {
+    // if defaultDownloadOptions does not exist create new empty key
+    settings->setValue("Settings/defaultUploadOptions", "");
+  };
 #endif
-    if (!(settings->contains("Settings/defaultRcloneOptions"))) {
-      // if defaultRcloneOptions does not exist create new empty key
-      settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
-    };
+  if (!(settings->contains("Settings/defaultRcloneOptions"))) {
+    // if defaultRcloneOptions does not exist create new empty key
+    settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
+  };
+
+  ui.actionDryRun->setIcon(QIcon(":remotes/images/qbutton_icons/dryrun.png"));
+  ui.actionRun->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
+  ui.actionEdit->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
+  ui.actionDelete->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
+  ui.actionRefresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
+  ui.actionOpen->setIcon(
+      QIcon(":remotes/images/qbutton_icons/open_remote.png"));
+  ui.actionConfig->setIcon(
+      QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
+  ui.actionStopAllJobs->setIcon(
+      QIcon(":remotes/images/qbutton_icons/stop.png"));
+  ui.actionCleanNotRunning->setIcon(
+      QIcon(":remotes/images/qbutton_icons/purge.png"));
+  // Preferences button action is triggered via slot defined in ui file
+  // as we dont want pref icon in the menu
+  ui.buttonPrefs->setIcon(
+      QIcon(":remotes/images/qbutton_icons/preferences.png"));
+  QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowup.png");
+  QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowdown.png");
+  QPixmap sortZAPixmap(":remotes/images/qbutton_icons/sortZA.png");
+  QPixmap sortAZPixmap(":remotes/images/qbutton_icons/sortAZ.png");
+
+  QIcon arrowDownIcon(arrowDownPixmap);
+  QIcon arrowUpIcon(arrowUpPixmap);
+  QIcon sortZAIcon(sortZAPixmap);
+  QIcon sortAZIcon(sortAZPixmap);
+
+  ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
+  ui.buttonRunTask->setDefaultAction(ui.actionRun);
+  ui.buttonEditTask->setDefaultAction(ui.actionEdit);
+  ui.buttonDeleteTask->setDefaultAction(ui.actionDelete);
+  ui.buttonSortTask->setDefaultAction(ui.actionSortTask);
+  ui.refresh->setDefaultAction(ui.actionRefresh);
+  ui.open->setDefaultAction(ui.actionOpen);
+  ui.config->setDefaultAction(ui.actionConfig);
+  //  ui.buttonPrefs->setDefaultAction(ui.preferences);
+  ui.buttonStopAllJobs->setDefaultAction(ui.actionStopAllJobs);
+  ui.buttonCleanNotRunning->setDefaultAction(ui.actionCleanNotRunning);
+
+  // overwrite button text
+  ui.buttonPrefs->setText("Prefs");
+
+  // open remote should be not active when there is
+  // no foucs on any e.g. after start
+  ui.open->setEnabled(false);
+
+  // both buttons inactive after start
+  ui.buttonStopAllJobs->setEnabled(false);
+  ui.buttonCleanNotRunning->setEnabled(false);
+
+  QString buttonStyle = settings->value("Settings/buttonStyle").toString();
+  QString buttonSize = settings->value("Settings/buttonSize").toString();
+
+  int icon_w = 16;
+  int icon_h = 16;
+  if (buttonSize == "0") {
+    icon_w = 24;
+  }
+  if (buttonSize == "1") {
+    icon_w = 32;
+  }
+  if (buttonSize == "2") {
+    icon_w = 48;
+  }
+  if (buttonSize == "3") {
+    icon_w = 72;
+  }
+  if (buttonSize == "4") {
+    icon_w = 96;
+  }
+  icon_h = icon_w;
+
+  if (buttonStyle == "textandicon") {
+    ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
+    ui.refresh->setIconSize(QSize(icon_w, icon_h));
+    ui.open->setIconSize(QSize(icon_w, icon_h));
+    ui.config->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonStopAllJobs->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonCleanNotRunning->setIconSize(QSize(icon_w, icon_h));
+
+  } else {
+    if (buttonStyle == "textonly") {
+      ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonRunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.refresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.open->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonStopAllJobs->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonCleanNotRunning->setToolButtonStyle(Qt::ToolButtonTextOnly);
+
+    } else {
+      // button style - icononly
+      ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonRunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
+      ui.refresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.refresh->setIconSize(QSize(icon_w, icon_h));
+      ui.open->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.open->setIconSize(QSize(icon_w, icon_h));
+      ui.config->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.config->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonStopAllJobs->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonStopAllJobs->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonCleanNotRunning->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonCleanNotRunning->setIconSize(QSize(icon_w, icon_h));
+    }
   }
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
@@ -291,122 +414,18 @@ MainWindow::MainWindow() {
   QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this,
                    [=]() { editSelectedTask(); });
 
-  ui.actionDryRun->setIcon(QIcon(":remotes/images/qbutton_icons/dryrun.png"));
-  ui.actionRun->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
-  ui.actionEdit->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
-  ui.actionDelete->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
-  ui.actionRefresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
-  ui.actionOpen->setIcon(
-      QIcon(":remotes/images/qbutton_icons/open_remote.png"));
-  ui.actionConfig->setIcon(
-      QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
-
-#if defined(Q_OS_MACOS)
-  auto settings = GetSettings();
-#endif
-
   bool sortTask = settings->value("Settings/sortTask").toBool();
 
   if (sortTask) {
-    ui.actionSortTask->setIcon(
-        QIcon(":remotes/images/qbutton_icons/sortZA.png"));
+    ui.actionSortTask->setIcon(sortZAIcon);
     ui.buttonSortTask->setToolTip("Sort Descending");
     ui.tasksListWidget->setSortingEnabled(true);
     ui.tasksListWidget->sortItems(Qt::AscendingOrder);
   } else {
-    ui.actionSortTask->setIcon(
-        QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
+    ui.actionSortTask->setIcon(sortAZIcon);
     ui.buttonSortTask->setToolTip("Sort Ascending");
     ui.tasksListWidget->setSortingEnabled(true);
     ui.tasksListWidget->sortItems(Qt::DescendingOrder);
-  }
-
-  ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
-  ui.buttonRunTask->setDefaultAction(ui.actionRun);
-  ui.buttonEditTask->setDefaultAction(ui.actionEdit);
-  ui.buttonDeleteTask->setDefaultAction(ui.actionDelete);
-  ui.buttonSortTask->setDefaultAction(ui.actionSortTask);
-  ui.refresh->setDefaultAction(ui.actionRefresh);
-  ui.open->setDefaultAction(ui.actionOpen);
-  ui.config->setDefaultAction(ui.actionConfig);
-  ui.buttonPrefs->setDefaultAction(ui.preferences);
-
-  ui.buttonPrefs->setText("Prefs");
-
-  // open remote should be not active when there is
-  // no foucs on any e.g. after start
-  ui.open->setEnabled(false);
-
-  QString buttonStyle = settings->value("Settings/buttonStyle").toString();
-  QString buttonSize = settings->value("Settings/buttonSize").toString();
-
-  ui.buttonPrefs->setIcon(
-      QIcon(":remotes/images/qbutton_icons/preferences.png"));
-
-  // buttons and icons size
-  int icon_w = 16;
-  int icon_h = 16;
-  if (buttonSize == "0") {
-    icon_w = 24;
-  }
-  if (buttonSize == "1") {
-    icon_w = 32;
-  }
-  if (buttonSize == "2") {
-    icon_w = 48;
-  }
-  if (buttonSize == "3") {
-    icon_w = 72;
-  }
-  if (buttonSize == "4") {
-    icon_w = 96;
-  }
-  icon_h = icon_w;
-
-  if (buttonStyle == "textandicon") {
-    ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
-    ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
-    ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
-    ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
-    ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
-    ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
-    ui.refresh->setIconSize(QSize(icon_w, icon_h));
-    ui.open->setIconSize(QSize(icon_w, icon_h));
-    ui.config->setIconSize(QSize(icon_w, icon_h));
-
-  } else {
-    if (buttonStyle == "textonly") {
-      ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonRunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.refresh->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.open->setToolButtonStyle(Qt::ToolButtonTextOnly);
-      ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
-
-    } else {
-      // button style - icononly
-      ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonRunTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonEditTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonDeleteTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonDeleteTask->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonSortTask->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonSortTask->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonPrefs->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.buttonPrefs->setIconSize(QSize(icon_w, icon_h));
-      ui.refresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.refresh->setIconSize(QSize(icon_w, icon_h));
-      ui.open->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.open->setIconSize(QSize(icon_w, icon_h));
-      ui.config->setToolButtonStyle(Qt::ToolButtonIconOnly);
-      ui.config->setIconSize(QSize(icon_w, icon_h));
-    }
   }
 
   QObject::connect(ui.tasksListWidget, &QWidget::customContextMenuRequested,
@@ -423,20 +442,94 @@ MainWindow::MainWindow() {
                          ui.tasksListWidget->viewport()->mapToGlobal(pos));
                    });
 
+  QObject::connect(ui.actionCleanNotRunning, &QAction::triggered, this, [=]() {
+    int jobsCount = ((ui.jobs->count() - 2) / 2 - mJobCount);
+    int button;
+
+    if (jobsCount == 1) {
+      button = QMessageBox::question(this, "Rclone Browser",
+                                     QString("There is %1 innactive job.\n"
+                                             "\nDo you want to clean it?")
+                                         .arg(jobsCount),
+                                     QMessageBox::Yes | QMessageBox::No);
+    } else {
+      button =
+          QMessageBox::question(this, "Rclone Browser",
+                                QString("There are %1 innactive jobs.\n"
+                                        "\nDo you want to clean all of them?")
+                                    .arg(jobsCount),
+                                QMessageBox::Yes | QMessageBox::No);
+    }
+
+    if (button == QMessageBox::Yes) {
+      for (int j = 0; j < ui.jobs->count(); j++) {
+        for (int i = 0; i < ui.jobs->count(); i++) {
+          QWidget *widget = ui.jobs->itemAt(i)->widget();
+          if (auto mount = qobject_cast<MountWidget *>(widget)) {
+            if (!(mount->isRunning)) {
+              emit mount->closed();
+            }
+          } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+            if (!(transfer->isRunning)) {
+              emit transfer->closed();
+            }
+          } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+            if (!(stream->isRunning)) {
+              emit stream->closed();
+            }
+          }
+        }
+      }
+    }
+  });
+
+  QObject::connect(ui.actionStopAllJobs, &QAction::triggered, this, [=]() {
+    int button;
+
+    if (mJobCount != 0) {
+      if (mJobCount == 1) {
+        button = QMessageBox::question(this, "Rclone Browser",
+                                       QString("There is %1 job running.\n"
+                                               "\nDo you want to stop it?")
+                                           .arg(mJobCount),
+                                       QMessageBox::Yes | QMessageBox::No);
+      } else {
+        button =
+            QMessageBox::question(this, "Rclone Browser",
+                                  QString("There are %1 jobs running.\n"
+                                          "\nDo you want to stop all of them?")
+                                      .arg(mJobCount),
+                                  QMessageBox::Yes | QMessageBox::No);
+      }
+
+      if (button == QMessageBox::Yes) {
+
+        for (int i = 0; i < ui.jobs->count(); i++) {
+          QWidget *widget = ui.jobs->itemAt(i)->widget();
+          if (auto mount = qobject_cast<MountWidget *>(widget)) {
+            mount->cancel();
+          } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+            transfer->cancel();
+          } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+            stream->cancel();
+          }
+        }
+      }
+    }
+  });
+
   QObject::connect(ui.actionSortTask, &QAction::triggered, this, [=]() {
     auto settings = GetSettings();
     bool sortTask = settings->value("Settings/sortTask").toBool();
 
     if (sortTask) {
-      ui.actionSortTask->setIcon(
-          QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
+      ui.actionSortTask->setIcon(sortAZIcon);
       ui.buttonSortTask->setToolTip("Sort Ascending");
       ui.tasksListWidget->setSortingEnabled(true);
       ui.tasksListWidget->sortItems(Qt::DescendingOrder);
       settings->setValue("Settings/sortTask", "false");
     } else {
-      ui.actionSortTask->setIcon(
-          QIcon(":remotes/images/qbutton_icons/sortZA.png"));
+      ui.actionSortTask->setIcon(sortZAIcon);
       settings->setValue("Settings/sortTask", "true");
       ui.tasksListWidget->setSortingEnabled(true);
       ui.tasksListWidget->sortItems(Qt::AscendingOrder);
@@ -551,13 +644,8 @@ MainWindow::MainWindow() {
                    &ListOfJobOptions::tasksListUpdated, this,
                    &MainWindow::listTasks);
 
-  QPixmap pixmap(":remotes/images/qbutton_icons/arrowup.png");
-  QIcon arrowup(pixmap);
-  mUploadIcon = arrowup;
-
-  QPixmap pixmap1(":remotes/images/qbutton_icons/arrowdown.png");
-  QIcon arrowdown(pixmap1);
-  mDownloadIcon = arrowdown;
+  mUploadIcon = arrowUpIcon;
+  mDownloadIcon = arrowDownIcon;
 
   ui.tabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
   ui.tabs->tabBar()->setTabButton(0, QTabBar::LeftSide, nullptr);
@@ -1062,6 +1150,7 @@ void MainWindow::rcloneConfig() {
 }
 
 void MainWindow::rcloneListRemotes() {
+
   ui.remotes->clear();
 
   auto settings = GetSettings();
@@ -1342,15 +1431,13 @@ void MainWindow::listTasks() {
   auto settings = GetSettings();
   bool sortTask = settings->value("Settings/sortTask").toBool();
   if (sortTask) {
-    ui.actionSortTask->setIcon(
-        QIcon(":remotes/images/qbutton_icons/sortZA.png"));
-    ui.buttonSortTask->setToolTip("Sort Descending");
+    //    ui.actionSortTask->setIcon(sortZAIcon);
+    //    ui.buttonSortTask->setToolTip("Sort Descending");
     ui.tasksListWidget->setSortingEnabled(true);
     ui.tasksListWidget->sortItems(Qt::AscendingOrder);
   } else {
-    ui.actionSortTask->setIcon(
-        QIcon(":remotes/images/qbutton_icons/sortAZ.png"));
-    ui.buttonSortTask->setToolTip("Sort Ascending");
+    //    ui.actionSortTask->setIcon(sortAZIcon);
+    //    ui.buttonSortTask->setToolTip("Sort Ascending");
     ui.tasksListWidget->setSortingEnabled(true);
     ui.tasksListWidget->sortItems(Qt::DescendingOrder);
   }
@@ -1365,7 +1452,6 @@ void MainWindow::listTasks() {
         jo->description);
     ui.tasksListWidget->addItem(item);
   }
-
 }
 
 void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
@@ -1450,7 +1536,6 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         if (mNotifyFinishedTransfers) {
           qApp->alert(this);
           mLastFinished = widget;
-
 #if defined(Q_OS_WIN)
           mSystemTray.showMessage(
               "Rclone Browser - Transfer finished", info,
@@ -1471,12 +1556,17 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         } else {
           ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
         }
+
+        ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+        ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                             (ui.jobs->count() - 2) / 2);
       });
 
   QObject::connect(widget, &JobWidget::closed, this, [=]() {
     if (widget == mLastFinished) {
       mLastFinished = nullptr;
     }
+
     ui.jobs->removeWidget(widget);
     ui.jobs->removeWidget(line);
     widget->deleteLater();
@@ -1484,6 +1574,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
+    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
   });
 
   if (ui.jobs->count() == 2) {
@@ -1493,6 +1586,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
+
+  ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   UseRclonePassword(transfer);
   transfer->start(GetRclone(), GetRcloneConf() + args, QIODevice::ReadOnly);
@@ -1515,6 +1611,10 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     } else {
       ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
     }
+
+    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
   });
 
   QObject::connect(widget, &MountWidget::closed, this, [=]() {
@@ -1525,6 +1625,9 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
+    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
   });
 
   if (ui.jobs->count() == 2) {
@@ -1534,6 +1637,9 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
+
+  ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   auto settings = GetSettings();
   QString opt = settings->value("Settings/mount").toString();
@@ -1626,6 +1732,10 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
     } else {
       ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
     }
+
+    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
   });
 
   QObject::connect(widget, &StreamWidget::closed, this, [=]() {
@@ -1636,6 +1746,9 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
+    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
   });
 
   if (ui.jobs->count() == 2) {
@@ -1645,6 +1758,9 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
+
+  ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);

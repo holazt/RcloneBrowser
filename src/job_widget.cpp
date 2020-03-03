@@ -76,7 +76,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
-    if (mRunning) {
+    if (isRunning) {
       int button = QMessageBox::question(
           this, "Transfer",
           QString(
@@ -262,7 +262,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                        delete label;
                      }
 
-                     mRunning = false;
+                     isRunning = false;
                      if (status == 0) {
                        ui.showDetails->setStyleSheet(
                            "QToolButton { border: 0; color: black; font-weight: normal;}");
@@ -289,7 +289,7 @@ JobWidget::~JobWidget() {}
 void JobWidget::showDetails() { ui.showDetails->setChecked(true); }
 
 void JobWidget::cancel() {
-  if (!mRunning) {
+  if (!isRunning) {
     return;
   }
 

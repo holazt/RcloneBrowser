@@ -25,6 +25,8 @@ private slots:
   void addMount(const QString &remote, const QString &folder, const QString &remoteType);
   void addStream(const QString &remote, const QString &stream);
 
+  void slotCloseTab(int index);
+
 private:
   Ui::MainWindow ui;
 

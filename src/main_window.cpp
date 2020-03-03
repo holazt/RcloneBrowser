@@ -15,7 +15,6 @@
 MainWindow::MainWindow() {
 
   ui.setupUi(this);
-
   if (IsPortableMode()) {
     this->setWindowTitle("Rclone Browser - portable mode");
   } else {
@@ -220,6 +219,10 @@ MainWindow::MainWindow() {
     }
   });
 
+  // intercept tab closure
+  MainWindow::connect(ui.tabs, SIGNAL(tabCloseRequested(int)), this,
+                      SLOT(slotCloseTab(int)));
+
   QObject::connect(ui.quit, &QAction::triggered, this, [=]() {
     mCloseToTray = false;
     close();
@@ -327,6 +330,8 @@ MainWindow::MainWindow() {
   ui.open->setDefaultAction(ui.actionOpen);
   ui.config->setDefaultAction(ui.actionConfig);
   ui.buttonPrefs->setDefaultAction(ui.preferences);
+
+  ui.buttonPrefs->setText("Prefs");
 
   // open remote should be not active when there is
   // no foucs on any e.g. after start
@@ -1361,25 +1366,6 @@ void MainWindow::listTasks() {
     ui.tasksListWidget->addItem(item);
   }
 
-  /*
-  if (ui.tasksListWidget->count() > 0) {
-    ui.tasksListWidget->item(0)->setSelected(true);
-  }
-  ui.tasksListWidget->setFocus();
-  */
-
-  //  ui.tasksListWidget->setFocus();
-
-  // if (ui.tasksListWidget->currentItem()) {
-
-  // ui.tasksListWidget->setCurrentItem(ui.tasksListWidget->currentItem());
-
-  // ui.tasksListWidget->setCurrentItem(ui.tasksListWidget->item(0));
-  // ui.tasksListWidget->currentItem()->setSelected(true);
-  // ui.tasksListWidget->setFocus();
-  //}
-
-  // ui.buttonEditTask->setDefaultAction(ui.edit);
 }
 
 void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
@@ -1665,4 +1651,23 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
   rclone->start(GetRclone(),
                 QStringList() << "cat" << GetRcloneConf() << remote,
                 QProcess::WriteOnly);
+}
+
+void MainWindow::slotCloseTab(int index) {
+
+  // only when last remote tab is closed return to remote list tab
+  // only when closing current tab
+  if (ui.tabs->currentIndex() == index) {
+
+    if (ui.tabs->count() == 4) {
+      if (index == 3) {
+        ui.tabs->setCurrentIndex(0);
+      }
+    } else {
+
+      if (ui.tabs->count() == 5) {
+        ui.tabs->setCurrentIndex(3);
+      }
+    }
+  }
 }

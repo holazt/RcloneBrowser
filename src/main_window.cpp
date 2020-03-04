@@ -147,27 +147,46 @@ MainWindow::MainWindow() {
     settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
   };
 
-  ui.actionDryRun->setIcon(QIcon(":remotes/images/qbutton_icons/dryrun.png"));
-  ui.actionRun->setIcon(QIcon(":remotes/images/qbutton_icons/run.png"));
-  ui.actionEdit->setIcon(QIcon(":remotes/images/qbutton_icons/edit.png"));
-  ui.actionDelete->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
-  ui.actionRefresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
+  QString buttonStyle = settings->value("Settings/buttonStyle").toString();
+  QString buttonSize = settings->value("Settings/buttonSize").toString();
+  QString iconsColour = settings->value("Settings/iconsColour").toString();
+
+  QString img_add = "";
+
+  if (iconsColour == "white") {
+    img_add = "_inv";
+  }
+
+  ui.actionDryRun->setIcon(
+      QIcon(":remotes/images/qbutton_icons/dryrun" + img_add + ".png"));
+  ui.actionRun->setIcon(
+      QIcon(":remotes/images/qbutton_icons/run" + img_add + ".png"));
+  ui.actionEdit->setIcon(
+      QIcon(":remotes/images/qbutton_icons/edit" + img_add + ".png"));
+  ui.actionDelete->setIcon(
+      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+  ui.actionRefresh->setIcon(
+      QIcon(":remotes/images/qbutton_icons/refresh" + img_add + ".png"));
   ui.actionOpen->setIcon(
-      QIcon(":remotes/images/qbutton_icons/open_remote.png"));
+      QIcon(":remotes/images/qbutton_icons/open_remote" + img_add + ".png"));
   ui.actionConfig->setIcon(
-      QIcon(":remotes/images/qbutton_icons/rclone_config.png"));
+      QIcon(":remotes/images/qbutton_icons/rclone_config" + img_add + ".png"));
   ui.actionStopAllJobs->setIcon(
-      QIcon(":remotes/images/qbutton_icons/stop.png"));
+      QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionCleanNotRunning->setIcon(
-      QIcon(":remotes/images/qbutton_icons/purge.png"));
+      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
   // Preferences button action is triggered via slot defined in ui file
   // as we dont want pref icon in the menu
   ui.buttonPrefs->setIcon(
-      QIcon(":remotes/images/qbutton_icons/preferences.png"));
-  QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowup.png");
-  QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowdown.png");
-  QPixmap sortZAPixmap(":remotes/images/qbutton_icons/sortZA.png");
-  QPixmap sortAZPixmap(":remotes/images/qbutton_icons/sortAZ.png");
+      QIcon(":remotes/images/qbutton_icons/preferences" + img_add + ".png"));
+  QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowup" + img_add +
+                          ".png");
+  QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowdown" + img_add +
+                        ".png");
+  QPixmap sortZAPixmap(":remotes/images/qbutton_icons/sortZA" + img_add +
+                       ".png");
+  QPixmap sortAZPixmap(":remotes/images/qbutton_icons/sortAZ" + img_add +
+                       ".png");
 
   QIcon arrowDownIcon(arrowDownPixmap);
   QIcon arrowUpIcon(arrowUpPixmap);
@@ -196,9 +215,6 @@ MainWindow::MainWindow() {
   // both buttons inactive after start
   ui.buttonStopAllJobs->setEnabled(false);
   ui.buttonCleanNotRunning->setEnabled(false);
-
-  QString buttonStyle = settings->value("Settings/buttonStyle").toString();
-  QString buttonSize = settings->value("Settings/buttonSize").toString();
 
   int icon_w = 16;
   int icon_h = 16;
@@ -314,8 +330,8 @@ MainWindow::MainWindow() {
                          dialog.getButtonStyle().trimmed());
       settings->setValue("Settings/iconsLayout",
                          dialog.getIconsLayout().trimmed());
-      settings->setValue("Settings/remotesColour",
-                         dialog.getRemotesColour().trimmed());
+      settings->setValue("Settings/iconsColour",
+                         dialog.getIconsColour().trimmed());
 
       settings->setValue("Settings/fontSize", dialog.getFontSize().trimmed());
       settings->setValue("Settings/buttonSize",
@@ -1186,8 +1202,8 @@ void MainWindow::rcloneListRemotes() {
           auto settings = GetSettings();
           bool darkModeIni = settings->value("Settings/darkModeIni").toBool();
           QString iconSize = settings->value("Settings/iconSize").toString();
-          QString remotesColour =
-              settings->value("Settings/remotesColour").toString();
+          QString iconsColour =
+              settings->value("Settings/iconsColour").toString();
 
           for (const QString &line : items) {
             if (line.isEmpty()) {
@@ -1243,7 +1259,7 @@ void MainWindow::rcloneListRemotes() {
             // _inv only for dark mode
             // we use darkModeIni to apply mode active at startup
             if (darkModeIni) {
-              if (remotesColour == "white") {
+              if (iconsColour == "white") {
                 img_add = "_inv";
               } else {
                 img_add = "";
@@ -1277,7 +1293,7 @@ void MainWindow::rcloneListRemotes() {
                // on older macOS we also have to adjust icon size per mode
                if (darkModeIni) {
                  size = darkModeIconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
-                 if (remotesColour == "white") {
+                 if (iconsColour == "white") {
                    img_add = "_inv";
                  } else {
                    img_add = "";
@@ -1290,6 +1306,11 @@ void MainWindow::rcloneListRemotes() {
              } else {
                // for macOS > 10.13 native dark mode does not change IconSize base
                size = 1.5 * lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
+               if (iconsColour == "white") {
+                  img_add = "_inv";
+               } else {
+                   img_add = "";
+               }
              }
 #endif
             ui.remotes->setIconSize(QSize(size, size));

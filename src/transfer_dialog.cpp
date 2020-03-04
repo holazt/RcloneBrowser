@@ -19,22 +19,30 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   //  QStyle *style = qApp->style();
 
-  ui.buttonSourceFile->setIcon(QIcon(":remotes/images/qbutton_icons/file.png"));
-  ui.buttonSourceFile->setIconSize(QSize(24, 24));
+  auto settings = GetSettings();
+  QString iconsColour = settings->value("Settings/iconsColour").toString();
 
+  QString img_add = "";
+
+  if (iconsColour == "white") {
+    img_add = "_inv";
+  }
+
+  ui.buttonSourceFile->setIcon(
+      QIcon(":remotes/images/qbutton_icons/file" + img_add + ".png"));
   ui.buttonSourceFolder->setIcon(
-      QIcon(":remotes/images/qbutton_icons/folder.png"));
-  ui.buttonSourceFolder->setIconSize(QSize(24, 24));
-
-  ui.buttonDest->setIcon(QIcon(":remotes/images/qbutton_icons/folder.png"));
-  ui.buttonDest->setIconSize(QSize(24, 24));
-
+      QIcon(":remotes/images/qbutton_icons/folder" + img_add + ".png"));
+  ui.buttonDest->setIcon(
+      QIcon(":remotes/images/qbutton_icons/folder" + img_add + ".png"));
   ui.buttonDefaultSource->setIcon(
-      QIcon(":remotes/images/qbutton_icons/restore.png"));
-  ui.buttonDefaultSource->setIconSize(QSize(24, 24));
-
+      QIcon(":remotes/images/qbutton_icons/restore" + img_add + ".png"));
   ui.buttonDefaultDest->setIcon(
-      QIcon(":remotes/images/qbutton_icons/restore.png"));
+      QIcon(":remotes/images/qbutton_icons/restore" + img_add + ".png"));
+
+  ui.buttonSourceFile->setIconSize(QSize(24, 24));
+  ui.buttonSourceFolder->setIconSize(QSize(24, 24));
+  ui.buttonDest->setIconSize(QSize(24, 24));
+  ui.buttonDefaultSource->setIconSize(QSize(24, 24));
   ui.buttonDefaultDest->setIconSize(QSize(24, 24));
 
   if (!mIsEditMode) {
@@ -201,7 +209,6 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     };
   });
 
-  auto settings = GetSettings();
   settings->beginGroup("Transfer");
   ReadSettings(settings.get(), this);
   settings->endGroup();

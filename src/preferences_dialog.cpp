@@ -14,11 +14,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   } else {
     ui.darkMode->hide();
     ui.darkMode_info->hide();
-    ui.remotes_colour->hide();
   }
 #endif
 
   resize(0, 0);
+
 
   QObject::connect(ui.rcloneBrowse, &QPushButton::clicked, this, [=]() {
     QString rclone = QFileDialog::getOpenFileName(
@@ -164,10 +164,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.cb_tiles->setChecked(true);
   }
 
-  if ((settings->value("Settings/remotesColour").toString()) == "white") {
-    ui.cb_remotes_colour_white->setChecked(true);
+  if ((settings->value("Settings/iconsColour").toString()) == "white") {
+    ui.cb_icons_colour_white->setChecked(true);
   } else {
-    ui.cb_remotes_colour_black->setChecked(true);
+    ui.cb_icons_colour_black->setChecked(true);
   }
 
   QString fontSize = settings->value("Settings/fontSize").toString();
@@ -356,8 +356,8 @@ QString PreferencesDialog::getIconsLayout() const {
   }
 }
 
-QString PreferencesDialog::getRemotesColour() const {
-  if (ui.cb_remotes_colour_white->isChecked()) {
+QString PreferencesDialog::getIconsColour() const {
+  if (ui.cb_icons_colour_white->isChecked()) {
     return "white";
   } else {
     return "black";

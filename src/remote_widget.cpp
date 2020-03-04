@@ -43,6 +43,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
   QString buttonSize = settings->value("Settings/buttonSize").toString();
+  QString iconsColour = settings->value("Settings/iconsColour").toString();
   QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
   settings->setValue("Settings/remoteMode", "main");
   ui.tree->setAlternatingRowColors(
@@ -54,21 +55,42 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.cb_GoogleDriveMode->hide();
   }
 
-  ui.refresh->setIcon(QIcon(":remotes/images/qbutton_icons/refresh.png"));
-  ui.mkdir->setIcon(QIcon(":remotes/images/qbutton_icons/mkdir.png"));
-  ui.rename->setIcon(QIcon(":remotes/images/qbutton_icons/rename.png"));
-  ui.move->setIcon(QIcon(":remotes/images/qbutton_icons/move.png"));
-  ui.purge->setIcon(QIcon(":remotes/images/qbutton_icons/purge.png"));
-  ui.mount->setIcon(QIcon(":remotes/images/qbutton_icons/mount.png"));
-  ui.stream->setIcon(QIcon(":remotes/images/qbutton_icons/stream.png"));
-  ui.upload->setIcon(QIcon(":remotes/images/qbutton_icons/upload.png"));
-  ui.download->setIcon(QIcon(":remotes/images/qbutton_icons/download.png"));
-  ui.actionCheck->setIcon(QIcon(":remotes/images/qbutton_icons/check.png"));
-  ui.getSize->setIcon(QIcon(":remotes/images/qbutton_icons/getsize.png"));
-  ui.getTree->setIcon(QIcon(":remotes/images/qbutton_icons/gettree.png"));
-  ui.link->setIcon(QIcon(":remotes/images/qbutton_icons/link.png"));
-  ui.export_->setIcon(QIcon(":remotes/images/qbutton_icons/export.png"));
-  ui.getInfo->setIcon(QIcon(":remotes/images/qbutton_icons/info.png"));
+  QString img_add = "";
+
+  if (iconsColour == "white") {
+    img_add = "_inv";
+  }
+
+  ui.refresh->setIcon(
+      QIcon(":remotes/images/qbutton_icons/refresh" + img_add + ".png"));
+  ui.mkdir->setIcon(
+      QIcon(":remotes/images/qbutton_icons/mkdir" + img_add + ".png"));
+  ui.rename->setIcon(
+      QIcon(":remotes/images/qbutton_icons/rename" + img_add + ".png"));
+  ui.move->setIcon(
+      QIcon(":remotes/images/qbutton_icons/move" + img_add + ".png"));
+  ui.purge->setIcon(
+      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+  ui.mount->setIcon(
+      QIcon(":remotes/images/qbutton_icons/mount" + img_add + ".png"));
+  ui.stream->setIcon(
+      QIcon(":remotes/images/qbutton_icons/stream" + img_add + ".png"));
+  ui.upload->setIcon(
+      QIcon(":remotes/images/qbutton_icons/upload" + img_add + ".png"));
+  ui.download->setIcon(
+      QIcon(":remotes/images/qbutton_icons/download" + img_add + ".png"));
+  ui.actionCheck->setIcon(
+      QIcon(":remotes/images/qbutton_icons/check" + img_add + ".png"));
+  ui.getSize->setIcon(
+      QIcon(":remotes/images/qbutton_icons/getsize" + img_add + ".png"));
+  ui.getTree->setIcon(
+      QIcon(":remotes/images/qbutton_icons/gettree" + img_add + ".png"));
+  ui.link->setIcon(
+      QIcon(":remotes/images/qbutton_icons/link" + img_add + ".png"));
+  ui.export_->setIcon(
+      QIcon(":remotes/images/qbutton_icons/export" + img_add + ".png"));
+  ui.getInfo->setIcon(
+      QIcon(":remotes/images/qbutton_icons/info" + img_add + ".png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
   ui.buttonMkdir->setDefaultAction(ui.mkdir);

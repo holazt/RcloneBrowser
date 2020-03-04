@@ -35,11 +35,21 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
   ui.output->setVisible(false);
 
+  auto settings = GetSettings();
+  QString iconsColour = settings->value("Settings/iconsColour").toString();
+
+  QString img_add = "";
+
+  if (iconsColour == "white") {
+    img_add = "_inv";
+  }
+
   ui.showDetails->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
-  ui.showDetails->setIconSize(QSize(24, 24));
+      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+
+  ui.showDetails->setIconSize(QSize(24, 24));
   ui.showOutput->setIconSize(QSize(24, 24));
 
   QObject::connect(
@@ -47,12 +57,12 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.details->setVisible(checked);
 
         if (checked) {
-          ui.showDetails->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showDetails->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         } else {
-          ui.showDetails->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showDetails->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         }
       });
@@ -62,17 +72,18 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.output->setVisible(checked);
 
         if (checked) {
-          ui.showOutput->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showOutput->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         } else {
-          ui.showOutput->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showOutput->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         }
       });
 
-  ui.cancel->setIcon(QIcon(":remotes/images/qbutton_icons/cancel.png"));
+  ui.cancel->setIcon(
+      QIcon(":remotes/images/qbutton_icons/cancel" + img_add + ".png"));
   ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
@@ -90,7 +101,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     }
   });
 
-  ui.copy->setIcon(QIcon(":remotes/images/qbutton_icons/copy.png"));
+  ui.copy->setIcon(
+      QIcon(":remotes/images/qbutton_icons/copy" + img_add + ".png"));
   ui.copy->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.copy, &QToolButton::clicked, this, [=]() {
@@ -146,7 +158,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
       if (rxSize.exactMatch(line)) {
         ui.size->setText(rxSize.cap(1));
-        ui.progress_info->setStyleSheet("QLabel { color: green; font-weight: bold;}");
+        ui.progress_info->setStyleSheet(
+            "QLabel { color: green; font-weight: bold;}");
         ui.progress_info->setText("(" + rxSize.cap(1) + ")");
 
         ui.bandwidth->setText(rxSize.cap(2));
@@ -157,7 +170,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.eta->setText(rxSize2.cap(8));
         ui.totalsize->setText(rxSize2.cap(3) + " " + rxSize2.cap(4));
 
-        ui.progress_info->setStyleSheet("QLabel { color: green; font-weight: bold;}");
+        ui.progress_info->setStyleSheet(
+            "QLabel { color: green; font-weight: bold;}");
         ui.progress_info->setText("(" + rxSize2.cap(5) + ")");
 
       } else if (rxErrors.exactMatch(line)) {
@@ -250,37 +264,44 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     }
   });
 
-  QObject::connect(mProcess,
-                   static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
-                       &QProcess::finished),
-                   this, [=](int status, QProcess::ExitStatus) {
-                     mProcess->deleteLater();
-                     for (auto label : mActive) {
-                       ui.progress->removeWidget(label->buddy());
-                       ui.progress->removeWidget(label);
-                       delete label->buddy();
-                       delete label;
-                     }
+  QObject::connect(
+      mProcess,
+      static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
+          &QProcess::finished),
+      this, [=](int status, QProcess::ExitStatus) {
+        mProcess->deleteLater();
+        for (auto label : mActive) {
+          ui.progress->removeWidget(label->buddy());
+          ui.progress->removeWidget(label);
+          delete label->buddy();
+          delete label;
+        }
 
-                     isRunning = false;
-                     if (status == 0) {
-                       ui.showDetails->setStyleSheet(
-                           "QToolButton { border: 0; color: black; font-weight: normal;}");
-                       ui.showDetails->setText("  Finished");
-                       ui.progress_info->hide();
-                     } else {
-                       ui.showDetails->setStyleSheet(
-                           "QToolButton { border: 0; color: red; font-weight: normal;}");
-                       ui.showDetails->setText("  Error");
-                       ui.progress_info->hide();
-                     }
+        isRunning = false;
+        if (status == 0) {
+          if (iconsColour == "white") {
+            ui.showDetails->setStyleSheet(
+                "QToolButton { border: 0; font-weight: normal;}");
+          } else {
+            ui.showDetails->setStyleSheet(
+                "QToolButton { border: 0; color: black; font-weight: normal;}");
+          }
+          ui.showDetails->setText("  Finished");
+          ui.progress_info->hide();
+        } else {
+          ui.showDetails->setStyleSheet(
+              "QToolButton { border: 0; color: red; font-weight: normal;}");
+          ui.showDetails->setText("  Error");
+          ui.progress_info->hide();
+        }
 
-                     ui.cancel->setToolTip("Close");
+        ui.cancel->setToolTip("Close");
 
-                     emit finished(ui.info->text());
-                   });
+        emit finished(ui.info->text());
+      });
 
-  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; font-weight: bold;}");
+  ui.showDetails->setStyleSheet(
+      "QToolButton { border: 0; color: green; font-weight: bold;}");
   ui.showDetails->setText("  Running");
 }
 
@@ -296,7 +317,8 @@ void JobWidget::cancel() {
   mProcess->kill();
   mProcess->waitForFinished();
 
-  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: red; font-weight: normal;}");
+  ui.showDetails->setStyleSheet(
+      "QToolButton { border: 0; color: red; font-weight: normal;}");
   ui.showDetails->setText("  Stopped");
   ui.progress_info->hide();
   ui.cancel->setToolTip("Close");

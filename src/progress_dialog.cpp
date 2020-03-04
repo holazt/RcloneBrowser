@@ -62,11 +62,20 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
   font.setPointSize(font.pointSize() + fontsize);
   ui.output->setFont(font);
 
+  // icons style
+  QString iconsColour = settings->value("Settings/iconsColour").toString();
+
+  QString img_add = "";
+
+  if (iconsColour == "white") {
+    img_add = "_inv";
+  }
+
   ui.output->setVisible(false);
 
   // set default arrow
   ui.buttonShowOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.buttonShowOutput->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
@@ -77,12 +86,12 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
         ui.output->setVisible(checked);
 
         if (checked) {
-          ui.buttonShowOutput->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.buttonShowOutput->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.buttonShowOutput->setIconSize(QSize(24, 24));
         } else {
-          ui.buttonShowOutput->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.buttonShowOutput->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.buttonShowOutput->setIconSize(QSize(24, 24));
         }
 
@@ -112,12 +121,16 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
     }
     ui.output->appendPlainText(output);
 
+    if (iconsColour == "white") {
+      ui.labelOperation->setStyleSheet("QLabel { font-weight: bold; }");
+    } else {
+      ui.labelOperation->setStyleSheet(
+          "QLabel { color: black; font-weight: bold; }");
+    }
 
- ui.labelOperation->setStyleSheet(
-      "QLabel { color: black; font-weight: bold; }");
- ui.labelOperation->setText("Finished ");
+    ui.labelOperation->setText("Finished ");
 
-//    ui.labelOperation->setVisible(false);
+    //    ui.labelOperation->setVisible(false);
 
     emit outputAvailable(output);
   });

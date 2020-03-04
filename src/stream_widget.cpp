@@ -1,4 +1,5 @@
 #include "stream_widget.h"
+#include "utils.h"
 
 StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                            const QString &remote, const QString &stream,
@@ -30,12 +31,21 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
   ui.output->setVisible(false);
 
+  auto settings = GetSettings();
+  QString iconsColour = settings->value("Settings/iconsColour").toString();
+
+  QString img_add = "";
+
+  if (iconsColour == "white") {
+    img_add = "_inv";
+  }
+
   ui.showDetails->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showDetails->setIconSize(QSize(24, 24));
 
   ui.showOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showOutput->setIconSize(QSize(24, 24));
 
   ui.cancel->setToolTip("Stop streaming");
@@ -44,12 +54,12 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
         ui.details->setVisible(checked);
         if (checked) {
-          ui.showDetails->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showDetails->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         } else {
-          ui.showDetails->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showDetails->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         }
       });
@@ -58,17 +68,18 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
       ui.showOutput, &QToolButton::toggled, this, [=](bool checked) {
         ui.output->setVisible(checked);
         if (checked) {
-          ui.showOutput->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vdownarrow.png"));
+          ui.showOutput->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         } else {
-          ui.showOutput->setIcon(
-              QIcon(":remotes/images/qbutton_icons/vrightarrow.png"));
+          ui.showOutput->setIcon(QIcon(
+              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         }
       });
 
-  ui.cancel->setIcon(QIcon(":remotes/images/qbutton_icons/cancel.png"));
+  ui.cancel->setIcon(
+      QIcon(":remotes/images/qbutton_icons/cancel" + img_add + ".png"));
   ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
@@ -90,40 +101,47 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
     }
   });
 
-  QObject::connect(mRclone,
-                   static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
-                       &QProcess::finished),
-                   this, [=](int status, QProcess::ExitStatus) {
-                     mRclone->deleteLater();
-                     isRunning = false;
+  QObject::connect(
+      mRclone,
+      static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
+          &QProcess::finished),
+      this, [=](int status, QProcess::ExitStatus) {
+        mRclone->deleteLater();
+        isRunning = false;
 
-                     QString info = "Streaming " + ui.info->text();
-                     QString infoTrimmed;
-                     if (info.length() > 140) {
-                       infoTrimmed = info.left(57) + "..." + info.right(80);
-                     } else {
-                       infoTrimmed = info;
-                     }
-                     ui.info->setText(infoTrimmed);
-                     ui.info->setCursorPosition(0);
+        QString info = "Streaming " + ui.info->text();
+        QString infoTrimmed;
+        if (info.length() > 140) {
+          infoTrimmed = info.left(57) + "..." + info.right(80);
+        } else {
+          infoTrimmed = info;
+        }
+        ui.info->setText(infoTrimmed);
+        ui.info->setCursorPosition(0);
 
-                     if (status == 0 || status == 9) {
-                       ui.showDetails->setStyleSheet(
-                           "QToolButton { border: 0; color: black; }");
-                       ui.showDetails->setText("  Finished");
-                     } else {
-                       ui.showDetails->setStyleSheet(
-                           "QToolButton { border: 0; color: red; }");
-                       ui.showDetails->setText("  Error");
-                     }
+        if (status == 0 || status == 9) {
+          if (iconsColour == "white") {
+            ui.showDetails->setStyleSheet(
+                "QToolButton { border: 0; font-weight: normal;}");
+          } else {
+            ui.showDetails->setStyleSheet(
+                "QToolButton { border: 0; color: black; font-weight: normal;}");
+          }
+          ui.showDetails->setText("  Finished");
+        } else {
+          ui.showDetails->setStyleSheet(
+              "QToolButton { border: 0; color: red; font-weight: normal;}");
+          ui.showDetails->setText("  Error");
+        }
 
-                     ui.cancel->setToolTip("Close");
+        ui.cancel->setToolTip("Close");
 
-                     emit finished();
-                     //          emit closed();
-                   });
+        emit finished();
+        //          emit closed();
+      });
 
-  ui.showDetails->setStyleSheet("QToolButton { border: 0; color: green; }");
+  ui.showDetails->setStyleSheet(
+      "QToolButton { border: 0; color: green; font-weight: bold;}");
   ui.showDetails->setText("  Streaming");
 }
 

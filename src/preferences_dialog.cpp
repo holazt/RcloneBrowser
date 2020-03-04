@@ -17,17 +17,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   }
 #endif
 
+  // lock vertical resizing
   resize(0, 0);
-
-#if not defined(Q_OS_MACOS)
-  // disable vertical resize
-  // does not work on macOS - to check with future Qt versions
-  int height = this->height();
-  if (height != minimumHeight() || height != maximumHeight()) {
-    setMinimumHeight(height);
-    setMaximumHeight(height);
-  }
-#endif
+  adjustSize();
+  resize(0, 0);
+  setMaximumHeight(this->height());
 
   QObject::connect(ui.rcloneBrowse, &QPushButton::clicked, this, [=]() {
     QString rclone = QFileDialog::getOpenFileName(

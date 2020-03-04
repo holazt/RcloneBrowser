@@ -21,4 +21,8 @@ signals:
 
 private:
   Ui::ProgressDialog ui;
+  int mWidth;
+  int mMinimumWidth;
+  int mMinimumHeight;
+  int mHeight;
 };

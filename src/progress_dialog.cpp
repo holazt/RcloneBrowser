@@ -5,19 +5,31 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
                                const QString &message, QProcess *process,
                                QWidget *parent, bool close, bool trim)
     : QDialog(parent) {
+
   ui.setupUi(this);
-  resize(width(), 0);
+
+  resize(0, 0);
 
   setWindowTitle(title);
+
+  // manually control window size to ensure resizing take into account output
+  // field which can be hidden
+  mMinimumWidth = minimumWidth();
+  mWidth = this->width();
+  mHeight = this->height();
+  ui.output->setVisible(true);
+  adjustSize();
+  mMinimumHeight = this->height();
+  ui.output->setVisible(false);
+  adjustSize();
 
   ui.labelOperation->setText(operation);
 
   ui.labelOperation->setStyleSheet(
       "QLabel { color: green; font-weight: bold; }");
 
-  ui.labelInfo->setText(message);
-  ui.labelInfo->setTextInteractionFlags(Qt::TextSelectableByMouse);
-  ui.labelInfo->setWordWrap(true);
+  ui.info->setText(message);
+  ui.info->setCursorPosition(0);
 
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
@@ -89,14 +101,34 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
           ui.buttonShowOutput->setIcon(QIcon(
               ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.buttonShowOutput->setIconSize(QSize(24, 24));
+
+          mWidth = this->width();
+          setMinimumWidth(mWidth);
+          setMaximumWidth(mWidth);
+          adjustSize();
+          setMinimumHeight(mHeight);
+          setMaximumHeight(mHeight);
+          setMinimumHeight(mMinimumHeight);
+          setMaximumHeight(16777215);
+          setMinimumWidth(mMinimumWidth);
+          setMaximumWidth(16777215);
         } else {
           ui.buttonShowOutput->setIcon(QIcon(
               ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.buttonShowOutput->setIconSize(QSize(24, 24));
-        }
 
-        if (!checked) {
+          mWidth = this->width();
+          mHeight = this->height();
+          setMinimumHeight(0);
+          setMinimumWidth(mWidth);
           adjustSize();
+          setMinimumWidth(mMinimumWidth);
+          //  when without output dont allow resize vertical
+          int height = this->height();
+          if (height != minimumHeight() || height != maximumHeight()) {
+            setMinimumHeight(height);
+            setMaximumHeight(height);
+          }
         }
       });
 
@@ -129,8 +161,6 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
     }
 
     ui.labelOperation->setText("Finished ");
-
-    //    ui.labelOperation->setVisible(false);
 
     emit outputAvailable(output);
   });

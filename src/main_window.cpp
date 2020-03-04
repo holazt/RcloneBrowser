@@ -448,14 +448,14 @@ MainWindow::MainWindow() {
 
     if (jobsCount == 1) {
       button = QMessageBox::question(this, "Rclone Browser",
-                                     QString("There is %1 innactive job.\n"
+                                     QString("There is %1 inactive job.\n"
                                              "\nDo you want to clean it?")
                                          .arg(jobsCount),
                                      QMessageBox::Yes | QMessageBox::No);
     } else {
       button =
           QMessageBox::question(this, "Rclone Browser",
-                                QString("There are %1 innactive jobs.\n"
+                                QString("There are %1 inactive jobs.\n"
                                         "\nDo you want to clean all of them?")
                                     .arg(jobsCount),
                                 QMessageBox::Yes | QMessageBox::No);

@@ -17,7 +17,6 @@
     <file>images/qbutton_icons/export.png</file>
     <file>images/qbutton_icons/link.png</file>
     <file>images/qbutton_icons/info.png</file>
-
     <file>images/qbutton_icons/arrowup.png</file>
     <file>images/qbutton_icons/arrowdown.png</file>
     <file>images/qbutton_icons/run.png</file>
@@ -39,6 +38,46 @@
     <file>images/qbutton_icons/open_remote.png</file>
     <file>images/qbutton_icons/check.png</file>
     <file>images/qbutton_icons/stop.png</file>
+
+
+    <file>images/qbutton_icons/refresh_inv.png</file>
+    <file>images/qbutton_icons/mkdir_inv.png</file>
+    <file>images/qbutton_icons/rename_inv.png</file>
+    <file>images/qbutton_icons/move_inv.png</file>
+    <file>images/qbutton_icons/purge_inv.png</file>
+    <file>images/qbutton_icons/mount_inv.png</file>
+    <file>images/qbutton_icons/stream_inv.png</file>
+    <file>images/qbutton_icons/upload_inv.png</file>
+    <file>images/qbutton_icons/download_inv.png</file>
+    <file>images/qbutton_icons/getsize_inv.png</file>
+    <file>images/qbutton_icons/gettree_inv.png</file>
+    <file>images/qbutton_icons/export_inv.png</file>
+    <file>images/qbutton_icons/link_inv.png</file>
+    <file>images/qbutton_icons/info_inv.png</file>
+    <file>images/qbutton_icons/arrowup_inv.png</file>
+    <file>images/qbutton_icons/arrowdown_inv.png</file>
+    <file>images/qbutton_icons/run_inv.png</file>
+    <file>images/qbutton_icons/file_inv.png</file>
+    <file>images/qbutton_icons/edit_inv.png</file>
+    <file>images/qbutton_icons/folder_inv.png</file>
+    <file>images/qbutton_icons/restore_inv.png</file>
+    <file>images/qbutton_icons/copy_inv.png</file>
+    <file>images/qbutton_icons/cancel_inv.png</file>
+    <file>images/qbutton_icons/vrightarrow_inv.png</file>
+    <file>images/qbutton_icons/vdownarrow_inv.png</file>
+    <file>images/qbutton_icons/preferences_inv.png</file>
+    <file>images/qbutton_icons/dryrun_inv.png</file>
+    <file>images/qbutton_icons/sort_inv.png</file>
+    <file>images/qbutton_icons/unsorted_inv.png</file>
+    <file>images/qbutton_icons/sortAZ_inv.png</file>
+    <file>images/qbutton_icons/sortZA_inv.png</file>
+    <file>images/qbutton_icons/rclone_config_inv.png</file>
+    <file>images/qbutton_icons/open_remote_inv.png</file>
+    <file>images/qbutton_icons/check_inv.png</file>
+    <file>images/qbutton_icons/stop_inv.png</file>
+
+
+
 
     <file>images/program_icons/rclone-browser512.png</file>
 

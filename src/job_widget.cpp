@@ -111,11 +111,13 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   });
 
   QObject::connect(mProcess, &QProcess::readyRead, this, [=]() {
+
+// regex101.com great for testing regexp
     QRegExp rxSize(
         R"(^Transferred:\s+(\S+ \S+) \(([^)]+)\)$)"); // Until rclone 1.42
     QRegExp rxSize2(
         R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
-    QRegExp rxErrors(R"(^Errors:\s+(\S+)$)");
+    QRegExp rxErrors(R"(^Errors:\s+(\d+)(.*)$)"); //captures also following variant: "Errors: 123 (bla bla bla)"
     QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxChecks2(
         R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+)$)");   // Starting with
@@ -158,6 +160,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
       if (rxSize.exactMatch(line)) {
         ui.size->setText(rxSize.cap(1));
+
         ui.progress_info->setStyleSheet(
             "QLabel { color: green; font-weight: bold;}");
         ui.progress_info->setText("(" + rxSize.cap(1) + ")");
@@ -176,6 +179,10 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
       } else if (rxErrors.exactMatch(line)) {
         ui.errors->setText(rxErrors.cap(1));
+
+        ui.progress_info->setStyleSheet(
+            "QLabel { color: red; font-weight: bold;}");
+
       } else if (rxChecks.exactMatch(line)) {
         ui.checks->setText(rxChecks.cap(1));
       } else if (rxChecks2.exactMatch(line)) {

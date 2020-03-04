@@ -230,7 +230,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.remoteMode->setText("drive, --drive-trashed-only");
     }
     if (mRemoteMode == "shared") {
-      ui.remoteMode->setText("--drive-shared-with-me");
+      ui.remoteMode->setText("drive, --drive-shared-with-me");
     }
   }
 
@@ -530,7 +530,7 @@ void TransferDialog::putJobOptions() {
         ui.remoteMode->setText("drive, --drive-trashed-only");
       }
       if (mJobOptions->remoteMode == "shared") {
-        ui.remoteMode->setText("--drive-shared-with-me");
+        ui.remoteMode->setText("drive, --drive-shared-with-me");
       }
     }
   }

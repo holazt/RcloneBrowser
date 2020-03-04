@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>954</width>
-    <height>635</height>
+    <height>630</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -140,6 +140,12 @@
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>10</verstretch>
+      </sizepolicy>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -157,7 +163,7 @@
           <item alignment="Qt::AlignTop">
            <widget class="QGroupBox" name="modeGroup">
             <property name="title">
-             <string>Mode</string>
+             <string>Transfer mode</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_5">
              <property name="bottomMargin">
@@ -351,6 +357,22 @@
         </widget>
        </item>
        <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::MinimumExpanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>15</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Other</string>
@@ -370,6 +392,12 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;extra options applied to rclone during transfer&lt;/p&gt;&lt;p&gt;e.g. --filter &amp;quot;- *.bak&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -394,6 +422,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -402,14 +436,26 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_GoogleDrive">
             <item>
-             <widget class="QLabel" name="googleDriveModeLabel">
+             <widget class="QLabel" name="remoteModeLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
-               <string>Google Drive mode: </string>
+               <string>Remote mode: </string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="googleDriveMode">
+             <widget class="QLineEdit" name="remoteMode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="contextMenuPolicy">
                <enum>Qt::NoContextMenu</enum>
               </property>
@@ -448,19 +494,6 @@
           </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

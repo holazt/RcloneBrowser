@@ -13,11 +13,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   ui.setupUi(this);
 
-  resize(0, 0);
+  adjustSize();
+  setMaximumHeight(this->height() + 30);
+  setMinimumHeight(this->height() + 30);
 
   setWindowTitle(isDownload ? "Download" : "Upload");
-
-  //  QStyle *style = qApp->style();
 
   auto settings = GetSettings();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
@@ -220,17 +220,20 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   ui.buttonDest->setVisible(isDownload);
   ui.buttonDefaultDest->setVisible(isDownload);
 
-  // remoteType != "" applies tasks saved before remoteType was introduced
-  if (!(remoteType == "")) {
-    if (!(remoteType == "drive")) {
-
-      qDebug() << QString("Hiding: ");
-      ui.googleDriveMode->setVisible(false);
-      ui.googleDriveModeLabel->setVisible(false);
+  if (mRemoteType != "drive") {
+    ui.remoteMode->setText(mRemoteType);
+  } else {
+    if (mRemoteMode == "main") {
+      ui.remoteMode->setText("drive");
+    }
+    if (mRemoteMode == "trash") {
+      ui.remoteMode->setText("drive, --drive-trashed-only");
+    }
+    if (mRemoteMode == "shared") {
+      ui.remoteMode->setText("--drive-shared-with-me");
     }
   }
 
-  ui.googleDriveMode->setText(remoteMode);
   ui.textDescription->clear();
 
   if (mIsEditMode && mJobOptions != nullptr) {
@@ -512,12 +515,24 @@ void TransferDialog::putJobOptions() {
   if (mJobOptions->remoteMode == "") {
     // task saved before googleDriveMode was added
     if (mJobOptions->DriveSharedWithMe) {
-      ui.googleDriveMode->setText("shared");
+      ui.remoteMode->setText("drive, --drive-shared-with-me");
     } else {
-      ui.googleDriveMode->setText("main");
+      ui.remoteMode->setText("drive");
     }
   } else {
-    ui.googleDriveMode->setText(mJobOptions->remoteMode);
+    if (mJobOptions->remoteType != "drive") {
+      ui.remoteMode->setText(mJobOptions->remoteType);
+    } else {
+      if (mJobOptions->remoteMode == "main") {
+        ui.remoteMode->setText("drive");
+      }
+      if (mJobOptions->remoteMode == "trash") {
+        ui.remoteMode->setText("drive, --drive-trashed-only");
+      }
+      if (mJobOptions->remoteMode == "shared") {
+        ui.remoteMode->setText("--drive-shared-with-me");
+      }
+    }
   }
 }
 

@@ -2493,7 +2493,6 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
     if (driveSharedMode == "shared") {
       args << "--drive-shared-with-me";
-      args << "--read-only";
     }
 
     if (driveSharedMode == "trash") {
@@ -2503,7 +2502,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);
-  rclone->start(GetRclone(), QStringList() << args << GetRcloneConf() << remote,
+  rclone->start(GetRclone(), QStringList() << args << GetRcloneConf() << GetDefaultRcloneOptionsList() << remote,
                 QProcess::WriteOnly);
 }
 

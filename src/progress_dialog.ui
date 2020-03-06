@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>277</height>
+    <height>279</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -82,6 +82,9 @@
      </property>
      <property name="lineWrapMode">
       <enum>QPlainTextEdit::NoWrap</enum>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

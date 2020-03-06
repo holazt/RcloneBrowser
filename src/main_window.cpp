@@ -259,6 +259,7 @@ MainWindow::MainWindow() {
     icon_w = 96;
   }
   icon_h = icon_w;
+  int button_width = 55;
 
   if (buttonStyle == "textandicon") {
 
@@ -281,6 +282,27 @@ MainWindow::MainWindow() {
     ui.buttonDownQueue->setIconSize(QSize(icon_w, icon_h));
     ui.buttonUpQueue->setIconSize(QSize(icon_w, icon_h));
 
+    ui.buttonDryrunTask->setMinimumWidth(button_width);
+    ui.buttonRunTask->setMinimumWidth(button_width);
+    ui.buttonEditTask->setMinimumWidth(button_width);
+    ui.buttonDeleteTask->setMinimumWidth(button_width);
+    ui.buttonSortTask->setMinimumWidth(button_width);
+    ui.buttonPrefs->setMinimumWidth(button_width);
+    ui.refresh->setMinimumWidth(button_width);
+    ui.open->setMinimumWidth(button_width);
+    ui.config->setMinimumWidth(button_width);
+    ui.buttonStopAllJobs->setMinimumWidth(button_width);
+    ui.buttonCleanNotRunning->setMinimumWidth(button_width);
+    ui.buttonAddToQueue->setMinimumWidth(button_width);
+    ui.buttonStartQueue->setMinimumWidth(button_width);
+    ui.buttonStopQueue->setMinimumWidth(button_width);
+    ui.buttonPurgeQueue->setMinimumWidth(button_width);
+    ui.buttonRemoveFromQueue->setMinimumWidth(button_width);
+    ui.buttonDownQueue->setMinimumWidth(button_width);
+
+    ui.buttonUpQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonUpQueue->setMinimumWidth(button_width);
+
   } else {
     if (buttonStyle == "textonly") {
       ui.buttonDryrunTask->setToolButtonStyle(Qt::ToolButtonTextOnly);
@@ -300,7 +322,27 @@ MainWindow::MainWindow() {
       ui.buttonPurgeQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonRemoveFromQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonDownQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+
+      ui.buttonDryrunTask->setMinimumWidth(button_width);
+      ui.buttonRunTask->setMinimumWidth(button_width);
+      ui.buttonEditTask->setMinimumWidth(button_width);
+      ui.buttonDeleteTask->setMinimumWidth(button_width);
+      ui.buttonSortTask->setMinimumWidth(button_width);
+      ui.buttonPrefs->setMinimumWidth(button_width);
+      ui.refresh->setMinimumWidth(button_width);
+      ui.open->setMinimumWidth(button_width);
+      ui.config->setMinimumWidth(button_width);
+      ui.buttonStopAllJobs->setMinimumWidth(button_width);
+      ui.buttonCleanNotRunning->setMinimumWidth(button_width);
+      ui.buttonAddToQueue->setMinimumWidth(button_width);
+      ui.buttonStartQueue->setMinimumWidth(button_width);
+      ui.buttonStopQueue->setMinimumWidth(button_width);
+      ui.buttonPurgeQueue->setMinimumWidth(button_width);
+      ui.buttonRemoveFromQueue->setMinimumWidth(button_width);
+      ui.buttonDownQueue->setMinimumWidth(button_width);
+
       ui.buttonUpQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonUpQueue->setMinimumWidth(button_width);
 
     } else {
       // button style - icononly

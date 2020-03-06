@@ -127,6 +127,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     icon_w = 96;
   }
   icon_h = icon_w;
+  int button_width = 55;
 
   if (buttonStyle == "textandicon") {
     ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
@@ -143,7 +144,24 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.buttonLink->setIconSize(QSize(icon_w, icon_h));
     ui.buttonExport->setIconSize(QSize(icon_w, icon_h));
     ui.buttonCheck->setIconSize(QSize(icon_w, icon_h));
+
+    ui.buttonRefresh->setMinimumWidth(button_width);
+    ui.buttonMkdir->setMinimumWidth(button_width);
+    ui.buttonRename->setMinimumWidth(button_width);
+    ui.buttonMove->setMinimumWidth(button_width);
+    ui.buttonPurge->setMinimumWidth(button_width);
+    ui.buttonMount->setMinimumWidth(button_width);
+    ui.buttonStream->setMinimumWidth(button_width);
+    ui.buttonUpload->setMinimumWidth(button_width);
+    ui.buttonDownload->setMinimumWidth(button_width);
+    ui.buttonSize->setMinimumWidth(button_width);
+    ui.buttonTree->setMinimumWidth(button_width);
+    ui.buttonLink->setMinimumWidth(button_width);
+    ui.buttonExport->setMinimumWidth(button_width);
+    ui.buttonCheck->setMinimumWidth(button_width);
+
     ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonInfo->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -162,7 +180,25 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonLink->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonExport->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonCheck->setToolButtonStyle(Qt::ToolButtonTextOnly);
+
+      ui.buttonRefresh->setMinimumWidth(button_width);
+      ui.buttonMkdir->setMinimumWidth(button_width);
+      ui.buttonRename->setMinimumWidth(button_width);
+      ui.buttonMove->setMinimumWidth(button_width);
+      ui.buttonPurge->setMinimumWidth(button_width);
+      ui.buttonMount->setMinimumWidth(button_width);
+      ui.buttonStream->setMinimumWidth(button_width);
+      ui.buttonUpload->setMinimumWidth(button_width);
+      ui.buttonDownload->setMinimumWidth(button_width);
+      ui.buttonSize->setMinimumWidth(button_width);
+      ui.buttonTree->setMinimumWidth(button_width);
+      ui.buttonLink->setMinimumWidth(button_width);
+      ui.buttonExport->setMinimumWidth(button_width);
+      ui.buttonCheck->setMinimumWidth(button_width);
+
       ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonInfo->setMinimumWidth(button_width);
+
 
     } else {
       // button style - icononly

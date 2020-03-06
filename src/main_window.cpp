@@ -710,6 +710,8 @@ MainWindow::MainWindow() {
   QObject::connect(ui.actionRun, &QAction::triggered, this, [=]() {
     auto items = ui.tasksListWidget->selectedItems();
 
+    // items->sortItems(Qt::AscendingOrder);
+
     QString itemsToRun;
     QString itemsAlreadyRunning;
 
@@ -855,10 +857,30 @@ MainWindow::MainWindow() {
     if (mQueueStatus && isQueueEmpty) {
 
       if (mQueueCount > 0) {
+
         JobOptionsListWidgetItem *item =
             static_cast<JobOptionsListWidgetItem *>(
                 ui.queueListWidget->item(0));
-        runItem(item, "queue");
+
+        JobOptions *jo = item->GetData();
+
+        // check first if maybe already running (manually by user??)
+        // in that case we just wait
+        bool isAlreadyRunning = false;
+        for (int j = 0; j < ui.jobs->count(); j++) {
+          QWidget *widget = ui.jobs->itemAt(j)->widget();
+          if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+            if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+                (transfer->isRunning)) {
+              isAlreadyRunning = true;
+              break;
+            }
+          }
+        }
+
+        if (!isAlreadyRunning) {
+          runItem(item, "queue");
+        }
         ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
       }
     }
@@ -909,9 +931,6 @@ MainWindow::MainWindow() {
       ui.buttonUpQueue->setEnabled(false);
       ui.buttonDownQueue->setEnabled(false);
     }
-    if (mQueueCount > 0) {
-      ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
-    }
 
     ui.labelQueueInfoStart->setText("Queue is running.");
     ui.labelQueueInfoStart->show();
@@ -921,7 +940,25 @@ MainWindow::MainWindow() {
     if (mQueueCount > 0) {
       JobOptionsListWidgetItem *item =
           static_cast<JobOptionsListWidgetItem *>(ui.queueListWidget->item(0));
-      runItem(item, "queue");
+      JobOptions *jo = item->GetData();
+
+      // check first if maybe already running (manually by user??)
+      // in that case we just wait
+      bool isAlreadyRunning = false;
+      for (int j = 0; j < ui.jobs->count(); j++) {
+        QWidget *widget = ui.jobs->itemAt(j)->widget();
+        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+          if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+              (transfer->isRunning)) {
+            isAlreadyRunning = true;
+            break;
+          }
+        }
+      }
+      if (!isAlreadyRunning) {
+        runItem(item, "queue");
+      }
+      ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
     }
   });
 
@@ -2132,15 +2169,6 @@ void MainWindow::listTasks() {
     ui.tasksListWidget->addItem(item);
   }
 
-  /*
-      ui.buttonDeleteTask->setDisabled(true);
-      ui.buttonEditTask->setDisabled(true);
-      ui.buttonRunTask->setDisabled(true);
-      ui.buttonDryrunTask->setDisabled(true);
-      ui.buttonAddToQueue->setDisabled(true);
-      ui.buttonSortTask->setDisabled(false);
-  */
-
   ui.buttonDeleteTask->setEnabled(false);
   ui.buttonEditTask->setEnabled(false);
   ui.buttonRunTask->setEnabled(false);
@@ -2298,27 +2326,58 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                              (ui.jobs->count() - 2) / 2);
 
-        // if queue job finished try to run next one
+        // if job finished try to run next one from the queue
         // only when not quitting  and when queue is active
-        if (widget->getTransferMode() == "queue" && !mAppQuittingStatus &&
-            mQueueStatus) {
 
-          --mQueueCount;
+        if (!mAppQuittingStatus && mQueueStatus) {
 
-          // queue is still running, even if mQueueCount is 0
-          ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+          auto QueueRunningTask = ui.queueListWidget->item(0);
 
-          ui.queueListWidget->takeItem(0);
-          auto nextTask = ui.queueListWidget->item(0);
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(QueueRunningTask);
+          JobOptions *jo = item->GetData();
 
-          if ((ui.queueListWidget->count()) > 0) {
-            JobOptionsListWidgetItem *item =
-                static_cast<JobOptionsListWidgetItem *>(nextTask);
-            runItem(item, "queue");
+          // check if finished task the same as running from the queue
+          auto transfer = qobject_cast<JobWidget *>(widget);
+          if (transfer->getUniqueID() == jo->uniqueId.toString()) {
 
-            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+            --mQueueCount;
+            // queue is still running, even if mQueueCount is 0
+            ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+
+            ui.queueListWidget->takeItem(0);
+            auto nextTask = ui.queueListWidget->item(0);
+
+            // if there is still task to run
+            if ((ui.queueListWidget->count()) > 0) {
+
+              // check if task is not already running (user could run it
+              // manually)
+
+              bool isAlreadyRunning = false;
+
+              JobOptionsListWidgetItem *item =
+                  static_cast<JobOptionsListWidgetItem *>(nextTask);
+              JobOptions *jo = item->GetData();
+
+              for (int j = 0; j < ui.jobs->count(); j++) {
+                QWidget *widget = ui.jobs->itemAt(j)->widget();
+                if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+                  if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+                      (transfer->isRunning)) {
+                    isAlreadyRunning = true;
+                    break;
+                  }
+                }
+              }
+
+              if (!isAlreadyRunning) {
+                runItem(item, "queue");
+              }
+              ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+            }
+            saveQueueFile();
           }
-          saveQueueFile();
         }
       });
 
@@ -2544,7 +2603,9 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);
-  rclone->start(GetRclone(), QStringList() << args << GetRcloneConf() << GetDefaultRcloneOptionsList() << remote,
+  rclone->start(GetRclone(),
+                QStringList() << args << GetRcloneConf()
+                              << GetDefaultRcloneOptionsList() << remote,
                 QProcess::WriteOnly);
 }
 

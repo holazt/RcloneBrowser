@@ -8,7 +8,7 @@ class JobWidget : public QWidget {
 
 public:
   JobWidget(QProcess *process, const QString &info, const QStringList &args,
-            const QString &source, const QString &dest,
+            const QString &source, const QString &dest, const QString &uniqueID, const QString &transferMode,
             QWidget *parent = nullptr);
   ~JobWidget();
 
@@ -17,6 +17,8 @@ public:
 
 public slots:
   void cancel();
+  QString getUniqueID();
+  QString getTransferMode();
 
 signals:
   void finished(const QString &info);
@@ -31,4 +33,8 @@ private:
   QStringList mArgs;
   QHash<QString, QLabel *> mActive;
   QSet<QLabel *> mUpdated;
+
+  QString mUniqueID = "";
+  QString mTransferMode ="";
+
 };

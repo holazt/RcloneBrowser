@@ -3,7 +3,8 @@
 
 JobWidget::JobWidget(QProcess *process, const QString &info,
                      const QStringList &args, const QString &source,
-                     const QString &dest, QWidget *parent)
+                     const QString &dest, const QString &uniqueID,
+                     const QString &transferMode, QWidget *parent)
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
@@ -20,6 +21,9 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   ui.dest->setToolTip(dest);
 
   QString infoTrimmed;
+
+  mUniqueID = uniqueID;
+  mTransferMode = transferMode;
 
   if (info.length() > 140) {
     infoTrimmed = info.left(57) + "..." + info.right(80);
@@ -111,13 +115,14 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   });
 
   QObject::connect(mProcess, &QProcess::readyRead, this, [=]() {
-
-// regex101.com great for testing regexp
+    // regex101.com great for testing regexp
     QRegExp rxSize(
         R"(^Transferred:\s+(\S+ \S+) \(([^)]+)\)$)"); // Until rclone 1.42
     QRegExp rxSize2(
         R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
-    QRegExp rxErrors(R"(^Errors:\s+(\d+)(.*)$)"); //captures also following variant: "Errors: 123 (bla bla bla)"
+    QRegExp rxErrors(
+        R"(^Errors:\s+(\d+)(.*)$)"); // captures also following variant:
+                                     // "Errors: 123 (bla bla bla)"
     QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxChecks2(
         R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+)$)");   // Starting with
@@ -330,3 +335,7 @@ void JobWidget::cancel() {
   ui.progress_info->hide();
   ui.cancel->setToolTip("Close");
 }
+
+QString JobWidget::getUniqueID() { return mUniqueID; }
+
+QString JobWidget::getTransferMode() { return mTransferMode; }

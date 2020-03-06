@@ -76,8 +76,14 @@
     <file>images/qbutton_icons/check_inv.png</file>
     <file>images/qbutton_icons/stop_inv.png</file>
 
+    <file>images/qbutton_icons/addtoqueue_inv.png</file>
+    <file>images/qbutton_icons/addtoqueue.png</file>
 
+    <file>images/qbutton_icons/removefromqueue.png</file>
+    <file>images/qbutton_icons/removefromqueue_inv.png</file>
 
+    <file>images/qbutton_icons/vuparrow.png</file>
+    <file>images/qbutton_icons/vuparrow_inv.png</file>
 
     <file>images/program_icons/rclone-browser512.png</file>
 

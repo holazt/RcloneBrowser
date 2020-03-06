@@ -260,7 +260,8 @@ void SetRclonePassword(const QString &rclonePassword) {
 
 QStringList GetRemoteModeRcloneOptions() {
   auto settings = GetSettings();
-  QString googleDriveMode = settings->value("Settings/remoteMode", "main").toString();
+  QString googleDriveMode =
+      settings->value("Settings/remoteMode", "main").toString();
 
   QStringList driveSharedOption;
 
@@ -305,4 +306,47 @@ QStringList GetShowHidden() {
                      << ".*";
   }
   return showHiddenOption;
+}
+
+QDir GetConfigDir() {
+
+  QDir outputDir;
+
+  if (IsPortableMode()) {
+    // in portable mode tasks' file will be saved in the same folder as
+    // excecutable
+#ifdef Q_OS_MACOS
+    // on macOS excecutable file is located in
+    // ./rclone-browser.app/Contents/MasOS/
+    // to get actual bundle folder we have
+    // to traverse three levels up
+    outputDir = QDir(qApp->applicationDirPath() + "/../../..");
+#else
+#ifdef Q_OS_WIN
+    // not macOS
+    outputDir = QDir(qApp->applicationDirPath());
+#else
+    QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+    outputDir = QDir(xdg_config_home + "/rclone-browser");
+#endif
+#endif
+
+  } else {
+    // get data location folder from Qt  - OS dependend
+    outputDir =
+        QDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+  }
+
+  //  if (!outputDir.exists()) {
+  //    outputDir.mkpath(".");
+  //  }
+  //  QString filePath = outputDir.absoluteFilePath(persistenceFileName);
+  //  QFile *file = new QFile(filePath);
+  //
+  //  if (!file->open(mode)) {
+  //    qDebug() << QString("Could not open ") << file->fileName();
+  //    delete file;
+  //    file = nullptr;
+  //  }
+  return outputDir;
 }

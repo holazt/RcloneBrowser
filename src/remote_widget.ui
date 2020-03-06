@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1064</width>
+    <width>1103</width>
     <height>552</height>
    </rect>
   </property>
@@ -62,14 +62,20 @@
            </widget>
           </item>
           <item>
-           <widget class="Line" name="line_2">
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
+           <spacer name="horizontalSpacer_3">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Horizontal</enum>
             </property>
-           </widget>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QToolButton" name="buttonMkdir">
@@ -112,14 +118,20 @@
            </widget>
           </item>
           <item>
-           <widget class="Line" name="line">
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
+           <spacer name="horizontalSpacer_4">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Horizontal</enum>
             </property>
-           </widget>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QToolButton" name="buttonMount">
@@ -162,14 +174,20 @@
            </widget>
           </item>
           <item>
-           <widget class="Line" name="line_3">
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
+           <spacer name="horizontalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Horizontal</enum>
             </property>
-           </widget>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QToolButton" name="buttonSize">

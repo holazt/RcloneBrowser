@@ -61,8 +61,7 @@ CheckDialog::CheckDialog(const QString &remote, const QDir &path,
   });
 }
 
-CheckDialog::~CheckDialog() {
-}
+CheckDialog::~CheckDialog() {}
 
 QString CheckDialog::getSource() const { return ui.sourceDir->text(); }
 

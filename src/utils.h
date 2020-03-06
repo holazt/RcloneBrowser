@@ -22,4 +22,6 @@ QStringList GetDefaultRcloneOptionsList();
 QStringList GetRemoteModeRcloneOptions();
 QStringList GetShowHidden();
 
+QDir GetConfigDir(void);
+
 unsigned int compareVersion(std::string, std::string);

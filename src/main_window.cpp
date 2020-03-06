@@ -171,7 +171,7 @@ MainWindow::MainWindow() {
       QIcon(":remotes/images/qbutton_icons/open_remote" + img_add + ".png"));
   ui.actionConfig->setIcon(
       QIcon(":remotes/images/qbutton_icons/rclone_config" + img_add + ".png"));
-  ui.actionStopAllJobs->setIcon(
+  ui.actionStopAllTransfers->setIcon(
       QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionCleanNotRunning->setIcon(
       QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
@@ -179,6 +179,22 @@ MainWindow::MainWindow() {
   // as we dont want pref icon in the menu
   ui.buttonPrefs->setIcon(
       QIcon(":remotes/images/qbutton_icons/preferences" + img_add + ".png"));
+
+  ui.actionAddToQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/addtoqueue" + img_add + ".png"));
+  ui.actionStartQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/run" + img_add + ".png"));
+  ui.actionStopQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
+  ui.actionPurgeQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+  ui.actionRemoveFromQueue->setIcon(QIcon(
+      ":remotes/images/qbutton_icons/removefromqueue" + img_add + ".png"));
+  ui.actionUpQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/vuparrow" + img_add + ".png"));
+  ui.actionDownQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+
   QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowup" + img_add +
                           ".png");
   QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowdown" + img_add +
@@ -202,8 +218,15 @@ MainWindow::MainWindow() {
   ui.open->setDefaultAction(ui.actionOpen);
   ui.config->setDefaultAction(ui.actionConfig);
   //  ui.buttonPrefs->setDefaultAction(ui.preferences);
-  ui.buttonStopAllJobs->setDefaultAction(ui.actionStopAllJobs);
+  ui.buttonStopAllJobs->setDefaultAction(ui.actionStopAllTransfers);
   ui.buttonCleanNotRunning->setDefaultAction(ui.actionCleanNotRunning);
+  ui.buttonAddToQueue->setDefaultAction(ui.actionAddToQueue);
+  ui.buttonStartQueue->setDefaultAction(ui.actionStartQueue);
+  ui.buttonStopQueue->setDefaultAction(ui.actionStopQueue);
+  ui.buttonPurgeQueue->setDefaultAction(ui.actionPurgeQueue);
+  ui.buttonRemoveFromQueue->setDefaultAction(ui.actionRemoveFromQueue);
+  ui.buttonDownQueue->setDefaultAction(ui.actionDownQueue);
+  ui.buttonUpQueue->setDefaultAction(ui.actionUpQueue);
 
   // overwrite button text
   ui.buttonPrefs->setText("Prefs");
@@ -218,6 +241,8 @@ MainWindow::MainWindow() {
 
   int icon_w = 16;
   int icon_h = 16;
+  //  int button_width = 32;
+
   if (buttonSize == "0") {
     icon_w = 24;
   }
@@ -236,6 +261,7 @@ MainWindow::MainWindow() {
   icon_h = icon_w;
 
   if (buttonStyle == "textandicon") {
+
     ui.buttonDryrunTask->setIconSize(QSize(icon_w, icon_h));
     ui.buttonRunTask->setIconSize(QSize(icon_w, icon_h));
     ui.buttonEditTask->setIconSize(QSize(icon_w, icon_h));
@@ -247,6 +273,13 @@ MainWindow::MainWindow() {
     ui.config->setIconSize(QSize(icon_w, icon_h));
     ui.buttonStopAllJobs->setIconSize(QSize(icon_w, icon_h));
     ui.buttonCleanNotRunning->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonAddToQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonStartQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonStopQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonPurgeQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonRemoveFromQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonDownQueue->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonUpQueue->setIconSize(QSize(icon_w, icon_h));
 
   } else {
     if (buttonStyle == "textonly") {
@@ -261,6 +294,13 @@ MainWindow::MainWindow() {
       ui.config->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonStopAllJobs->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonCleanNotRunning->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonAddToQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonStartQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonStopQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonPurgeQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonRemoveFromQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonDownQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonUpQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
 
     } else {
       // button style - icononly
@@ -286,6 +326,20 @@ MainWindow::MainWindow() {
       ui.buttonStopAllJobs->setIconSize(QSize(icon_w, icon_h));
       ui.buttonCleanNotRunning->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonCleanNotRunning->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonAddToQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonAddToQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonStartQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonStartQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonStopQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonStopQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonPurgeQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonPurgeQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonRemoveFromQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonRemoveFromQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonDownQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDownQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonUpQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonUpQueue->setIconSize(QSize(icon_w, icon_h));
     }
   }
 
@@ -419,12 +473,38 @@ MainWindow::MainWindow() {
   QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs,
                    &QTabWidget::removeTab);
 
+  QObject::connect(ui.tasksListWidget, &QListWidget::itemClicked, this, [=]() {
+    ui.buttonDeleteTask->setEnabled(true);
+    ui.buttonEditTask->setEnabled(true);
+    ui.buttonRunTask->setEnabled(true);
+    ui.buttonDryrunTask->setEnabled(true);
+    ui.buttonAddToQueue->setEnabled(true);
+  });
+
   QObject::connect(ui.tasksListWidget, &QListWidget::currentItemChanged, this,
-                   [=](QListWidgetItem *current) {
-                     ui.buttonDeleteTask->setEnabled(current != nullptr);
-                     ui.buttonEditTask->setEnabled(current != nullptr);
-                     ui.buttonRunTask->setEnabled(current != nullptr);
-                     ui.buttonDryrunTask->setEnabled(current != nullptr);
+                   [=]() {
+                     auto items = ui.tasksListWidget->selectedItems();
+
+                     if (items.isEmpty()) {
+                       ui.buttonDeleteTask->setEnabled(false);
+                       ui.buttonEditTask->setEnabled(false);
+                       ui.buttonRunTask->setEnabled(false);
+                       ui.buttonDryrunTask->setEnabled(false);
+                       ui.buttonAddToQueue->setEnabled(false);
+                     } else {
+
+                       ui.buttonDeleteTask->setEnabled(true);
+                       ui.buttonEditTask->setEnabled(true);
+                       ui.buttonRunTask->setEnabled(true);
+                       ui.buttonDryrunTask->setEnabled(true);
+                       ui.buttonAddToQueue->setEnabled(true);
+                     }
+
+                     if (ui.tasksListWidget->count() > 1) {
+                       ui.buttonSortTask->setEnabled(true);
+                     } else {
+                       ui.buttonSortTask->setEnabled(false);
+                     }
                    });
 
   QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this,
@@ -447,35 +527,36 @@ MainWindow::MainWindow() {
   QObject::connect(ui.tasksListWidget, &QWidget::customContextMenuRequested,
                    this, [=](const QPoint &pos) {
                      QMenu menu;
-                     menu.addAction(ui.actionEdit);
+                     menu.addAction(ui.actionAddToQueue);
                      menu.addSeparator();
                      menu.addAction(ui.actionDryRun);
-                     menu.addSeparator();
                      menu.addAction(ui.actionRun);
                      menu.addSeparator();
+                     menu.addAction(ui.actionEdit);
                      menu.addAction(ui.actionDelete);
                      menu.exec(
                          ui.tasksListWidget->viewport()->mapToGlobal(pos));
                    });
 
+  QObject::connect(ui.queueListWidget, &QWidget::customContextMenuRequested,
+                   this, [=](const QPoint &pos) {
+                     QMenu menu;
+                     menu.addAction(ui.actionUpQueue);
+                     menu.addAction(ui.actionDownQueue);
+                     menu.addSeparator();
+                     menu.addAction(ui.actionRemoveFromQueue);
+                     menu.exec(
+                         ui.queueListWidget->viewport()->mapToGlobal(pos));
+                   });
+
   QObject::connect(ui.actionCleanNotRunning, &QAction::triggered, this, [=]() {
     int jobsCount = ((ui.jobs->count() - 2) / 2 - mJobCount);
-    int button;
 
-    if (jobsCount == 1) {
-      button = QMessageBox::question(this, "Rclone Browser",
-                                     QString("There is %1 inactive job.\n"
-                                             "\nDo you want to clean it?")
-                                         .arg(jobsCount),
-                                     QMessageBox::Yes | QMessageBox::No);
-    } else {
-      button =
-          QMessageBox::question(this, "Rclone Browser",
-                                QString("There are %1 inactive jobs.\n"
-                                        "\nDo you want to clean all of them?")
-                                    .arg(jobsCount),
-                                QMessageBox::Yes | QMessageBox::No);
-    }
+    int button = QMessageBox::question(this, "Rclone Browser",
+                                       QString("There are %1 inactive job(s).\n"
+                                               "\nDo you want to clean them?")
+                                           .arg(jobsCount),
+                                       QMessageBox::Yes | QMessageBox::No);
 
     if (button == QMessageBox::Yes) {
       for (int j = 0; j < ui.jobs->count(); j++) {
@@ -499,35 +580,23 @@ MainWindow::MainWindow() {
     }
   });
 
-  QObject::connect(ui.actionStopAllJobs, &QAction::triggered, this, [=]() {
-    int button;
+  QObject::connect(ui.actionStopAllTransfers, &QAction::triggered, this, [=]() {
+    // we only stop transfer jobs - others are intact
+    if (mTransferJobCount != 0) {
 
-    if (mJobCount != 0) {
-      if (mJobCount == 1) {
-        button = QMessageBox::question(this, "Rclone Browser",
-                                       QString("There is %1 job running.\n"
-                                               "\nDo you want to stop it?")
-                                           .arg(mJobCount),
-                                       QMessageBox::Yes | QMessageBox::No);
-      } else {
-        button =
-            QMessageBox::question(this, "Rclone Browser",
-                                  QString("There are %1 jobs running.\n"
-                                          "\nDo you want to stop all of them?")
-                                      .arg(mJobCount),
-                                  QMessageBox::Yes | QMessageBox::No);
-      }
+      int button = QMessageBox::question(
+          this, "Rclone Browser",
+          QString("There are %1 transfer job(s) running.\n"
+                  "\nDo you want to stop  them?")
+              .arg(mTransferJobCount),
+          QMessageBox::Yes | QMessageBox::No);
 
       if (button == QMessageBox::Yes) {
 
         for (int i = 0; i < ui.jobs->count(); i++) {
           QWidget *widget = ui.jobs->itemAt(i)->widget();
-          if (auto mount = qobject_cast<MountWidget *>(widget)) {
-            mount->cancel();
-          } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-            transfer->cancel();
-          } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
-            stream->cancel();
+          if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+            emit transfer->cancel();
           }
         }
       }
@@ -579,16 +648,17 @@ MainWindow::MainWindow() {
     }
 
     if (items.count() > 0) {
-      int button = QMessageBox::warning(
+      int button = QMessageBox::question(
           this, "Dry run",
-          QString("Are you sure you want to dry run following task(s)?\n\n" +
-                  itemsToRun),
+          QString(
+              "Are you sure you want to dry run the following task(s)?\n\n" +
+              itemsToRun),
           QMessageBox::Yes | QMessageBox::No);
       if (button == QMessageBox::Yes) {
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
-          runItem(item, true);
+          runItem(item, "task", true);
         }
       }
     }
@@ -599,25 +669,46 @@ MainWindow::MainWindow() {
     auto items = ui.tasksListWidget->selectedItems();
 
     QString itemsToRun;
+    QString itemsAlreadyRunning;
 
     foreach (auto i, items) {
       JobOptionsListWidgetItem *item =
           static_cast<JobOptionsListWidgetItem *>(i);
       JobOptions *jo = item->GetData();
       itemsToRun = itemsToRun + jo->description + "\n";
+
+      // check if task already running
+      for (int j = 0; j < ui.jobs->count(); j++) {
+        QWidget *widget = ui.jobs->itemAt(j)->widget();
+        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+          if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+              (transfer->isRunning)) {
+            itemsAlreadyRunning = itemsAlreadyRunning + jo->description + "\n";
+          }
+        }
+      }
+    }
+
+    if (!itemsAlreadyRunning.isEmpty()) {
+      QMessageBox::critical(
+          this, "Run",
+          QString("Failed as the following task(s) are already running.\n\n" +
+                  itemsAlreadyRunning),
+          QMessageBox::Ok);
+      return;
     }
 
     if (items.count() > 0) {
-      int button = QMessageBox::warning(
+      int button = QMessageBox::question(
           this, "Run",
-          QString("Are you sure you want to run following task(s)?\n\n" +
+          QString("Are you sure you want to run the following task(s)?\n\n" +
                   itemsToRun),
           QMessageBox::No | QMessageBox::Yes);
       if (button == QMessageBox::Yes) {
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
-          runItem(item);
+          runItem(item, "task");
         }
       }
     }
@@ -639,7 +730,7 @@ MainWindow::MainWindow() {
     if (items.count() > 0) {
       int button = QMessageBox::warning(
           this, "Delete",
-          QString("Are you sure you want to delete following task(s)?\n\n" +
+          QString("Are you sure you want to delete the following task(s)?\n\n" +
                   itemsToDelete),
           QMessageBox::No | QMessageBox::Yes);
 
@@ -656,6 +747,472 @@ MainWindow::MainWindow() {
     }
   });
 
+  QObject::connect(ui.actionAddToQueue, &QAction::triggered, this, [=]() {
+    auto items = ui.tasksListWidget->selectedItems();
+
+    QString itemsToAdd;
+
+    foreach (auto i, items) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(i);
+      JobOptions *jo = item->GetData();
+      itemsToAdd = itemsToAdd + jo->description + "\n";
+    }
+
+    // if queue is empty we have to start first task
+    bool isQueueEmpty = (ui.queueListWidget->count() == 0);
+
+    if (items.count() > 0) {
+      int button = QMessageBox::question(
+          this, "Add to queue",
+          QString("Are you sure you want to add the following "
+                  "task(s) to the queue?\n\n" +
+                  itemsToAdd),
+          QMessageBox::No | QMessageBox::Yes);
+
+      if (button == QMessageBox::Yes) {
+
+        mQueueCount = mQueueCount + items.count();
+
+        if (mQueueStatus) {
+          ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+        } else {
+          ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+        }
+
+        foreach (auto i, items) {
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(i);
+
+          JobOptions *jo = item->GetData();
+
+          JobOptionsListWidgetItem *newitem = new JobOptionsListWidgetItem(
+              jo,
+              jo->jobType == JobOptions::JobType::Download ? mDownloadIcon
+                                                           : mUploadIcon,
+              jo->description);
+
+          ui.queueListWidget->addItem(newitem);
+        }
+
+        if (ui.queueListWidget->count() > 0) {
+          ui.buttonPurgeQueue->setEnabled(true);
+        } else {
+          ui.buttonPurgeQueue->setEnabled(false);
+        }
+      }
+    }
+
+    // save new queue to file
+    saveQueueFile();
+
+    ui.queueListWidget->setFocus();
+
+    // if queue was empty we start first taks if queue is running
+
+    if (mQueueStatus && isQueueEmpty) {
+
+      if (mQueueCount > 0) {
+        JobOptionsListWidgetItem *item =
+            static_cast<JobOptionsListWidgetItem *>(
+                ui.queueListWidget->item(0));
+        runItem(item, "queue");
+        ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+      }
+    }
+  });
+
+  QObject::connect(ui.actionStartQueue, &QAction::triggered, this, [=]() {
+    mQueueStatus = true;
+
+    ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+    ui.buttonStopQueue->setEnabled(true);
+    ui.buttonStartQueue->setEnabled(false);
+
+    ui.buttonPurgeQueue->setEnabled(false);
+
+    if (mQueueCount > 1) {
+      ui.buttonPurgeQueue->setEnabled(true);
+    } else {
+      ui.buttonPurgeQueue->setEnabled(false);
+    }
+
+    if (ui.queueListWidget->currentRow() == 0 ||
+        ui.queueListWidget->currentRow() == ui.queueListWidget->count() - 1) {
+      ui.buttonDownQueue->setEnabled(false);
+    } else {
+      ui.buttonDownQueue->setEnabled(true);
+    }
+
+    if (ui.queueListWidget->currentRow() == 1 ||
+        ui.queueListWidget->currentRow() == 0) {
+      ui.buttonUpQueue->setEnabled(false);
+    } else {
+      ui.buttonUpQueue->setEnabled(true);
+    }
+
+    if (ui.queueListWidget->currentRow() == 0) {
+
+      ui.buttonRemoveFromQueue->setEnabled(false);
+      ui.buttonUpQueue->setEnabled(false);
+      ui.buttonDownQueue->setEnabled(false);
+
+    } else {
+      ui.buttonRemoveFromQueue->setEnabled(true);
+    }
+
+    if (mQueueCount == 0) {
+      ui.buttonRemoveFromQueue->setEnabled(false);
+      ui.buttonPurgeQueue->setEnabled(false);
+      ui.buttonUpQueue->setEnabled(false);
+      ui.buttonDownQueue->setEnabled(false);
+    }
+    if (mQueueCount > 0) {
+      ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+    }
+
+    ui.labelQueueInfoStart->setText("Queue is running.");
+    ui.labelQueueInfoStart->show();
+    ui.labelQueueInfoStop->hide();
+
+    // if not empty start first task
+    if (mQueueCount > 0) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(ui.queueListWidget->item(0));
+      runItem(item, "queue");
+    }
+  });
+
+  QObject::connect(ui.actionStopQueue, &QAction::triggered, this, [=]() {
+    mQueueStatus = false;
+
+    if (ui.queueListWidget->count() > 0) {
+      ui.queueListWidget->item(0)->setBackground(QBrush());
+    }
+
+    ui.buttonStopQueue->setEnabled(false);
+    ui.buttonStartQueue->setEnabled(true);
+    ui.buttonPurgeQueue->setEnabled(true);
+    ui.buttonRemoveFromQueue->setEnabled(true);
+
+    if (mQueueCount == 0) {
+      ui.buttonRemoveFromQueue->setEnabled(false);
+      ui.buttonPurgeQueue->setEnabled(false);
+      ui.buttonUpQueue->setEnabled(false);
+      ui.buttonDownQueue->setEnabled(false);
+      ui.tabs->setTabText(3, QString("Queue").arg(mQueueCount));
+    } else {
+      ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+    }
+
+    if (!(ui.queueListWidget->item(0) == nullptr)) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(ui.queueListWidget->item(0));
+
+      JobOptions *jo = item->GetData();
+
+      for (int j = 0; j < ui.jobs->count(); j++) {
+        QWidget *widget = ui.jobs->itemAt(j)->widget();
+        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+
+          if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+              (transfer->isRunning)) {
+            emit transfer->cancel();
+          }
+        }
+      }
+    }
+
+    ui.labelQueueInfoStop->setText("Queue is not running.");
+    ui.labelQueueInfoStop->show();
+    ui.labelQueueInfoStart->hide();
+  });
+
+  QObject::connect(ui.actionPurgeQueue, &QAction::triggered, this, [=]() {
+    if (ui.queueListWidget->count() > 0) {
+
+      int button = QMessageBox::warning(
+          this, "Clean the queue",
+          QString("Are you sure you want to remove all tasks from the queue?"),
+          QMessageBox::No | QMessageBox::Yes);
+
+      if (button == QMessageBox::Yes) {
+
+        int itemsCount = ui.queueListWidget->count();
+        for (int i = 0; i < itemsCount; i++) {
+
+          if (mQueueStatus) {
+            --mQueueCount;
+            if (i != 0)
+              ui.queueListWidget->takeItem(1);
+          } else {
+            --mQueueCount;
+            ui.queueListWidget->takeItem(0);
+          }
+
+          ui.buttonRemoveFromQueue->setEnabled(false);
+          ui.buttonPurgeQueue->setEnabled(false);
+          ui.buttonUpQueue->setEnabled(false);
+          ui.buttonDownQueue->setEnabled(false);
+        }
+      } else {
+        ui.queueListWidget->setFocus();
+      }
+    }
+
+    if (mQueueCount != 0) {
+      ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+    } else {
+      ui.tabs->setTabText(3, QString("Queue").arg(mQueueCount));
+    }
+    saveQueueFile();
+  });
+
+  QObject::connect(ui.actionRemoveFromQueue, &QAction::triggered, this, [=]() {
+    if (mQueueStatus) {
+
+      if (mQueueCount > 0) {
+        --mQueueCount;
+        ui.queueListWidget->takeItem(ui.queueListWidget->currentRow());
+
+        if (ui.queueListWidget->currentRow() == 0 ||
+            ui.queueListWidget->currentRow() ==
+                ui.queueListWidget->count() - 1) {
+          ui.buttonDownQueue->setEnabled(false);
+        } else {
+          ui.buttonDownQueue->setEnabled(true);
+        }
+
+        if (ui.queueListWidget->currentRow() == 0 ||
+            ui.queueListWidget->currentRow() == 1) {
+          ui.buttonUpQueue->setEnabled(false);
+        } else {
+          ui.buttonUpQueue->setEnabled(true);
+        }
+      }
+      if (ui.queueListWidget->count() == 1) {
+        ui.buttonRemoveFromQueue->setEnabled(false);
+      }
+      ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+
+    } else {
+
+      --mQueueCount;
+      ui.queueListWidget->takeItem(ui.queueListWidget->currentRow());
+
+      if (ui.queueListWidget->currentRow() == ui.queueListWidget->count() - 1) {
+        ui.buttonDownQueue->setEnabled(false);
+      } else {
+        ui.buttonDownQueue->setEnabled(true);
+      }
+      if (ui.queueListWidget->currentRow() == 0) {
+        ui.buttonUpQueue->setEnabled(false);
+      } else {
+        ui.buttonUpQueue->setEnabled(true);
+      }
+
+      if (ui.queueListWidget->count() == 0) {
+
+        ui.buttonRemoveFromQueue->setEnabled(false);
+        ui.buttonPurgeQueue->setEnabled(false);
+        ui.buttonUpQueue->setEnabled(false);
+        ui.buttonDownQueue->setEnabled(false);
+        ui.tabs->setTabText(3, QString("Queue"));
+
+      } else {
+        ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+      }
+    }
+
+    saveQueueFile();
+  });
+
+  QObject::connect(ui.actionDownQueue, &QAction::triggered, this, [=]() {
+    auto item = ui.queueListWidget->takeItem(ui.queueListWidget->currentRow());
+    ui.queueListWidget->insertItem(ui.queueListWidget->currentRow() + 1, item);
+    ui.queueListWidget->setCurrentRow(ui.queueListWidget->row(item));
+
+    saveQueueFile();
+  });
+
+  QObject::connect(ui.actionUpQueue, &QAction::triggered, this, [=]() {
+    if (ui.queueListWidget->currentRow() == ui.queueListWidget->count() - 1) {
+      // last row needs special treatment
+      auto item =
+          ui.queueListWidget->takeItem(ui.queueListWidget->currentRow());
+      ui.queueListWidget->insertItem(ui.queueListWidget->currentRow(), item);
+      ui.queueListWidget->setCurrentRow(ui.queueListWidget->row(item));
+    } else {
+      auto item =
+          ui.queueListWidget->takeItem(ui.queueListWidget->currentRow());
+      ui.queueListWidget->insertItem(ui.queueListWidget->currentRow() - 1,
+                                     item);
+      ui.queueListWidget->setCurrentRow(ui.queueListWidget->row(item));
+    }
+
+    saveQueueFile();
+  });
+
+  QObject::connect(ui.queueListWidget, &QListWidget::itemClicked, this, [=]() {
+    if (mQueueStatus) {
+
+      if (ui.queueListWidget->count() > 1) {
+        ui.buttonPurgeQueue->setEnabled(true);
+      } else {
+        ui.buttonPurgeQueue->setEnabled(false);
+      }
+
+      if (ui.queueListWidget->currentRow() == 0 ||
+          ui.queueListWidget->currentRow() == ui.queueListWidget->count() - 1) {
+        ui.buttonDownQueue->setEnabled(false);
+      } else {
+        ui.buttonDownQueue->setEnabled(true);
+      }
+
+      if (ui.queueListWidget->currentRow() == 1 ||
+          ui.queueListWidget->currentRow() == 0) {
+        ui.buttonUpQueue->setEnabled(false);
+        ui.actionUpQueue->setEnabled(false);
+      } else {
+        ui.buttonUpQueue->setEnabled(true);
+        ui.actionUpQueue->setEnabled(true);
+      }
+
+      if (ui.queueListWidget->currentRow() == 0) {
+        ui.buttonRemoveFromQueue->setEnabled(false);
+        ui.actionRemoveFromQueue->setEnabled(false);
+      } else {
+        ui.buttonRemoveFromQueue->setEnabled(true);
+        ui.actionRemoveFromQueue->setEnabled(true);
+      }
+
+    } else {
+      if (ui.queueListWidget->count() > 0) {
+        ui.buttonPurgeQueue->setEnabled(true);
+      } else {
+        ui.buttonPurgeQueue->setEnabled(false);
+      }
+
+      if (ui.queueListWidget->currentRow() == 0) {
+        ui.buttonUpQueue->setEnabled(false);
+        ui.actionUpQueue->setEnabled(false);
+      } else {
+        ui.buttonUpQueue->setEnabled(true);
+        ui.actionUpQueue->setEnabled(true);
+      }
+      if (ui.queueListWidget->currentRow() == ui.queueListWidget->count() - 1) {
+        ui.buttonDownQueue->setEnabled(false);
+        ui.actionDownQueue->setEnabled(false);
+      } else {
+        ui.buttonDownQueue->setEnabled(true);
+        ui.actionDownQueue->setEnabled(true);
+      }
+      ui.buttonRemoveFromQueue->setEnabled(true);
+      ui.actionRemoveFromQueue->setEnabled(true);
+    }
+  });
+
+  QObject::connect(ui.queueListWidget, &QListWidget::currentItemChanged, this,
+                   [=]() {
+                     if (ui.queueListWidget->selectedItems().empty()) {
+
+                       ui.buttonDownQueue->setEnabled(false);
+                       ui.buttonUpQueue->setEnabled(false);
+                       ui.buttonRemoveFromQueue->setEnabled(false);
+                       ui.actionDownQueue->setEnabled(false);
+                       ui.actionUpQueue->setEnabled(false);
+                       ui.actionRemoveFromQueue->setEnabled(false);
+
+                       if (mQueueStatus) {
+
+                         if (ui.queueListWidget->count() > 1) {
+                           ui.buttonPurgeQueue->setEnabled(true);
+                         } else {
+                           ui.buttonPurgeQueue->setEnabled(false);
+                         }
+
+                       } else {
+
+                         if (ui.queueListWidget->count() > 0) {
+                           ui.buttonPurgeQueue->setEnabled(true);
+                         } else {
+                           ui.buttonPurgeQueue->setEnabled(false);
+                         }
+                       }
+                       return;
+                     }
+
+                     if (mQueueStatus) {
+
+                       if (ui.queueListWidget->count() > 1) {
+                         ui.buttonPurgeQueue->setEnabled(true);
+                       } else {
+                         ui.buttonPurgeQueue->setEnabled(false);
+                       }
+
+                       if (ui.queueListWidget->currentRow() == 0 ||
+                           ui.queueListWidget->currentRow() ==
+                               ui.queueListWidget->count() - 1) {
+                         ui.buttonDownQueue->setEnabled(false);
+                         ui.actionDownQueue->setEnabled(false);
+                       } else {
+                         ui.buttonDownQueue->setEnabled(true);
+                         ui.actionDownQueue->setEnabled(true);
+                       }
+
+                       if (ui.queueListWidget->currentRow() == 1 ||
+                           ui.queueListWidget->currentRow() == 0) {
+                         ui.buttonUpQueue->setEnabled(false);
+                         ui.actionUpQueue->setEnabled(false);
+                       } else {
+                         ui.buttonUpQueue->setEnabled(true);
+                         ui.actionUpQueue->setEnabled(true);
+                       }
+
+                       if (ui.queueListWidget->currentRow() == 0) {
+                         ui.buttonRemoveFromQueue->setEnabled(false);
+                         ui.actionRemoveFromQueue->setEnabled(false);
+                       } else {
+                         ui.buttonRemoveFromQueue->setEnabled(true);
+                         ui.actionRemoveFromQueue->setEnabled(true);
+                       }
+
+                     } else {
+
+                       if (ui.queueListWidget->count() > 0) {
+                         ui.buttonPurgeQueue->setEnabled(true);
+                       } else {
+                         ui.buttonPurgeQueue->setEnabled(false);
+                       }
+
+                       if (ui.queueListWidget->currentRow() == 0) {
+                         ui.buttonUpQueue->setEnabled(false);
+                         ui.actionUpQueue->setEnabled(false);
+                       } else {
+                         ui.buttonUpQueue->setEnabled(true);
+                         ui.actionUpQueue->setEnabled(true);
+                       }
+
+                       if (ui.queueListWidget->currentRow() ==
+                           ui.queueListWidget->count() - 1) {
+                         ui.buttonDownQueue->setEnabled(false);
+                         ui.actionDownQueue->setEnabled(false);
+                       } else {
+                         ui.buttonDownQueue->setEnabled(true);
+                         ui.actionDownQueue->setEnabled(true);
+                       }
+
+                       if (ui.queueListWidget->count() > 0) {
+                         ui.buttonPurgeQueue->setEnabled(true);
+                       } else {
+                         ui.buttonPurgeQueue->setEnabled(false);
+                       }
+
+                       ui.buttonRemoveFromQueue->setEnabled(true);
+                       ui.actionRemoveFromQueue->setEnabled(true);
+                     }
+                   });
+
   QObject::connect(ListOfJobOptions::getInstance(),
                    &ListOfJobOptions::tasksListUpdated, this,
                    &MainWindow::listTasks);
@@ -663,15 +1220,20 @@ MainWindow::MainWindow() {
   mUploadIcon = arrowUpIcon;
   mDownloadIcon = arrowDownIcon;
 
+  // remove close button from these tabs
   ui.tabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
   ui.tabs->tabBar()->setTabButton(0, QTabBar::LeftSide, nullptr);
   ui.tabs->tabBar()->setTabButton(1, QTabBar::RightSide, nullptr);
   ui.tabs->tabBar()->setTabButton(1, QTabBar::LeftSide, nullptr);
   ui.tabs->tabBar()->setTabButton(2, QTabBar::RightSide, nullptr);
   ui.tabs->tabBar()->setTabButton(2, QTabBar::LeftSide, nullptr);
+  ui.tabs->tabBar()->setTabButton(3, QTabBar::RightSide, nullptr);
+  ui.tabs->tabBar()->setTabButton(3, QTabBar::LeftSide, nullptr);
+
   ui.tabs->setCurrentIndex(0);
 
   listTasks();
+  addTasksToQueue();
 
   QObject::connect(&mSystemTray, &QSystemTrayIcon::activated, this,
                    [=](QSystemTrayIcon::ActivationReason reason) {
@@ -1387,14 +1949,19 @@ bool MainWindow::canClose() {
   }
 
   if (button == QMessageBox::Yes) {
+
+    // make sure terminated job is not removed from the queue
+    // we make close process aware that it is quitting
+    mAppQuittingStatus = true;
+
     for (int i = 0; i < ui.jobs->count(); i++) {
       QWidget *widget = ui.jobs->itemAt(i)->widget();
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
-        mount->cancel();
+        emit mount->cancel();
       } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-        transfer->cancel();
+        emit transfer->cancel();
       } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
-        stream->cancel();
+        emit stream->cancel();
       }
     }
     return true;
@@ -1421,6 +1988,69 @@ void MainWindow::closeEvent(QCloseEvent *ev) {
   }
 }
 
+void MainWindow::addTasksToQueue() {
+
+  // restore queue from file
+  // ignore no more existing
+
+  ui.queueListWidget->clear();
+
+  auto items = ui.tasksListWidget->selectedItems();
+
+  ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
+
+  QString filePath = GetConfigDir().absoluteFilePath("queue.conf");
+  QFile file(filePath);
+  QTextStream in(&file);
+
+  if (!file.open(QIODevice::ReadOnly)) {
+    return;
+  } else {
+
+    while (!in.atEnd()) {
+
+      QString line = in.readLine();
+
+      for (JobOptions *jo : ljo->getTasks()) {
+        JobOptionsListWidgetItem *item = new JobOptionsListWidgetItem(
+            jo,
+            jo->jobType == JobOptions::JobType::Download ? mDownloadIcon
+                                                         : mUploadIcon,
+            jo->description);
+
+        if (jo->uniqueId.toString() == line) {
+          ++mQueueCount;
+          ui.queueListWidget->addItem(item);
+        }
+      }
+    }
+
+    file.close();
+
+    if (mQueueCount == 0) {
+      ui.tabs->setTabText(3, QString("Queue").arg(mQueueCount));
+    } else {
+      ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+    }
+
+    ui.labelQueueInfoStop->setText("Queue is not running.");
+    ui.labelQueueInfoStop->show();
+    ui.labelQueueInfoStart->hide();
+  }
+
+  ui.buttonStopQueue->setEnabled(false);
+  ui.buttonStartQueue->setEnabled(true);
+  ui.buttonDownQueue->setEnabled(false);
+  ui.buttonUpQueue->setEnabled(false);
+  ui.buttonRemoveFromQueue->setEnabled(false);
+
+  if (ui.queueListWidget->count() > 0) {
+    ui.buttonPurgeQueue->setEnabled(true);
+  } else {
+    ui.buttonPurgeQueue->setEnabled(false);
+  }
+}
+
 void MainWindow::listTasks() {
 
   ui.tasksListWidget->clear();
@@ -1434,20 +2064,6 @@ void MainWindow::listTasks() {
   // enable drag and drop reordering (there is no persistence of order
   // implemented yet)
   // ui.tasksListWidget->setDragDropMode(QAbstractItemView::InternalMove);
-
-  auto items = ui.tasksListWidget->selectedItems();
-  if (items.count() != 0) {
-    ui.buttonDeleteTask->setDisabled(false);
-    ui.buttonEditTask->setDisabled(false);
-    ui.buttonRunTask->setDisabled(false);
-    ui.buttonDryrunTask->setDisabled(false);
-
-  } else {
-    ui.buttonDeleteTask->setDisabled(true);
-    ui.buttonEditTask->setDisabled(true);
-    ui.buttonRunTask->setDisabled(true);
-    ui.buttonDryrunTask->setDisabled(true);
-  }
 
   auto settings = GetSettings();
   bool sortTask = settings->value("Settings/sortTask").toBool();
@@ -1473,9 +2089,31 @@ void MainWindow::listTasks() {
         jo->description);
     ui.tasksListWidget->addItem(item);
   }
+
+  /*
+      ui.buttonDeleteTask->setDisabled(true);
+      ui.buttonEditTask->setDisabled(true);
+      ui.buttonRunTask->setDisabled(true);
+      ui.buttonDryrunTask->setDisabled(true);
+      ui.buttonAddToQueue->setDisabled(true);
+      ui.buttonSortTask->setDisabled(false);
+  */
+
+  ui.buttonDeleteTask->setEnabled(false);
+  ui.buttonEditTask->setEnabled(false);
+  ui.buttonRunTask->setEnabled(false);
+  ui.buttonDryrunTask->setEnabled(false);
+  ui.buttonAddToQueue->setEnabled(false);
+
+  if (ui.tasksListWidget->count() > 1) {
+    ui.buttonSortTask->setEnabled(true);
+  } else {
+    ui.buttonSortTask->setEnabled(false);
+  }
 }
 
-void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
+void MainWindow::runItem(JobOptionsListWidgetItem *item,
+                         const QString &transferMode, bool dryrun) {
   if (item == nullptr)
     return;
   JobOptions *jo = item->GetData();
@@ -1498,13 +2136,22 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item, bool dryrun) {
                .arg(operation.toLower())
                .arg(jo->source);
   } else {
-    info = QString("Task: \"%1\", %2 from %3")
-               .arg(jo->description)
-               .arg(operation)
-               .arg(jo->source);
+    if (transferMode == "queue") {
+      info = QString("Queue task: \"%1\", %2 from %3")
+                 .arg(jo->description)
+                 .arg(operation)
+                 .arg(jo->source);
+    } else {
+
+      info = QString("Task: \"%1\", %2 from %3")
+                 .arg(jo->description)
+                 .arg(operation)
+                 .arg(jo->source);
+    }
   }
 
-  addTransfer(info, jo->source, jo->dest, args);
+  addTransfer(info, jo->source, jo->dest, args, jo->uniqueId.toString(),
+              transferMode);
 }
 
 void MainWindow::editSelectedTask() {
@@ -1541,12 +2188,38 @@ void MainWindow::editSelectedTask() {
   // and the Save Task button closes it... so there is nothing more to do here
 }
 
+void MainWindow::saveQueueFile(void) {
+
+  QString filePath = GetConfigDir().absoluteFilePath("queue.conf");
+  QFile file(filePath);
+  QTextStream out(&file);
+  file.open(QIODevice::WriteOnly);
+
+  // loop over ui.queueListWidget
+  for (int i = 0; i < ui.queueListWidget->count(); ++i) {
+    QListWidgetItem *item = ui.queueListWidget->item(i);
+
+    JobOptionsListWidgetItem *jobItem =
+        static_cast<JobOptionsListWidgetItem *>(item);
+
+    JobOptions *jo = jobItem->GetData();
+
+    out << jo->uniqueId.toString() << endl;
+  }
+
+  file.close();
+}
+
 void MainWindow::addTransfer(const QString &message, const QString &source,
-                             const QString &dest, const QStringList &args) {
+                             const QString &dest, const QStringList &args,
+                             const QString &uniqueId,
+                             const QString &transferMode) {
+
   QProcess *transfer = new QProcess(this);
   transfer->setProcessChannelMode(QProcess::MergedChannels);
 
-  auto widget = new JobWidget(transfer, message, args, source, dest);
+  auto widget = new JobWidget(transfer, message, args, source, dest, uniqueId,
+                              transferMode);
 
   auto line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -1572,15 +2245,39 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 #endif
         }
 
+        --mTransferJobCount;
         if (--mJobCount == 0) {
           ui.tabs->setTabText(1, "Jobs");
         } else {
           ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
         }
 
-        ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+        ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
         ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                              (ui.jobs->count() - 2) / 2);
+
+        // if queue job finished try to run next one
+        // only when not quitting  and when queue is active
+        if (widget->getTransferMode() == "queue" && !mAppQuittingStatus &&
+            mQueueStatus) {
+
+          --mQueueCount;
+
+          // queue is still running, even if mQueueCount is 0
+          ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+
+          ui.queueListWidget->takeItem(0);
+          auto nextTask = ui.queueListWidget->item(0);
+
+          if ((ui.queueListWidget->count()) > 0) {
+            JobOptionsListWidgetItem *item =
+                static_cast<JobOptionsListWidgetItem *>(nextTask);
+            runItem(item, "queue");
+
+            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+          }
+          saveQueueFile();
+        }
       });
 
   QObject::connect(widget, &JobWidget::closed, this, [=]() {
@@ -1595,7 +2292,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
-    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
   });
@@ -1606,9 +2303,10 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
+  ++mTransferJobCount;
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
-  ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   UseRclonePassword(transfer);
@@ -1633,7 +2331,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
       ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
     }
 
-    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
   });
@@ -1646,7 +2344,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
-    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
   });
@@ -1659,7 +2357,7 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
   ui.jobs->insertWidget(1, line);
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
-  ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   auto settings = GetSettings();
@@ -1754,7 +2452,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
       ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
     }
 
-    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
   });
@@ -1767,7 +2465,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
-    ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
   });
@@ -1780,7 +2478,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
   ui.jobs->insertWidget(1, line);
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
-  ui.buttonStopAllJobs->setEnabled(mJobCount != 0);
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   player->start(stream, QProcess::ReadOnly);
@@ -1796,14 +2494,14 @@ void MainWindow::slotCloseTab(int index) {
   // only when closing current tab
   if (ui.tabs->currentIndex() == index) {
 
-    if (ui.tabs->count() == 4) {
-      if (index == 3) {
+    if (ui.tabs->count() == 5) {
+      if (index == 4) {
         ui.tabs->setCurrentIndex(0);
       }
     } else {
 
-      if (ui.tabs->count() == 5) {
-        ui.tabs->setCurrentIndex(3);
+      if (ui.tabs->count() == 6) {
+        ui.tabs->setCurrentIndex(4);
       }
     }
   }

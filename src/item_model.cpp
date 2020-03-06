@@ -528,13 +528,15 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
   UseRclonePassword(lsl);
 
   lsd->start(GetRclone(),
-             QStringList() << "lsd" << GetRcloneConf() << GetRemoteModeRcloneOptions()
-                           << GetShowHidden() << GetDefaultRcloneOptionsList()
+             QStringList() << "lsd" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions() << GetShowHidden()
+                           << GetDefaultRcloneOptionsList()
                            << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
   lsl->start(GetRclone(),
-             QStringList() << "lsl" << GetRcloneConf() << GetRemoteModeRcloneOptions()
-                           << GetShowHidden() << "--max-depth"
+             QStringList() << "lsl" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions() << GetShowHidden()
+                           << "--max-depth"
                            << "1" << GetDefaultRcloneOptionsList()
                            << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);

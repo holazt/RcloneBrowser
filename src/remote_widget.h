@@ -20,7 +20,7 @@ signals:
                    const QString &remote, const QStringList &args, const QString &uniqueId, const QString &transferMode);
   void addMount(const QString &remote, const QString &folder,
                 const QString &remoteType);
-  void addStream(const QString &remote, const QString &stream);
+  void addStream(const QString &remote, const QString &stream, const QString &remoteType);
 
 private:
   Ui::RemoteWidget ui;

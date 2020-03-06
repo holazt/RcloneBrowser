@@ -23,7 +23,7 @@ private slots:
   void addTransfer(const QString &message, const QString &source,
                    const QString &dest, const QStringList &args, const QString &uniqueId, const QString &transferMode);
   void addMount(const QString &remote, const QString &folder, const QString &remoteType);
-  void addStream(const QString &remote, const QString &stream);
+  void addStream(const QString &remote, const QString &stream, const QString &remoteType);
 
   void slotCloseTab(int index);
 

@@ -477,7 +477,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       settings->setValue("Settings/streamConfirmed", true);
     }
 
-    emit addStream(remote + ":" + path, stream);
+    emit addStream(remote + ":" + path, stream, remoteType);
   });
 
   QObject::connect(ui.link, &QAction::triggered, this, [=]() {

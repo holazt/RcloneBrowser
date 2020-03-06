@@ -2419,7 +2419,8 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
   mount->start(GetRclone(), args, QIODevice::ReadOnly);
 }
 
-void MainWindow::addStream(const QString &remote, const QString &stream) {
+void MainWindow::addStream(const QString &remote, const QString &stream,
+                           const QString &remoteType) {
   auto player = new QProcess();
   auto rclone = new QProcess();
   rclone->setStandardOutputProcess(player);
@@ -2481,10 +2482,28 @@ void MainWindow::addStream(const QString &remote, const QString &stream) {
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
+  auto settings = GetSettings();
+  QString opt = settings->value("Settings/mount").toString();
+  QString driveSharedMode = settings->value("Settings/remoteMode").toString();
+
+  QStringList args;
+  args << "cat";
+
+  if (remoteType == "drive") {
+
+    if (driveSharedMode == "shared") {
+      args << "--drive-shared-with-me";
+      args << "--read-only";
+    }
+
+    if (driveSharedMode == "trash") {
+      args << "--drive-trashed-only";
+    }
+  };
+
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);
-  rclone->start(GetRclone(),
-                QStringList() << "cat" << GetRcloneConf() << remote,
+  rclone->start(GetRclone(), QStringList() << args << GetRcloneConf() << remote,
                 QProcess::WriteOnly);
 }
 

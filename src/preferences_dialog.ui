@@ -29,7 +29,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -618,9 +618,19 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
+           <widget class="QCheckBox" name="cb_longList">
+            <property name="text">
+             <string>List (long)</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cb_list">
             <property name="text">
-             <string>List</string>
+             <string>List (wrapping)</string>
             </property>
             <property name="checked">
              <bool>true</bool>

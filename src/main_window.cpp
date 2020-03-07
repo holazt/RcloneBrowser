@@ -1821,7 +1821,13 @@ void MainWindow::rcloneListRemotes() {
     ui.remotes->setResizeMode(QListView::Adjust);
     ui.remotes->setWrapping(true);
     ui.remotes->setSpacing(10);
-  } else {
+  }
+  if (iconsLayout == "longlist") {
+    ui.remotes->setViewMode(QListWidget::ListMode);
+    ui.remotes->setResizeMode(QListView::Adjust);
+    ui.remotes->setWrapping(false);
+  }
+  if (iconsLayout == "list") {
     ui.remotes->setViewMode(QListWidget::ListMode);
     ui.remotes->setResizeMode(QListView::Adjust);
     ui.remotes->setWrapping(true);

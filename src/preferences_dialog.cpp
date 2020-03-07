@@ -164,7 +164,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   if ((settings->value("Settings/iconsLayout").toString()) == "list") {
     ui.cb_list->setChecked(true);
   } else {
-    ui.cb_tiles->setChecked(true);
+    if ((settings->value("Settings/iconsLayout").toString()) == "tiles") {
+      ui.cb_tiles->setChecked(true);
+    } else {
+      ui.cb_longList->setChecked(true);
+    }
   }
 
   if ((settings->value("Settings/iconsColour").toString()) == "white") {
@@ -354,9 +358,11 @@ QString PreferencesDialog::getButtonStyle() const {
 QString PreferencesDialog::getIconsLayout() const {
   if (ui.cb_list->isChecked()) {
     return "list";
-  } else {
-    return "tiles";
   }
+  if (ui.cb_longList->isChecked()) {
+    return "longlist";
+  }
+  return "tiles";
 }
 
 QString PreferencesDialog::getIconsColour() const {

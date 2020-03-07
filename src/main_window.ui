@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -128,7 +128,7 @@
            <enum>QAbstractItemView::SelectRows</enum>
           </property>
           <property name="isWrapping" stdset="0">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="wordWrap">
            <bool>true</bool>

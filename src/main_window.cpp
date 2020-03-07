@@ -1442,7 +1442,13 @@ MainWindow::sortListWidget(const QList<QListWidgetItem *> &list,
         }
       }
     }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
     sortedList.swapItemsAt(min_idx, i);
+#else
+    sortedList.swap(min_idx, i);
+#endif
+
   }
   return sortedList;
 }

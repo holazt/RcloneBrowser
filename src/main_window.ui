@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -696,7 +696,7 @@
     <string>Run</string>
    </property>
    <property name="toolTip">
-    <string>Run selected tasks</string>
+    <string>Run all selected tasks at once</string>
    </property>
   </action>
   <action name="actionDryRun">
@@ -704,7 +704,7 @@
     <string>Dry Run</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dry Run selected tasks&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dry Run all selected tasks at once&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionSortTask">

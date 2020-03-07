@@ -678,7 +678,12 @@ MainWindow::MainWindow() {
   });
 
   QObject::connect(ui.actionDryRun, &QAction::triggered, this, [=]() {
-    auto items = ui.tasksListWidget->selectedItems();
+    auto selection = ui.tasksListWidget->selectedItems();
+
+    auto settings = GetSettings();
+    bool sortTask = settings->value("Settings/sortTask").toBool();
+
+    auto items = sortListWidget(selection, sortTask);
 
     QString itemsToRun;
 
@@ -708,9 +713,12 @@ MainWindow::MainWindow() {
   });
 
   QObject::connect(ui.actionRun, &QAction::triggered, this, [=]() {
-    auto items = ui.tasksListWidget->selectedItems();
+    auto selection = ui.tasksListWidget->selectedItems();
 
-    // items->sortItems(Qt::AscendingOrder);
+    auto settings = GetSettings();
+    bool sortTask = settings->value("Settings/sortTask").toBool();
+
+    auto items = sortListWidget(selection, sortTask);
 
     QString itemsToRun;
     QString itemsAlreadyRunning;
@@ -760,7 +768,12 @@ MainWindow::MainWindow() {
   });
 
   QObject::connect(ui.actionDelete, &QAction::triggered, this, [=]() {
-    auto items = ui.tasksListWidget->selectedItems();
+    auto selection = ui.tasksListWidget->selectedItems();
+
+    auto settings = GetSettings();
+    bool sortTask = settings->value("Settings/sortTask").toBool();
+
+    auto items = sortListWidget(selection, sortTask);
 
     QString itemsToDelete;
 
@@ -792,10 +805,16 @@ MainWindow::MainWindow() {
   });
 
   QObject::connect(ui.actionAddToQueue, &QAction::triggered, this, [=]() {
-    auto items = ui.tasksListWidget->selectedItems();
+    auto selection = ui.tasksListWidget->selectedItems();
+
+    auto settings = GetSettings();
+    bool sortTask = settings->value("Settings/sortTask").toBool();
+
+    auto items = sortListWidget(selection, sortTask);
 
     QString itemsToAdd;
 
+    // create list of selected tasks' names
     foreach (auto i, items) {
       JobOptionsListWidgetItem *item =
           static_cast<JobOptionsListWidgetItem *>(i);
@@ -817,7 +836,6 @@ MainWindow::MainWindow() {
       if (button == QMessageBox::Yes) {
 
         mQueueCount = mQueueCount + items.count();
-
         if (mQueueStatus) {
           ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
         } else {
@@ -844,16 +862,16 @@ MainWindow::MainWindow() {
         } else {
           ui.buttonPurgeQueue->setEnabled(false);
         }
+        // save new queue to file
+        saveQueueFile();
+        ui.queueListWidget->setFocus();
+      } else {
+        // user pressed No
+        return;
       }
     }
 
-    // save new queue to file
-    saveQueueFile();
-
-    ui.queueListWidget->setFocus();
-
     // if queue was empty we start first taks if queue is running
-
     if (mQueueStatus && isQueueEmpty) {
 
       if (mQueueCount > 0) {
@@ -865,7 +883,7 @@ MainWindow::MainWindow() {
         JobOptions *jo = item->GetData();
 
         // check first if maybe already running (manually by user??)
-        // in that case we just wait
+        // in that case we only mark it as processing
         bool isAlreadyRunning = false;
         for (int j = 0; j < ui.jobs->count(); j++) {
           QWidget *widget = ui.jobs->itemAt(j)->widget();
@@ -877,7 +895,6 @@ MainWindow::MainWindow() {
             }
           }
         }
-
         if (!isAlreadyRunning) {
           runItem(item, "queue");
         }
@@ -979,7 +996,7 @@ MainWindow::MainWindow() {
       ui.buttonPurgeQueue->setEnabled(false);
       ui.buttonUpQueue->setEnabled(false);
       ui.buttonDownQueue->setEnabled(false);
-      ui.tabs->setTabText(3, QString("Queue").arg(mQueueCount));
+      ui.tabs->setTabText(3, QString("Queue"));
     } else {
       ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
     }
@@ -1042,7 +1059,7 @@ MainWindow::MainWindow() {
     if (mQueueCount != 0) {
       ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
     } else {
-      ui.tabs->setTabText(3, QString("Queue").arg(mQueueCount));
+      ui.tabs->setTabText(3, QString("Queue"));
     }
     saveQueueFile();
   });
@@ -1391,6 +1408,43 @@ MainWindow::MainWindow() {
 MainWindow::~MainWindow() {
   auto settings = GetSettings();
   settings->setValue("MainWindow/geometry", saveGeometry());
+}
+
+QList<QListWidgetItem *>
+MainWindow::sortListWidget(const QList<QListWidgetItem *> &list,
+                           bool sortOrder) {
+
+  QList<QListWidgetItem *> sortedList = list;
+
+  int n = sortedList.size();
+  int min_idx;
+
+  // basic selection sort algorithm
+  for (int i = 0; i < (n - 1); i++) {
+    min_idx = i;
+    for (int j = i + 1; j < n; j++) {
+
+      JobOptionsListWidgetItem *item_j =
+          static_cast<JobOptionsListWidgetItem *>(sortedList.at(j));
+      JobOptions *jo_j = item_j->GetData();
+
+      JobOptionsListWidgetItem *item_min_idx =
+          static_cast<JobOptionsListWidgetItem *>(sortedList.at(min_idx));
+      JobOptions *jo_min_idx = item_min_idx->GetData();
+
+      if (sortOrder) {
+        if (jo_j->description < jo_min_idx->description) {
+          min_idx = j;
+        }
+      } else {
+        if (jo_j->description > jo_min_idx->description) {
+          min_idx = j;
+        }
+      }
+    }
+    sortedList.swapItemsAt(min_idx, i);
+  }
+  return sortedList;
 }
 
 void MainWindow::rcloneGetVersion() {
@@ -2113,7 +2167,7 @@ void MainWindow::addTasksToQueue() {
     file.close();
 
     if (mQueueCount == 0) {
-      ui.tabs->setTabText(3, QString("Queue").arg(mQueueCount));
+      ui.tabs->setTabText(3, QString("Queue"));
     } else {
       ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
     }

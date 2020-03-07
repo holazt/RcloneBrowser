@@ -21,9 +21,12 @@ private slots:
   void listTasks();
 
   void addTransfer(const QString &message, const QString &source,
-                   const QString &dest, const QStringList &args, const QString &uniqueId, const QString &transferMode);
-  void addMount(const QString &remote, const QString &folder, const QString &remoteType);
-  void addStream(const QString &remote, const QString &stream, const QString &remoteType);
+                   const QString &dest, const QStringList &args,
+                   const QString &uniqueId, const QString &transferMode);
+  void addMount(const QString &remote, const QString &folder,
+                const QString &remoteType);
+  void addStream(const QString &remote, const QString &stream,
+                 const QString &remoteType);
 
   void slotCloseTab(int index);
 
@@ -63,9 +66,14 @@ private:
   void closeEvent(QCloseEvent *ev) override;
   bool getConfigPassword(QProcess *p);
 
+  // sort QListWidget view/selection
+  QList<QListWidgetItem *> sortListWidget(const QList<QListWidgetItem *> &list,
+                                          bool sortOrder = false);
+
   void addEmptyJobsMessage();
 
-  void runItem(JobOptionsListWidgetItem *item, const QString &transferMode, bool dryrun = false);
+  void runItem(JobOptionsListWidgetItem *item, const QString &transferMode,
+               bool dryrun = false);
   void editSelectedTask();
   QIcon mUploadIcon;
   QIcon mDownloadIcon;

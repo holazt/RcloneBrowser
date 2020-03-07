@@ -152,8 +152,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.buttonPurge->setMinimumWidth(button_width);
     ui.buttonMount->setMinimumWidth(button_width);
     ui.buttonStream->setMinimumWidth(button_width);
-    ui.buttonUpload->setMinimumWidth(button_width);
-    ui.buttonDownload->setMinimumWidth(button_width);
+    ui.buttonUpload->setMinimumWidth(button_width * 1.4);
+    ui.buttonDownload->setMinimumWidth(button_width * 1.4);
     ui.buttonSize->setMinimumWidth(button_width);
     ui.buttonTree->setMinimumWidth(button_width);
     ui.buttonLink->setMinimumWidth(button_width);
@@ -188,8 +188,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonPurge->setMinimumWidth(button_width);
       ui.buttonMount->setMinimumWidth(button_width);
       ui.buttonStream->setMinimumWidth(button_width);
-      ui.buttonUpload->setMinimumWidth(button_width);
-      ui.buttonDownload->setMinimumWidth(button_width);
+      ui.buttonUpload->setMinimumWidth(button_width * 1.4);
+      ui.buttonDownload->setMinimumWidth(button_width * 1.4);
       ui.buttonSize->setMinimumWidth(button_width);
       ui.buttonTree->setMinimumWidth(button_width);
       ui.buttonLink->setMinimumWidth(button_width);

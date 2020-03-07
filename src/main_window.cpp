@@ -1338,11 +1338,11 @@ MainWindow::sortListWidget(const QList<QListWidgetItem *> &list,
       JobOptions *jo_min_idx = item_min_idx->GetData();
 
       if (sortOrder) {
-        if (jo_j->description < jo_min_idx->description) {
+        if ((jo_j->description).toUpper() < (jo_min_idx->description).toUpper()) {
           min_idx = j;
         }
       } else {
-        if (jo_j->description > jo_min_idx->description) {
+        if ((jo_j->description).toUpper() > (jo_min_idx->description).toUpper() ) {
           min_idx = j;
         }
       }

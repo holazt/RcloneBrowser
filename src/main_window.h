@@ -70,6 +70,9 @@ private:
   QList<QListWidgetItem *> sortListWidget(const QList<QListWidgetItem *> &list,
                                           bool sortOrder = false);
 
+  // set queue screen buttons mess in one place
+  void setQueueButtons(void);
+
   void addEmptyJobsMessage();
 
   void runItem(JobOptionsListWidgetItem *item, const QString &transferMode,

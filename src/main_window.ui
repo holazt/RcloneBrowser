@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -456,9 +456,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QToolButton" name="buttonPurgeQueue">
+           <widget class="QToolButton" name="buttonUpQueue">
             <property name="text">
-             <string>Purge</string>
+             <string>Up</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -466,9 +466,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="buttonRemoveFromQueue">
+           <widget class="QToolButton" name="buttonDownQueue">
             <property name="text">
-             <string>Delete</string>
+             <string>Down</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -492,9 +492,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QToolButton" name="buttonUpQueue">
+           <widget class="QToolButton" name="buttonRemoveFromQueue">
             <property name="text">
-             <string>Up</string>
+             <string>Delete</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -502,9 +502,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="buttonDownQueue">
+           <widget class="QToolButton" name="buttonPurgeQueue">
             <property name="text">
-             <string>Down</string>
+             <string>Purge</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>

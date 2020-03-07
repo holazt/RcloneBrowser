@@ -837,7 +837,7 @@ MainWindow::MainWindow() {
 
         mQueueCount = mQueueCount + items.count();
         if (mQueueStatus) {
-          ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+          ui.tabs->setTabText(3, QString("Queue (%1)>>").arg(mQueueCount));
         } else {
           ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
         }
@@ -906,7 +906,7 @@ MainWindow::MainWindow() {
   QObject::connect(ui.actionStartQueue, &QAction::triggered, this, [=]() {
     mQueueStatus = true;
 
-    ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+    ui.tabs->setTabText(3, QString("Queue (%1)>>").arg(mQueueCount));
     ui.buttonStopQueue->setEnabled(true);
     ui.buttonStartQueue->setEnabled(false);
 
@@ -1089,7 +1089,7 @@ MainWindow::MainWindow() {
       if (ui.queueListWidget->count() == 1) {
         ui.buttonRemoveFromQueue->setEnabled(false);
       }
-      ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+      ui.tabs->setTabText(3, QString("Queue (%1)>>").arg(mQueueCount));
 
     } else {
 
@@ -1448,7 +1448,6 @@ MainWindow::sortListWidget(const QList<QListWidgetItem *> &list,
 #else
     sortedList.swap(min_idx, i);
 #endif
-
   }
   return sortedList;
 }
@@ -2409,7 +2408,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
             --mQueueCount;
             // queue is still running, even if mQueueCount is 0
-            ui.tabs->setTabText(3, QString(">>Queue (%1)").arg(mQueueCount));
+            ui.tabs->setTabText(3, QString("Queue (%1)>>").arg(mQueueCount));
 
             ui.queueListWidget->takeItem(0);
             auto nextTask = ui.queueListWidget->item(0);

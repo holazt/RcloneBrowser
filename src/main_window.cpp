@@ -195,9 +195,9 @@ MainWindow::MainWindow() {
   ui.actionDownQueue->setIcon(
       QIcon(":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
 
-  QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowup" + img_add +
+  QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowdown" + img_add +
                           ".png");
-  QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowdown" + img_add +
+  QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowup" + img_add +
                         ".png");
   QPixmap sortZAPixmap(":remotes/images/qbutton_icons/sortZA" + img_add +
                        ".png");

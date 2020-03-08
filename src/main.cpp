@@ -60,13 +60,13 @@ int main(int argc, char *argv[]) {
   // during first run the darkModeIni key might not exist
   if (!(settings->contains("Settings/darkModeIni"))) {
     // if darkModeIni does not exist create new key
-    settings->setValue("Settings/darkModeIni", "false");
+    settings->setValue("Settings/darkModeIni", "true");
   };
 
   // during first run the darkMode key might not exist
   if (!(settings->contains("Settings/darkMode"))) {
     // if darkMode does not exist create new key
-    settings->setValue("Settings/darkMode", "false");
+    settings->setValue("Settings/darkMode", "true");
   };
 
   bool darkMode = settings->value("Settings/darkMode").toBool();
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
   // during first run the iconSize key might not exist
   if (!(settings->contains("Settings/iconSize"))) {
     // if iconSize does not exist create new key
-    settings->setValue("Settings/iconSize", "M");
+    settings->setValue("Settings/iconSize", "S");
   };
 
   // during first run the iconsLayout key might not exist
@@ -94,19 +94,19 @@ int main(int argc, char *argv[]) {
   // during first run the buttonStyle key might not exist
   if (!(settings->contains("Settings/buttonStyle"))) {
     // if buttonstyle does not exist create new key
-    settings->setValue("Settings/buttonStyle", "icononly");
+    settings->setValue("Settings/buttonStyle", "textandicon");
   };
 
   // during first run the fontSize key might not exist
   if (!(settings->contains("Settings/fontSize"))) {
     // if fontSize does not exist create new key
-    settings->setValue("Settings/fontSize", "2");
+    settings->setValue("Settings/fontSize", "0");
   };
 
   // during first run the buttonSize key might not exist
   if (!(settings->contains("Settings/buttonSize"))) {
     // if buttonSize does not exist create new key
-    settings->setValue("Settings/buttonSize", "1");
+    settings->setValue("Settings/buttonSize", "0");
   };
 
   // during first run the sortTask key might not exist

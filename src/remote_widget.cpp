@@ -14,6 +14,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
   ui.setupUi(this);
 
+  ui.frameTools->hide();
+
   bool isLocal = remoteType == "local";
   bool isGoogle = remoteType == "drive";
 
@@ -89,6 +91,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QIcon(":remotes/images/qbutton_icons/link" + img_add + ".png"));
   ui.export_->setIcon(
       QIcon(":remotes/images/qbutton_icons/export" + img_add + ".png"));
+  ui.actionTools->setIcon(
+      QIcon(":remotes/images/qbutton_icons/tools" + img_add + ".png"));
+
   ui.getInfo->setIcon(
       QIcon(":remotes/images/qbutton_icons/info" + img_add + ".png"));
 
@@ -107,6 +112,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonLink->setDefaultAction(ui.link);
   ui.buttonExport->setDefaultAction(ui.export_);
   ui.buttonInfo->setDefaultAction(ui.getInfo);
+  ui.buttonTools->setDefaultAction(ui.actionTools);
 
   // buttons and icons size
   int icon_w = 16;
@@ -162,6 +168,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
     ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
     ui.buttonInfo->setMinimumWidth(button_width);
+    ui.buttonTools->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonTools->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -198,7 +206,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
       ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonInfo->setMinimumWidth(button_width);
-
+      ui.buttonTools->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonTools->setMinimumWidth(button_width);
 
     } else {
       // button style - icononly
@@ -232,6 +241,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonCheck->setIconSize(QSize(icon_w, icon_h));
       ui.buttonInfo->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonTools->setIconSize(QSize(icon_w, icon_h));
     }
   }
 
@@ -716,6 +727,26 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
       progress->allowToClose();
       progress->show();
+    }
+  });
+
+  QObject::connect(ui.actionTools, &QAction::triggered, this, [=]() {
+    if (mButtonToolsState) {
+      mButtonToolsState = false;
+      ui.frameTools->hide();
+      ui.buttonTools->setDown(false);
+
+    } else {
+      mButtonToolsState = true;
+      ui.frameTools->show();
+      ui.buttonTools->setDown(true);
+
+      QPropertyAnimation *animation =
+          new QPropertyAnimation(ui.frameTools, "maximumHeight");
+      animation->setDuration(100);
+      animation->setStartValue(0);
+      animation->setEndValue(150);
+      animation->start(QPropertyAnimation::DeleteWhenStopped);
     }
   });
 

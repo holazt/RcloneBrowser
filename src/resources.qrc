@@ -85,6 +85,9 @@
     <file>images/qbutton_icons/vuparrow.png</file>
     <file>images/qbutton_icons/vuparrow_inv.png</file>
 
+    <file>images/qbutton_icons/tools.png</file>
+    <file>images/qbutton_icons/tools_inv.png</file>
+
     <file>images/program_icons/rclone-browser512.png</file>
 
     <file>images/amazon_cloud_drive.png</file>

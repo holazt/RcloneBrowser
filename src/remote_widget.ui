@@ -372,6 +372,16 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QToolButton" name="buttonDedupe">
+            <property name="text">
+             <string>Dedupe</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -596,6 +606,14 @@ rclone about</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show additional remote's tools&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionDedupe">
+   <property name="text">
+    <string>Dedupe</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove duplicated files&lt;/p&gt;&lt;p&gt;rclone &lt;span style=&quot; font-family:'.SF NS Mono';&quot;&gt;dedupe&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

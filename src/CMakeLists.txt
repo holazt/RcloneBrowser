@@ -37,6 +37,7 @@ set(UI
   transfer_dialog.ui
   export_dialog.ui
   check_dialog.ui
+  dedupe_dialog.ui
   progress_dialog.ui
   job_widget.ui
   mount_widget.ui
@@ -50,6 +51,7 @@ set(MOC
   transfer_dialog.h
   export_dialog.h
   check_dialog.h
+  dedupe_dialog.h
   progress_dialog.h
   job_widget.h
   mount_widget.h
@@ -74,6 +76,7 @@ set(SOURCE
   transfer_dialog.cpp
   export_dialog.cpp
   check_dialog.cpp
+  dedupe_dialog.cpp
   progress_dialog.cpp
   job_widget.cpp
   mount_widget.cpp

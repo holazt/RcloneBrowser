@@ -1,5 +1,6 @@
 #include "remote_widget.h"
 #include "check_dialog.h"
+#include "dedupe_dialog.h"
 #include "export_dialog.h"
 #include "icon_cache.h"
 #include "item_model.h"
@@ -52,9 +53,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       settings->value("Settings/rowColors", false).toBool());
 
   ui.cb_GoogleDriveMode->setDisabled(!isGoogle);
-  // hide cb_GoogleDriveMode for non Google remotes
+  // hide cb_GoogleDriveMode and Dedupe button for non Google remotes
   if (!isGoogle) {
     ui.cb_GoogleDriveMode->hide();
+    ui.buttonDedupe->hide();
   }
 
   QString img_add = "";
@@ -93,9 +95,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QIcon(":remotes/images/qbutton_icons/export" + img_add + ".png"));
   ui.actionTools->setIcon(
       QIcon(":remotes/images/qbutton_icons/tools" + img_add + ".png"));
-
   ui.getInfo->setIcon(
       QIcon(":remotes/images/qbutton_icons/info" + img_add + ".png"));
+  ui.actionDedupe->setIcon(
+      QIcon(":remotes/images/qbutton_icons/dedupe" + img_add + ".png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
   ui.buttonMkdir->setDefaultAction(ui.mkdir);
@@ -113,6 +116,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonExport->setDefaultAction(ui.export_);
   ui.buttonInfo->setDefaultAction(ui.getInfo);
   ui.buttonTools->setDefaultAction(ui.actionTools);
+  ui.buttonDedupe->setDefaultAction(ui.actionDedupe);
 
   // buttons and icons size
   int icon_w = 16;
@@ -170,6 +174,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.buttonInfo->setMinimumWidth(button_width);
     ui.buttonTools->setIconSize(QSize(icon_w, icon_h));
     ui.buttonTools->setMinimumWidth(button_width);
+    ui.buttonDedupe->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonDedupe->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -208,6 +214,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonInfo->setMinimumWidth(button_width);
       ui.buttonTools->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonTools->setMinimumWidth(button_width);
+      ui.buttonDedupe->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonDedupe->setMinimumWidth(button_width);
 
     } else {
       // button style - icononly
@@ -243,6 +251,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonInfo->setIconSize(QSize(icon_w, icon_h));
       ui.buttonTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonTools->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonDedupe->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonDedupe->setIconSize(QSize(icon_w, icon_h));
     }
   }
 
@@ -780,6 +790,42 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
       ProgressDialog *progress =
           new ProgressDialog(checkcommand, "Running... ",
+                             "rclone " + e.getOptions().join(" ") + " " +
+                                 GetRemoteModeRcloneOptions().join(" ") + " " +
+                                 GetDefaultRcloneOptionsList().join(" "),
+                             process, this, false);
+
+      progress->expand();
+      progress->allowToClose();
+      progress->show();
+    }
+  });
+
+  QObject::connect(ui.actionDedupe, &QAction::triggered, this, [=]() {
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+    QString path_info = model->path(index).path();
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path_info) : path_info;
+
+    QDir path = model->path(index);
+    DedupeDialog e(remote, path, remoteType, this);
+
+    if (e.exec() == QDialog::Accepted) {
+
+      QProcess *process = new QProcess;
+      UseRclonePassword(process);
+      process->setProgram(GetRclone());
+
+      process->setArguments(QStringList() << GetRcloneConf() << e.getOptions()
+                                          << GetRemoteModeRcloneOptions()
+                                          << GetDefaultRcloneOptionsList());
+
+      process->setProcessChannelMode(QProcess::MergedChannels);
+
+      ProgressDialog *progress =
+          new ProgressDialog("rclone dedupe", "Running... ",
                              "rclone " + e.getOptions().join(" ") + " " +
                                  GetRemoteModeRcloneOptions().join(" ") + " " +
                                  GetDefaultRcloneOptionsList().join(" "),

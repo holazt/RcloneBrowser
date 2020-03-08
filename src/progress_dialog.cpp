@@ -137,10 +137,26 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
                        &QProcess::finished),
                    this, [=](int code, QProcess::ExitStatus status) {
                      if (status == QProcess::NormalExit && code == 0) {
+
+                       if (iconsColour == "white") {
+                         ui.labelOperation->setStyleSheet(
+                             "QLabel { font-weight: bold; }");
+                       } else {
+                         ui.labelOperation->setStyleSheet(
+                             "QLabel { color: black; font-weight: bold; }");
+                       }
+
+                       ui.labelOperation->setText("Finished ");
+
                        if (close) {
                          emit accept();
                        }
                      } else {
+
+                       ui.labelOperation->setStyleSheet(
+                           "QLabel { color: red; font-weight: bold; }");
+                       ui.labelOperation->setText("Error ");
+
                        ui.buttonShowOutput->setChecked(true);
                        ui.buttonBox->setEnabled(true);
                      }
@@ -152,15 +168,6 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
       output = output.trimmed();
     }
     ui.output->appendPlainText(output);
-
-    if (iconsColour == "white") {
-      ui.labelOperation->setStyleSheet("QLabel { font-weight: bold; }");
-    } else {
-      ui.labelOperation->setStyleSheet(
-          "QLabel { color: black; font-weight: bold; }");
-    }
-
-    ui.labelOperation->setText("Finished ");
 
     emit outputAvailable(output);
   });

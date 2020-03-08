@@ -8,6 +8,10 @@ DedupeDialog::DedupeDialog(const QString &remote, const QDir &path,
   ui.setupUi(this);
   //  resize(0, 0);
 
+  ui.label_2->setTextFormat(Qt::RichText);
+  ui.label_2->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  ui.label_2->setOpenExternalLinks(true);
+
   adjustSize();
   setMaximumHeight(this->height());
   setMinimumHeight(this->height());

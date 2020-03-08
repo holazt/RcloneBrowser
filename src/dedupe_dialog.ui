@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>434</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -305,10 +305,29 @@
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For more infomation, refer to rclone online documentation on &lt;a href=&quot;https://rclone.org/commands/rclone_dedupe/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0068da;&quot;&gt;dedupe&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="textFormat">
-      <enum>Qt::RichText</enum>
+     <property name="indent">
+      <number>4</number>
+     </property>
+     <property name="openExternalLinks">
+      <bool>false</bool>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>5</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

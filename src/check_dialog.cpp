@@ -8,6 +8,10 @@ CheckDialog::CheckDialog(const QString &remote, const QDir &path,
   ui.setupUi(this);
   //  resize(0, 0);
 
+  adjustSize();
+  setMaximumHeight(this->height());
+  setMinimumHeight(this->height());
+
   setWindowTitle("Check integrity");
 
   mTarget = remote + ":" + path.path();

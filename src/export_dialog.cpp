@@ -5,7 +5,10 @@ ExportDialog::ExportDialog(const QString &remote, const QDir &path,
                            QWidget *parent)
     : QDialog(parent) {
   ui.setupUi(this);
-  resize(0, 0);
+
+  adjustSize();
+  setMaximumHeight(this->height());
+  setMinimumHeight(this->height());
 
   setWindowTitle("Export files list");
 

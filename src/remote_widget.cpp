@@ -907,6 +907,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                      menu.addAction(ui.link);
                      menu.addAction(ui.export_);
                      menu.addAction(ui.actionCheck);
+                     menu.addAction(ui.actionDedupe);
                      menu.exec(ui.tree->viewport()->mapToGlobal(pos));
                    });
 

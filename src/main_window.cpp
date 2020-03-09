@@ -601,21 +601,20 @@ MainWindow::MainWindow() {
                                        QMessageBox::Yes | QMessageBox::No);
 
     if (button == QMessageBox::Yes) {
-      for (int j = 0; j < ui.jobs->count(); j++) {
-        for (int i = 0; i < ui.jobs->count(); i++) {
-          QWidget *widget = ui.jobs->itemAt(i)->widget();
-          if (auto mount = qobject_cast<MountWidget *>(widget)) {
-            if (!(mount->isRunning)) {
-              emit mount->closed();
-            }
-          } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-            if (!(transfer->isRunning)) {
-              emit transfer->closed();
-            }
-          } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
-            if (!(stream->isRunning)) {
-              emit stream->closed();
-            }
+      int widgetsCount = ui.jobs->count();
+      for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
+        QWidget *widget = ui.jobs->itemAt(i)->widget();
+        if (auto mount = qobject_cast<MountWidget *>(widget)) {
+          if (!(mount->isRunning)) {
+            emit mount->closed();
+          }
+        } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+          if (!(transfer->isRunning)) {
+            emit transfer->closed();
+          }
+        } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+          if (!(stream->isRunning)) {
+            emit stream->closed();
           }
         }
       }
@@ -635,10 +634,51 @@ MainWindow::MainWindow() {
 
       if (button == QMessageBox::Yes) {
 
-        for (int i = 0; i < ui.jobs->count(); i++) {
+        // if queue is running and active stop it
+        // to prevent race condition with new queue task auto starting
+        // (triggered by stopping tasks)
+        bool queueActive = false;
+        if ((mQueueStatus == true) && (ui.queueListWidget->count() > 0)) {
+          queueActive = true;
+          mQueueStatus = false;
+          /// remove top task from queue + save it
+          ui.queueListWidget->takeItem(0);
+          --mQueueCount;
+          saveQueueFile();
+
+          if (mQueueCount == 0) {
+            ui.tabs->setTabText(3, QString("Queue (%1)>>(0)").arg(mQueueCount));
+          } else {
+            ui.tabs->setTabText(
+                3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
+          }
+          setQueueButtons();
+        }
+
+        // now safely terminate all running transfers
+        int widgetsCount = ui.jobs->count();
+        for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
           QWidget *widget = ui.jobs->itemAt(i)->widget();
           if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-            emit transfer->cancel();
+            if ((transfer->isRunning)) {
+              emit transfer->cancel();
+            }
+          }
+        }
+
+        // restart queue if it was active before
+        if (queueActive == true) {
+          mQueueStatus = true;
+          if (ui.queueListWidget->count() > 0) {
+            // start task
+            // no transfer job is running as we just stopped all - we can start
+            // without checking other running jobs
+            JobOptionsListWidgetItem *item =
+                static_cast<JobOptionsListWidgetItem *>(
+                    ui.queueListWidget->item(0));
+            runItem(item, "queue");
+            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+            setQueueButtons();
           }
         }
       }
@@ -730,7 +770,8 @@ MainWindow::MainWindow() {
       itemsToRun = itemsToRun + jo->description + "\n";
 
       // check if task already running
-      for (int j = 0; j < ui.jobs->count(); j++) {
+      int widgetsCount = ui.jobs->count();
+      for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
         QWidget *widget = ui.jobs->itemAt(j)->widget();
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
@@ -785,7 +826,8 @@ MainWindow::MainWindow() {
       itemsToDelete = itemsToDelete + jo->description + "\n";
 
       // check if any tasks already running
-      for (int j = 0; j < ui.jobs->count(); j++) {
+      int widgetsCount = ui.jobs->count();
+      for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
         QWidget *widget = ui.jobs->itemAt(j)->widget();
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
@@ -796,7 +838,7 @@ MainWindow::MainWindow() {
       }
     }
 
-    // dont delete running tasks
+    // don't delete running tasks
     if (!itemsAlreadyRunning.isEmpty()) {
       QMessageBox::critical(
           this, "Run",
@@ -915,7 +957,8 @@ MainWindow::MainWindow() {
         // check first if maybe already running (manually by user??)
         // in that case we only mark it as processing
         bool isAlreadyRunning = false;
-        for (int j = 0; j < ui.jobs->count(); j++) {
+        int widgetsCount = ui.jobs->count();
+        for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
           QWidget *widget = ui.jobs->itemAt(j)->widget();
           if (auto transfer = qobject_cast<JobWidget *>(widget)) {
             if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
@@ -995,9 +1038,9 @@ MainWindow::MainWindow() {
       JobOptions *jo = item->GetData();
 
       // check first if maybe already running (manually by user??)
-      // in that case we just wait
       bool isAlreadyRunning = false;
-      for (int j = 0; j < ui.jobs->count(); j++) {
+      int widgetsCount = ui.jobs->count();
+      for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
         QWidget *widget = ui.jobs->itemAt(j)->widget();
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
@@ -1007,6 +1050,7 @@ MainWindow::MainWindow() {
           }
         }
       }
+      // start only when not running already
       if (!isAlreadyRunning) {
         runItem(item, "queue");
       }
@@ -1043,7 +1087,8 @@ MainWindow::MainWindow() {
 
       JobOptions *jo = item->GetData();
 
-      for (int j = 0; j < ui.jobs->count(); j++) {
+      int widgetsCount = ui.jobs->count();
+      for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
         QWidget *widget = ui.jobs->itemAt(j)->widget();
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
 
@@ -1338,11 +1383,13 @@ MainWindow::sortListWidget(const QList<QListWidgetItem *> &list,
       JobOptions *jo_min_idx = item_min_idx->GetData();
 
       if (sortOrder) {
-        if ((jo_j->description).toUpper() < (jo_min_idx->description).toUpper()) {
+        if ((jo_j->description).toUpper() <
+            (jo_min_idx->description).toUpper()) {
           min_idx = j;
         }
       } else {
-        if ((jo_j->description).toUpper() > (jo_min_idx->description).toUpper() ) {
+        if ((jo_j->description).toUpper() >
+            (jo_min_idx->description).toUpper()) {
           min_idx = j;
         }
       }
@@ -2106,7 +2153,8 @@ bool MainWindow::canClose() {
     // we make close process aware that it is quitting
     mAppQuittingStatus = true;
 
-    for (int i = 0; i < ui.jobs->count(); i++) {
+    int widgetsCount = ui.jobs->count();
+    for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
       QWidget *widget = ui.jobs->itemAt(i)->widget();
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
         emit mount->cancel();
@@ -2486,9 +2534,11 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
                                              (ui.jobs->count() - 2) / 2);
 
         // if job finished try to run next one from the queue
-        // only when not quitting  and when queue is active
+        // only when not quitting, queue is active and there are tasks in the
+        // queue
 
-        if (!mAppQuittingStatus && mQueueStatus) {
+        if (!mAppQuittingStatus && mQueueStatus &&
+            ui.queueListWidget->count() > 0) {
 
           auto QueueRunningTask = ui.queueListWidget->item(0);
 
@@ -2525,7 +2575,8 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
                   static_cast<JobOptionsListWidgetItem *>(nextTask);
               JobOptions *jo = item->GetData();
 
-              for (int j = 0; j < ui.jobs->count(); j++) {
+              int widgetsCount = ui.jobs->count();
+              for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
                 QWidget *widget = ui.jobs->itemAt(j)->widget();
                 if (auto transfer = qobject_cast<JobWidget *>(widget)) {
                   if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&

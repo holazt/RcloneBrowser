@@ -345,6 +345,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         ui.getTree->setDisabled(!isFolder);
         ui.export_->setDisabled(!isFolder);
         ui.actionCheck->setDisabled(!isFolder);
+        ui.actionDedupe->setDisabled(!isFolder);
         ui.path->setText(isLocal ? QDir::toNativeSeparators(path.path())
                                  : path.path());
       });

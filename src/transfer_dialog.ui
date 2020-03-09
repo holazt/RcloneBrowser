@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>954</width>
-    <height>630</height>
+    <width>870</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>954</width>
+    <width>870</width>
     <height>0</height>
    </size>
   </property>
@@ -78,11 +78,11 @@
       </item>
       <item row="1" column="1" colspan="2">
        <widget class="QLineEdit" name="textDest">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>24</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -114,11 +114,11 @@
       </item>
       <item row="0" column="1" colspan="2">
        <widget class="QLineEdit" name="textSource">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>24</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -126,26 +126,7 @@
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>0</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>10</verstretch>
-      </sizepolicy>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -155,222 +136,183 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string/>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item alignment="Qt::AlignTop">
-           <widget class="QGroupBox" name="modeGroup">
-            <property name="title">
-             <string>Transfer mode</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_5">
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item row="2" column="2">
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="0">
-              <widget class="QRadioButton" name="rbMove">
-               <property name="toolTip">
-                <string>rclone move</string>
-               </property>
-               <property name="text">
-                <string>Move</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="rbCopy">
-               <property name="toolTip">
-                <string>rclone copy</string>
-               </property>
-               <property name="text">
-                <string>Copy</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="rbSync">
-               <property name="toolTip">
-                <string>rclone sync</string>
-               </property>
-               <property name="text">
-                <string>Sync</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QComboBox" name="cbSyncDelete">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QGroupBox" name="modeGroup">
+           <property name="title">
+            <string>Transfer mode</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QCheckBox" name="rbCopy">
+              <property name="text">
+               <string>Copy</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="rbMove">
+              <property name="text">
+               <string>Move</string>
+              </property>
+              <property name="autoExclusive">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="spacing">
+               <number>-1</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="rbSync">
                 <property name="text">
-                 <string>Delete during transfer</string>
+                 <string>Sync</string>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Delete after transfering</string>
+                <property name="autoExclusive">
+                 <bool>true</bool>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Delete before transfering</string>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cbSyncDelete">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
-               </item>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item alignment="Qt::AlignTop">
-           <widget class="QGroupBox" name="skipFilesGroup">
-            <property name="title">
-             <string>Skip files</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout">
-             <item row="2" column="1">
-              <widget class="QComboBox" name="cbCompare">
-               <property name="currentText">
-                <string>Size &amp; mod-time</string>
-               </property>
-               <item>
+                <item>
+                 <property name="text">
+                  <string>Delete during transfer</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Delete after transfering</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Delete before transfering</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="skipFilesGroup">
+           <property name="title">
+            <string>Skip files</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QCheckBox" name="checkSkipNewer">
+              <property name="toolTip">
+               <string>--update</string>
+              </property>
+              <property name="text">
+               <string>Skip files that are newer on the destination</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkSkipExisting">
+              <property name="toolTip">
+               <string>--ignore-existing</string>
+              </property>
+              <property name="text">
+               <string>Skip all files that exist</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QCheckBox" name="checkCompare">
+                <property name="toolTip">
+                 <string>compare logic</string>
+                </property>
                 <property name="text">
+                 <string>Compare</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cbCompare">
+                <property name="currentText">
                  <string>Size &amp; mod-time</string>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Size &amp; checksum</string>
+                <item>
+                 <property name="text">
+                  <string>Size &amp; mod-time</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Size &amp; checksum</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Only mod-time</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string extracomment="--size-only">Only size</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string extracomment="--checksum">Only checksum</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Only mod-time</string>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string extracomment="--size-only">Only size</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string extracomment="--checksum">Only checksum</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
-              <widget class="QCheckBox" name="checkSkipNewer">
-               <property name="toolTip">
-                <string>--update</string>
-               </property>
-               <property name="text">
-                <string>Skip files that are newer on the destination</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QCheckBox" name="checkCompare">
-               <property name="toolTip">
-                <string>compare logic</string>
-               </property>
-               <property name="text">
-                <string>Compare</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QCheckBox" name="checkSkipExisting">
-               <property name="toolTip">
-                <string>--ignore-existing</string>
-               </property>
-               <property name="text">
-                <string>Skip all files that exist</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <spacer name="verticalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="2" column="2">
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>0</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::MinimumExpanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>15</height>
-          </size>
-         </property>
-        </spacer>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox">
@@ -387,12 +329,6 @@
           </item>
           <item>
            <widget class="QLineEdit" name="textExtra">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -416,12 +352,6 @@
           </item>
           <item>
            <widget class="QLineEdit" name="textDescription">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -437,12 +367,6 @@
            <layout class="QHBoxLayout" name="horizontalLayout_GoogleDrive">
             <item>
              <widget class="QLabel" name="remoteModeLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="text">
                <string>Remote mode: </string>
               </property>
@@ -450,11 +374,11 @@
             </item>
             <item>
              <widget class="QLineEdit" name="remoteMode">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>24</height>
+               </size>
               </property>
               <property name="contextMenuPolicy">
                <enum>Qt::NoContextMenu</enum>
@@ -521,283 +445,36 @@
           <string>Transfer parameters</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_6">
-          <item row="4" column="1">
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>15</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>IO idle timeout</string>
-            </property>
-            <property name="buddy">
-             <cstring>spinIdleTimeout</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Minimum size (KiB or b|k|M|G suffix)</string>
-            </property>
-            <property name="buddy">
-             <cstring>textMinSize</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="2">
-           <widget class="QSpinBox" name="spinLowLevelRetries">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--low-level-retries</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>999999</number>
-            </property>
-            <property name="value">
-             <number>10</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLineEdit" name="textMaxAge">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--max-age</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="2">
-           <widget class="QSpinBox" name="spinConnectTimeout">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--contimeout</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>999999</number>
-            </property>
-            <property name="value">
-             <number>60</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QSpinBox" name="spinCheckers">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--checkers</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>999</number>
-            </property>
-            <property name="value">
-             <number>8</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Transfers</string>
-            </property>
-            <property name="buddy">
-             <cstring>spinTransfers</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Retries</string>
-            </property>
-            <property name="buddy">
-             <cstring>spinRetries</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Low level retries</string>
-            </property>
-            <property name="buddy">
-             <cstring>spinLowLevelRetries</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <widget class="QSpinBox" name="spinIdleTimeout">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--timeout</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="maximum">
-             <number>999999</number>
-            </property>
-            <property name="value">
-             <number>300</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Checkers</string>
-            </property>
-            <property name="buddy">
-             <cstring>spinCheckers</cstring>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="2">
            <widget class="QLineEdit" name="textMinAge">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>16777215</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>--min-age</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label">
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>Bandwidth (KiB/s or b|k|M|G suffix)</string>
+             <string>Connect timeout</string>
             </property>
             <property name="buddy">
-             <cstring>textBandwidth</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLineEdit" name="textMinSize">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--min-size</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="2">
-           <widget class="QSpinBox" name="spinRetries">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>--retries</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>999999</number>
-            </property>
-            <property name="value">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Minimum age (s or ms|s|m|h|d|w|M|y suffix)</string>
-            </property>
-            <property name="buddy">
-             <cstring>textMinAge</cstring>
+             <cstring>spinConnectTimeout</cstring>
             </property>
            </widget>
           </item>
           <item row="1" column="2">
            <widget class="QSpinBox" name="spinTransfers">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>--transfers</string>
@@ -816,6 +493,36 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Bandwidth (KiB/s or b|k|M|G suffix)</string>
+            </property>
+            <property name="buddy">
+             <cstring>textBandwidth</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Retries</string>
+            </property>
+            <property name="buddy">
+             <cstring>spinRetries</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Minimum size (KiB or b|k|M|G suffix)</string>
+            </property>
+            <property name="buddy">
+             <cstring>textMinSize</cstring>
+            </property>
+           </widget>
+          </item>
           <item row="5" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
@@ -823,6 +530,169 @@
             </property>
             <property name="buddy">
              <cstring>textMaxAge</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLineEdit" name="textMaxAge">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--max-age</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Checkers</string>
+            </property>
+            <property name="buddy">
+             <cstring>spinCheckers</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>IO idle timeout</string>
+            </property>
+            <property name="buddy">
+             <cstring>spinIdleTimeout</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="2">
+           <widget class="QSpinBox" name="spinIdleTimeout">
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--timeout</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
+            </property>
+            <property name="value">
+             <number>300</number>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="2">
+           <widget class="QSpinBox" name="spinConnectTimeout">
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--contimeout</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
+            </property>
+            <property name="value">
+             <number>60</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Minimum age (s or ms|s|m|h|d|w|M|y suffix)</string>
+            </property>
+            <property name="buddy">
+             <cstring>textMinAge</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLineEdit" name="textMinSize">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--min-size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="2">
+           <widget class="QSpinBox" name="spinRetries">
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--retries</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
+            </property>
+            <property name="value">
+             <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QSpinBox" name="spinMaxDepth">
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--max-depth</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
             </property>
            </widget>
           </item>
@@ -836,47 +706,101 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="2">
-           <widget class="QSpinBox" name="spinMaxDepth">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>Transfers</string>
             </property>
-            <property name="toolTip">
-             <string>--max-depth</string>
+            <property name="buddy">
+             <cstring>spinTransfers</cstring>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Low level retries</string>
             </property>
-            <property name="maximum">
-             <number>999999</number>
+            <property name="buddy">
+             <cstring>spinLowLevelRetries</cstring>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
            <widget class="QLineEdit" name="textBandwidth">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>16777215</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>--bwlimit</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Connect timeout</string>
+          <item row="0" column="2">
+           <widget class="QSpinBox" name="spinCheckers">
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
             </property>
-            <property name="buddy">
-             <cstring>spinConnectTimeout</cstring>
+            <property name="toolTip">
+             <string>--checkers</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999</number>
+            </property>
+            <property name="value">
+             <number>8</number>
             </property>
            </widget>
+          </item>
+          <item row="10" column="2">
+           <widget class="QSpinBox" name="spinLowLevelRetries">
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>--low-level-retries</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -930,13 +854,9 @@
   <tabstop>buttonDest</tabstop>
   <tabstop>buttonDefaultDest</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>rbCopy</tabstop>
-  <tabstop>rbMove</tabstop>
-  <tabstop>rbSync</tabstop>
   <tabstop>cbSyncDelete</tabstop>
   <tabstop>checkSkipNewer</tabstop>
   <tabstop>checkSkipExisting</tabstop>
-  <tabstop>checkCompare</tabstop>
   <tabstop>cbCompare</tabstop>
   <tabstop>checkSameFilesystem</tabstop>
   <tabstop>checkDontUpdateModified</tabstop>
@@ -955,22 +875,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>rbSync</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>cbSyncDelete</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>75</x>
-     <y>195</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>232</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>checkCompare</sender>
    <signal>toggled(bool)</signal>
    <receiver>cbCompare</receiver>
@@ -983,6 +887,22 @@
     <hint type="destinationlabel">
      <x>487</x>
      <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbSync</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbSyncDelete</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>235</y>
     </hint>
    </hints>
   </connection>

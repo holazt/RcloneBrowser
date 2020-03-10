@@ -1024,9 +1024,18 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
     QModelIndex top = index;
+
+    // get top parent
     while (!model->isTopLevel(top)) {
       top = top.parent();
     }
+
+    int i = 0;
+    // clear top folder's rows
+    while (model->removeRow(0, top)) {
+      ++i;
+    }
+
     ui.tree->selectionModel()->clear();
     ui.tree->selectionModel()->select(top, QItemSelectionModel::Select |
                                                QItemSelectionModel::Rows);

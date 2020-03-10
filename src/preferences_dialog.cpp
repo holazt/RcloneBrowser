@@ -17,6 +17,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   }
 #endif
 
+  // images as tooltips - one picture tells more...
+  ui.cb_textandicon->setToolTip(  tr("<img src=':remotes/images/tooltips/textandicon.png'>")    );
+  ui.cb_icononly->setToolTip(  tr("<img src=':remotes/images/tooltips/icononly.png'>")    );
+  ui.cb_textonly->setToolTip(  tr("<img src=':remotes/images/tooltips/textonly.png'>")    );
+
   // lock vertical resizing
   resize(0, 0);
   adjustSize();

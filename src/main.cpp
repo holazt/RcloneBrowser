@@ -127,6 +127,18 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/remoteType", "main");
   };
 
+  // during first run the queueScript key might not exist
+  if (!(settings->contains("Settings/queueScript"))) {
+    // if queueScript does not exist create new key
+    settings->setValue("Settings/queueScript", "");
+  };
+
+  // during first run the queueScriptRun key might not exist
+  if (!(settings->contains("Settings/queueScriptRun"))) {
+    // if queueScriptRun does not exist create new key
+    settings->setValue("Settings/queueScriptRun", "false");
+  };
+
   // set application font size
   int fontsize = 0;
 

@@ -91,6 +91,29 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
         ui.defaultUploadDir->setText(defaultUploadDir);
       });
 
+  QObject::connect(ui.queueScriptBrowse, &QPushButton::clicked, this, [=]() {
+    QString queueScript = QFileDialog::getOpenFileName(this, "Select script",
+                                                       ui.queueScript->text());
+    if (queueScript.isEmpty()) {
+      return;
+    }
+
+    if (!QFileInfo(queueScript).isExecutable()) {
+      QMessageBox::critical(
+          this, "Error", QString("File %1 is not executable").arg(queueScript));
+      return;
+    }
+
+    if (QFileInfo(queueScript) == QFileInfo(qApp->applicationFilePath())) {
+      QMessageBox::critical(this, "Error",
+                            "You selected RcloneBrowser executable!\nPlease "
+                            "select your script executable instead.");
+      return;
+    }
+
+    ui.queueScript->setText(queueScript);
+  });
+
   auto settings = GetSettings();
   ui.rclone->setText(
       QDir::toNativeSeparators(settings->value("Settings/rclone").toString()));
@@ -119,6 +142,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/defaultUploadOptions").toString());
   ui.defaultRcloneOptions->setText(
       settings->value("Settings/defaultRcloneOptions").toString());
+  ui.queueScript->setText(QDir::toNativeSeparators(
+      settings->value("Settings/queueScript").toString()));
 
   ui.checkRcloneBrowserUpdates->setChecked(
       settings->value("Settings/checkRcloneBrowserUpdates", true).toBool());
@@ -303,6 +328,10 @@ QString PreferencesDialog::getDefaultUploadOptions() const {
 
 QString PreferencesDialog::getDefaultRcloneOptions() const {
   return ui.defaultRcloneOptions->text();
+}
+
+QString PreferencesDialog::getQueueScript() const {
+  return ui.queueScript->text();
 }
 
 bool PreferencesDialog::getCheckRcloneBrowserUpdates() const {

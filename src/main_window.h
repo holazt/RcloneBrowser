@@ -28,6 +28,8 @@ private slots:
   void addStream(const QString &remote, const QString &stream,
                  const QString &remoteType);
 
+  void runQueueScript(const QString &script);
+
   void slotCloseTab(int index);
 
   void saveQueueFile(void);

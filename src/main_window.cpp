@@ -22,6 +22,8 @@ MainWindow::MainWindow() {
   }
 
   auto settings = GetSettings();
+  ui.queueScriptRun->setChecked(
+      (settings->value("Settings/queueScriptRun").toBool()));
 
 #if defined(Q_OS_WIN)
   // disable "?" WindowContextHelpButton
@@ -404,6 +406,8 @@ MainWindow::MainWindow() {
                          dialog.getDefaultUploadOptions().trimmed());
       settings->setValue("Settings/defaultRcloneOptions",
                          dialog.getDefaultRcloneOptions().trimmed());
+      settings->setValue("Settings/queueScript",
+                         dialog.getQueueScript().trimmed());
 
       settings->setValue("Settings/checkRcloneBrowserUpdates",
                          dialog.getCheckRcloneBrowserUpdates());
@@ -441,6 +445,16 @@ MainWindow::MainWindow() {
                          dialog.getHttpsProxy().trimmed());
       settings->setValue("Settings/no_proxy", dialog.getNoProxy().trimmed());
 
+      // set queueScriptRun tooltip
+      QString queueScriptRunToolTip =
+          QString("Run script defined in preferences after all queue "
+                  "processing finishes.\n\n"
+                  "Can be used for example to hibernate your computer.\n\n") +
+          QString("Script set in preferences: ") + QString("\"") +
+          QString(settings->value("Settings/queueScript", false).toString()) +
+          QString("\"");
+      ui.queueScriptRun->setToolTip(queueScriptRunToolTip);
+
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
       mFirstTime = true;
@@ -452,6 +466,13 @@ MainWindow::MainWindow() {
 
       mSystemTray.setVisible(mAlwaysShowInTray);
     }
+  });
+
+  QObject::connect(ui.actionQueueScriptRun, &QAction::triggered, this, [=]() {
+    // remember in settings queueScriptRun checkbox state
+    auto settings = GetSettings();
+    settings->setValue("Settings/queueScriptRun",
+                       ui.queueScriptRun->isChecked());
   });
 
   // intercept tab closure
@@ -2195,6 +2216,17 @@ void MainWindow::addTasksToQueue() {
 
   ui.queueListWidget->clear();
 
+  // set queueScriptRun tooltip
+  auto settings = GetSettings();
+  QString queueScriptRunToolTip =
+      QString("Run script defined in preferences after all queue processing "
+              "finishes.\n\n"
+              "Can be used for example to hibernate your computer.\n\n") +
+      QString("Script set in preferences: ") + QString("\"") +
+      QString(settings->value("Settings/queueScript", false).toString()) +
+      QString("\"");
+  ui.queueScriptRun->setToolTip(queueScriptRunToolTip);
+
   auto items = ui.tasksListWidget->selectedItems();
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
@@ -2560,6 +2592,19 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
             if (mQueueCount == 0) {
               ui.tabs->setTabText(3,
                                   QString("Queue (%1)>>(0)").arg(mQueueCount));
+              // run queueScript
+              auto settings = GetSettings();
+              bool queueScriptRun =
+                  settings->value("Settings/queueScriptRun", false).toBool();
+
+              if (queueScriptRun) {
+                QString queueScript =
+                    settings->value("Settings/queueScript", false).toString();
+                if (!queueScript.isEmpty()) {
+                  runQueueScript(queueScript);
+                }
+              }
+
             } else {
               ui.tabs->setTabText(
                   3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
@@ -2633,6 +2678,23 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
   UseRclonePassword(transfer);
   transfer->start(GetRclone(), GetRcloneConf() + args, QIODevice::ReadOnly);
+}
+
+//  runs queueScript
+void MainWindow::runQueueScript(const QString &script) {
+
+  QProcess *p = new QProcess();
+
+  QObject::connect(p,
+                   static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
+                       &QProcess::finished),
+                   this, [=](int code, QProcess::ExitStatus) {
+                     if (code == 0) {
+                     }
+                     p->deleteLater();
+                   });
+
+  p->start(script);
 }
 
 void MainWindow::addMount(const QString &remote, const QString &folder,

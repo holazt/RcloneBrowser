@@ -93,7 +93,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QIcon(":remotes/images/qbutton_icons/link" + img_add + ".png"));
   ui.export_->setIcon(
       QIcon(":remotes/images/qbutton_icons/export" + img_add + ".png"));
-  ui.actionTools->setIcon(
+  ui.buttonTools->setIcon(
       QIcon(":remotes/images/qbutton_icons/tools" + img_add + ".png"));
   ui.getInfo->setIcon(
       QIcon(":remotes/images/qbutton_icons/info" + img_add + ".png"));
@@ -115,7 +115,6 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonLink->setDefaultAction(ui.link);
   ui.buttonExport->setDefaultAction(ui.export_);
   ui.buttonInfo->setDefaultAction(ui.getInfo);
-  ui.buttonTools->setDefaultAction(ui.actionTools);
   ui.buttonDedupe->setDefaultAction(ui.actionDedupe);
 
   // buttons and icons size
@@ -255,6 +254,35 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonDedupe->setIconSize(QSize(icon_w, icon_h));
     }
   }
+
+  ui.refresh->setStatusTip("Refresh (F5)");
+  ui.mkdir->setStatusTip("New Folder (F7) - rclone mkdir");
+  ui.rename->setStatusTip("Rename (F2) - rclone moveto");
+  ui.move->setStatusTip("Move - rclone move");
+  ui.purge->setStatusTip("Delete (Del) - rclone purge|delete");
+  ui.mount->setStatusTip("Mount - rclone mount");
+  ui.stream->setStatusTip("Stream file - rclone cat | player -");
+  ui.upload->setStatusTip("Upload file/directory");
+  ui.download->setStatusTip("Download file/directory");
+  ui.getSize->setStatusTip("Get folder size - rclone size");
+  ui.getTree->setStatusTip("Show folders tree - rclone tree");
+  ui.link->setStatusTip("Fetch public link - rclone link");
+  ui.export_->setStatusTip("Export files list");
+  ui.actionCheck->setStatusTip(
+      "Check remote's integrity - rclone check/cryptcheck");
+  ui.actionDedupe->setStatusTip("Remove duplicated files - rclone dedupe");
+
+  QMenu *menuMode = new QMenu(this);
+  menuMode->addAction(ui.getTree);
+  menuMode->addAction(ui.link);
+  menuMode->addAction(ui.export_);
+  menuMode->addAction(ui.actionCheck);
+  if (remoteType == "drive") {
+    menuMode->addAction(ui.actionDedupe);
+  }
+
+  ui.buttonTools->setMenu(menuMode);
+  ui.buttonTools->setPopupMode(QToolButton::InstantPopup);
 
   ui.tree->sortByColumn(0, Qt::AscendingOrder);
   ui.tree->header()->setSectionsMovable(false);
@@ -907,7 +935,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                      menu.addAction(ui.link);
                      menu.addAction(ui.export_);
                      menu.addAction(ui.actionCheck);
-                     menu.addAction(ui.actionDedupe);
+                     if (remoteType == "drive") {
+                       menu.addAction(ui.actionDedupe);
+                     }
                      menu.exec(ui.tree->viewport()->mapToGlobal(pos));
                    });
 

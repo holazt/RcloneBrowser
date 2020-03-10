@@ -2261,6 +2261,11 @@ void MainWindow::listTasks() {
   ui.tasksListWidget->setSpacing(5);
   ui.tasksListWidget->setWrapping(true);
 
+  ui.queueListWidget->setViewMode(QListWidget::ListMode);
+  ui.queueListWidget->setResizeMode(QListView::Adjust);
+  ui.queueListWidget->setSpacing(5);
+  ui.queueListWidget->setWrapping(true);
+
   // enable drag and drop reordering (there is no persistence of order
   // implemented yet)
   // ui.tasksListWidget->setDragDropMode(QAbstractItemView::InternalMove);

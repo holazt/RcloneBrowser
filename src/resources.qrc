@@ -93,10 +93,14 @@
 
     <file>images/program_icons/rclone-browser512.png</file>
 
-
     <file>images/tooltips/textandicon.png</file>
     <file>images/tooltips/icononly.png</file>
     <file>images/tooltips/textonly.png</file>
+    <file>images/tooltips/iconswhite.png</file>
+    <file>images/tooltips/iconsblack.png</file>
+    <file>images/tooltips/listlong.png</file>
+    <file>images/tooltips/listwrap.png</file>
+    <file>images/tooltips/tiles.png</file>
 
     <file>images/amazon_cloud_drive.png</file>
     <file>images/b2.png</file>

@@ -5,6 +5,18 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
 
   ui.setupUi(this);
 
+
+// hide elements used for testing only
+
+ui.cb_font_6->hide();
+ui.cb_font_7->hide();
+ui.cb_font_8->hide();
+ui.cb_font_9->hide();
+
+ui.cb_button_4->hide();
+
+ui.cb_remote_xxl->hide();
+
 // dark mode option for all systems but latest macOS
 // on macOS Mojave or newer dark mode is managed by OS
 #if defined(Q_OS_MACOS)
@@ -21,6 +33,12 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.cb_textandicon->setToolTip(  tr("<img src=':remotes/images/tooltips/textandicon.png'>")    );
   ui.cb_icononly->setToolTip(  tr("<img src=':remotes/images/tooltips/icononly.png'>")    );
   ui.cb_textonly->setToolTip(  tr("<img src=':remotes/images/tooltips/textonly.png'>")    );
+  ui.cb_icons_colour_black->setToolTip(  tr("<img src=':remotes/images/tooltips/iconsblack.png'>")    );
+  ui.cb_icons_colour_white->setToolTip(  tr("<img src=':remotes/images/tooltips/iconswhite.png'>")    );
+  ui.cb_longList->setToolTip(  tr("<img src=':remotes/images/tooltips/listlong.png'>")    );
+  ui.cb_list->setToolTip(  tr("<img src=':remotes/images/tooltips/listwrap.png'>")    );
+  ui.cb_tiles->setToolTip(  tr("<img src=':remotes/images/tooltips/tiles.png'>")    );
+
 
   // lock vertical resizing
   resize(0, 0);

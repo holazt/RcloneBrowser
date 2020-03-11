@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -359,6 +359,12 @@
           </item>
           <item>
            <widget class="QToolButton" name="buttonAddToQueue">
+            <property name="toolTip">
+             <string>Add selected tasks to the queue for later execution</string>
+            </property>
+            <property name="statusTip">
+             <string>Add selected tasks to the queue for later execution</string>
+            </property>
             <property name="text">
              <string>Add</string>
             </property>
@@ -803,7 +809,7 @@
   </action>
   <action name="actionAddToQueue">
    <property name="text">
-    <string>Add</string>
+    <string>Add to the queue</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add selected tasks to the queue for later execution&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -894,6 +900,22 @@
    <hints>
     <hint type="sourcelabel">
      <x>567</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonAddToQueue</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAddToQueue</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>289</x>
      <y>73</y>
     </hint>
     <hint type="destinationlabel">

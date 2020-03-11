@@ -182,8 +182,12 @@ MainWindow::MainWindow() {
   ui.buttonPrefs->setIcon(
       QIcon(":remotes/images/qbutton_icons/preferences" + img_add + ".png"));
 
+  // triggered via slot so button text can be different than action menu
+  ui.buttonAddToQueue->setIcon(
+      QIcon(":remotes/images/qbutton_icons/addtoqueue" + img_add + ".png"));
   ui.actionAddToQueue->setIcon(
       QIcon(":remotes/images/qbutton_icons/addtoqueue" + img_add + ".png"));
+
   ui.actionStartQueue->setIcon(
       QIcon(":remotes/images/qbutton_icons/run" + img_add + ".png"));
   ui.actionStopQueue->setIcon(
@@ -222,7 +226,7 @@ MainWindow::MainWindow() {
   //  ui.buttonPrefs->setDefaultAction(ui.preferences);
   ui.buttonStopAllJobs->setDefaultAction(ui.actionStopAllTransfers);
   ui.buttonCleanNotRunning->setDefaultAction(ui.actionCleanNotRunning);
-  ui.buttonAddToQueue->setDefaultAction(ui.actionAddToQueue);
+  // ui.buttonAddToQueue->setDefaultAction(ui.actionAddToQueue);
   ui.buttonStartQueue->setDefaultAction(ui.actionStartQueue);
   ui.buttonStopQueue->setDefaultAction(ui.actionStopQueue);
   ui.buttonPurgeQueue->setDefaultAction(ui.actionPurgeQueue);
@@ -232,6 +236,7 @@ MainWindow::MainWindow() {
 
   // overwrite button text
   ui.buttonPrefs->setText("Prefs");
+  ui.buttonAddToQueue->setText("Add");
 
   // open remote should be not active when there is
   // no foucs on any e.g. after start

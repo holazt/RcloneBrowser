@@ -37,37 +37,7 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
   auto settings = GetSettings();
 
   int fontsize = 0;
-
-  if (settings->value("Settings/fontSize").toString() == "0") {
-    fontsize = 0;
-  }
-  if (settings->value("Settings/fontSize").toString() == "1") {
-    fontsize = 1;
-  }
-  if (settings->value("Settings/fontSize").toString() == "2") {
-    fontsize = 2;
-  }
-  if (settings->value("Settings/fontSize").toString() == "3") {
-    fontsize = 3;
-  }
-  if (settings->value("Settings/fontSize").toString() == "4") {
-    fontsize = 4;
-  }
-  if (settings->value("Settings/fontSize").toString() == "5") {
-    fontsize = 5;
-  }
-  if (settings->value("Settings/fontSize").toString() == "6") {
-    fontsize = 6;
-  }
-  if (settings->value("Settings/fontSize").toString() == "7") {
-    fontsize = 7;
-  }
-  if (settings->value("Settings/fontSize").toString() == "8") {
-    fontsize = 8;
-  }
-  if (settings->value("Settings/fontSize").toString() == "9") {
-    fontsize = 9;
-  }
+  fontsize = (settings->value("Settings/fontSize").toInt());
 
   QFont font = ui.output->font();
   QFontMetrics fm(font);

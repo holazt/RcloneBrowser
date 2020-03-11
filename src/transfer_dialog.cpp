@@ -13,13 +13,20 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   ui.setupUi(this);
 
+  auto settings = GetSettings();
+
+  // set minimumWidth based on font size
+  int fontsize = 0;
+  fontsize = (settings->value("Settings/fontSize").toInt());
+  setMinimumWidth(minimumWidth() + (fontsize * 50));
+
+  // lock vertical resizing
   adjustSize();
   setMaximumHeight(this->height() + 30);
   setMinimumHeight(this->height() + 30);
 
   setWindowTitle(isDownload ? "Download" : "Upload");
 
-  auto settings = GetSettings();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
 
   QString img_add = "";
@@ -44,6 +51,12 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   ui.buttonDest->setIconSize(QSize(24, 24));
   ui.buttonDefaultSource->setIconSize(QSize(24, 24));
   ui.buttonDefaultDest->setIconSize(QSize(24, 24));
+
+  // only used for layout
+  ui.comboBoxSpacer1->hide();
+  ui.comboBoxSpacer2->hide();
+  ui.comboBoxSpacer3->hide();
+  ui.comboBoxSpacer4->hide();
 
   if (!mIsEditMode) {
     QPushButton *dryRun =

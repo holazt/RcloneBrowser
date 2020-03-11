@@ -2,9 +2,13 @@
 #include "utils.h"
 
 MountWidget::MountWidget(QProcess *process, const QString &remote,
-                         const QString &folder, QWidget *parent)
+                         const QString &folder, const QStringList &args,
+                         QWidget *parent)
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
+
+  mArgs.append(QDir::toNativeSeparators(GetRclone()));
+  mArgs.append(args);
 
   QString info = QString("%1 on %2").arg(remote).arg(folder);
   QString infoTrimmed;
@@ -60,6 +64,15 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
           ui.showDetails->setIconSize(QSize(24, 24));
         }
       });
+
+  ui.copy->setIcon(
+      QIcon(":remotes/images/qbutton_icons/copy" + img_add + ".png"));
+  ui.copy->setIconSize(QSize(24, 24));
+
+  QObject::connect(ui.copy, &QToolButton::clicked, this, [=]() {
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(mArgs.join(" "));
+  });
 
   QObject::connect(
       ui.showOutput, &QToolButton::toggled, this, [=](bool checked) {
@@ -137,6 +150,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
           ui.showDetails->setText("  Error");
         }
         ui.cancel->setToolTip("Close");
+        ui.cancel->setStatusTip("Close");
         emit finished();
       });
 
@@ -195,4 +209,5 @@ void MountWidget::cancel() {
 
   ui.showDetails->setText("  Finished");
   ui.cancel->setToolTip("Close");
+  ui.cancel->setStatusTip("Close");
 }

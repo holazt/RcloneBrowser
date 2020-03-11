@@ -8,7 +8,7 @@ class MountWidget : public QWidget {
 
 public:
   MountWidget(QProcess *process, const QString &remote, const QString &folder,
-              QWidget *parent = nullptr);
+              const QStringList &args, QWidget *parent = nullptr);
   ~MountWidget();
   bool isRunning = true;
 
@@ -23,4 +23,6 @@ private:
   Ui::MountWidget ui;
 
   QProcess *mProcess;
+
+  QStringList mArgs;
 };

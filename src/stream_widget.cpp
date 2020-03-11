@@ -3,11 +3,17 @@
 
 StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                            const QString &remote, const QString &stream,
-                           QWidget *parent)
+                           const QStringList &args, QWidget *parent)
     : QWidget(parent), mRclone(rclone), mPlayer(player) {
   ui.setupUi(this);
 
   QString remoteTrimmed;
+
+  auto settings = GetSettings();
+  mArgs.append(QDir::toNativeSeparators(GetRclone()));
+  mArgs.append(args);
+  mArgs.append(" | ");
+  mArgs.append(settings->value("Settings/stream").toString());
 
   if (remote.length() > 140) {
     remoteTrimmed = remote.left(57) + "..." + remote.right(80);
@@ -31,7 +37,6 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
   ui.output->setVisible(false);
 
-  auto settings = GetSettings();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
 
   QString img_add = "";
@@ -49,6 +54,16 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.showOutput->setIconSize(QSize(24, 24));
 
   ui.cancel->setToolTip("Stop streaming");
+  ui.cancel->setStatusTip("Stop streaming");
+
+  ui.copy->setIcon(
+      QIcon(":remotes/images/qbutton_icons/copy" + img_add + ".png"));
+  ui.copy->setIconSize(QSize(24, 24));
+
+  QObject::connect(ui.copy, &QToolButton::clicked, this, [=]() {
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(mArgs.join(" "));
+  });
 
   QObject::connect(
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
@@ -135,6 +150,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
         }
 
         ui.cancel->setToolTip("Close");
+        ui.cancel->setStatusTip("Close");
 
         emit finished();
         //          emit closed();

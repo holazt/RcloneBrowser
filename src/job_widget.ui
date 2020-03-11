@@ -113,6 +113,9 @@
         <property name="toolTip">
          <string>Copy rclone command to clipboard</string>
         </property>
+        <property name="statusTip">
+         <string>Copy rclone command to clipboard</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>
         </property>
@@ -124,7 +127,10 @@
       <item>
        <widget class="QToolButton" name="cancel">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Stop job&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Stop job</string>
+        </property>
+        <property name="statusTip">
+         <string>Stop job</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>

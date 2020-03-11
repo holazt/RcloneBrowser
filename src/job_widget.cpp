@@ -308,6 +308,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         }
 
         ui.cancel->setToolTip("Close");
+        ui.cancel->setStatusTip("Close");
 
         emit finished(ui.info->text());
       });
@@ -334,6 +335,7 @@ void JobWidget::cancel() {
   ui.showDetails->setText("  Stopped");
   ui.progress_info->hide();
   ui.cancel->setToolTip("Close");
+  ui.cancel->setStatusTip("Close");
 }
 
 QString JobWidget::getUniqueID() { return mUniqueID; }

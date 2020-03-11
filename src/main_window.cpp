@@ -2702,43 +2702,10 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
   QProcess *mount = new QProcess(this);
   mount->setProcessChannelMode(QProcess::MergedChannels);
 
-  auto widget = new MountWidget(mount, remote, folder);
-
-  auto line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-
-  QObject::connect(widget, &MountWidget::finished, this, [=]() {
-    if (--mJobCount == 0) {
-      ui.tabs->setTabText(1, "Jobs");
-    } else {
-      ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
-    }
-
-    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
-    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
-                                         (ui.jobs->count() - 2) / 2);
-  });
-
-  QObject::connect(widget, &MountWidget::closed, this, [=]() {
-    ui.jobs->removeWidget(widget);
-    ui.jobs->removeWidget(line);
-    widget->deleteLater();
-    delete line;
-    if (ui.jobs->count() == 2) {
-      ui.noJobsAvailable->show();
-    }
-    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
-    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
-                                         (ui.jobs->count() - 2) / 2);
-  });
-
   if (ui.jobs->count() == 2) {
     ui.noJobsAvailable->hide();
   }
 
-  ui.jobs->insertWidget(0, widget);
-  ui.jobs->insertWidget(1, line);
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
@@ -2750,6 +2717,10 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
 
   QStringList args;
   args << "mount";
+
+  args << remote << folder;
+
+  args << GetRcloneConf();
 
 #if defined(Q_OS_WIN32)
   args << "--rc";
@@ -2784,8 +2755,6 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
   //       args << "--vfs-cache-mode";
   //       args << "writes";
 
-  args.append(GetRcloneConf());
-
   if (!opt.isEmpty()) {
     // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1
     // arg2" --option-3 arg3 should generate "--option-1" "--option-2=\"arg1
@@ -2797,7 +2766,39 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     }
   }
 
-  args << remote << folder;
+  auto widget = new MountWidget(mount, remote, folder, args);
+
+  auto line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+
+  ui.jobs->insertWidget(0, widget);
+  ui.jobs->insertWidget(1, line);
+
+  QObject::connect(widget, &MountWidget::finished, this, [=]() {
+    if (--mJobCount == 0) {
+      ui.tabs->setTabText(1, "Jobs");
+    } else {
+      ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
+    }
+
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
+  });
+
+  QObject::connect(widget, &MountWidget::closed, this, [=]() {
+    ui.jobs->removeWidget(widget);
+    ui.jobs->removeWidget(line);
+    widget->deleteLater();
+    delete line;
+    if (ui.jobs->count() == 2) {
+      ui.noJobsAvailable->show();
+    }
+    ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
+    ui.buttonCleanNotRunning->setEnabled(mJobCount !=
+                                         (ui.jobs->count() - 2) / 2);
+  });
 
   UseRclonePassword(mount);
   mount->start(GetRclone(), args, QIODevice::ReadOnly);
@@ -2824,7 +2825,37 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
         }
       });
 
-  auto widget = new StreamWidget(rclone, player, remote, stream);
+  ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
+
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
+
+  auto settings = GetSettings();
+  QString opt = settings->value("Settings/mount").toString();
+  QString driveSharedMode = settings->value("Settings/remoteMode").toString();
+
+  QStringList args;
+
+  args << "cat";
+
+  args << remote;
+
+  args << GetRcloneConf();
+
+  if (remoteType == "drive") {
+
+    if (driveSharedMode == "shared") {
+      args << "--drive-shared-with-me";
+    }
+
+    if (driveSharedMode == "trash") {
+      args << "--drive-trashed-only";
+    }
+  };
+
+  args << GetDefaultRcloneOptionsList();
+
+  auto widget = new StreamWidget(rclone, player, remote, stream, args);
 
   auto line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -2861,35 +2892,10 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
-  ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
-
-  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
-  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
-
-  auto settings = GetSettings();
-  QString opt = settings->value("Settings/mount").toString();
-  QString driveSharedMode = settings->value("Settings/remoteMode").toString();
-
-  QStringList args;
-  args << "cat";
-
-  if (remoteType == "drive") {
-
-    if (driveSharedMode == "shared") {
-      args << "--drive-shared-with-me";
-    }
-
-    if (driveSharedMode == "trash") {
-      args << "--drive-trashed-only";
-    }
-  };
 
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);
-  rclone->start(GetRclone(),
-                QStringList() << args << GetRcloneConf()
-                              << GetDefaultRcloneOptionsList() << remote,
-                QProcess::WriteOnly);
+  rclone->start(GetRclone(), QStringList() << args, QProcess::WriteOnly);
 }
 
 void MainWindow::slotCloseTab(int index) {

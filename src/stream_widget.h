@@ -8,7 +8,8 @@ class StreamWidget : public QWidget {
 
 public:
   StreamWidget(QProcess *rclone, QProcess *player, const QString &remote,
-               const QString &stream, QWidget *parent = nullptr);
+               const QString &stream, const QStringList &args,
+               QWidget *parent = nullptr);
   ~StreamWidget();
   bool isRunning = true;
 
@@ -24,4 +25,6 @@ private:
 
   QProcess *mRclone;
   QProcess *mPlayer;
+
+  QStringList mArgs;
 };

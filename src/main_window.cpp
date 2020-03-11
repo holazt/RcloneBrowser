@@ -387,6 +387,12 @@ MainWindow::MainWindow() {
     }
   }
 
+  // layout spacers - otherwise layout of different tabs differ due to checkbox
+  // on queue tab
+  ui.layoutcontrol1->hide();
+  ui.layoutcontrol2->hide();
+  ui.layoutcontrol3->hide();
+
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
     PreferencesDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
+    <width>696</width>
     <height>411</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -87,6 +87,16 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="layoutcontrol3">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>CheckBox</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QToolButton" name="buttonPrefs">
@@ -177,6 +187,16 @@
             </property>
            </spacer>
           </item>
+          <item>
+           <widget class="QCheckBox" name="layoutcontrol2">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>CheckBox</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -205,8 +225,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>610</width>
-             <height>250</height>
+             <width>648</width>
+             <height>245</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -369,6 +389,19 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="layoutcontrol1">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>CheckBox</string>
+            </property>
+            <property name="tristate">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -618,7 +651,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>658</width>
+     <width>696</width>
      <height>22</height>
     </rect>
    </property>

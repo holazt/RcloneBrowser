@@ -393,6 +393,33 @@ MainWindow::MainWindow() {
   ui.layoutcontrol2->hide();
   ui.layoutcontrol3->hide();
 
+  // statusTips
+  ui.actionRefresh->setStatusTip("Refresh remotes view");
+  ui.actionConfig->setStatusTip("rclone config");
+  ui.actionOpen->setStatusTip("Open remote");
+  ui.preferences->setStatusTip("Rclone Browser preferences");
+
+  ui.actionStopAllTransfers->setStatusTip("Stop all running transfers");
+  ui.actionCleanNotRunning->setStatusTip("Remove all not running jobs");
+
+  ui.actionDryRun->setStatusTip("Dry Run all selected tasks at once");
+  ui.actionRun->setStatusTip("Run all selected tasks at once");
+  ui.actionEdit->setStatusTip("Edit selected task");
+  ui.actionDelete->setStatusTip("Delete selected tasks");
+  ui.actionAddToQueue->setStatusTip(
+      "Add selected tasks to the queue for later execution");
+  ui.actionSortTask->setStatusTip("Sort tasks");
+
+  ui.actionStartQueue->setStatusTip(
+      "Start actively processing items from the queue");
+  ui.actionStopQueue->setStatusTip(
+      "Stop the queue processing. Active task will be cancelled.");
+  ui.actionUpQueue->setStatusTip("Move task up in the queue");
+  ui.actionDownQueue->setStatusTip("Move task down in the queue");
+  ui.actionRemoveFromQueue->setStatusTip("Remove from the queue");
+  ui.actionPurgeQueue->setStatusTip(
+      "Remove all not running tasks from the queue");
+
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
     PreferencesDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {

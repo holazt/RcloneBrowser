@@ -47,6 +47,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QToolButton" name="refresh">
+            <property name="statusTip">
+             <string>Refresh remotes view</string>
+            </property>
             <property name="text">
              <string>Refresh</string>
             </property>
@@ -102,6 +105,9 @@
            <widget class="QToolButton" name="buttonPrefs">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rclone Browser preferences&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Rclone Browser preferences</string>
             </property>
             <property name="text">
              <string>Prefs</string>

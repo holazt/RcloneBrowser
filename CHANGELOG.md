@@ -1,4 +1,32 @@
 # Change Log
+
+## [2.0.0][2.0.0] - 2020-03-
+-   NEW: interface look and feel redisign - more space, more flexible and dynamic, more information, more cutomizations
+-   NEW: added queueing functionality. Tasks can be queued for later excecution. Queue itself can be rearranged and edidted. It is persistent between application restart. And in addition user defined script can be run when all queued tasks are processed.
+-   NEW: changed how tasks are handled - multiple actionable selections available now
+-   NEW: added remotes tiles and list view - more remotes on one screen
+-   NEWL added tasks view wrapping - more tasks on one screen
+-   NEW: added configurable application font size
+-   NEW: added configurable inteface buttons style and size
+-   NEW: changed dark mode look on Windows and Linux
+-   NEW: replaced all Qt generic icons with custom ones - more consistent look and feel
+-   NEW: jobs are not deleted immediately after pressing close button. Now they enter "stopped" state
+-   NEW: added "rclone about" command button - provides info about remote space (total/used/free)
+-   NEW: getTree, getSize, getLink, getInfo and export dialogs are now modeless - they don't block main application window
+-   NEW: remote actions e.g. getTree now have status info - "Running" and "Finished"
+-   NEW: added new button for rclone check/cryptcheck
+-   NEW: for Google drive added option to browse trash (--drive-trashed-only) - #82
+-   NEW: added buttons to stop all running jobs and clean all innactive
+-   NEW: added files deduplication option (rclone dedupe) for Google drive
+-   NEW: added "copy rclone command to clipboard" for stream and mount jobs
+-   FIXED: added all missing remotes icons including latest rclone 1.51 additions (SugarSync and memory)
+-   FIXED: widgets layouts
+-   FIXED: export files list encoding switched to UTF8 to fix characters support - issue #77 - Thank you @partment for PR #78
+-   FIXED: parsing rclone options containing quotes and spaces e.g. --password-command="pass rclone/config" - issue #79 - Thank you @myelsukov for help
+-   FIXED: job notificantion icon
+-   FIXED: quitting the app from systray when "close to systray" is enabled
+-   bunch of usual small tweaks and fixes
+
 ## [1.8.0][1.8.0] - 2020-02-17
 -   NEW: http(s) proxy configuration for rclone
 -   NEW: remotes icons size option selector
@@ -125,6 +153,7 @@
 -   Mount and unmount folders on macOS and GNU/Linux
 -   Optionally minimizes to tray, with notifications when upload/download finishes
 
+[1.9.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.9.0
 [1.8.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.8.0
 [1.7.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.7.0
 [1.6.0]: https://github.com/kapitainsky/RcloneBrowser/releases/tag/1.6.0

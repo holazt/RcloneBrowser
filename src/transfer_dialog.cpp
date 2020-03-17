@@ -36,15 +36,15 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   }
 
   ui.buttonSourceFile->setIcon(
-      QIcon(":remotes/images/qbutton_icons/file" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/file" + img_add + ".png"));
   ui.buttonSourceFolder->setIcon(
-      QIcon(":remotes/images/qbutton_icons/folder" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/folder" + img_add + ".png"));
   ui.buttonDest->setIcon(
-      QIcon(":remotes/images/qbutton_icons/folder" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/folder" + img_add + ".png"));
   ui.buttonDefaultSource->setIcon(
-      QIcon(":remotes/images/qbutton_icons/restore" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/restore" + img_add + ".png"));
   ui.buttonDefaultDest->setIcon(
-      QIcon(":remotes/images/qbutton_icons/restore" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/restore" + img_add + ".png"));
 
   ui.buttonSourceFile->setIconSize(QSize(24, 24));
   ui.buttonSourceFolder->setIconSize(QSize(24, 24));

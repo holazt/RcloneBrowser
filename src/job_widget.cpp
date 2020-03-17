@@ -49,9 +49,9 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   }
 
   ui.showDetails->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
 
   ui.showDetails->setIconSize(QSize(24, 24));
   ui.showOutput->setIconSize(QSize(24, 24));
@@ -62,11 +62,11 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
         if (checked) {
           ui.showDetails->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         } else {
           ui.showDetails->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         }
       });
@@ -77,17 +77,17 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
         if (checked) {
           ui.showOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         } else {
           ui.showOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         }
       });
 
   ui.cancel->setIcon(
-      QIcon(":remotes/images/qbutton_icons/cancel" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/cancel" + img_add + ".png"));
   ui.cancel->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
@@ -106,7 +106,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   });
 
   ui.copy->setIcon(
-      QIcon(":remotes/images/qbutton_icons/copy" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/copy" + img_add + ".png"));
   ui.copy->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.copy, &QToolButton::clicked, this, [=]() {

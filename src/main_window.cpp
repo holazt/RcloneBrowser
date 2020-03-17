@@ -162,59 +162,59 @@ MainWindow::MainWindow() {
   }
 
   ui.actionDryRun->setIcon(
-      QIcon(":remotes/images/qbutton_icons/dryrun" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/dryrun" + img_add + ".png"));
   ui.actionRun->setIcon(
-      QIcon(":remotes/images/qbutton_icons/run" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/run" + img_add + ".png"));
   ui.actionEdit->setIcon(
-      QIcon(":remotes/images/qbutton_icons/edit" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/edit" + img_add + ".png"));
   ui.actionDelete->setIcon(
-      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   ui.actionStop->setIcon(
-      QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionRefresh->setIcon(
-      QIcon(":remotes/images/qbutton_icons/refresh" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/refresh" + img_add + ".png"));
   ui.actionOpen->setIcon(
-      QIcon(":remotes/images/qbutton_icons/open_remote" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/open_remote" + img_add + ".png"));
   ui.actionConfig->setIcon(
-      QIcon(":remotes/images/qbutton_icons/rclone_config" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/rclone_config" + img_add + ".png"));
   ui.actionStopAllTransfers->setIcon(
-      QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionCleanNotRunning->setIcon(
-      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   // Preferences button action is triggered via slot defined in ui file
   // as we dont want pref icon in the menu
   ui.buttonPrefs->setIcon(
-      QIcon(":remotes/images/qbutton_icons/preferences" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/preferences" + img_add + ".png"));
 
   // triggered via slot so button text can be different than action menu
   ui.buttonAddToQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/addtoqueue" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/addtoqueue" + img_add + ".png"));
   ui.actionAddToQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/addtoqueue" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/addtoqueue" + img_add + ".png"));
 
   ui.actionStartQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/run" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/run" + img_add + ".png"));
   ui.actionStopQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionPurgeQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   ui.actionRemoveFromQueue->setIcon(QIcon(
-      ":remotes/images/qbutton_icons/removefromqueue" + img_add + ".png"));
+      ":media/images/qbutton_icons/removefromqueue" + img_add + ".png"));
   ui.actionUpQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vuparrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vuparrow" + img_add + ".png"));
   ui.actionDownQueue->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
 
-  QPixmap arrowDownPixmap(":remotes/images/qbutton_icons/arrowdown" + img_add +
+  QPixmap arrowDownPixmap(":media/images/qbutton_icons/arrowdown" + img_add +
                           ".png");
-  QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowup" + img_add +
+  QPixmap arrowUpPixmap(":media/images/qbutton_icons/arrowup" + img_add +
                         ".png");
-  QPixmap mount1Pixmap(":remotes/images/qbutton_icons/mount1" + img_add +
+  QPixmap mount1Pixmap(":media/images/qbutton_icons/mount1" + img_add +
                        ".png");
 
-  QPixmap sortZAPixmap(":remotes/images/qbutton_icons/sortZA" + img_add +
+  QPixmap sortZAPixmap(":media/images/qbutton_icons/sortZA" + img_add +
                        ".png");
-  QPixmap sortAZPixmap(":remotes/images/qbutton_icons/sortAZ" + img_add +
+  QPixmap sortAZPixmap(":media/images/qbutton_icons/sortAZ" + img_add +
                        ".png");
 
   QIcon arrowDownIcon(arrowDownPixmap);
@@ -2510,10 +2510,10 @@ void MainWindow::rcloneListRemotes() {
             ui.remotes->setIconSize(QSize(size, size));
 
             QString path =
-                ":/remotes/images/" + type.replace(' ', '_') + img_add + ".png";
+                ":media/images/remotes_icons/" + type.replace(' ', '_') + img_add + ".png";
             QIcon icon(QFile(path).exists()
                            ? path
-                           : ":/remotes/images/unknown" + img_add + ".png");
+                           : ":media/images/remotes_icons/unknown" + img_add + ".png");
 
             QListWidgetItem *item = new QListWidgetItem(icon, name);
             item->setData(Qt::UserRole, type);
@@ -3190,7 +3190,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 #if defined(Q_OS_WIN)
           mSystemTray.showMessage(
               "Rclone Browser - Transfer finished", info,
-              QIcon(":remotes/images/program_icons/rclone-browser512.png"));
+              QIcon(":media/images/program_icons/rclone-browser512.png"));
 #else
 #if defined(Q_OS_MACOS)
           mSystemTray.showMessage(

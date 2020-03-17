@@ -57,7 +57,7 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
 
   // set default arrow
   ui.buttonShowOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.buttonShowOutput->setIconSize(QSize(24, 24));
 
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
@@ -69,7 +69,7 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
 
         if (checked) {
           ui.buttonShowOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.buttonShowOutput->setIconSize(QSize(24, 24));
 
           mWidth = this->width();
@@ -84,7 +84,7 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
           setMaximumWidth(16777215);
         } else {
           ui.buttonShowOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.buttonShowOutput->setIconSize(QSize(24, 24));
 
           mWidth = this->width();

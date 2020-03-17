@@ -30,20 +30,20 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
 
   // images as tooltips - one picture tells more...
   ui.cb_textandicon->setToolTip(
-      tr("<img src=':remotes/images/tooltips/textandicon.png'>"));
+      tr("<img src=':media/images/tooltips/textandicon.png'>"));
   ui.cb_icononly->setToolTip(
-      tr("<img src=':remotes/images/tooltips/icononly.png'>"));
+      tr("<img src=':media/images/tooltips/icononly.png'>"));
   ui.cb_textonly->setToolTip(
-      tr("<img src=':remotes/images/tooltips/textonly.png'>"));
+      tr("<img src=':media/images/tooltips/textonly.png'>"));
   ui.cb_icons_colour_black->setToolTip(
-      tr("<img src=':remotes/images/tooltips/iconsblack.png'>"));
+      tr("<img src=':media/images/tooltips/iconsblack.png'>"));
   ui.cb_icons_colour_white->setToolTip(
-      tr("<img src=':remotes/images/tooltips/iconswhite.png'>"));
+      tr("<img src=':media/images/tooltips/iconswhite.png'>"));
   ui.cb_longList->setToolTip(
-      tr("<img src=':remotes/images/tooltips/listlong.png'>"));
+      tr("<img src=':media/images/tooltips/listlong.png'>"));
   ui.cb_list->setToolTip(
-      tr("<img src=':remotes/images/tooltips/listwrap.png'>"));
-  ui.cb_tiles->setToolTip(tr("<img src=':remotes/images/tooltips/tiles.png'>"));
+      tr("<img src=':media/images/tooltips/listwrap.png'>"));
+  ui.cb_tiles->setToolTip(tr("<img src=':media/images/tooltips/tiles.png'>"));
 
   auto settings = GetSettings();
 

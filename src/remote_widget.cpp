@@ -68,39 +68,39 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   }
 
   ui.refresh->setIcon(
-      QIcon(":remotes/images/qbutton_icons/refresh" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/refresh" + img_add + ".png"));
   ui.mkdir->setIcon(
-      QIcon(":remotes/images/qbutton_icons/mkdir" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/mkdir" + img_add + ".png"));
   ui.rename->setIcon(
-      QIcon(":remotes/images/qbutton_icons/rename" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/rename" + img_add + ".png"));
   ui.move->setIcon(
-      QIcon(":remotes/images/qbutton_icons/move" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/move" + img_add + ".png"));
   ui.purge->setIcon(
-      QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   ui.actionNewMount->setIcon(
-      QIcon(":remotes/images/qbutton_icons/mount" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/mount" + img_add + ".png"));
   ui.stream->setIcon(
-      QIcon(":remotes/images/qbutton_icons/stream" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/stream" + img_add + ".png"));
   ui.upload->setIcon(
-      QIcon(":remotes/images/qbutton_icons/upload" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/upload" + img_add + ".png"));
   ui.download->setIcon(
-      QIcon(":remotes/images/qbutton_icons/download" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/download" + img_add + ".png"));
   ui.actionCheck->setIcon(
-      QIcon(":remotes/images/qbutton_icons/check" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/check" + img_add + ".png"));
   ui.getSize->setIcon(
-      QIcon(":remotes/images/qbutton_icons/getsize" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/getsize" + img_add + ".png"));
   ui.getTree->setIcon(
-      QIcon(":remotes/images/qbutton_icons/gettree" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/gettree" + img_add + ".png"));
   ui.link->setIcon(
-      QIcon(":remotes/images/qbutton_icons/link" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/link" + img_add + ".png"));
   ui.export_->setIcon(
-      QIcon(":remotes/images/qbutton_icons/export" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/export" + img_add + ".png"));
   ui.buttonTools->setIcon(
-      QIcon(":remotes/images/qbutton_icons/tools" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/tools" + img_add + ".png"));
   ui.getInfo->setIcon(
-      QIcon(":remotes/images/qbutton_icons/info" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/info" + img_add + ".png"));
   ui.actionDedupe->setIcon(
-      QIcon(":remotes/images/qbutton_icons/dedupe" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/dedupe" + img_add + ".png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
   ui.buttonMkdir->setDefaultAction(ui.mkdir);

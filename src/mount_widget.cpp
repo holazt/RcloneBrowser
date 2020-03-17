@@ -61,22 +61,22 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   }
 
   ui.showDetails->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showDetails->setIconSize(QSize(24, 24));
   ui.showOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showOutput->setIconSize(QSize(24, 24));
 
   ui.showScriptOutput->setIcon(
-      QIcon(":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.showScriptOutput->setIconSize(QSize(24, 24));
 
   ui.cancel->setIcon(
-      QIcon(":remotes/images/qbutton_icons/cancel" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/cancel" + img_add + ".png"));
   ui.cancel->setIconSize(QSize(24, 24));
 
   ui.copy->setIcon(
-      QIcon(":remotes/images/qbutton_icons/copy" + img_add + ".png"));
+      QIcon(":media/images/qbutton_icons/copy" + img_add + ".png"));
   ui.copy->setIconSize(QSize(24, 24));
 
   QObject::connect(
@@ -84,11 +84,11 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
         ui.details->setVisible(checked);
         if (checked) {
           ui.showDetails->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         } else {
           ui.showDetails->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showDetails->setIconSize(QSize(24, 24));
         }
       });
@@ -146,11 +146,11 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
         if (checked) {
           ui.showScriptOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showScriptOutput->setIconSize(QSize(24, 24));
         } else {
           ui.showScriptOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showScriptOutput->setIconSize(QSize(24, 24));
         }
       });
@@ -162,11 +162,11 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
         if (checked) {
           ui.showOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vdownarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vdownarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         } else {
           ui.showOutput->setIcon(QIcon(
-              ":remotes/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+              ":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
           ui.showOutput->setIconSize(QSize(24, 24));
         }
       });

@@ -49,6 +49,7 @@ private:
   bool mAlwaysShowInTray;
   bool mCloseToTray;
   bool mNotifyFinishedTransfers;
+  bool mSoundNotif;
 
   QLabel *mStatusMessage;
 

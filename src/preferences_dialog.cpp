@@ -41,8 +41,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       tr("<img src=':media/images/tooltips/iconswhite.png'>"));
   ui.cb_longList->setToolTip(
       tr("<img src=':media/images/tooltips/listlong.png'>"));
-  ui.cb_list->setToolTip(
-      tr("<img src=':media/images/tooltips/listwrap.png'>"));
+  ui.cb_list->setToolTip(tr("<img src=':media/images/tooltips/listwrap.png'>"));
   ui.cb_tiles->setToolTip(tr("<img src=':media/images/tooltips/tiles.png'>"));
 
   auto settings = GetSettings();
@@ -202,6 +201,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.notifyFinishedTransfers->setChecked(false);
     ui.notifyFinishedTransfers->setDisabled(true);
   }
+  ui.cb_soundNotif->setChecked(
+      settings->value("Settings/soundNotif", true).toBool());
 
   ui.showFolderIcons->setChecked(
       settings->value("Settings/showFolderIcons", true).toBool());
@@ -389,6 +390,10 @@ bool PreferencesDialog::getCloseToTray() const {
 
 bool PreferencesDialog::getNotifyFinishedTransfers() const {
   return ui.notifyFinishedTransfers->isChecked();
+}
+
+bool PreferencesDialog::getSoundNotif() const {
+  return ui.cb_soundNotif->isChecked();
 }
 
 bool PreferencesDialog::getShowFolderIcons() const {

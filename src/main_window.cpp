@@ -118,6 +118,7 @@ MainWindow::MainWindow() {
   mCloseToTray = settings->value("Settings/closeToTray", false).toBool();
   mNotifyFinishedTransfers =
       settings->value("Settings/notifyFinishedTransfers", true).toBool();
+  mSoundNotif = settings->value("Settings/soundNotif", false).toBool();
 
   mSystemTray.setVisible(mAlwaysShowInTray);
 
@@ -198,8 +199,8 @@ MainWindow::MainWindow() {
       QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionPurgeQueue->setIcon(
       QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
-  ui.actionRemoveFromQueue->setIcon(QIcon(
-      ":media/images/qbutton_icons/removefromqueue" + img_add + ".png"));
+  ui.actionRemoveFromQueue->setIcon(
+      QIcon(":media/images/qbutton_icons/removefromqueue" + img_add + ".png"));
   ui.actionUpQueue->setIcon(
       QIcon(":media/images/qbutton_icons/vuparrow" + img_add + ".png"));
   ui.actionDownQueue->setIcon(
@@ -209,13 +210,10 @@ MainWindow::MainWindow() {
                           ".png");
   QPixmap arrowUpPixmap(":media/images/qbutton_icons/arrowup" + img_add +
                         ".png");
-  QPixmap mount1Pixmap(":media/images/qbutton_icons/mount1" + img_add +
-                       ".png");
+  QPixmap mount1Pixmap(":media/images/qbutton_icons/mount1" + img_add + ".png");
 
-  QPixmap sortZAPixmap(":media/images/qbutton_icons/sortZA" + img_add +
-                       ".png");
-  QPixmap sortAZPixmap(":media/images/qbutton_icons/sortAZ" + img_add +
-                       ".png");
+  QPixmap sortZAPixmap(":media/images/qbutton_icons/sortZA" + img_add + ".png");
+  QPixmap sortAZPixmap(":media/images/qbutton_icons/sortAZ" + img_add + ".png");
 
   QIcon arrowDownIcon(arrowDownPixmap);
   QIcon arrowUpIcon(arrowUpPixmap);
@@ -477,6 +475,7 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/closeToTray", dialog.getCloseToTray());
       settings->setValue("Settings/notifyFinishedTransfers",
                          dialog.getNotifyFinishedTransfers());
+      settings->setValue("Settings/soundNotif", dialog.getSoundNotif());
 
       settings->setValue("Settings/showFolderIcons",
                          dialog.getShowFolderIcons());
@@ -521,6 +520,7 @@ MainWindow::MainWindow() {
       mAlwaysShowInTray = dialog.getAlwaysShowInTray();
       mCloseToTray = dialog.getCloseToTray();
       mNotifyFinishedTransfers = dialog.getNotifyFinishedTransfers();
+      mSoundNotif = dialog.getSoundNotif();
 
       mSystemTray.setVisible(mAlwaysShowInTray);
     }
@@ -2509,11 +2509,12 @@ void MainWindow::rcloneListRemotes() {
 #endif
             ui.remotes->setIconSize(QSize(size, size));
 
-            QString path =
-                ":media/images/remotes_icons/" + type.replace(' ', '_') + img_add + ".png";
+            QString path = ":media/images/remotes_icons/" +
+                           type.replace(' ', '_') + img_add + ".png";
             QIcon icon(QFile(path).exists()
                            ? path
-                           : ":media/images/remotes_icons/unknown" + img_add + ".png");
+                           : ":media/images/remotes_icons/unknown" + img_add +
+                                 ".png");
 
             QListWidgetItem *item = new QListWidgetItem(icon, name);
             item->setData(Qt::UserRole, type);
@@ -3200,6 +3201,11 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
               "Rclone Browser - Transfer finished", info, QSystemTrayIcon::Information);
 #endif
 #endif
+        }
+
+        if (mSoundNotif) {
+          // play notification sound
+          QSound::play(":media/sounds/notification-sound.wav");
         }
 
         --mTransferJobCount;

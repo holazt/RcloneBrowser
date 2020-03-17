@@ -439,6 +439,13 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="notifyFinishedTransfers">
+            <property name="text">
+             <string>Notify about finished transfers</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="closeToTray">
             <property name="text">
@@ -446,10 +453,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="notifyFinishedTransfers">
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="cb_soundNotif">
             <property name="text">
-             <string>Notify about finished transfers</string>
+             <string>Play sound when transfer finishes</string>
             </property>
            </widget>
           </item>

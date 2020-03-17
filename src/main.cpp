@@ -139,6 +139,10 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/queueScriptRun", "false");
   };
 
+  if (!(settings->contains("Settings/soundNotif"))) {
+    settings->setValue("Settings/soundNotif", "false");
+  };
+
   // use ports (49152-65535) -
   // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
   // during first run the rcPortStartWin key might not exist

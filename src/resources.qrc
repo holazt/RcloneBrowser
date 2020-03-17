@@ -180,5 +180,7 @@
     <file>images/remotes_icons/alias_inv.png</file>
     <file>images/remotes_icons/union.png</file>
     <file>images/remotes_icons/union_inv.png</file>
+
+    <file>sounds/notification-sound.wav</file>
   </qresource>
 </RCC>

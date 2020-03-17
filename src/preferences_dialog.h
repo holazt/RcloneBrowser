@@ -27,6 +27,7 @@ public:
   bool getAlwaysShowInTray() const;
   bool getCloseToTray() const;
   bool getNotifyFinishedTransfers() const;
+  bool getSoundNotif() const;
 
   bool getShowFolderIcons() const;
   bool getShowFileIcons() const;

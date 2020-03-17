@@ -18,9 +18,9 @@ MainWindow::MainWindow() {
 
   ui.setupUi(this);
   if (IsPortableMode()) {
-    this->setWindowTitle("Rclone Browser - portable mode");
+    this->setWindowTitle("Rclone Browser - portable mode - BETA release");
   } else {
-    this->setWindowTitle("Rclone Browser");
+    this->setWindowTitle("Rclone Browser - BETA release");
   }
 
   auto settings = GetSettings();

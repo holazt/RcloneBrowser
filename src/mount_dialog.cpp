@@ -549,12 +549,8 @@ void MountDialog::putJobOptions() {
   if (mJobOptions->mountWinDriveMode) {
     ui.cb_driveLetter->setChecked(true);
 
-    QMessageBox::information(this, tr("Disks"),
-                             tr("Disks:\n\n") + QVariant(drive).toString());
-
     ui.combo_driveLetter->setCurrentIndex((mJobOptions->dest).at(0).toLatin1() -
                                           65);
-
   } else {
     ui.cb_mountPointWin->setChecked(true);
 

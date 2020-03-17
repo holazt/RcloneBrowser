@@ -139,6 +139,14 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/queueScriptRun", "false");
   };
 
+  // use ports (49152-65535) -
+  // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+  // during first run the rcPortStartWin key might not exist
+  if (!(settings->contains("Settings/rcPortStartWin"))) {
+    // if rcPortStartWin does not exist create new key
+    settings->setValue("Settings/rcPortStartWin", "49700");
+  };
+
   // set application font size
   int fontsize = 0;
   fontsize = (settings->value("Settings/fontSize").toInt());

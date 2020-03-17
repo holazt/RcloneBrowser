@@ -70,7 +70,7 @@
           <item row="7" column="0">
            <widget class="QLabel" name="mountLabel">
             <property name="text">
-             <string>Mount options:</string>
+             <string>Default mount options:</string>
             </property>
             <property name="buddy">
              <cstring>mount</cstring>

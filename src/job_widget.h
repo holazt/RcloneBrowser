@@ -8,8 +8,8 @@ class JobWidget : public QWidget {
 
 public:
   JobWidget(QProcess *process, const QString &info, const QStringList &args,
-            const QString &source, const QString &dest, const QString &uniqueID, const QString &transferMode,
-            QWidget *parent = nullptr);
+            const QString &source, const QString &dest, const QString &uniqueID,
+            const QString &transferMode, QWidget *parent = nullptr);
   ~JobWidget();
 
   void showDetails();
@@ -35,6 +35,5 @@ private:
   QSet<QLabel *> mUpdated;
 
   QString mUniqueID = "";
-  QString mTransferMode ="";
-
+  QString mTransferMode = "";
 };

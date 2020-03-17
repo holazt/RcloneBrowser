@@ -137,15 +137,15 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
         if (status == 0 || status == 9) {
           if (iconsColour == "white") {
             ui.showDetails->setStyleSheet(
-                "QToolButton { border: 0; font-weight: normal;}");
+                "QToolButton { border: 0; font-weight: bold;}");
           } else {
             ui.showDetails->setStyleSheet(
-                "QToolButton { border: 0; color: black; font-weight: normal;}");
+                "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
         } else {
           ui.showDetails->setStyleSheet(
-              "QToolButton { border: 0; color: red; font-weight: normal;}");
+              "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
         }
 

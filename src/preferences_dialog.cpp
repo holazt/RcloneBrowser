@@ -67,14 +67,15 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     }
 
     if (!QFileInfo(rclone).isExecutable()) {
-      QMessageBox::critical(this, "Error",
-                            QString("File %1 is not executable").arg(rclone));
+      QMessageBox::critical(
+          this, "Error",
+          QString("File\n\n %1\n\n is not executable.").arg(rclone));
       return;
     }
 
     if (QFileInfo(rclone) == QFileInfo(qApp->applicationFilePath())) {
       QMessageBox::critical(this, "Error",
-                            "You selected RcloneBrowser executable!\nPlease "
+                            "You selected Rclone Browser executable!\nPlease "
                             "select rclone executable instead.");
       return;
     }
@@ -136,7 +137,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
 
     if (!QFileInfo(queueScript).isExecutable()) {
       QMessageBox::critical(
-          this, "Error", QString("File %1 is not executable").arg(queueScript));
+          this, "Error",
+          QString("File\n\n %1\n\n is not executable.").arg(queueScript));
       return;
     }
 

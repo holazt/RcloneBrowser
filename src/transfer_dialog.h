@@ -9,7 +9,8 @@ class TransferDialog : public QDialog {
 
 public:
   TransferDialog(bool isDownload, bool isDrop, const QString &remote,
-                 const QDir &path, bool isFolder, const QString &remoteType, const QString &remoteMode, QWidget *parent = nullptr,
+                 const QDir &path, bool isFolder, const QString &remoteType,
+                 const QString &remoteMode, QWidget *parent = nullptr,
                  JobOptions *task = nullptr, bool editMode = false);
   ~TransferDialog();
 

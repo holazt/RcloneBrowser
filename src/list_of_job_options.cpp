@@ -11,6 +11,7 @@ static QDataStream &operator>>(QDataStream &in, JobOptions::Operation &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::SyncTiming &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::CompareOption &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::JobType &e);
+static QDataStream &operator>>(QDataStream &in, JobOptions::MountCacheLevel &e);
 
 ListOfJobOptions *ListOfJobOptions::SavedJobOptions = nullptr;
 const QString ListOfJobOptions::persistenceFileName = "tasks.bin";
@@ -153,7 +154,9 @@ QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {
          << jo.connectTimeout << jo.idleTimeout << jo.retries
          << jo.lowLevelRetries << jo.deleteExcluded << jo.excluded << jo.extra
          << jo.DriveSharedWithMe << jo.source << jo.dest << jo.isFolder
-         << jo.uniqueId << jo.remoteMode << jo.remoteType;
+         << jo.uniqueId << jo.remoteMode << jo.remoteType << jo.mountReadOnly
+         << jo.mountCacheLevel << jo.mountVolume << jo.mountAutoStart
+         << jo.mountRcPort << jo.mountScript << jo.mountWinDriveMode;
 
   return stream;
 }
@@ -194,6 +197,16 @@ QDataStream &operator>>(QDataStream &stream, JobOptions &jo) {
     stream >> jo.remoteType;
   }
 
+  if (actualVersion >= 5) {
+    stream >> jo.mountReadOnly;
+    stream >> jo.mountCacheLevel;
+    stream >> jo.mountVolume;
+    stream >> jo.mountAutoStart;
+    stream >> jo.mountRcPort;
+    stream >> jo.mountScript;
+    stream >> jo.mountWinDriveMode;
+  }
+
   return stream;
 }
 
@@ -213,6 +226,11 @@ QDataStream &operator>>(QDataStream &in, JobOptions::CompareOption &e) {
 }
 
 QDataStream &operator>>(QDataStream &in, JobOptions::JobType &e) {
+  in >> (quint32 &)e;
+  return in;
+}
+
+QDataStream &operator>>(QDataStream &in, JobOptions::MountCacheLevel &e) {
   in >> (quint32 &)e;
   return in;
 }

@@ -35,6 +35,7 @@ set(UI
   main_window.ui
   remote_widget.ui
   transfer_dialog.ui
+  mount_dialog.ui
   export_dialog.ui
   check_dialog.ui
   dedupe_dialog.ui
@@ -49,6 +50,7 @@ set(MOC
   main_window.h
   remote_widget.h
   transfer_dialog.h
+  mount_dialog.h
   export_dialog.h
   check_dialog.h
   dedupe_dialog.h
@@ -66,6 +68,7 @@ set(OTHER
   pch.h
   utils.h
   job_options.h
+  global.h
 )
 
 set(SOURCE
@@ -74,6 +77,7 @@ set(SOURCE
   main_window.cpp
   remote_widget.cpp
   transfer_dialog.cpp
+  mount_dialog.cpp
   export_dialog.cpp
   check_dialog.cpp
   dedupe_dialog.cpp

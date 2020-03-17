@@ -8,7 +8,7 @@ class DedupeDialog : public QDialog {
 
 public:
   DedupeDialog(const QString &remote, const QDir &path,
-              const QString &remoteType, QWidget *parent = nullptr);
+               const QString &remoteType, QWidget *parent = nullptr);
   ~DedupeDialog();
 
   //  QString getSource() const;

@@ -15,9 +15,11 @@ JobOptions::JobOptions()
       syncTiming(UnknownTiming), skipNewer(false), skipExisting(false),
       compare(false), compareOption(), verbose(false), sameFilesystem(false),
       dontUpdateModified(false), maxDepth(0), deleteExcluded(false),
-      isFolder(false) {}
+      isFolder(false), DriveSharedWithMe(false), mountReadOnly(false),
+      mountCacheLevel(UnknownCacheLevel), mountAutoStart(false),
+      mountWinDriveMode(false) {}
 
-const qint32 JobOptions::classVersion = 4;
+const qint32 JobOptions::classVersion = 5;
 
 JobOptions::~JobOptions() {}
 

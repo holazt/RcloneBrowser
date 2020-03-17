@@ -2,7 +2,7 @@
 #include "utils.h"
 
 DedupeDialog::DedupeDialog(const QString &remote, const QDir &path,
-                         const QString &remoteType, QWidget *parent)
+                           const QString &remoteType, QWidget *parent)
     : QDialog(parent) {
 
   ui.setupUi(this);

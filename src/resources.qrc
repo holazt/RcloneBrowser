@@ -91,6 +91,10 @@
     <file>images/qbutton_icons/dedupe.png</file>
     <file>images/qbutton_icons/dedupe_inv.png</file>
 
+    <file>images/qbutton_icons/mount1.png</file>
+    <file>images/qbutton_icons/mount1_inv.png</file>
+
+
     <file>images/program_icons/rclone-browser512.png</file>
 
     <file>images/tooltips/textandicon.png</file>

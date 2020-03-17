@@ -548,7 +548,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       settings->setValue("Settings/streamConfirmed", true);
     }
 
-    //!!! stream $filename
+    QFileInfo fi(path);
+    QString filename = fi.fileName();
+    stream.replace("$file_name",filename);
 
     emit addStream(remote + ":" + path, stream, remoteType);
   });

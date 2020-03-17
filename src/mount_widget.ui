@@ -129,6 +129,9 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="2">
        <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { border: 0 }</string>
+        </property>
         <property name="title">
          <string/>
         </property>

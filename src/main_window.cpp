@@ -2,6 +2,7 @@
 #include "job_options.h"
 #include "job_widget.h"
 #include "list_of_job_options.h"
+#include "mount_dialog.h"
 #include "mount_widget.h"
 #include "preferences_dialog.h"
 #include "remote_widget.h"
@@ -9,6 +10,7 @@
 #include "transfer_dialog.h"
 #include "utils.h"
 #ifdef Q_OS_MACOS
+#include "global.h"
 #include "osx_helper.h"
 #endif
 
@@ -167,6 +169,8 @@ MainWindow::MainWindow() {
       QIcon(":remotes/images/qbutton_icons/edit" + img_add + ".png"));
   ui.actionDelete->setIcon(
       QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
+  ui.actionStop->setIcon(
+      QIcon(":remotes/images/qbutton_icons/stop" + img_add + ".png"));
   ui.actionRefresh->setIcon(
       QIcon(":remotes/images/qbutton_icons/refresh" + img_add + ".png"));
   ui.actionOpen->setIcon(
@@ -205,6 +209,9 @@ MainWindow::MainWindow() {
                           ".png");
   QPixmap arrowUpPixmap(":remotes/images/qbutton_icons/arrowup" + img_add +
                         ".png");
+  QPixmap mount1Pixmap(":remotes/images/qbutton_icons/mount1" + img_add +
+                       ".png");
+
   QPixmap sortZAPixmap(":remotes/images/qbutton_icons/sortZA" + img_add +
                        ".png");
   QPixmap sortAZPixmap(":remotes/images/qbutton_icons/sortAZ" + img_add +
@@ -212,11 +219,13 @@ MainWindow::MainWindow() {
 
   QIcon arrowDownIcon(arrowDownPixmap);
   QIcon arrowUpIcon(arrowUpPixmap);
+  QIcon mount1Icon(mount1Pixmap);
   QIcon sortZAIcon(sortZAPixmap);
   QIcon sortAZIcon(sortAZPixmap);
 
   ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
   ui.buttonRunTask->setDefaultAction(ui.actionRun);
+  ui.buttonStop->setDefaultAction(ui.actionStop);
   ui.buttonEditTask->setDefaultAction(ui.actionEdit);
   ui.buttonDeleteTask->setDefaultAction(ui.actionDelete);
   ui.buttonSortTask->setDefaultAction(ui.actionSortTask);
@@ -234,7 +243,8 @@ MainWindow::MainWindow() {
   ui.buttonDownQueue->setDefaultAction(ui.actionDownQueue);
   ui.buttonUpQueue->setDefaultAction(ui.actionUpQueue);
 
-  // overwrite button text
+  // overwrite button text, we want different menu name and different conextual
+  // menu
   ui.buttonPrefs->setText("Prefs");
   ui.buttonAddToQueue->setText("Add");
 
@@ -309,6 +319,8 @@ MainWindow::MainWindow() {
 
     ui.buttonUpQueue->setIconSize(QSize(icon_w, icon_h));
     ui.buttonUpQueue->setMinimumWidth(button_width);
+    ui.buttonStop->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonStop->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -347,9 +359,10 @@ MainWindow::MainWindow() {
       ui.buttonPurgeQueue->setMinimumWidth(button_width);
       ui.buttonRemoveFromQueue->setMinimumWidth(button_width);
       ui.buttonDownQueue->setMinimumWidth(button_width);
-
       ui.buttonUpQueue->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonUpQueue->setMinimumWidth(button_width);
+      ui.buttonStop->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonStop->setMinimumWidth(button_width);
 
     } else {
       // button style - icononly
@@ -389,6 +402,8 @@ MainWindow::MainWindow() {
       ui.buttonDownQueue->setIconSize(QSize(icon_w, icon_h));
       ui.buttonUpQueue->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonUpQueue->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonStop->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonStop->setIconSize(QSize(icon_w, icon_h));
     }
   }
 
@@ -404,16 +419,18 @@ MainWindow::MainWindow() {
   ui.actionOpen->setStatusTip("Open remote");
   ui.preferences->setStatusTip("Rclone Browser preferences");
 
-  ui.actionStopAllTransfers->setStatusTip("Stop all running transfers");
+  ui.actionStopAllTransfers->setStatusTip("Stop all running transfer jobs");
   ui.actionCleanNotRunning->setStatusTip("Remove all not running jobs");
 
   ui.actionDryRun->setStatusTip("Dry Run all selected tasks at once");
   ui.actionRun->setStatusTip("Run all selected tasks at once");
+  ui.actionStop->setStatusTip("Stop all selected tasks");
+
   ui.actionEdit->setStatusTip("Edit selected task");
-  ui.actionDelete->setStatusTip("Delete selected tasks");
-  ui.actionAddToQueue->setStatusTip(
-      "Add selected tasks to the queue for later execution");
-  ui.actionSortTask->setStatusTip("Sort tasks");
+  ui.actionDelete->setStatusTip(
+      "Delete selected tasks - only not running tasks can be deleted.");
+  ui.actionAddToQueue->setStatusTip("Add selected transfer tasks to the queue");
+  ui.actionSortTask->setStatusTip("Sort tasks by name");
 
   ui.actionStartQueue->setStatusTip(
       "Start actively processing items from the queue");
@@ -424,6 +441,9 @@ MainWindow::MainWindow() {
   ui.actionRemoveFromQueue->setStatusTip("Remove from the queue");
   ui.actionPurgeQueue->setStatusTip(
       "Remove all not running tasks from the queue");
+
+  ui.buttonStopAllJobs->setEnabled(false);
+  ui.buttonCleanNotRunning->setEnabled(false);
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
     PreferencesDialog dialog(this);
@@ -538,9 +558,37 @@ MainWindow::MainWindow() {
   QObject::connect(ui.aboutQt, &QAction::triggered, qApp,
                    &QApplication::aboutQt);
 
-  QObject::connect(
-      ui.remotes, &QListWidget::currentItemChanged, this,
-      [=](QListWidgetItem *current) { ui.open->setEnabled(current != NULL); });
+  QObject::connect(ui.remotes, &QListWidget::currentItemChanged, this, [=]() {
+    if (ui.remotes->selectedItems().empty()) {
+      ui.open->setEnabled(false);
+    } else {
+      ui.open->setEnabled(true);
+    }
+  });
+
+  QObject::connect(ui.remotes, &QListWidget::itemSelectionChanged, this, [=]() {
+    if (ui.remotes->selectedItems().empty()) {
+      ui.open->setEnabled(false);
+    } else {
+      ui.open->setEnabled(true);
+    }
+  });
+
+  QObject::connect(ui.remotes, &QListWidget::itemChanged, this, [=]() {
+    if (ui.remotes->selectedItems().empty()) {
+      ui.open->setEnabled(false);
+    } else {
+      ui.open->setEnabled(true);
+    }
+  });
+
+  QObject::connect(ui.remotes, &QListWidget::itemClicked, this, [=]() {
+    if (ui.remotes->selectedItems().empty()) {
+      ui.open->setEnabled(false);
+    } else {
+      ui.open->setEnabled(true);
+    }
+  });
 
   QObject::connect(ui.remotes, &QListWidget::itemActivated, ui.open,
                    &QPushButton::clicked);
@@ -559,8 +607,8 @@ MainWindow::MainWindow() {
       QString remoteType = type;
 
       auto remote = new RemoteWidget(&mIcons, name, remoteType, ui.tabs);
-      QObject::connect(remote, &RemoteWidget::addMount, this,
-                       &MainWindow::addMount);
+      QObject::connect(remote, &RemoteWidget::addNewMount, this,
+                       &MainWindow::addNewMount);
       QObject::connect(remote, &RemoteWidget::addStream, this,
                        &MainWindow::addStream);
       QObject::connect(remote, &RemoteWidget::addTransfer, this,
@@ -574,39 +622,17 @@ MainWindow::MainWindow() {
   QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs,
                    &QTabWidget::removeTab);
 
-  QObject::connect(ui.tasksListWidget, &QListWidget::itemClicked, this, [=]() {
-    ui.buttonDeleteTask->setEnabled(true);
-    ui.buttonEditTask->setEnabled(true);
-    ui.buttonRunTask->setEnabled(true);
-    ui.buttonDryrunTask->setEnabled(true);
-    ui.buttonAddToQueue->setEnabled(true);
-  });
+  QObject::connect(ui.tasksListWidget, &QListWidget::itemClicked, this,
+                   [=]() { setTasksButtons(); });
 
   QObject::connect(ui.tasksListWidget, &QListWidget::currentItemChanged, this,
-                   [=]() {
-                     auto items = ui.tasksListWidget->selectedItems();
+                   [=]() { setTasksButtons(); });
 
-                     if (items.isEmpty()) {
-                       ui.buttonDeleteTask->setEnabled(false);
-                       ui.buttonEditTask->setEnabled(false);
-                       ui.buttonRunTask->setEnabled(false);
-                       ui.buttonDryrunTask->setEnabled(false);
-                       ui.buttonAddToQueue->setEnabled(false);
-                     } else {
+  QObject::connect(ui.tasksListWidget, &QListWidget::itemChanged, this,
+                   [=]() { setTasksButtons(); });
 
-                       ui.buttonDeleteTask->setEnabled(true);
-                       ui.buttonEditTask->setEnabled(true);
-                       ui.buttonRunTask->setEnabled(true);
-                       ui.buttonDryrunTask->setEnabled(true);
-                       ui.buttonAddToQueue->setEnabled(true);
-                     }
-
-                     if (ui.tasksListWidget->count() > 1) {
-                       ui.buttonSortTask->setEnabled(true);
-                     } else {
-                       ui.buttonSortTask->setEnabled(false);
-                     }
-                   });
+  QObject::connect(ui.tasksListWidget, &QListWidget::itemSelectionChanged, this,
+                   [=]() { setTasksButtons(); });
 
   QObject::connect(ui.tasksListWidget, &QListWidget::itemDoubleClicked, this,
                    [=]() { editSelectedTask(); });
@@ -625,19 +651,84 @@ MainWindow::MainWindow() {
     ui.tasksListWidget->sortItems(Qt::DescendingOrder);
   }
 
-  QObject::connect(ui.tasksListWidget, &QWidget::customContextMenuRequested,
-                   this, [=](const QPoint &pos) {
-                     QMenu menu;
-                     menu.addAction(ui.actionAddToQueue);
-                     menu.addSeparator();
-                     menu.addAction(ui.actionDryRun);
-                     menu.addAction(ui.actionRun);
-                     menu.addSeparator();
-                     menu.addAction(ui.actionEdit);
-                     menu.addAction(ui.actionDelete);
-                     menu.exec(
-                         ui.tasksListWidget->viewport()->mapToGlobal(pos));
-                   });
+  QObject::connect(
+      ui.tasksListWidget, &QWidget::customContextMenuRequested, this,
+      [=](const QPoint &pos) {
+        /*
+                             bool isMount = false;
+                             auto selection =
+           ui.tasksListWidget->selectedItems(); foreach (auto i, selection) {
+                               JobOptionsListWidgetItem *item =
+                                   static_cast<JobOptionsListWidgetItem *>(i);
+                               JobOptions *jo = item->GetData();
+                               if (jo->operation == JobOptions::Mount) {
+                                 isMount = true;
+                               }
+                             }
+
+        */
+        setTasksButtons();
+        auto items = ui.tasksListWidget->selectedItems();
+        bool isMount = false;
+        bool isRunning = false;
+
+        if (items.count() > 0) {
+
+          foreach (auto i, items) {
+            JobOptionsListWidgetItem *item =
+                static_cast<JobOptionsListWidgetItem *>(i);
+            JobOptions *jo = item->GetData();
+
+            if (jo->operation == JobOptions::Mount) {
+              isMount = true;
+            }
+
+            int widgetsCount = ui.jobs->count();
+            for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+              QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+              if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+                if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+                    (transfer->isRunning)) {
+                  isRunning = true;
+                }
+              }
+
+              if (auto mount = qobject_cast<MountWidget *>(widget)) {
+                if ((mount->getUniqueID() == jo->uniqueId.toString()) &&
+                    (mount->isRunning)) {
+                  isRunning = true;
+                }
+              }
+            }
+          }
+
+          QMenu menu;
+          if (!isMount) {
+            menu.addAction(ui.actionAddToQueue);
+          }
+          menu.addSeparator();
+          if (!isMount) {
+            if (!isRunning) {
+              menu.addAction(ui.actionDryRun);
+            }
+          }
+          if (!isRunning) {
+            menu.addAction(ui.actionRun);
+          }
+          if (isRunning) {
+            menu.addAction(ui.actionStop);
+          }
+          menu.addSeparator();
+          if (items.count() == 1) {
+            menu.addAction(ui.actionEdit);
+          }
+          if (!isRunning) {
+            menu.addAction(ui.actionDelete);
+          }
+          menu.exec(ui.tasksListWidget->viewport()->mapToGlobal(pos));
+        }
+      });
 
   QObject::connect(ui.queueListWidget, &QWidget::customContextMenuRequested,
                    this, [=](const QPoint &pos) {
@@ -811,6 +902,59 @@ MainWindow::MainWindow() {
     ui.tasksListWidget->setFocus();
   });
 
+  QObject::connect(ui.actionStop, &QAction::triggered, this, [=]() {
+    auto selection = ui.tasksListWidget->selectedItems();
+
+    auto settings = GetSettings();
+    bool sortTask = settings->value("Settings/sortTask").toBool();
+
+    auto items = sortListWidget(selection, sortTask);
+
+    QString itemsToStop;
+
+    foreach (auto i, items) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(i);
+      JobOptions *jo = item->GetData();
+      itemsToStop = itemsToStop + jo->description + "\n";
+    }
+
+    if (items.count() > 0) {
+      int button = QMessageBox::question(
+          this, "Stop tasks",
+          QString("Are you sure you want to stop the following task(s)?\n\n" +
+                  itemsToStop),
+          QMessageBox::Yes | QMessageBox::No);
+      if (button == QMessageBox::Yes) {
+        foreach (auto i, items) {
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(i);
+
+          JobOptions *jo = item->GetData();
+
+          int widgetsCount = ui.jobs->count();
+          for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+            QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+            if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+              if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+                  (transfer->isRunning)) {
+                transfer->cancel();
+              }
+            }
+            if (auto mount = qobject_cast<MountWidget *>(widget)) {
+              if ((mount->getUniqueID() == jo->uniqueId.toString()) &&
+                  (mount->isRunning)) {
+                mount->cancel();
+              }
+            }
+          }
+        }
+      }
+    }
+    ui.tasksListWidget->setFocus();
+  });
+
   QObject::connect(ui.actionRun, &QAction::triggered, this, [=]() {
     auto selection = ui.tasksListWidget->selectedItems();
 
@@ -832,9 +976,17 @@ MainWindow::MainWindow() {
       int widgetsCount = ui.jobs->count();
       for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
         QWidget *widget = ui.jobs->itemAt(j)->widget();
+
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
               (transfer->isRunning)) {
+            itemsAlreadyRunning = itemsAlreadyRunning + jo->description + "\n";
+          }
+        }
+
+        if (auto mount = qobject_cast<MountWidget *>(widget)) {
+          if ((mount->getUniqueID() == jo->uniqueId.toString()) &&
+              (mount->isRunning)) {
             itemsAlreadyRunning = itemsAlreadyRunning + jo->description + "\n";
           }
         }
@@ -857,6 +1009,7 @@ MainWindow::MainWindow() {
                   itemsToRun),
           QMessageBox::No | QMessageBox::Yes);
       if (button == QMessageBox::Yes) {
+
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
@@ -865,6 +1018,7 @@ MainWindow::MainWindow() {
       }
     }
     ui.tasksListWidget->setFocus();
+    setTasksButtons();
   });
 
   QObject::connect(ui.actionDelete, &QAction::triggered, this, [=]() {
@@ -888,9 +1042,16 @@ MainWindow::MainWindow() {
       int widgetsCount = ui.jobs->count();
       for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
         QWidget *widget = ui.jobs->itemAt(j)->widget();
+
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
               (transfer->isRunning)) {
+            itemsAlreadyRunning = itemsAlreadyRunning + jo->description + "\n";
+          }
+        }
+        if (auto mount = qobject_cast<MountWidget *>(widget)) {
+          if ((mount->getUniqueID() == jo->uniqueId.toString()) &&
+              (mount->isRunning)) {
             itemsAlreadyRunning = itemsAlreadyRunning + jo->description + "\n";
           }
         }
@@ -906,6 +1067,7 @@ MainWindow::MainWindow() {
                   "\n\nYou can't delete running tasks.\nStop them first."),
           QMessageBox::Ok);
       ui.tasksListWidget->setFocus();
+      setTasksButtons();
       return;
     }
 
@@ -928,6 +1090,33 @@ MainWindow::MainWindow() {
         ui.tasksListWidget->setFocus();
       }
     }
+
+    // restore active tasks colours
+    int widgetsCount = ui.jobs->count();
+    for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+
+      JobOptions *joTasks = item->GetData();
+
+      for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+        QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+          if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
+              (transfer->isRunning)) {
+            ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+          }
+        }
+
+        if (auto mount = qobject_cast<MountWidget *>(widget)) {
+          if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
+              (mount->isRunning)) {
+            ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+          }
+        }
+      }
+    }
   });
 
   QObject::connect(ui.actionAddToQueue, &QAction::triggered, this, [=]() {
@@ -946,6 +1135,15 @@ MainWindow::MainWindow() {
           static_cast<JobOptionsListWidgetItem *>(i);
       JobOptions *jo = item->GetData();
       itemsToAdd = itemsToAdd + jo->description + "\n";
+
+      if (jo->operation == JobOptions::Mount) {
+
+        QMessageBox::information(
+            this, tr("Mount tasks selected!"),
+            tr("You selected mount tasks - they can't be added to the queue."));
+
+        return;
+      }
     }
 
     // if queue is empty we have to start first task
@@ -962,6 +1160,7 @@ MainWindow::MainWindow() {
       if (button == QMessageBox::Yes) {
 
         mQueueCount = mQueueCount + items.count();
+
         if (mQueueStatus) {
           if (mQueueCount == 0) {
             ui.tabs->setTabText(3, QString("Queue (%1)>>(0)").arg(mQueueCount));
@@ -979,11 +1178,21 @@ MainWindow::MainWindow() {
 
           JobOptions *jo = item->GetData();
 
-          JobOptionsListWidgetItem *newitem = new JobOptionsListWidgetItem(
-              jo,
-              jo->jobType == JobOptions::JobType::Download ? mDownloadIcon
-                                                           : mUploadIcon,
-              jo->description);
+          QIcon jobIcon;
+
+          if (jo->jobType == JobOptions::JobType::Download) {
+            if (jo->operation == JobOptions::Mount) {
+              jobIcon = mMountIcon;
+            } else {
+              jobIcon = mDownloadIcon;
+            }
+          }
+          if (jo->jobType == JobOptions::JobType::Upload) {
+            jobIcon = mUploadIcon;
+          }
+
+          JobOptionsListWidgetItem *newitem =
+              new JobOptionsListWidgetItem(jo, jobIcon, jo->description);
 
           ui.queueListWidget->addItem(newitem);
         }
@@ -1324,6 +1533,7 @@ MainWindow::MainWindow() {
 
   mUploadIcon = arrowUpIcon;
   mDownloadIcon = arrowDownIcon;
+  mMountIcon = mount1Icon;
 
   // remove close button from these tabs
   ui.tabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
@@ -1412,6 +1622,10 @@ MainWindow::MainWindow() {
   } else {
     rcloneGetVersion();
   }
+
+  // we start all auto mount tasks with 1s delay - so RB has chance to start
+  // properly
+  QTimer::singleShot(1000, this, SLOT(autoStartMounts()));
 }
 
 MainWindow::~MainWindow() {
@@ -1461,6 +1675,166 @@ MainWindow::sortListWidget(const QList<QListWidgetItem *> &list,
 #endif
   }
   return sortedList;
+}
+
+void MainWindow::autoStartMounts(void) {
+
+  // autostart all auto mounts from tasks list
+  for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+    JobOptionsListWidgetItem *item =
+        static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+    JobOptions *joTasks = item->GetData();
+    if (joTasks->operation == JobOptions::Mount && joTasks->mountAutoStart) {
+      runItem(item, "autostart");
+    }
+  }
+}
+
+void MainWindow::quitApp(void) {
+
+  // wait for all processes to stop
+  if (mQuitInfoDelay == 1) {
+
+    QMessageBox *msgBox =
+        new QMessageBox(QMessageBox::Warning, "Quitting",
+                        "\nTerminating all processes,\nplease wait.", 0, this,
+                        //                        Qt::FramelessWindowHint |
+                        //                        Qt::WindowStaysOnTopHint);
+                        Qt::FramelessWindowHint);
+    msgBox->setStandardButtons(0);
+
+    msgBox->setCursor(Qt::WaitCursor);
+    msgBox->setAttribute(Qt::WA_DeleteOnClose);
+    msgBox->show();
+  }
+
+  bool processActive = false;
+  int widgetsCount = ui.jobs->count();
+
+  // loop over all jobs
+  for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
+    QWidget *widget = ui.jobs->itemAt(i)->widget();
+    if (auto mount = qobject_cast<MountWidget *>(widget)) {
+      if (mount->isRunning) {
+        processActive = true;
+      } else {
+        emit mount->closed();
+      }
+    } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+      if (transfer->isRunning) {
+        processActive = true;
+      } else {
+        emit transfer->closed();
+      }
+    } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+      if (stream->isRunning) {
+        processActive = true;
+      } else {
+        emit stream->closed();
+      }
+    }
+  };
+
+  if (processActive == false) {
+    // no running widget - bye bye
+    QApplication::quit();
+  } else {
+    // something still running we check again a bit later then
+    QTimer::singleShot(1000, this, SLOT(quitApp()));
+    ++mQuitInfoDelay;
+  }
+}
+
+void MainWindow::setTasksButtons() {
+  auto items = ui.tasksListWidget->selectedItems();
+  if (items.isEmpty()) {
+    ui.buttonDeleteTask->setEnabled(false);
+    ui.buttonEditTask->setEnabled(false);
+    ui.buttonRunTask->setEnabled(false);
+    ui.buttonDryrunTask->setEnabled(false);
+    ui.buttonAddToQueue->setEnabled(false);
+  } else {
+
+    ui.buttonDeleteTask->setEnabled(true);
+    ui.buttonEditTask->setEnabled(true);
+    ui.buttonRunTask->setEnabled(true);
+    ui.buttonDryrunTask->setEnabled(true);
+    ui.buttonAddToQueue->setEnabled(true);
+  }
+
+  if (ui.tasksListWidget->count() > 1) {
+    ui.buttonSortTask->setEnabled(true);
+  } else {
+    ui.buttonSortTask->setEnabled(false);
+  }
+
+  if (items.count() > 1) {
+    ui.buttonEditTask->setEnabled(false);
+  }
+
+  bool isMount = false;
+  bool isRunning = false;
+  int isNotRunning = items.count();
+
+  if (items.count() > 0) {
+
+    foreach (auto i, items) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(i);
+      JobOptions *jo = item->GetData();
+
+      if (jo->operation == JobOptions::Mount) {
+        isMount = true;
+      }
+
+      int widgetsCount = ui.jobs->count();
+      for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+        QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+          if ((transfer->getUniqueID() == jo->uniqueId.toString()) &&
+              (transfer->isRunning)) {
+            isRunning = true;
+            --isNotRunning;
+          } else {
+
+            if ((transfer->getUniqueID() == jo->uniqueId.toString())) {
+            }
+          }
+        }
+
+        if (auto mount = qobject_cast<MountWidget *>(widget)) {
+          if ((mount->getUniqueID() == jo->uniqueId.toString()) &&
+              (mount->isRunning)) {
+            isRunning = true;
+            --isNotRunning;
+          } else {
+
+            if ((mount->getUniqueID() == jo->uniqueId.toString())) {
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (isRunning) {
+    ui.buttonDeleteTask->setEnabled(false);
+    ui.buttonRunTask->setEnabled(false);
+    ui.buttonDryrunTask->setEnabled(false);
+  }
+
+  if (isNotRunning == 0 && items.count() != 0) {
+    ui.buttonStop->setEnabled(true);
+  } else {
+    ui.buttonStop->setEnabled(false);
+  }
+
+  if (isMount) {
+    ui.buttonDryrunTask->setEnabled(false);
+    ui.buttonAddToQueue->setEnabled(false);
+  }
+  return;
 }
 
 void MainWindow::setQueueButtons() {
@@ -2154,6 +2528,7 @@ void MainWindow::rcloneListRemotes() {
           }
         }
         p->deleteLater();
+        ui.open->setEnabled(false);
       });
 
   UseRclonePassword(p);
@@ -2216,16 +2591,28 @@ bool MainWindow::canClose() {
     for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
       QWidget *widget = ui.jobs->itemAt(i)->widget();
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
-        emit mount->cancel();
+        if (mount->isRunning) {
+          emit mount->cancel();
+        } else {
+          emit mount->closed();
+        }
+
       } else if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-        emit transfer->cancel();
+        if (transfer->isRunning) {
+          emit transfer->cancel();
+        } else {
+          emit transfer->closed();
+        }
       } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
-        emit stream->cancel();
+        if (stream->isRunning) {
+          emit stream->cancel();
+        } else {
+          emit stream->closed();
+        }
       }
     }
     return true;
   }
-
   return false;
 }
 
@@ -2241,7 +2628,9 @@ void MainWindow::closeEvent(QCloseEvent *ev) {
   }
 
   if (canClose()) {
-    QApplication::quit();
+    // quitApp() will wait for everything to finish
+    quitApp();
+    ev->ignore();
   } else {
     ev->ignore();
   }
@@ -2277,16 +2666,39 @@ void MainWindow::addTasksToQueue() {
     return;
   } else {
 
+    QString taskNameDisplay;
+
     while (!in.atEnd()) {
 
       QString line = in.readLine();
 
       for (JobOptions *jo : ljo->getTasks()) {
-        JobOptionsListWidgetItem *item = new JobOptionsListWidgetItem(
-            jo,
-            jo->jobType == JobOptions::JobType::Download ? mDownloadIcon
-                                                         : mUploadIcon,
-            jo->description);
+
+        QIcon jobIcon = mDownloadIcon;
+
+        if (jo->jobType == JobOptions::JobType::Download) {
+          if (jo->operation == JobOptions::Mount) {
+            jobIcon = mMountIcon;
+          } else {
+            jobIcon = mDownloadIcon;
+          }
+        }
+        if (jo->jobType == JobOptions::JobType::Upload) {
+          jobIcon = mUploadIcon;
+        }
+
+        if (jo->operation == JobOptions::Mount) {
+          if (jo->mountAutoStart) {
+            taskNameDisplay = jo->description + "(autostart)";
+          } else {
+            taskNameDisplay = jo->description;
+          }
+        } else {
+          taskNameDisplay = jo->description;
+        }
+
+        JobOptionsListWidgetItem *item =
+            new JobOptionsListWidgetItem(jo, jobIcon, taskNameDisplay);
 
         if (jo->uniqueId.toString() == line) {
           ++mQueueCount;
@@ -2357,17 +2769,40 @@ void MainWindow::listTasks() {
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
 
   for (JobOptions *jo : ljo->getTasks()) {
-    JobOptionsListWidgetItem *item = new JobOptionsListWidgetItem(
-        jo,
-        jo->jobType == JobOptions::JobType::Download ? mDownloadIcon
-                                                     : mUploadIcon,
-        jo->description);
+
+    QIcon jobIcon;
+    QString taskNameDisplay;
+
+    if (jo->jobType == JobOptions::JobType::Download) {
+      if (jo->operation == JobOptions::Mount) {
+        jobIcon = mMountIcon;
+      } else {
+        jobIcon = mDownloadIcon;
+      }
+    }
+    if (jo->jobType == JobOptions::JobType::Upload) {
+      jobIcon = mUploadIcon;
+    }
+
+    if (jo->operation == JobOptions::Mount) {
+      if (jo->mountAutoStart) {
+        taskNameDisplay = jo->description + " (auto)";
+      } else {
+        taskNameDisplay = jo->description;
+      }
+    } else {
+      taskNameDisplay = jo->description;
+    }
+
+    JobOptionsListWidgetItem *item =
+        new JobOptionsListWidgetItem(jo, jobIcon, taskNameDisplay);
     ui.tasksListWidget->addItem(item);
   }
 
   ui.buttonDeleteTask->setEnabled(false);
   ui.buttonEditTask->setEnabled(false);
   ui.buttonRunTask->setEnabled(false);
+  ui.buttonStop->setEnabled(false);
   ui.buttonDryrunTask->setEnabled(false);
   ui.buttonAddToQueue->setEnabled(false);
 
@@ -2411,11 +2846,21 @@ void MainWindow::listTasks() {
 
         ui.queueListWidget->takeItem(i);
 
+        QIcon jobIcon = mDownloadIcon;
+
+        if (jo_task->jobType == JobOptions::JobType::Download) {
+          if (jo_task->operation == JobOptions::Mount) {
+            jobIcon = mMountIcon;
+          } else {
+            jobIcon = mDownloadIcon;
+          }
+        }
+        if (jo_task->jobType == JobOptions::JobType::Upload) {
+          jobIcon = mUploadIcon;
+        }
+
         JobOptionsListWidgetItem *item_insert = new JobOptionsListWidgetItem(
-            jo_task,
-            jo_task->jobType == JobOptions::JobType::Download ? mDownloadIcon
-                                                              : mUploadIcon,
-            jo_task->description);
+            jo_task, jobIcon, jo_task->description);
 
         ui.queueListWidget->insertItem(i, item_insert);
 
@@ -2461,6 +2906,8 @@ void MainWindow::listTasks() {
   saveQueueFile();
   ui.queueListWidget->setFocus();
   setQueueButtons();
+  ui.tasksListWidget->setFocus();
+  setTasksButtons();
 
 } // MainWindow::listTasks()
 
@@ -2468,42 +2915,151 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
                          const QString &transferMode, bool dryrun) {
   if (item == nullptr)
     return;
+
   JobOptions *jo = item->GetData();
-  jo->dryRun = dryrun;
-  QStringList args = jo->getOptions();
 
-  QString info;
-  QString operation;
-
-  if (int(jo->operation) == 1)
-    operation = "Copy";
-  if (int(jo->operation) == 2)
-    operation = "Move";
-  if (int(jo->operation) == 3)
-    operation = "Sync";
-
-  if (dryrun) {
-    info = QString("Dry run, task: \"%1\", %2 from %3")
-               .arg(jo->description)
-               .arg(operation.toLower())
-               .arg(jo->source);
-  } else {
-    if (transferMode == "queue") {
-      info = QString("Queue task: \"%1\", %2 from %3")
-                 .arg(jo->description)
-                 .arg(operation)
-                 .arg(jo->source);
-    } else {
-
-      info = QString("Task: \"%1\", %2 from %3")
-                 .arg(jo->description)
-                 .arg(operation)
-                 .arg(jo->source);
+  // running items have green background
+  for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+    JobOptionsListWidgetItem *item =
+        static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+    JobOptions *joTasks = item->GetData();
+    if (joTasks->uniqueId.toString() == jo->uniqueId.toString()) {
+      ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
     }
   }
 
-  addTransfer(info, jo->source, jo->dest, args, jo->uniqueId.toString(),
-              transferMode);
+  if (jo->operation != JobOptions::Mount) {
+    // transfer
+    jo->dryRun = dryrun;
+    QStringList args = jo->getOptions();
+
+    QString info;
+    QString operation;
+
+    if (int(jo->operation) == 1)
+      operation = "Copy";
+    if (int(jo->operation) == 2)
+      operation = "Move";
+    if (int(jo->operation) == 3)
+      operation = "Sync";
+
+    if (dryrun) {
+      info = QString("Dry run, task: \"%1\", %2 from %3")
+                 .arg(jo->description)
+                 .arg(operation.toLower())
+                 .arg(jo->source);
+    } else {
+      if (transferMode == "queue") {
+        info = QString("Queue task: \"%1\", %2 from %3")
+                   .arg(jo->description)
+                   .arg(operation)
+                   .arg(jo->source);
+      } else {
+
+        info = QString("Task: \"%1\", %2 from %3")
+                   .arg(jo->description)
+                   .arg(operation)
+                   .arg(jo->source);
+      }
+    }
+
+    addTransfer(info, jo->source, jo->dest, args, jo->uniqueId.toString(),
+                transferMode);
+
+  } else {
+    // mount
+
+    QStringList args;
+
+    args << "mount";
+
+    args << jo->source;
+
+    args << jo->dest;
+
+    if (!jo->mountRcPort.isEmpty()) {
+
+      args << "--rc";
+      args << "--rc-addr";
+      args << "localhost:" + jo->mountRcPort;
+
+      // generate random username and password
+      const QString possibleCharacters(
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+
+      QString rcUser;
+      for (int i = 0; i < 10; ++i) {
+        int index = qrand() % possibleCharacters.length();
+        QChar nextChar = possibleCharacters.at(index);
+        rcUser.append(nextChar);
+      }
+
+      QString rcPass;
+      for (int i = 0; i < 22; ++i) {
+        int index = qrand() % possibleCharacters.length();
+        QChar nextChar = possibleCharacters.at(index);
+        rcPass.append(nextChar);
+      }
+
+      args << "--rc-user=" + rcUser;
+      args << "--rc-pass=" + rcPass;
+    }
+    if (jo->remoteType == "drive") {
+      if (jo->remoteMode == "shared") {
+        args << "--drive-shared-with-me";
+        if (!jo->mountReadOnly) {
+          args << "--read-only";
+        }
+      }
+      if (jo->remoteMode == "trash") {
+        args << "--drive-trashed-only";
+      }
+    }
+
+    if (jo->mountReadOnly) {
+      args << "--read-only";
+    }
+
+    if (!(jo->mountVolume.trimmed().isEmpty())) {
+      args << "--volname";
+      args << jo->mountVolume;
+    }
+
+    switch (jo->mountCacheLevel) {
+    case JobOptions::MountCacheLevel::Off:
+      break;
+    case JobOptions::MountCacheLevel::Minimal:
+      args << "--vfs-cache-mode";
+      args << "minimal";
+      break;
+    case JobOptions::MountCacheLevel::Writes:
+      args << "--vfs-cache-mode";
+      args << "writes";
+      break;
+    case JobOptions::MountCacheLevel::Full:
+      args << "--vfs-cache-mode";
+      args << "full";
+      break;
+    case JobOptions::MountCacheLevel::UnknownCacheLevel:
+      break;
+    }
+
+    if (!jo->extra.trimmed().isEmpty()) {
+      for (auto line : jo->extra.trimmed().split('\n')) {
+        if (!line.isEmpty()) {
+          for (QString arg :
+               line.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+            if (!arg.isEmpty()) {
+              args << arg.replace("\"", "");
+            }
+          }
+        }
+      }
+    }
+
+    addNewMount(jo->source, jo->dest, jo->remoteType, args, jo->mountScript,
+                jo->uniqueId.toString());
+  }
 }
 
 void MainWindow::editSelectedTask() {
@@ -2522,19 +3078,68 @@ void MainWindow::editSelectedTask() {
     QString remoteType = (jo->remoteType);
     QString remoteMode = (jo->remoteMode);
 
+    QString jobType = "";
+
+    if (jo->jobType == JobOptions::Download) {
+      if (jo->operation == JobOptions::Mount) {
+        jobType = "Mount";
+      } else {
+        jobType = "Download";
+      }
+    }
+    if (jo->jobType == JobOptions::Upload) {
+      jobType = "Upload";
+    }
+
     QString remote = isDownload ? jo->source : jo->dest;
     QString path = isDownload ? jo->dest : jo->source;
     // qDebug() << "remote:" + remote;
     // qDebug() << "path:" + path;
 
-    TransferDialog td(isDownload, false, remote, path, jo->isFolder, remoteType,
-                      remoteMode, this, jo, true);
-    td.exec();
+    if (jobType == "Download" || jobType == "Upload") {
+
+      TransferDialog td(isDownload, false, remote, path, jo->isFolder,
+                        remoteType, remoteMode, this, jo, true);
+      td.exec();
+    } else {
+      if (jobType == "Mount") {
+        MountDialog md(remote, path, remoteType, remoteMode, this, jo, true);
+        md.exec();
+      }
+    }
   }
 
   // restore the selection to help user keep track of what s/he was doing
   ui.tasksListWidget->setCurrentItem(ui.tasksListWidget->item(selection));
   ui.tasksListWidget->setFocus();
+  setTasksButtons();
+
+  // restore active tasks colours
+  int widgetsCount = ui.jobs->count();
+  for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+    JobOptionsListWidgetItem *item =
+        static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+
+    JobOptions *joTasks = item->GetData();
+
+    for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+      QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+      if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+        if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
+            (transfer->isRunning)) {
+          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+        }
+      }
+
+      if (auto mount = qobject_cast<MountWidget *>(widget)) {
+        if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
+            (mount->isRunning)) {
+          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+        }
+      }
+    }
+  }
 
   // edit mode on the TransferDialog suppresses the usual Accept buttons
   // and the Save Task button closes it... so there is nothing more to do here
@@ -2607,6 +3212,19 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
         ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                              (ui.jobs->count() - 2) / 2);
+
+        // transfer finished - remove green from tasks list
+        auto transfer = qobject_cast<JobWidget *>(widget);
+        for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+          JobOptionsListWidgetItem *item =
+              static_cast<JobOptionsListWidgetItem *>(
+                  ui.tasksListWidget->item(k));
+          JobOptions *jo = item->GetData();
+          if (transfer->getUniqueID() == jo->uniqueId.toString()) {
+
+            ui.tasksListWidget->item(k)->setBackground(QBrush());
+          }
+        }
 
         // if job finished try to run next one from the queue
         // only when not quitting, queue is active and there are tasks in the
@@ -2683,6 +3301,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
             saveQueueFile();
           }
         }
+        setTasksButtons();
       });
 
   QObject::connect(widget, &JobWidget::closed, this, [=]() {
@@ -2716,6 +3335,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
   UseRclonePassword(transfer);
   transfer->start(GetRclone(), GetRcloneConf() + args, QIODevice::ReadOnly);
+
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 }
 
 //  runs queueScript
@@ -2735,8 +3357,15 @@ void MainWindow::runQueueScript(const QString &script) {
   p->start(script);
 }
 
-void MainWindow::addMount(const QString &remote, const QString &folder,
-                          const QString &remoteType) {
+void MainWindow::addNewMount(const QString &remote, const QString &folder,
+                             const QString &remoteType, const QStringList &args,
+                             const QString &script, const QString &uniqueId) {
+
+  if (remoteType == "") {
+  }
+
+  QStringList argsFinal = args;
+
   QProcess *mount = new QProcess(this);
   mount->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -2746,52 +3375,11 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
 
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
-  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
-  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
-
+  // get default mount options
   auto settings = GetSettings();
   QString opt = settings->value("Settings/mount").toString();
-  QString driveSharedMode = settings->value("Settings/remoteMode").toString();
 
-  QStringList args;
-  args << "mount";
-
-  args << remote << folder;
-
-  args << GetRcloneConf();
-
-#if defined(Q_OS_WIN32)
-  args << "--rc";
-  args << "--rc-addr";
-
-  // calculate remote control interface port based on mount drive letter
-  // this way every mount will have unique port assigned
-  int port_offset = folder[0].toLatin1();
-  unsigned short int rclone_rc_port_base = 19000;
-  unsigned short int rclone_rc_port = rclone_rc_port_base + port_offset;
-  args << "localhost:" + QVariant(rclone_rc_port).toString();
-#endif
-
-  // for google drive "shared with me" without --read-only writes go created in
-  // main google drive it is more logical to mount it as read only so there is
-  // no confusion
-
-  if (remoteType == "drive") {
-
-    if (driveSharedMode == "shared") {
-      args << "--drive-shared-with-me";
-      args << "--read-only";
-    }
-
-    if (driveSharedMode == "trash") {
-      args << "--drive-trashed-only";
-    }
-  };
-
-  //	 default mount is now more generic. all options can be passed via
-  // preferences mount field
-  //       args << "--vfs-cache-mode";
-  //       args << "writes";
+  argsFinal << GetRcloneConf();
 
   if (!opt.isEmpty()) {
     // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1
@@ -2799,12 +3387,13 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     // arg2\"" "--option-3" "arg3"
     for (QString arg : opt.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
       if (!arg.isEmpty()) {
-        args << arg.replace("\"", "");
+        argsFinal << arg.replace("\"", "");
       }
     }
   }
 
-  auto widget = new MountWidget(mount, remote, folder, args);
+  auto widget =
+      new MountWidget(mount, remote, folder, argsFinal, script, uniqueId);
 
   auto line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -2823,6 +3412,19 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
+
+    // mount finished - we remove green from task list
+    auto mount = qobject_cast<MountWidget *>(widget);
+    for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+      JobOptionsListWidgetItem *item =
+          static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+      JobOptions *jo = item->GetData();
+      if (mount->getUniqueID() == jo->uniqueId.toString()) {
+
+        ui.tasksListWidget->item(k)->setBackground(QBrush());
+      }
+    }
+    setTasksButtons();
   });
 
   QObject::connect(widget, &MountWidget::closed, this, [=]() {
@@ -2836,10 +3438,15 @@ void MainWindow::addMount(const QString &remote, const QString &folder,
     ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
+
+    setTasksButtons();
   });
 
   UseRclonePassword(mount);
-  mount->start(GetRclone(), args, QIODevice::ReadOnly);
+  mount->start(GetRclone(), argsFinal, QIODevice::ReadOnly);
+
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 }
 
 void MainWindow::addStream(const QString &remote, const QString &stream,
@@ -2934,6 +3541,9 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);
   rclone->start(GetRclone(), QStringList() << args, QProcess::WriteOnly);
+
+  ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
+  ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 }
 
 void MainWindow::slotCloseTab(int index) {

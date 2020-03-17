@@ -185,9 +185,12 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
       } else if (rxErrors.exactMatch(line)) {
         ui.errors->setText(rxErrors.cap(1));
 
-        ui.progress_info->setStyleSheet(
-            "QLabel { color: red; font-weight: bold;}");
-
+        if (!(rxErrors.cap(1).toInt() == 0)) {
+          ui.progress_info->setStyleSheet(
+              "QLabel { color: red; font-weight: bold;}");
+          ui.errors->setStyleSheet(
+              "QLineEdit { color: red; font-weight: bold;}");
+        }
       } else if (rxChecks.exactMatch(line)) {
         ui.checks->setText(rxChecks.cap(1));
       } else if (rxChecks2.exactMatch(line)) {
@@ -293,16 +296,16 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         if (status == 0) {
           if (iconsColour == "white") {
             ui.showDetails->setStyleSheet(
-                "QToolButton { border: 0; font-weight: normal;}");
+                "QToolButton { border: 0; font-weight: bold;}");
           } else {
             ui.showDetails->setStyleSheet(
-                "QToolButton { border: 0; color: black; font-weight: normal;}");
+                "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
           ui.progress_info->hide();
         } else {
           ui.showDetails->setStyleSheet(
-              "QToolButton { border: 0; color: red; font-weight: normal;}");
+              "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
           ui.progress_info->hide();
         }
@@ -331,7 +334,7 @@ void JobWidget::cancel() {
   mProcess->waitForFinished();
 
   ui.showDetails->setStyleSheet(
-      "QToolButton { border: 0; color: red; font-weight: normal;}");
+      "QToolButton { border: 0; color: red; font-weight: bold;}");
   ui.showDetails->setText("  Stopped");
   ui.progress_info->hide();
   ui.cancel->setToolTip("Close");

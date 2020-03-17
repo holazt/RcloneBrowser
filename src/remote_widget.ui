@@ -616,6 +616,11 @@ rclone about</string>
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove duplicated files&lt;/p&gt;&lt;p&gt;rclone &lt;span style=&quot; font-family:'.SF NS Mono';&quot;&gt;dedupe&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
+  <action name="actionNewMount">
+   <property name="text">
+    <string>New Mount</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>buttonRefresh</tabstop>

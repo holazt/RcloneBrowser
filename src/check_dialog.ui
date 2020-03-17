@@ -23,7 +23,7 @@
    </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+   <item alignment="Qt::AlignVCenter">
     <widget class="QWidget" name="pathGroup" native="true">
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="2" column="1">
@@ -88,7 +88,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignVCenter">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -182,7 +182,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignVCenter">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string/>

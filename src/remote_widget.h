@@ -19,13 +19,13 @@ signals:
   void addTransfer(const QString &message, const QString &source,
                    const QString &remote, const QStringList &args,
                    const QString &uniqueId, const QString &transferMode);
-  void addMount(const QString &remote, const QString &folder,
-                const QString &remoteType);
   void addStream(const QString &remote, const QString &stream,
                  const QString &remoteType);
+  void addNewMount(const QString &remote, const QString &folder,
+                   const QString &remoteType, const QStringList &args,
+                   const QString &script, const QString &uniqueId);
 
 private:
   Ui::RemoteWidget ui;
-
   bool mButtonToolsState = false;
 };

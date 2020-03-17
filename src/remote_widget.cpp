@@ -2,9 +2,11 @@
 #include "check_dialog.h"
 #include "dedupe_dialog.h"
 #include "export_dialog.h"
+#include "global.h"
 #include "icon_cache.h"
 #include "item_model.h"
 #include "list_of_job_options.h"
+#include "mount_dialog.h"
 #include "progress_dialog.h"
 #include "transfer_dialog.h"
 #include "utils.h"
@@ -75,7 +77,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QIcon(":remotes/images/qbutton_icons/move" + img_add + ".png"));
   ui.purge->setIcon(
       QIcon(":remotes/images/qbutton_icons/purge" + img_add + ".png"));
-  ui.mount->setIcon(
+  ui.actionNewMount->setIcon(
       QIcon(":remotes/images/qbutton_icons/mount" + img_add + ".png"));
   ui.stream->setIcon(
       QIcon(":remotes/images/qbutton_icons/stream" + img_add + ".png"));
@@ -105,7 +107,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonRename->setDefaultAction(ui.rename);
   ui.buttonMove->setDefaultAction(ui.move);
   ui.buttonPurge->setDefaultAction(ui.purge);
-  ui.buttonMount->setDefaultAction(ui.mount);
+  ui.buttonMount->setDefaultAction(ui.actionNewMount);
   ui.buttonStream->setDefaultAction(ui.stream);
   ui.buttonUpload->setDefaultAction(ui.upload);
   ui.buttonDownload->setDefaultAction(ui.download);
@@ -115,7 +117,6 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.buttonLink->setDefaultAction(ui.link);
   ui.buttonExport->setDefaultAction(ui.export_);
   ui.buttonInfo->setDefaultAction(ui.getInfo);
-  ui.buttonDedupe->setDefaultAction(ui.actionDedupe);
 
   // buttons and icons size
   int icon_w = 16;
@@ -284,6 +285,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
   ui.buttonTools->setMenu(menuMode);
   ui.buttonTools->setPopupMode(QToolButton::InstantPopup);
+
+  // set combo box tooltips
+  ui.cb_GoogleDriveMode->setItemData(0, "default", Qt::ToolTipRole);
+  ui.cb_GoogleDriveMode->setItemData(1, "--drive-shared-with-me",
+                                     Qt::ToolTipRole);
+  ui.cb_GoogleDriveMode->setItemData(2, "--drive-trashed-only",
+                                     Qt::ToolTipRole);
 
   ui.tree->sortByColumn(0, Qt::AscendingOrder);
   ui.tree->header()->setSectionsMovable(false);
@@ -515,30 +523,6 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
-  QObject::connect(ui.mount, &QAction::triggered, this, [=]() {
-    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
-
-    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-
-    QString path = model->path(index).path();
-    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
-
-#if defined(Q_OS_WIN32)
-    QString folder =
-        QInputDialog::getText(this, "Mount",
-                              QString("(Make sure you have WinFsp-FUSE "
-                                      "installed)\n\nDrive to mount %1 to")
-                                  .arg(remote),
-                              QLineEdit::Normal, "Z:");
-#else
-        QString folder = QFileDialog::getExistingDirectory(this, QString("Mount %1").arg(remote));
-#endif
-
-    if (!folder.isEmpty()) {
-      emit addMount(remote + ":" + path, folder, remoteType);
-    }
-  });
-
   QObject::connect(ui.stream, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
@@ -563,6 +547,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       settings->setValue("Settings/stream", stream);
       settings->setValue("Settings/streamConfirmed", true);
     }
+
+    //!!! stream $filename
 
     emit addStream(remote + ":" + path, stream, remoteType);
   });
@@ -788,6 +774,70 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       animation->setEndValue(150);
       animation->start(QPropertyAnimation::DeleteWhenStopped);
     }
+  });
+
+  QObject::connect(ui.actionNewMount, &QAction::triggered, this, [=]() {
+    QString remoteMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+    QString path_info = model->path(index).path();
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path_info) : path_info;
+
+    QString path = model->path(index).path();
+
+    QDir path_mount = model->path(index);
+
+#if defined(Q_OS_WIN)
+    // on Windows we check if WinFsp is installed
+    QSettings winKey("HKEY_CLASSES_ROOT\\Installer\\Dependencies",
+                     QSettings::NativeFormat);
+
+    if (winKey.childGroups().contains("WinFsp", Qt::CaseInsensitive)) {
+#endif
+#if defined(Q_OS_MACOS)
+      // on macOS we check if FUSE for macOS is installed
+
+      const QFileInfo outputDir("/Library/Filesystems/osxfuse.fs/");
+
+      if (outputDir.exists()) {
+
+#endif
+
+        MountDialog e(remote, path_mount, remoteType, remoteMode, this);
+
+        if (e.exec() == QDialog::Accepted) {
+
+          QStringList args = e.getOptions();
+
+          emit addNewMount(remote + ":" + path, e.getMountPoint(), remoteType,
+                           args, e.getScript(), QUuid::createUuid().toString());
+        }
+
+#if defined(Q_OS_WIN)
+      } else {
+
+        QMessageBox::information(
+            this, "FUSE for Windows (WinFsp) warning",
+            QString(
+                R"(<p>To run "rclone mount" on Windows,<br />you will need to )"
+                R"(download and install:<br /><br />)"
+                R"(<a href="http://www.secfs.net/winfsp/">FUSE for Windows (WinFsp)</a><br /></p>)"));
+      }
+#endif
+
+#if defined(Q_OS_MACOS)
+    } else {
+
+      QMessageBox::information(
+          this, "FUSE for macOS warning",
+          QString(
+              R"(<p>To run "rclone mount" on macOS,<br />you will need to )"
+              R"(download and install:<br /><br />)"
+              R"(<a href="https://osxfuse.github.io">FUSE for macOS</a></p>)"));
+    }
+#endif
   });
 
   QObject::connect(ui.actionCheck, &QAction::triggered, this, [=]() {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>StreamWidget</class>
- <widget class="QWidget" name="StreamWidget">
+ <class>MountWidget</class>
+ <widget class="QWidget" name="MountWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>654</width>
-    <height>366</height>
+    <width>856</width>
+    <height>615</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -51,9 +51,6 @@
         </property>
         <property name="toolButtonStyle">
          <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
-        <property name="arrowType">
-         <enum>Qt::NoArrow</enum>
         </property>
        </widget>
       </item>
@@ -111,10 +108,10 @@
       <item>
        <widget class="QToolButton" name="cancel">
         <property name="toolTip">
-         <string>Stop</string>
+         <string>Unmount</string>
         </property>
         <property name="statusTip">
-         <string>Stop</string>
+         <string>Unmount</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>
@@ -139,68 +136,7 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="0" column="1" alignment="Qt::AlignRight">
-       <widget class="QLabel" name="label_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Remote content:</string>
-        </property>
-        <property name="buddy">
-         <cstring>remote</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>10</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="4" column="1" colspan="2">
-       <widget class="QToolButton" name="showOutput">
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0 }</string>
-        </property>
-        <property name="text">
-         <string>  Show Output</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
-        <property name="arrowType">
-         <enum>Qt::NoArrow</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" colspan="3">
-       <widget class="QPlainTextEdit" name="output">
-        <property name="lineWrapMode">
-         <enum>QPlainTextEdit::NoWrap</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
+      <item row="0" column="0">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -216,7 +152,49 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="1" alignment="Qt::AlignRight">
+      <item row="7" column="1" colspan="2">
+       <widget class="QToolButton" name="showOutput">
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0 }</string>
+        </property>
+        <property name="text">
+         <string>  Show Output</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="10" column="1">
+       <widget class="QLabel" name="l_script">
+        <property name="text">
+         <string>script</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1" colspan="3">
+       <widget class="QPlainTextEdit" name="sOutput"/>
+      </item>
+      <item row="1" column="1">
        <widget class="QLabel" name="label_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -225,15 +203,25 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Streaming app:</string>
+         <string>Mount point:</string>
         </property>
         <property name="buddy">
-         <cstring>stream</cstring>
+         <cstring>folder</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QLineEdit" name="stream">
+      <item row="9" column="1" colspan="3">
+       <widget class="QPlainTextEdit" name="output">
+        <property name="lineWrapMode">
+         <enum>QPlainTextEdit::NoWrap</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" colspan="2">
+       <widget class="QLineEdit" name="folder">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -245,7 +233,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="2" colspan="2">
        <widget class="QLineEdit" name="remote">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -258,6 +246,48 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Remote:</string>
+        </property>
+        <property name="buddy">
+         <cstring>remote</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QLabel" name="l_rclone">
+        <property name="text">
+         <string>rclone</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QToolButton" name="showScriptOutput">
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0 }</string>
+        </property>
+        <property name="text">
+         <string>  Show script Output</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+        <property name="arrowType">
+         <enum>Qt::NoArrow</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -267,6 +297,7 @@
   <tabstop>showDetails</tabstop>
   <tabstop>cancel</tabstop>
   <tabstop>remote</tabstop>
+  <tabstop>folder</tabstop>
   <tabstop>showOutput</tabstop>
   <tabstop>output</tabstop>
  </tabstops>

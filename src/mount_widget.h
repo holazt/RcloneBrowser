@@ -8,12 +8,14 @@ class MountWidget : public QWidget {
 
 public:
   MountWidget(QProcess *process, const QString &remote, const QString &folder,
-              const QStringList &args, QWidget *parent = nullptr);
+              const QStringList &args, const QString &script,
+              const QString &uniqueID, QWidget *parent = nullptr);
   ~MountWidget();
   bool isRunning = true;
 
 public slots:
   void cancel();
+  QString getUniqueID();
 
 signals:
   void finished();
@@ -22,7 +24,11 @@ signals:
 private:
   Ui::MountWidget ui;
 
+  bool mScriptRunning = false;
+  bool mScriptStarted = false;
   QProcess *mProcess;
-
+  QProcess *mScriptProcess;
+  QString mRcPort = "0";
   QStringList mArgs;
+  QString mUniqueID = "";
 };

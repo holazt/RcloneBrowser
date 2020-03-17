@@ -1,5 +1,4 @@
 #pragma once
-
 #include "icon_cache.h"
 #include "job_options.h"
 #include "pch.h"
@@ -23,16 +22,23 @@ private slots:
   void addTransfer(const QString &message, const QString &source,
                    const QString &dest, const QStringList &args,
                    const QString &uniqueId, const QString &transferMode);
-  void addMount(const QString &remote, const QString &folder,
-                const QString &remoteType);
   void addStream(const QString &remote, const QString &stream,
                  const QString &remoteType);
+
+  void addNewMount(const QString &remote, const QString &folder,
+                   const QString &remoteType, const QStringList &args,
+                   const QString &script, const QString &uniqueId);
 
   void runQueueScript(const QString &script);
 
   void slotCloseTab(int index);
 
   void saveQueueFile(void);
+
+  void autoStartMounts(void);
+
+  // quit RB but only when all processes finished
+  void quitApp(void);
 
 private:
   Ui::MainWindow ui;
@@ -72,8 +78,9 @@ private:
   QList<QListWidgetItem *> sortListWidget(const QList<QListWidgetItem *> &list,
                                           bool sortOrder = false);
 
-  // set queue screen buttons mess in one place
+  // set screen buttons logic mess in one place
   void setQueueButtons(void);
+  void setTasksButtons(void);
 
   void addEmptyJobsMessage();
 
@@ -82,6 +89,9 @@ private:
   void editSelectedTask();
   QIcon mUploadIcon;
   QIcon mDownloadIcon;
+  QIcon mMountIcon;
+  // if waiting for processes we show dialog - this is used to calculate delay
+  int mQuitInfoDelay = 0;
 
   void addTasksToQueue();
 };

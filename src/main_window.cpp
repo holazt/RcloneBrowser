@@ -1710,12 +1710,12 @@ void MainWindow::quitApp(void) {
   // wait for all processes to stop
   if (mQuitInfoDelay == 1) {
 
-    QMessageBox *msgBox =
-        new QMessageBox(QMessageBox::Warning, "Quitting",
-                        "\nTerminating all processes\nbefore quitting, please wait.", 0, this,
-                        //                        Qt::FramelessWindowHint |
-                        //                        Qt::WindowStaysOnTopHint);
-                        Qt::FramelessWindowHint);
+    QMessageBox *msgBox = new QMessageBox(
+        QMessageBox::Warning, "Quitting",
+        "\nTerminating all processes\nbefore quitting, please wait.", 0, this,
+        //                        Qt::FramelessWindowHint |
+        //                        Qt::WindowStaysOnTopHint);
+        Qt::FramelessWindowHint);
     msgBox->setStandardButtons(0);
 
     msgBox->setCursor(Qt::WaitCursor);

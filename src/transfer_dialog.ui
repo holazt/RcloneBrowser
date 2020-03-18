@@ -81,7 +81,14 @@
          <string>Choose file to upload</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="text">
          <string>1s</string>
@@ -94,7 +101,14 @@
          <string>Choose folder to upload</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="text">
          <string>2s</string>
@@ -107,7 +121,14 @@
          <string>Restore default upload folder</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="text">
          <string>3s</string>
@@ -163,7 +184,14 @@
          <string>Choose folder where to download</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="text">
          <string>1d</string>
@@ -176,7 +204,14 @@
          <string>Restore default download folder</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="text">
          <string>2d</string>

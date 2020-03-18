@@ -117,7 +117,14 @@
          <string>Copy rclone command to clipboard</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0 }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="autoRaise">
          <bool>false</bool>
@@ -133,7 +140,14 @@
          <string>Stop job</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0 }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
        </widget>
       </item>

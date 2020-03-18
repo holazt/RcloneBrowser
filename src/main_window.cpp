@@ -1709,11 +1709,11 @@ void MainWindow::autoStartMounts(void) {
 void MainWindow::quitApp(void) {
 
   // wait for all processes to stop
-  if (mQuitInfoDelay == 1) {
+  if (mQuitInfoDelay == 3) {
 
     QMessageBox *msgBox = new QMessageBox(
         QMessageBox::Warning, "Quitting",
-        "\nTerminating all processes\nbefore quitting, please wait.", 0, this,
+        "Terminating all processes\nbefore quitting, please wait.", 0, this,
         //                        Qt::FramelessWindowHint |
         //                        Qt::WindowStaysOnTopHint);
         Qt::FramelessWindowHint);
@@ -1756,7 +1756,7 @@ void MainWindow::quitApp(void) {
     QApplication::quit();
   } else {
     // something still running we check again a bit later then
-    QTimer::singleShot(1000, this, SLOT(quitApp()));
+    QTimer::singleShot(200, this, SLOT(quitApp()));
     ++mQuitInfoDelay;
   }
 }

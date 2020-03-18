@@ -189,7 +189,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
           ui.progress_info->setStyleSheet(
               "QLabel { color: red; font-weight: bold;}");
           ui.errors->setStyleSheet(
-              "QLineEdit { color: red; font-weight: bold;}");
+              "QLineEdit { color: red; font-weight: normal;}");
         }
       } else if (rxChecks.exactMatch(line)) {
         ui.checks->setText(rxChecks.cap(1));

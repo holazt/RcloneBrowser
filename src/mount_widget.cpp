@@ -126,14 +126,16 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
             ui.l_script->setStyleSheet(
                 "QLabel { color: black; font-weight: bold;}");
-            ui.l_script->setText("Finished (error code: " + QString::number(status) + ")");
+            ui.l_script->setText(
+                "Finished (error code: " + QString::number(status) + ")");
           }
 
         } else {
 
           ui.l_script->setStyleSheet(
               "QLabel { color: red; font-weight: bold;}");
-          ui.l_script->setText("Error (error code: " + QString::number(status) + ")");
+          ui.l_script->setText("Error (error code: " + QString::number(status) +
+                               ")");
         }
       });
 
@@ -176,12 +178,14 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
     if (isRunning) {
+
       int button = QMessageBox::question(
           this, "Unmount",
           QString("Do you want to unmount?\n\n %2 \n\n mounted to \n\n %1")
               .arg(folder)
               .arg(remote),
-          QMessageBox::Yes | QMessageBox::No);
+          QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
       if (button == QMessageBox::Yes) {
         cancel();
       }

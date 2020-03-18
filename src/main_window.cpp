@@ -748,7 +748,8 @@ MainWindow::MainWindow() {
                                        QString("There are %1 inactive job(s).\n"
                                                "\nDo you want to clean them?")
                                            .arg(jobsCount),
-                                       QMessageBox::Yes | QMessageBox::No);
+                                       QMessageBox::Yes | QMessageBox::No,
+                                       QMessageBox::No);
 
     if (button == QMessageBox::Yes) {
       int widgetsCount = ui.jobs->count();
@@ -780,7 +781,7 @@ MainWindow::MainWindow() {
           QString("There are %1 transfer job(s) running.\n"
                   "\nDo you want to stop  them?")
               .arg(mTransferJobCount),
-          QMessageBox::Yes | QMessageBox::No);
+          QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
       if (button == QMessageBox::Yes) {
 
@@ -890,7 +891,7 @@ MainWindow::MainWindow() {
           QString(
               "Are you sure you want to dry run the following task(s)?\n\n" +
               itemsToRun),
-          QMessageBox::Yes | QMessageBox::No);
+          QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
       if (button == QMessageBox::Yes) {
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
@@ -924,7 +925,7 @@ MainWindow::MainWindow() {
           this, "Stop tasks",
           QString("Are you sure you want to stop the following task(s)?\n\n" +
                   itemsToStop),
-          QMessageBox::Yes | QMessageBox::No);
+          QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
       if (button == QMessageBox::Yes) {
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
@@ -1007,7 +1008,7 @@ MainWindow::MainWindow() {
           this, "Run",
           QString("Are you sure you want to run the following task(s)?\n\n" +
                   itemsToRun),
-          QMessageBox::No | QMessageBox::Yes);
+          QMessageBox::No | QMessageBox::Yes, QMessageBox::No);
       if (button == QMessageBox::Yes) {
 
         foreach (auto i, items) {
@@ -1077,7 +1078,7 @@ MainWindow::MainWindow() {
           this, "Delete",
           QString("Are you sure you want to delete the following task(s)?\n\n" +
                   itemsToDelete),
-          QMessageBox::No | QMessageBox::Yes);
+          QMessageBox::No | QMessageBox::Yes, QMessageBox::No);
 
       if (button == QMessageBox::Yes) {
 
@@ -1170,7 +1171,7 @@ MainWindow::MainWindow() {
           QString("Are you sure you want to add the following "
                   "task(s) to the queue?\n\n" +
                   itemsToAdd),
-          QMessageBox::No | QMessageBox::Yes);
+          QMessageBox::No | QMessageBox::Yes, QMessageBox::No);
 
       if (button == QMessageBox::Yes) {
 
@@ -1395,7 +1396,7 @@ MainWindow::MainWindow() {
           this, "Clean the queue",
           QString("Are you sure you want to remove all\nnot running tasks from "
                   "the queue?"),
-          QMessageBox::No | QMessageBox::Yes);
+          QMessageBox::No | QMessageBox::Yes, QMessageBox::No);
 
       if (button == QMessageBox::Yes) {
 
@@ -2586,12 +2587,12 @@ bool MainWindow::canClose() {
   ui.tabs->setCurrentIndex(1);
   showNormal();
 
-  int button =
-      QMessageBox::question(this, "Rclone Browser",
-                            QString("There are %1 job(s) running.\n"
-                                    "\nDo you want to stop them and quit?")
-                                .arg(mJobCount),
-                            QMessageBox::Yes | QMessageBox::No);
+  int button = QMessageBox::question(
+      this, "Rclone Browser",
+      QString("There are %1 job(s) running.\n"
+              "\nDo you want to stop them and quit?")
+          .arg(mJobCount),
+      QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
   if (!wasVisible) {
     hide();

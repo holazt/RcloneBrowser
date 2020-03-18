@@ -103,7 +103,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
     if (isRunning) {
       int button = QMessageBox::question(
           this, "Stop", QString("Do you want to stop %1 stream?").arg(remote),
-          QMessageBox::Yes | QMessageBox::No);
+          QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
       if (button == QMessageBox::Yes) {
         cancel();
       }

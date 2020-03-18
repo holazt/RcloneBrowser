@@ -500,7 +500,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     int button = QMessageBox::question(
         this, "Delete",
         QString("Are you sure you want to delete %1 ?").arg(pathMsg),
-        QMessageBox::Yes | QMessageBox::No);
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (button == QMessageBox::Yes) {
       QProcess process;
       UseRclonePassword(&process);

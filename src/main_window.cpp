@@ -1080,12 +1080,27 @@ MainWindow::MainWindow() {
           QMessageBox::No | QMessageBox::Yes);
 
       if (button == QMessageBox::Yes) {
+
+        QStringList itemsIDsToDelete;
         foreach (auto i, items) {
           JobOptionsListWidgetItem *item =
               static_cast<JobOptionsListWidgetItem *>(i);
           JobOptions *jo = item->GetData();
-          ListOfJobOptions::getInstance()->Forget(jo);
+          itemsIDsToDelete << jo->uniqueId.toString();
         }
+        for (const auto &i : itemsIDsToDelete) {
+          int widgetsCount = ui.tasksListWidget->count();
+          for (int j = widgetsCount - 1; j >= 0; j = j - 1) {
+            JobOptionsListWidgetItem *item =
+                static_cast<JobOptionsListWidgetItem *>(
+                    ui.tasksListWidget->item(j));
+            JobOptions *jo = item->GetData();
+            if (jo->uniqueId.toString() == i) {
+              ListOfJobOptions::getInstance()->Forget(jo);
+            }
+          }
+        }
+
       } else {
         ui.tasksListWidget->setFocus();
       }

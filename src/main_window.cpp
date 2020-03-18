@@ -1697,7 +1697,7 @@ void MainWindow::quitApp(void) {
 
     QMessageBox *msgBox =
         new QMessageBox(QMessageBox::Warning, "Quitting",
-                        "\nTerminating all processes,\nplease wait.", 0, this,
+                        "\nTerminating all processes\nbefore quitting, please wait.", 0, this,
                         //                        Qt::FramelessWindowHint |
                         //                        Qt::WindowStaysOnTopHint);
                         Qt::FramelessWindowHint);

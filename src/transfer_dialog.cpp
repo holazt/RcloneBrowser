@@ -64,7 +64,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   if (!mIsEditMode) {
     QPushButton *dryRun =
         ui.buttonBox->addButton("&Dry run", QDialogButtonBox::AcceptRole);
-    ui.buttonBox->addButton("&Run", QDialogButtonBox::AcceptRole);
+
+    QPushButton *run =
+        ui.buttonBox->addButton("&Run", QDialogButtonBox::AcceptRole);
+    run->setToolTip("ALT-r");
+
     QObject::connect(dryRun, &QPushButton::clicked, this,
                      [=]() { mDryRun = true; });
   }

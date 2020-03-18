@@ -261,10 +261,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.rename->setStatusTip("Rename (F2) - rclone moveto");
   ui.move->setStatusTip("Move - rclone move");
   ui.purge->setStatusTip("Delete (Del) - rclone purge|delete");
-  ui.actionNewMount->setStatusTip("Mount remote to local filesystem - rclone mount");
+  ui.actionNewMount->setStatusTip(
+      "Mount remote to local filesystem - rclone mount");
   ui.stream->setStatusTip("Stream file - rclone cat | player -");
-  ui.upload->setStatusTip("Upload file/directory");
-  ui.download->setStatusTip("Download file/directory");
+  ui.upload->setStatusTip("Upload file/directory (ALT-u)");
+  ui.download->setStatusTip("Download file/directory - (ALT-d)");
   ui.getSize->setStatusTip("Get folder size - rclone size");
   ui.getTree->setStatusTip("Show folders tree - rclone tree");
   ui.link->setStatusTip("Fetch public link - rclone link");

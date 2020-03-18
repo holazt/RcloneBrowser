@@ -415,7 +415,7 @@ MainWindow::MainWindow() {
   ui.actionRefresh->setStatusTip("Refresh remotes view");
   ui.actionConfig->setStatusTip("rclone config");
   ui.actionOpen->setStatusTip("Open remote");
-  ui.preferences->setStatusTip("Rclone Browser preferences");
+  ui.preferences->setStatusTip("Rclone Browser preferences (ALT-p)");
 
   ui.actionStopAllTransfers->setStatusTip("Stop all running transfer jobs");
   ui.actionCleanNotRunning->setStatusTip("Remove all not running jobs");

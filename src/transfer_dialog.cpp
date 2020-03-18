@@ -126,7 +126,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // validate before saving task...
     if (ui.textDescription->text().isEmpty()) {
       QMessageBox::warning(this, "Warning",
-                           "\nPlease enter task description to save!");
+                           "Please enter task description to save!");
       ui.tabWidget->setCurrentIndex(0);
       ui.textDescription->setFocus(Qt::FocusReason::OtherFocusReason);
       return;
@@ -137,14 +137,14 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     if (mIsDownload) {
       if (ui.textDest->text().isEmpty()) {
         QMessageBox::warning(this, "Error",
-                             "\nInvalid task, destination is required!");
+                             "Invalid task, destination is required!");
         ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }
     } else {
       if (ui.textSource->text().isEmpty()) {
         QMessageBox::warning(this, "Error",
-                             "\nInvalid task, source is  required!");
+                             "Invalid task, source is  required!");
         ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }
@@ -625,13 +625,13 @@ void TransferDialog::done(int r) {
   if (r == QDialog::Accepted) {
     if (mIsDownload) {
       if (ui.textDest->text().isEmpty()) {
-        QMessageBox::warning(this, "Warning", "\nPlease enter destination!");
+        QMessageBox::warning(this, "Warning", "Please enter destination!");
         ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }
     } else {
       if (ui.textSource->text().isEmpty()) {
-        QMessageBox::warning(this, "Warning", "\nPlease enter source!");
+        QMessageBox::warning(this, "Warning", "Please enter source!");
         ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }

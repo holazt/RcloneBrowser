@@ -3385,8 +3385,6 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
   auto settings = GetSettings();
   QString opt = settings->value("Settings/mount").toString();
 
-  argsFinal << GetRcloneConf();
-
   if (!opt.isEmpty()) {
     // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1
     // arg2" --option-3 arg3 should generate "--option-1" "--option-2=\"arg1
@@ -3397,6 +3395,8 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
       }
     }
   }
+
+  argsFinal << GetRcloneConf();
 
   auto widget =
       new MountWidget(mount, remote, folder, argsFinal, script, uniqueId);

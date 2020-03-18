@@ -15,6 +15,8 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   mArgs.append(" | ");
   mArgs.append(stream);
 
+  ui.showOutput->setToolTip(mArgs.join(" "));
+
   if (remote.length() > 140) {
     remoteTrimmed = remote.left(57) + "..." + remote.right(80);
   } else {

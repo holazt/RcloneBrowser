@@ -12,6 +12,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   mArgs.append(GetRcloneConf());
   mArgs.append(args);
 
+  ui.showOutput->setToolTip(mArgs.join(" "));
+
   ui.source->setText(source);
   ui.source->setCursorPosition(0);
   ui.source->setToolTip(source);

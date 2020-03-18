@@ -43,6 +43,9 @@ QStringList JobOptions::getOptions() const {
     list << "sync";
   }
 
+  list << source;
+  list << dest;
+
   if (dryRun) {
     list << "--dry-run";
   }
@@ -177,9 +180,6 @@ QStringList JobOptions::getOptions() const {
   if (!defaultRcloneOptionsList.isEmpty()) {
     list << defaultRcloneOptionsList;
   }
-
-  list << source;
-  list << dest;
 
   return list;
 }

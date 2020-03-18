@@ -126,17 +126,30 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // validate before saving task...
     if (ui.textDescription->text().isEmpty()) {
       QMessageBox::warning(this, "Warning",
-                           "Please enter task description to Save!");
+                           "\nPlease enter task description to save!");
+      ui.tabWidget->setCurrentIndex(0);
       ui.textDescription->setFocus(Qt::FocusReason::OtherFocusReason);
       return;
     }
+
     // even though the below does not match the condition on the Run buttons
     // it SEEMS like blanking either one would be a problem, right?
-    if (ui.textDest->text().isEmpty() || ui.textSource->text().isEmpty()) {
-      QMessageBox::warning(this, "Error",
-                           "Invalid Task, source and destination required!");
-      return;
+    if (mIsDownload) {
+      if (ui.textDest->text().isEmpty()) {
+        QMessageBox::warning(this, "Error",
+                             "\nInvalid task, destination is required!");
+        ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
+        return;
+      }
+    } else {
+      if (ui.textSource->text().isEmpty()) {
+        QMessageBox::warning(this, "Error",
+                             "\nInvalid task, source is  required!");
+        ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
+        return;
+      }
     }
+
     JobOptions *jobo = getJobOptions();
     ListOfJobOptions::getInstance()->Persist(jobo);
     // always close on save
@@ -612,12 +625,14 @@ void TransferDialog::done(int r) {
   if (r == QDialog::Accepted) {
     if (mIsDownload) {
       if (ui.textDest->text().isEmpty()) {
-        QMessageBox::warning(this, "Warning", "Please enter destination!");
+        QMessageBox::warning(this, "Warning", "\nPlease enter destination!");
+        ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }
     } else {
       if (ui.textSource->text().isEmpty()) {
-        QMessageBox::warning(this, "Warning", "Please enter source!");
+        QMessageBox::warning(this, "Warning", "\nPlease enter source!");
+        ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }
     }

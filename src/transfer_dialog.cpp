@@ -21,9 +21,12 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   setMinimumWidth(minimumWidth() + (fontsize * 50));
 
   // lock vertical resizing
+  resize(0, 0);
   adjustSize();
-  setMaximumHeight(this->height() + 30);
-  setMinimumHeight(this->height() + 30);
+
+  setMaximumHeight(this->height());
+  setMinimumHeight(this->height());
+  QTimer::singleShot(0, this, SLOT(size()));
 
   setWindowTitle(isDownload ? "Download" : "Upload");
 
@@ -149,8 +152,12 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   QObject::connect(ui.buttonSourceFile, &QToolButton::clicked, this, [=]() {
     QString file = QFileDialog::getOpenFileName(this, "Choose file to upload");
     if (!file.isEmpty()) {
-      ui.textSource->setText(QDir::toNativeSeparators(file));
-      ui.textDest->setText(remote + ":" + path.path());
+      if (!mIsEditMode) {
+        ui.textSource->setText(QDir::toNativeSeparators(file));
+        ui.textDest->setText(remote + ":" + path.path());
+      } else {
+        ui.textSource->setText(QDir::toNativeSeparators(file));
+      }
     }
   });
 
@@ -161,12 +168,17 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     QString folder = QFileDialog::getExistingDirectory(
         this, "Choose folder to upload", last_used_source_folder,
         QFileDialog::ShowDirsOnly);
+
     if (!folder.isEmpty()) {
+
       // store new folder in lastUsedSourceFolder
       settings->setValue("Settings/lastUsedSourceFolder", folder);
       ui.textSource->setText(QDir::toNativeSeparators(folder));
-      ui.textDest->setText(remote + ":" +
-                           path.filePath(QFileInfo(folder).fileName()));
+
+      if (!mIsEditMode) {
+        ui.textDest->setText(remote + ":" +
+                             path.filePath(QFileInfo(folder).fileName()));
+      }
     }
   });
 
@@ -178,10 +190,14 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     settings->setValue("Settings/lastUsedSourceFolder", default_folder);
     ui.textSource->setText(QDir::toNativeSeparators(default_folder));
     if (!default_folder.isEmpty()) {
-      ui.textDest->setText(remote + ":" +
-                           path.filePath(QFileInfo(default_folder).fileName()));
+      if (!mIsEditMode) {
+        ui.textDest->setText(
+            remote + ":" + path.filePath(QFileInfo(default_folder).fileName()));
+      }
     } else {
-      ui.textDest->setText(remote + ":" + path.path());
+      if (!mIsEditMode) {
+        ui.textDest->setText(remote + ":" + path.path());
+      }
     };
   });
 
@@ -192,13 +208,21 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     QString folder = QFileDialog::getExistingDirectory(
         this, "Choose destination folder", last_used_dest_folder,
         QFileDialog::ShowDirsOnly);
+
     if (!folder.isEmpty()) {
       // store new folder in lastUsedDestFolder
       settings->setValue("Settings/lastUsedDestFolder", folder);
-      if (isFolder) {
-        ui.textDest->setText(
-            QDir::toNativeSeparators(folder + "/" + path.dirName()));
+
+      if (!mIsEditMode) {
+        if (isFolder) {
+          ui.textDest->setText(
+              QDir::toNativeSeparators(folder + "/" + path.dirName()));
+        } else {
+          ui.textDest->setText(QDir::toNativeSeparators(folder));
+        }
+
       } else {
+
         ui.textDest->setText(QDir::toNativeSeparators(folder));
       }
     }
@@ -211,9 +235,14 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // store default_folder in lastUsedDestFolder
     settings->setValue("Settings/lastUsedDestFolder", default_folder);
     if (!default_folder.isEmpty()) {
-      if (isFolder) {
-        ui.textDest->setText(
-            QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+      if (!mIsEditMode) {
+
+        if (isFolder) {
+          ui.textDest->setText(
+              QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+        } else {
+          ui.textDest->setText(QDir::toNativeSeparators(default_folder));
+        }
       } else {
         ui.textDest->setText(QDir::toNativeSeparators(default_folder));
       }
@@ -252,21 +281,26 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   if (mIsEditMode && mJobOptions != nullptr) {
     // it's not really valid for only one of these things to be true.
     // when operating on an existing instance i.e. a saved task,
-    // changing the dest or src seems to have problems so we
-    // will not allow it.  simple enough, and better, to make a
-    // new task for different pairings anyway.  that will make
-    // a lot more sense when/if scheduling and history are added...
-    ui.buttonSourceFile->setVisible(false);
-    ui.buttonSourceFolder->setVisible(false);
-    ui.buttonDefaultSource->setVisible(false);
 
-    ui.buttonDest->setVisible(false);
-    ui.buttonDefaultDest->setVisible(false);
+    if (isDownload) {
+      ui.l_destRemote->hide();
+      ui.buttonSourceFile->setVisible(false);
+      ui.buttonSourceFolder->setVisible(false);
+      ui.buttonDefaultSource->setVisible(false);
+      ui.l_sourceRemote->setEnabled(false);
+    } else {
+      ui.l_sourceRemote->hide();
+      ui.buttonDefaultDest->setVisible(false);
+      ui.buttonDest->setVisible(false);
+      ui.l_destRemote->setEnabled(false);
+    }
 
-    ui.textDest->setDisabled(true);
-    ui.textSource->setDisabled(true);
     putJobOptions();
+
   } else {
+
+    ui.l_sourceRemote->hide();
+    ui.l_destRemote->hide();
 
     // set source and destination using defaults
     if (isDownload) {
@@ -343,6 +377,8 @@ TransferDialog::~TransferDialog() {
     settings->endGroup();
   }
 }
+
+void TransferDialog::size() { resize(0, maximumHeight()); }
 
 void TransferDialog::setSource(const QString &path) {
   ui.textSource->setText(QDir::toNativeSeparators(path));
@@ -455,9 +491,20 @@ JobOptions *TransferDialog::getJobOptions() {
   mJobOptions->excluded = ui.textExclude->toPlainText().trimmed();
   mJobOptions->extra = ui.textExtra->text().trimmed();
 
-  mJobOptions->source = ui.textSource->text();
-  mJobOptions->dest = ui.textDest->text();
   mJobOptions->isFolder = mIsFolder;
+
+  if (mIsEditMode) {
+    if (mIsDownload) {
+      mJobOptions->source = ui.l_sourceRemote->text() + ui.textSource->text();
+      mJobOptions->dest = ui.textDest->text();
+    } else {
+      mJobOptions->source = ui.textSource->text();
+      mJobOptions->dest = ui.l_destRemote->text() + ui.textDest->text();
+    }
+  } else {
+    mJobOptions->source = ui.textSource->text();
+    mJobOptions->dest = ui.textDest->text();
+  }
 
   mJobOptions->description = ui.textDescription->text();
   mJobOptions->remoteType = mRemoteType;
@@ -521,8 +568,22 @@ void TransferDialog::putJobOptions() {
   ui.textExclude->setPlainText(mJobOptions->excluded);
   ui.textExtra->setText(mJobOptions->extra);
 
-  ui.textSource->setText(mJobOptions->source);
-  ui.textDest->setText(mJobOptions->dest);
+  if (mJobOptions->jobType == JobOptions::JobType::Download) {
+    ui.l_sourceRemote->setText(
+        (mJobOptions->source).left((mJobOptions->source).indexOf(":") + 1));
+    ui.textSource->setText((mJobOptions->source)
+                               .right((mJobOptions->source).length() -
+                                      (mJobOptions->source).indexOf(":") - 1));
+    ui.textDest->setText(mJobOptions->dest);
+  } else {
+    ui.textSource->setText(mJobOptions->source);
+    ui.l_destRemote->setText(
+        (mJobOptions->dest).left((mJobOptions->dest).indexOf(":") + 1));
+    ui.textDest->setText((mJobOptions->dest)
+                             .right((mJobOptions->dest).length() -
+                                    (mJobOptions->dest).indexOf(":") - 1));
+  }
+
   ui.textDescription->setText(mJobOptions->description);
 
   if (mJobOptions->remoteMode == "") {

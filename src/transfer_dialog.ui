@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>770</width>
-    <height>618</height>
+    <height>628</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,85 +18,12 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QWidget" name="pathGroup" native="true">
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="3">
-       <widget class="QToolButton" name="buttonDest">
-        <property name="toolTip">
-         <string>Choose folder where to download</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QToolButton" name="buttonSourceFolder">
-        <property name="toolTip">
-         <string>Choose folder to upload</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QToolButton" name="buttonDefaultDest">
-        <property name="toolTip">
-         <string>Restore default download folder</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_14">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Destination:</string>
-        </property>
-        <property name="buddy">
-         <cstring>textDest</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QToolButton" name="buttonSourceFile">
-        <property name="toolTip">
-         <string>Choose file to upload</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="textDest">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>24</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QToolButton" name="buttonDefaultSource">
-        <property name="toolTip">
-         <string>Restore default upload folder</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0; }</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0" alignment="Qt::AlignRight">
        <widget class="QLabel" name="label_13">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -105,20 +32,145 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Source:</string>
+         <string>From:</string>
         </property>
         <property name="buddy">
          <cstring>textSource</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="textSource">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>24</height>
-         </size>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <widget class="QLabel" name="l_sourceRemote">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>remote:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="textSource">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="2">
+       <widget class="QToolButton" name="buttonSourceFile">
+        <property name="toolTip">
+         <string>Choose file to upload</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+        <property name="text">
+         <string>1s</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QToolButton" name="buttonSourceFolder">
+        <property name="toolTip">
+         <string>Choose folder to upload</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+        <property name="text">
+         <string>2s</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QToolButton" name="buttonDefaultSource">
+        <property name="toolTip">
+         <string>Restore default upload folder</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+        <property name="text">
+         <string>3s</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" alignment="Qt::AlignRight">
+       <widget class="QLabel" name="label_14">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>To:</string>
+        </property>
+        <property name="buddy">
+         <cstring>textDest</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <item>
+         <widget class="QLabel" name="l_destRemote">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>remote:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="textDest">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="2">
+       <widget class="QToolButton" name="buttonDest">
+        <property name="toolTip">
+         <string>Choose folder where to download</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+        <property name="text">
+         <string>1d</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QToolButton" name="buttonDefaultDest">
+        <property name="toolTip">
+         <string>Restore default download folder</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }</string>
+        </property>
+        <property name="text">
+         <string>2d</string>
         </property>
        </widget>
       </item>
@@ -1089,13 +1141,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>textSource</tabstop>
-  <tabstop>buttonSourceFile</tabstop>
-  <tabstop>buttonSourceFolder</tabstop>
-  <tabstop>buttonDefaultSource</tabstop>
-  <tabstop>textDest</tabstop>
-  <tabstop>buttonDest</tabstop>
-  <tabstop>buttonDefaultDest</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>cbSyncDelete</tabstop>
   <tabstop>cbCompare</tabstop>

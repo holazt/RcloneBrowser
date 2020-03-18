@@ -39,6 +39,9 @@ private:
 
   void done(int r) override;
 
+private slots:
+  void size();
+
 signals:
   void tasksListChanged();
 };

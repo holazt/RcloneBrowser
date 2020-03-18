@@ -261,7 +261,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.rename->setStatusTip("Rename (F2) - rclone moveto");
   ui.move->setStatusTip("Move - rclone move");
   ui.purge->setStatusTip("Delete (Del) - rclone purge|delete");
-  ui.mount->setStatusTip("Mount - rclone mount");
+  ui.actionNewMount->setStatusTip("Mount remote to local filesystem - rclone mount");
   ui.stream->setStatusTip("Stream file - rclone cat | player -");
   ui.upload->setStatusTip("Upload file/directory");
   ui.download->setStatusTip("Download file/directory");
@@ -329,7 +329,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.move->setDisabled(true);
           ui.rename->setDisabled(true);
           ui.purge->setDisabled(true);
-          ui.mount->setDisabled(true);
+          ui.actionNewMount->setDisabled(true);
           ui.stream->setDisabled(true);
           ui.upload->setDisabled(true);
           ui.download->setDisabled(true);
@@ -356,19 +356,19 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           unsigned int result =
               compareVersion(rcloneVersion.toStdString(), "1.50");
           if (result == 2) {
-            ui.mount->setDisabled(true);
+            ui.actionNewMount->setDisabled(true);
           } else {
-            ui.mount->setDisabled(!isFolder);
+            ui.actionNewMount->setDisabled(!isFolder);
           };
 #else
 // mount is not supported by rclone on these systems
 #if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
-          ui.mount->setDisabled(true);
+          ui.actionNewMount->setDisabled(true);
 #else
           if (remoteType == "local") {
-            ui.mount->setDisabled(true);
+            ui.actionNewMount->setDisabled(true);
           } else {
-            ui.mount->setDisabled(!isFolder);
+            ui.actionNewMount->setDisabled(!isFolder);
           }
 #endif
 #endif
@@ -978,7 +978,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                      menu.addAction(ui.move);
                      menu.addAction(ui.purge);
                      menu.addSeparator();
-                     menu.addAction(ui.mount);
+                     menu.addAction(ui.actionNewMount);
                      menu.addAction(ui.stream);
                      menu.addAction(ui.upload);
                      menu.addAction(ui.download);

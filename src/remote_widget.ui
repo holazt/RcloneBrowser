@@ -135,6 +135,9 @@
           </item>
           <item>
            <widget class="QToolButton" name="buttonMount">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;Mount remote&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;rclone mount&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Mount</string>
             </property>
@@ -619,6 +622,9 @@ rclone about</string>
   <action name="actionNewMount">
    <property name="text">
     <string>New Mount</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mount remote&lt;/p&gt;&lt;p&gt;rclone mount&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

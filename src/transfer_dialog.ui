@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>770</width>
-    <height>628</height>
+    <height>590</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,12 +18,21 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string/>
+    <widget class="QFrame" name="frame">
+     <property name="styleSheet">
+      <string notr="true">QFrame { border: 0; }</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0" alignment="Qt::AlignRight">
+      <item row="0" column="0">
        <widget class="QLabel" name="label_13">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -40,7 +49,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
         <item>
          <widget class="QLabel" name="l_sourceRemote">
           <property name="sizePolicy">
@@ -105,7 +114,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" alignment="Qt::AlignRight">
+      <item row="1" column="0">
        <widget class="QLabel" name="label_14">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -122,7 +131,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
         <item>
          <widget class="QLabel" name="l_destRemote">
           <property name="sizePolicy">
@@ -194,139 +203,12 @@
            <property name="title">
             <string>Transfer mode</string>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>2</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>10</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="rbCopy">
-                <property name="text">
-                 <string>Copy</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboBoxSpacer2">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>3</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <spacer name="horizontalSpacer_7">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>10</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="rbMove">
-                <property name="text">
-                 <string>Move</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboBoxSpacer1">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="3" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <property name="spacing">
-               <number>-1</number>
+               <number>0</number>
               </property>
-              <item>
-               <spacer name="horizontalSpacer_6">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>10</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
               <item>
                <widget class="QCheckBox" name="rbSync">
                 <property name="text">
@@ -338,7 +220,7 @@
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_11">
+               <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -347,7 +229,7 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>10</width>
+                  <width>15</width>
                   <height>20</height>
                  </size>
                 </property>
@@ -382,65 +264,40 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>0</width>
-                  <height>0</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>
               </item>
              </layout>
             </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="skipFilesGroup">
-           <property name="title">
-            <string>Skip files</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>2</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item row="0" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <item>
-               <spacer name="horizontalSpacer_8">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>10</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkSkipNewer">
-                <property name="toolTip">
-                 <string>--update</string>
-                </property>
+               <widget class="QCheckBox" name="rbCopy">
                 <property name="text">
-                 <string>Skip files that are newer on the destination</string>
+                 <string>Copy</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBoxSpacer3">
+               <widget class="QComboBox" name="comboBoxSpacer2">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>10</width>
+                  <width>50</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -448,8 +305,38 @@
               </item>
              </layout>
             </item>
-            <item>
-             <spacer name="verticalSpacer_2">
+            <item row="2" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="rbMove">
+                <property name="text">
+                 <string>Move</string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboBoxSpacer1">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="0">
+             <spacer name="verticalSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -464,24 +351,20 @@
               </property>
              </spacer>
             </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
-              <item>
-               <spacer name="horizontalSpacer_9">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>10</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="skipFilesGroup">
+           <property name="title">
+            <string>Skip files</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="2" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QCheckBox" name="checkSkipExisting">
                 <property name="toolTip">
@@ -507,24 +390,38 @@
               </item>
              </layout>
             </item>
-            <item>
+            <item row="0" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <item>
-               <spacer name="horizontalSpacer_10">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+               <widget class="QCheckBox" name="checkSkipNewer">
+                <property name="toolTip">
+                 <string>--update</string>
                 </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
+                <property name="text">
+                 <string>Skip files that are newer on the destination</string>
                 </property>
-                <property name="sizeHint" stdset="0">
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboBoxSpacer3">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximumSize">
                  <size>
                   <width>10</width>
-                  <height>20</height>
+                  <height>16777215</height>
                  </size>
                 </property>
-               </spacer>
+               </widget>
               </item>
+             </layout>
+            </item>
+            <item row="3" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
                <widget class="QCheckBox" name="checkCompare">
                 <property name="toolTip">
@@ -539,7 +436,7 @@
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_12">
+               <spacer name="horizontalSpacer_6">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -587,19 +484,35 @@
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer">
+               <spacer name="horizontalSpacer_2">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>0</width>
+                  <width>40</width>
                   <height>20</height>
                  </size>
                 </property>
                </spacer>
               </item>
              </layout>
+            </item>
+            <item row="1" column="0">
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>3</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>
@@ -612,29 +525,6 @@
           <string>Other</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Extra options:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="textExtra">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;extra options applied to rclone during transfer&lt;/p&gt;&lt;p&gt;e.g. --filter &amp;quot;- *.bak&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QLabel" name="label_15">
             <property name="text">
@@ -1102,6 +992,20 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Extra options</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QPlainTextEdit" name="pte_textExtra">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra options to apply for transfer e.g.:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;--fast-list&lt;br/&gt;--include &amp;quot;*.jpg&amp;quot; --ignore-case&lt;br/&gt;--include-from include-file.txt --no-traverse&lt;br/&gt;--files-from files-from.txt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab4">
       <attribute name="title">
        <string>Exclude</string>
@@ -1142,7 +1046,6 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>cbSyncDelete</tabstop>
   <tabstop>cbCompare</tabstop>
   <tabstop>checkSameFilesystem</tabstop>
   <tabstop>checkDontUpdateModified</tabstop>

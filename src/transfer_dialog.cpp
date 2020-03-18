@@ -111,11 +111,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         auto settings = GetSettings();
         if (isDownload) {
           // download
-          ui.textExtra->setText(
+          ui.pte_textExtra->setPlainText(
               settings->value("Settings/defaultDownloadOptions").toString());
         } else {
           // upload
-          ui.textExtra->setText(
+          ui.pte_textExtra->setPlainText(
               settings->value("Settings/defaultUploadOptions").toString());
         }
       });
@@ -305,7 +305,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.l_sourceRemote->setEnabled(false);
       ui.l_sourceRemote->setText(remote + ":");
 
-      ui.textExtra->setText(
+      ui.pte_textExtra->setPlainText(
           settings->value("Settings/defaultDownloadOptions").toString());
       ui.textSource->setText(path.path());
       QString folder;
@@ -335,7 +335,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.l_destRemote->setEnabled(false);
       ui.l_destRemote->setText(remote + ":");
 
-      ui.textExtra->setText(
+      ui.pte_textExtra->setPlainText(
           settings->value("Settings/defaultUploadOptions").toString());
       QString folder;
       QString default_folder =
@@ -492,7 +492,7 @@ JobOptions *TransferDialog::getJobOptions() {
   mJobOptions->deleteExcluded = ui.checkDeleteExcluded->isChecked();
 
   mJobOptions->excluded = ui.textExclude->toPlainText().trimmed();
-  mJobOptions->extra = ui.textExtra->text().trimmed();
+  mJobOptions->extra = ui.pte_textExtra->toPlainText().trimmed();
 
   mJobOptions->isFolder = mIsFolder;
 
@@ -564,7 +564,7 @@ void TransferDialog::putJobOptions() {
   ui.checkDeleteExcluded->setChecked(mJobOptions->deleteExcluded);
 
   ui.textExclude->setPlainText(mJobOptions->excluded);
-  ui.textExtra->setText(mJobOptions->extra);
+  ui.pte_textExtra->setPlainText(mJobOptions->extra);
 
   if (mJobOptions->jobType == JobOptions::JobType::Download) {
     ui.l_sourceRemote->setText(

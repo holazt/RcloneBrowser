@@ -13,7 +13,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
   mArgs.append(args);
   mArgs.append(" | ");
-  mArgs.append(settings->value("Settings/stream").toString());
+  mArgs.append(stream);
 
   if (remote.length() > 140) {
     remoteTrimmed = remote.left(57) + "..." + remote.right(80);

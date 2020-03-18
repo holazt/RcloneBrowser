@@ -273,6 +273,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       "Check remote's integrity - rclone check/cryptcheck");
   ui.actionDedupe->setStatusTip("Remove duplicated files - rclone dedupe");
   ui.getInfo->setStatusTip("Get remote info - rclone about");
+  ui.actionTools->setStatusTip("Show additional tools");
 
   QMenu *menuMode = new QMenu(this);
   menuMode->addAction(ui.getTree);

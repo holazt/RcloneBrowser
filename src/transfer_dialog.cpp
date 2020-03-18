@@ -154,7 +154,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     if (!file.isEmpty()) {
       if (!mIsEditMode) {
         ui.textSource->setText(QDir::toNativeSeparators(file));
-        ui.textDest->setText(remote + ":" + path.path());
+        ui.textDest->setText(path.path());
       } else {
         ui.textSource->setText(QDir::toNativeSeparators(file));
       }
@@ -176,8 +176,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.textSource->setText(QDir::toNativeSeparators(folder));
 
       if (!mIsEditMode) {
-        ui.textDest->setText(remote + ":" +
-                             path.filePath(QFileInfo(folder).fileName()));
+        ui.textDest->setText(path.filePath(QFileInfo(folder).fileName()));
       }
     }
   });
@@ -192,11 +191,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     if (!default_folder.isEmpty()) {
       if (!mIsEditMode) {
         ui.textDest->setText(
-            remote + ":" + path.filePath(QFileInfo(default_folder).fileName()));
+            path.filePath(QFileInfo(default_folder).fileName()));
       }
     } else {
       if (!mIsEditMode) {
-        ui.textDest->setText(remote + ":" + path.path());
+        ui.textDest->setText(path.path());
       }
     };
   });
@@ -299,15 +298,16 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   } else {
 
-    ui.l_sourceRemote->hide();
-    ui.l_destRemote->hide();
-
     // set source and destination using defaults
     if (isDownload) {
       // download
+      ui.l_destRemote->hide();
+      ui.l_sourceRemote->setEnabled(false);
+      ui.l_sourceRemote->setText(remote + ":");
+
       ui.textExtra->setText(
           settings->value("Settings/defaultDownloadOptions").toString());
-      ui.textSource->setText(remote + ":" + path.path());
+      ui.textSource->setText(path.path());
       QString folder;
       QString default_folder =
           (settings->value("Settings/defaultDownloadDir").toString());
@@ -331,6 +331,10 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
     } else {
       // upload
+      ui.l_sourceRemote->hide();
+      ui.l_destRemote->setEnabled(false);
+      ui.l_destRemote->setText(remote + ":");
+
       ui.textExtra->setText(
           settings->value("Settings/defaultUploadOptions").toString());
       QString folder;
@@ -350,17 +354,16 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       if (!isDrop) {
         ui.textSource->setText(QDir::toNativeSeparators(folder));
         if (!folder.isEmpty()) {
-          ui.textDest->setText(remote + ":" +
-                               path.filePath(QFileInfo(folder).fileName()));
+          ui.textDest->setText(path.filePath(QFileInfo(folder).fileName()));
         } else {
-          ui.textDest->setText(remote + ":" + path.path());
+          ui.textDest->setText(path.path());
         }
       } else {
         // when dropping to root folder
         if (path.path() == ".") {
-          ui.textDest->setText(remote + ":");
+          ui.textDest->setText("");
         } else {
-          ui.textDest->setText(remote + ":" + path.path());
+          ui.textDest->setText(path.path());
         }
       };
     };
@@ -493,17 +496,12 @@ JobOptions *TransferDialog::getJobOptions() {
 
   mJobOptions->isFolder = mIsFolder;
 
-  if (mIsEditMode) {
-    if (mIsDownload) {
-      mJobOptions->source = ui.l_sourceRemote->text() + ui.textSource->text();
-      mJobOptions->dest = ui.textDest->text();
-    } else {
-      mJobOptions->source = ui.textSource->text();
-      mJobOptions->dest = ui.l_destRemote->text() + ui.textDest->text();
-    }
+  if (mIsDownload) {
+    mJobOptions->source = ui.l_sourceRemote->text() + ui.textSource->text();
+    mJobOptions->dest = ui.textDest->text();
   } else {
     mJobOptions->source = ui.textSource->text();
-    mJobOptions->dest = ui.textDest->text();
+    mJobOptions->dest = ui.l_destRemote->text() + ui.textDest->text();
   }
 
   mJobOptions->description = ui.textDescription->text();

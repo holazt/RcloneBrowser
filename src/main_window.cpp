@@ -3491,8 +3491,6 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
   args << remote;
 
-  args << GetRcloneConf();
-
   if (remoteType == "drive") {
 
     if (driveSharedMode == "shared") {
@@ -3505,6 +3503,8 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
   };
 
   args << GetDefaultRcloneOptionsList();
+
+  args << GetRcloneConf();
 
   auto widget = new StreamWidget(rclone, player, remote, stream, args);
 

@@ -14,6 +14,8 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
   mArgs.append(args);
 
+  ui.showOutput->setToolTip(mArgs.join(" "));
+
   QString info = QString("%1 on %2").arg(remote).arg(folder);
   QString infoTrimmed;
 
@@ -49,6 +51,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   } else {
     ui.l_script->setStyleSheet("QLabel { color: green; font-weight: bold;}");
     ui.l_script->setText("Running");
+    ui.showScriptOutput->setToolTip(script);
   }
 
   auto settings = GetSettings();
@@ -123,14 +126,14 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
             ui.l_script->setStyleSheet(
                 "QLabel { color: black; font-weight: bold;}");
-            ui.l_script->setText("Finished (" + QString::number(status) + ")");
+            ui.l_script->setText("Finished (error code: " + QString::number(status) + ")");
           }
 
         } else {
 
           ui.l_script->setStyleSheet(
               "QLabel { color: red; font-weight: bold;}");
-          ui.l_script->setText("Error (" + QString::number(status) + ")");
+          ui.l_script->setText("Error (error code: " + QString::number(status) + ")");
         }
       });
 

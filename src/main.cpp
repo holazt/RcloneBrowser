@@ -1,7 +1,15 @@
 #include "main_window.h"
 #include "utils.h"
 
+#ifdef Q_OS_MACOS
+extern void qt_set_sequence_auto_mnemonic(bool b);
+#endif
+
 int main(int argc, char *argv[]) {
+
+#ifdef Q_OS_MACOS
+  qt_set_sequence_auto_mnemonic(true);
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
   static const char ENV_VAR_QT_DEVICE_PIXEL_RATIO[] = "QT_DEVICE_PIXEL_RATIO";

@@ -9,8 +9,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
   ui.setupUi(this);
 
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
-  mArgs.append(GetRcloneConf());
   mArgs.append(args);
+  mArgs.append(GetRcloneConf());
 
   ui.showOutput->setToolTip(mArgs.join(" "));
 

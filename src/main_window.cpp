@@ -3340,7 +3340,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
 
   UseRclonePassword(transfer);
-  transfer->start(GetRclone(), GetRcloneConf() + args, QIODevice::ReadOnly);
+  transfer->start(GetRclone(), args + GetRcloneConf(), QIODevice::ReadOnly);
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);

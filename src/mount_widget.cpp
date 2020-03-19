@@ -121,6 +121,17 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                    [=]() { mScriptRunning = true; });
 
   QObject::connect(
+      mScriptProcess, &QProcess::errorOccurred, this,
+      [=](QProcess::ProcessError error) {
+        mScriptRunning = false;
+        QString errorString =
+            QMetaEnum::fromType<QProcess::ProcessError>().valueToKey(error);
+
+        ui.l_script->setStyleSheet("QLabel { color: red; font-weight: bold;}");
+        ui.l_script->setText("Process error: " + errorString);
+      });
+
+  QObject::connect(
       mScriptProcess,
       static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
           &QProcess::finished),
@@ -138,16 +149,16 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
             ui.l_script->setStyleSheet(
                 "QLabel { color: black; font-weight: bold;}");
-            ui.l_script->setText(
-                "Finished (error code: " + QString::number(status) + ")");
+            ui.l_script->setText("Finished (returned error code: " +
+                                 QString::number(status) + ")");
           }
 
         } else {
 
           ui.l_script->setStyleSheet(
               "QLabel { color: red; font-weight: bold;}");
-          ui.l_script->setText("Error (error code: " + QString::number(status) +
-                               ")");
+          ui.l_script->setText(
+              "Error (returned error code: " + QString::number(status) + ")");
         }
       });
 

@@ -268,6 +268,9 @@ QToolButton:pressed {
         <property name="text">
          <string>Running</string>
         </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+        </property>
        </widget>
       </item>
       <item row="5" column="1" colspan="2">

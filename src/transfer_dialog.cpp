@@ -63,7 +63,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   if (!mIsEditMode) {
     QPushButton *dryRun =
-        ui.buttonBox->addButton("&Dry run", QDialogButtonBox::AcceptRole);
+        ui.buttonBox->addButton("Dry run", QDialogButtonBox::AcceptRole);
 
     QPushButton *run =
         ui.buttonBox->addButton("&Run", QDialogButtonBox::AcceptRole);

@@ -265,7 +265,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       "Mount remote to local filesystem - rclone mount");
   ui.stream->setStatusTip("Stream file - rclone cat | player -");
   ui.upload->setStatusTip("Upload file/directory (ALT-u)");
-  ui.download->setStatusTip("Download file/directory - (ALT-d)");
+  ui.download->setStatusTip("Download file/directory (ALT-d)");
   ui.getSize->setStatusTip("Get folder size - rclone size");
   ui.getTree->setStatusTip("Show folders tree - rclone tree");
   ui.link->setStatusTip("Fetch public link - rclone link");

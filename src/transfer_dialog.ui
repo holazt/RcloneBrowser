@@ -245,12 +245,9 @@ QToolButton:pressed {
                <number>0</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="rbSync">
+               <widget class="QRadioButton" name="rbSync">
                 <property name="text">
                  <string>Sync</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -313,14 +310,11 @@ QToolButton:pressed {
                <number>0</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="rbCopy">
+               <widget class="QRadioButton" name="rbCopy">
                 <property name="text">
                  <string>Copy</string>
                 </property>
                 <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="autoExclusive">
                  <bool>true</bool>
                 </property>
                </widget>
@@ -346,12 +340,9 @@ QToolButton:pressed {
                <number>0</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="rbMove">
+               <widget class="QRadioButton" name="rbMove">
                 <property name="text">
                  <string>Move</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1121,12 +1112,12 @@ QToolButton:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>234</y>
+     <x>78</x>
+     <y>293</y>
     </hint>
     <hint type="destinationlabel">
-     <x>206</x>
-     <y>235</y>
+     <x>213</x>
+     <y>293</y>
     </hint>
    </hints>
   </connection>

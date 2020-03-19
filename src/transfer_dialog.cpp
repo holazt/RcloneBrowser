@@ -416,9 +416,21 @@ QString TransferDialog::getMode() const {
   return QString();
 }
 
-QString TransferDialog::getSource() const { return ui.textSource->text(); }
+QString TransferDialog::getSource() const {
+  if (mIsDownload) {
+    return ui.l_sourceRemote->text() + ui.textSource->text();
+  } else {
+    return ui.textSource->text();
+  }
+}
 
-QString TransferDialog::getDest() const { return ui.textDest->text(); }
+QString TransferDialog::getDest() const {
+  if (mIsDownload) {
+    return ui.textDest->text();
+  } else {
+    return ui.l_destRemote->text() + ui.textDest->text();
+  }
+}
 
 QStringList TransferDialog::getOptions() {
   JobOptions *jobo = getJobOptions();

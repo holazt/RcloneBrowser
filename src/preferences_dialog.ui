@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>620</width>
-    <height>761</height>
+    <height>758</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -589,111 +589,72 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_0">
+           <widget class="QRadioButton" name="cb_font_0">
             <property name="text">
              <string>0</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_1">
+           <widget class="QRadioButton" name="cb_font_1">
             <property name="text">
              <string>1</string>
             </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_2">
+           <widget class="QRadioButton" name="cb_font_2">
             <property name="text">
              <string>2</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_3">
+           <widget class="QRadioButton" name="cb_font_3">
             <property name="text">
              <string>3</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_4">
+           <widget class="QRadioButton" name="cb_font_4">
             <property name="text">
              <string>4</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_5">
+           <widget class="QRadioButton" name="cb_font_5">
             <property name="text">
              <string>5</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_6">
+           <widget class="QRadioButton" name="cb_font_6">
             <property name="text">
              <string>6</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_7">
+           <widget class="QRadioButton" name="cb_font_7">
             <property name="text">
              <string>7</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_8">
+           <widget class="QRadioButton" name="cb_font_8">
             <property name="text">
              <string>8</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_font_9">
+           <widget class="QRadioButton" name="cb_font_9">
             <property name="text">
              <string>9</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -739,38 +700,23 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QCheckBox" name="cb_icononly">
+           <widget class="QRadioButton" name="cb_icononly">
             <property name="text">
              <string>Icon only</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_textandicon">
+           <widget class="QRadioButton" name="cb_textandicon">
             <property name="text">
              <string>Text and Icon</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_textonly">
+           <widget class="QRadioButton" name="cb_textonly">
             <property name="text">
              <string>Text only</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -816,58 +762,37 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QCheckBox" name="cb_button_0">
+           <widget class="QRadioButton" name="cb_button_0">
             <property name="text">
              <string>S</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_1">
+           <widget class="QRadioButton" name="cb_button_1">
             <property name="text">
              <string>M</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_2">
+           <widget class="QRadioButton" name="cb_button_2">
             <property name="text">
              <string>L</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_3">
+           <widget class="QRadioButton" name="cb_button_3">
             <property name="text">
              <string>XL</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_button_4">
+           <widget class="QRadioButton" name="cb_button_4">
             <property name="text">
              <string>XXL</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -910,35 +835,23 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QCheckBox" name="cb_longList">
+           <widget class="QRadioButton" name="cb_longList">
             <property name="text">
              <string>List (long)</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_list">
+           <widget class="QRadioButton" name="cb_list">
             <property name="text">
              <string>List (wrapping)</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_tiles">
+           <widget class="QRadioButton" name="cb_tiles">
             <property name="text">
              <string>Tiles</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -984,58 +897,37 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QCheckBox" name="cb_remote_s">
+           <widget class="QRadioButton" name="cb_remote_s">
             <property name="text">
              <string>S</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_remote_m">
+           <widget class="QRadioButton" name="cb_remote_m">
             <property name="text">
              <string>M</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_remote_l">
+           <widget class="QRadioButton" name="cb_remote_l">
             <property name="text">
              <string>L</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_remote_xl">
+           <widget class="QRadioButton" name="cb_remote_xl">
             <property name="text">
              <string>XL</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_remote_xxl">
+           <widget class="QRadioButton" name="cb_remote_xxl">
             <property name="text">
              <string>XXL</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1078,30 +970,21 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QCheckBox" name="cb_icons_colour_black">
+           <widget class="QRadioButton" name="cb_icons_colour_black">
             <property name="text">
              <string>Black</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_icons_colour_white">
+           <widget class="QRadioButton" name="cb_icons_colour_white">
             <property name="text">
              <string>White</string>
             </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_6">
+           <spacer name="spacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1142,32 +1025,17 @@
           <string>Connection settings</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="useProxy">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone will use proxy defined below to access Internet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Use manual proxy configuration</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QCheckBox" name="useSystemSettings">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rclone will use OS defined internet access&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="useSystemSettings">
             <property name="text">
              <string>Use system settings</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QRadioButton" name="useProxy">
+            <property name="text">
+             <string>Use manual proxy configuration</string>
             </property>
            </widget>
           </item>
@@ -1386,8 +1254,6 @@
   <tabstop>rowColors</tabstop>
   <tabstop>showHidden</tabstop>
   <tabstop>darkMode</tabstop>
-  <tabstop>useSystemSettings</tabstop>
-  <tabstop>useProxy</tabstop>
   <tabstop>http_proxy</tabstop>
   <tabstop>https_proxy</tabstop>
   <tabstop>no_proxy</tabstop>

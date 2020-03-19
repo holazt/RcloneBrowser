@@ -27,7 +27,8 @@ private slots:
 
   void addNewMount(const QString &remote, const QString &folder,
                    const QString &remoteType, const QStringList &args,
-                   const QString &script, const QString &uniqueId);
+                   const QString &script, const QString &uniqueId,
+                   const QString &info);
 
   void runQueueScript(const QString &script);
 

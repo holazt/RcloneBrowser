@@ -5,7 +5,7 @@
 MountWidget::MountWidget(QProcess *process, const QString &remote,
                          const QString &folder, const QStringList &args,
                          const QString &script, const QString &uniqueID,
-                         QWidget *parent)
+                         const QString &info, QWidget *parent)
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
@@ -17,16 +17,21 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
   ui.showOutput->setToolTip(mArgs.join(" "));
 
-  QString info = QString("%1 on %2").arg(remote).arg(folder);
-  QString infoTrimmed;
-
-  if (info.length() > 140) {
-    infoTrimmed = info.left(57) + "..." + info.right(80);
+  QString screenInfo;
+  if (info == "") {
+    screenInfo = QString("%1 on %2").arg(remote).arg(folder);
   } else {
-    infoTrimmed = info;
+    screenInfo = info;
   }
 
-  ui.info->setText(infoTrimmed);
+  QString screenInfoTrimmed;
+  if (screenInfo.length() > 140) {
+    screenInfoTrimmed = screenInfo.left(57) + "..." + screenInfo.right(80);
+  } else {
+    screenInfoTrimmed = screenInfo;
+  }
+
+  ui.info->setText(screenInfoTrimmed);
   ui.info->setCursorPosition(0);
 
   ui.remote->setText(remote);

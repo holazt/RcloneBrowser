@@ -23,7 +23,8 @@ signals:
                  const QString &remoteType);
   void addNewMount(const QString &remote, const QString &folder,
                    const QString &remoteType, const QStringList &args,
-                   const QString &script, const QString &uniqueId);
+                   const QString &script, const QString &uniqueId,
+                   const QString &info);
 
 private:
   Ui::RemoteWidget ui;

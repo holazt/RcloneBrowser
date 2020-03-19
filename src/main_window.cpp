@@ -3099,7 +3099,7 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
     }
 
     addNewMount(jo->source, jo->dest, jo->remoteType, args, jo->mountScript,
-                jo->uniqueId.toString());
+                jo->uniqueId.toString(), "Mounting task: " + jo->description);
   }
 }
 
@@ -3405,7 +3405,8 @@ void MainWindow::runQueueScript(const QString &script) {
 
 void MainWindow::addNewMount(const QString &remote, const QString &folder,
                              const QString &remoteType, const QStringList &args,
-                             const QString &script, const QString &uniqueId) {
+                             const QString &script, const QString &uniqueId,
+                             const QString &info) {
 
   if (remoteType == "") {
   }
@@ -3439,7 +3440,7 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
   argsFinal << GetRcloneConf();
 
   auto widget =
-      new MountWidget(mount, remote, folder, argsFinal, script, uniqueId);
+      new MountWidget(mount, remote, folder, argsFinal, script, uniqueId, info);
 
   auto line = new QFrame();
   line->setFrameShape(QFrame::HLine);

@@ -9,7 +9,8 @@ class MountWidget : public QWidget {
 public:
   MountWidget(QProcess *process, const QString &remote, const QString &folder,
               const QStringList &args, const QString &script,
-              const QString &uniqueID, QWidget *parent = nullptr);
+              const QString &uniqueID, const QString &info,
+              QWidget *parent = nullptr);
   ~MountWidget();
   bool isRunning = true;
 

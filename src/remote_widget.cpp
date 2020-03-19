@@ -816,7 +816,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           QStringList args = e.getOptions();
 
           emit addNewMount(remote + ":" + path, e.getMountPoint(), remoteType,
-                           args, e.getScript(), QUuid::createUuid().toString());
+                           args, e.getScript(), QUuid::createUuid().toString(),
+                           "");
         }
 
 #if defined(Q_OS_WIN)

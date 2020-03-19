@@ -16,6 +16,7 @@ public:
 public slots:
   void cancel();
   QString getUniqueID();
+  QString getUnmountingError();
 
 signals:
   void finished();
@@ -26,8 +27,11 @@ private:
 
   bool mScriptRunning = false;
   bool mScriptStarted = false;
+
   QProcess *mProcess;
-  QProcess *mScriptProcess;
+  QProcess mScriptProcess;
+
+  QString mUnmountingError = "0";
   QString mRcPort = "0";
   QStringList mArgs;
   QString mUniqueID = "";

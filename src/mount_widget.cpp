@@ -11,6 +11,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
   mUniqueID = uniqueID;
   QProcess *mScriptProcess = new QProcess();
+
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
   mArgs.append(args);
 
@@ -81,6 +82,12 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
   ui.copy->setIcon(
       QIcon(":media/images/qbutton_icons/copy" + img_add + ".png"));
   ui.copy->setIconSize(QSize(24, 24));
+
+  ui.showDetails->setStyleSheet(
+      "QToolButton { border: 0; color: green; font-weight: bold;}");
+  ui.showDetails->setText("  Mounted");
+  ui.showDetails->setToolTip("Show details");
+  ui.showDetails->setStatusTip("Show details");
 
   QObject::connect(
       ui.showDetails, &QToolButton::toggled, this, [=](bool checked) {
@@ -178,19 +185,16 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
   QObject::connect(ui.cancel, &QToolButton::clicked, this, [=]() {
     if (isRunning) {
-
       int button = QMessageBox::question(
           this, "Unmount",
           QString("Do you want to unmount?\n\n %2 \n\n mounted to \n\n %1")
               .arg(folder)
               .arg(remote),
           QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-
       if (button == QMessageBox::Yes) {
         cancel();
       }
     } else {
-
       emit closed();
     }
   });
@@ -202,7 +206,6 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
     while (mProcess->canReadLine()) {
       line = mProcess->readLine().trimmed();
       ui.output->appendPlainText(line);
-
       // we capture RC port here from rclone output
       if (rx.exactMatch(line)) {
         line.replace("/", "");
@@ -213,8 +216,8 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
       if (mRcPort != "0" && mScriptStarted == false) {
 
         mScriptStarted = true;
-
         QStringList sargs;
+
         sargs << GetRclone();
         sargs << mRcPort;
 
@@ -253,6 +256,8 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
         }
 
         QString info = "Mounted " + ui.info->text();
+        ui.showDetails->setToolTip("Show details");
+        ui.showDetails->setStatusTip("Show details");
         QString infoTrimmed;
         if (info.length() > 140) {
           infoTrimmed = info.left(57) + "..." + info.right(80);
@@ -271,19 +276,20 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                 "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
+          ui.showDetails->setToolTip("Show details");
+          ui.showDetails->setStatusTip("Show details");
         } else {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
+          ui.showDetails->setToolTip("Show details");
+          ui.showDetails->setStatusTip("Show details");
         }
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
+        ui.cancel->setEnabled(true);
         emit finished();
       });
-
-  ui.showDetails->setStyleSheet(
-      "QToolButton { border: 0; color: green; font-weight: bold;}");
-  ui.showDetails->setText("  Mounted");
 }
 
 MountWidget::~MountWidget() {}
@@ -294,12 +300,36 @@ void MountWidget::cancel() {
   }
 
   QString cmd;
+  mUnmountingError = "0";
+
+  QProcess *pUnmount = new QProcess();
+
+  QObject::connect(
+      pUnmount,
+      static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
+          &QProcess::finished),
+      this, [=](int status, QProcess::ExitStatus) {
+        if (status != 0) {
+          // unmounting failed
+          mUnmountingError = status;
+          ui.cancel->setEnabled(true);
+          ui.showDetails->setStyleSheet(
+              "QToolButton { border: 0; color: red; font-weight: bold;}");
+          ui.showDetails->setText("  Mounted");
+          ui.showDetails->setToolTip("Unmounting failed - check if mount"
+                                     " is not used by other programs");
+          ui.showDetails->setStatusTip("Unmounting failed - check if mount"
+                                       " is not used by other programs");
+
+        } else {
+          mUnmountingError = "0";
+        }
+      });
 
 #if defined(Q_OS_MACOS) || defined(Q_OS_FREEBSD)
-  QProcess::startDetached("umount", QStringList() << ui.folder->text());
+  pUnmount->start("umount", QStringList() << ui.folder->text());
 #else
 #if defined(Q_OS_WIN32)
-  QProcess *p = new QProcess();
   QStringList unmountArgs;
   unmountArgs << "rc";
 
@@ -323,32 +353,22 @@ void MountWidget::cancel() {
 
   unmountArgs << user << password;
 
-  UseRclonePassword(p);
-  p->start(GetRclone(), unmountArgs, QIODevice::ReadOnly);
+  //  UseRclonePassword(pUnmount);
+  pUnmount->start(GetRclone(), unmountArgs, QIODevice::ReadOnly);
 
 #else
-  QProcess::startDetached("fusermount", QStringList()
-                                            << "-u" << ui.folder->text());
+  pUnmount->start("fusermount", QStringList() << "-u" << ui.folder->text());
 #endif
 #endif
 
-  //!!! it ok?
   //  mProcess->waitForFinished();
 
-  //  auto settings = GetSettings();
-  //  QString iconsColour = settings->value("Settings/iconsColour").toString();
-
-  //  if (iconsColour == "white") {
-  //    ui.showDetails->setStyleSheet(
-  //        "QToolButton { border: 0; font-weight: normal; }");
-  //  } else {
   ui.showDetails->setStyleSheet(
       "QToolButton { border: 0; color: green; font-weight: bold;}");
-  //  }
-
   ui.showDetails->setText("  Unmounting");
-  //  ui.cancel->setToolTip("Close");
+  ui.cancel->setEnabled(false);
   //  ui.cancel->setStatusTip("Close");
 }
 
 QString MountWidget::getUniqueID() { return mUniqueID; }
+QString MountWidget::getUnmountingError() { return mUnmountingError; }

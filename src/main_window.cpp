@@ -1707,32 +1707,38 @@ void MainWindow::autoStartMounts(void) {
 }
 
 void MainWindow::quitApp(void) {
-
   // wait for all processes to stop
   if (mQuitInfoDelay == 3) {
-
     QMessageBox *msgBox = new QMessageBox(
         QMessageBox::Warning, "Quitting",
         "Terminating all processes\nbefore quitting, please wait.", 0, this,
-        //                        Qt::FramelessWindowHint |
         //                        Qt::WindowStaysOnTopHint);
         Qt::FramelessWindowHint);
-    msgBox->setStandardButtons(0);
 
+    msgBox->setStandardButtons(0);
     msgBox->setCursor(Qt::WaitCursor);
     msgBox->setAttribute(Qt::WA_DeleteOnClose);
+
     msgBox->show();
+
+    mQuittingErrorMsgBox = msgBox;
   }
 
   bool processActive = false;
+  bool unmountingFailed = false;
   int widgetsCount = ui.jobs->count();
 
-  // loop over all jobs
+  // loop over all jobs and clean them
   for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
     QWidget *widget = ui.jobs->itemAt(i)->widget();
     if (auto mount = qobject_cast<MountWidget *>(widget)) {
       if (mount->isRunning) {
         processActive = true;
+        if (mount->getUnmountingError() != "0") {
+          // there is failed unmount - quitting fails
+          // but loop continues closing what possible
+          unmountingFailed = true;
+        }
       } else {
         emit mount->closed();
       }
@@ -1751,8 +1757,26 @@ void MainWindow::quitApp(void) {
     }
   };
 
+  if (unmountingFailed) {
+    // quitting failed
+    // reset to 3 attempts again
+    mQuitInfoDelay = 3;
+
+    if (mQuittingErrorMsgBox != NULL) {
+      mQuittingErrorMsgBox->hide();
+      mQuittingErrorMsgBox = NULL;
+    }
+
+    QMessageBox::critical(
+        this, "Unmounting failed",
+        QString("Some mounts can't be unmounted. Make sure that they are "
+                "not used by other programs. You can also try to unmount "
+                "them directly from your OS."));
+    return;
+  }
+
   if (processActive == false) {
-    // no running widget - bye bye
+    // no running widget - bye bye - quitting at last
     QApplication::quit();
   } else {
     // something still running we check again a bit later then

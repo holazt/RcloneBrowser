@@ -91,6 +91,7 @@ private:
   QIcon mUploadIcon;
   QIcon mDownloadIcon;
   QIcon mMountIcon;
+  QMessageBox *mQuittingErrorMsgBox = NULL;
   // if waiting for processes we show dialog - this is used to calculate delay
   int mQuitInfoDelay = 0;
 

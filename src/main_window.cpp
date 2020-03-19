@@ -820,6 +820,18 @@ MainWindow::MainWindow() {
         // restart queue if it was active before
         if (queueActive == true) {
           mQueueStatus = true;
+
+          if (ui.queueListWidget->count() == 0) {
+            auto settings = GetSettings();
+            if (settings->value("Settings/queueScriptRun", false).toBool()) {
+              QString queueScript =
+                  settings->value("Settings/queueScript", false).toString();
+              if (!queueScript.isEmpty()) {
+                runQueueScript(queueScript);
+              }
+            }
+          }
+
           if (ui.queueListWidget->count() > 0) {
             // start task
             // no transfer job is running as we just stopped all - we can start
@@ -3400,7 +3412,7 @@ void MainWindow::runQueueScript(const QString &script) {
                      p->deleteLater();
                    });
 
-  p->start(script);
+  p->start("\"" + QDir::toNativeSeparators(script) + "\"");
 }
 
 void MainWindow::addNewMount(const QString &remote, const QString &folder,

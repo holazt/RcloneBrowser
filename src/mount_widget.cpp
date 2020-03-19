@@ -253,7 +253,8 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
         sargs << password;
         sargs << folder;
 
-        mScriptProcess->start(script, sargs, QIODevice::ReadOnly);
+        mScriptProcess->start("\"" + QDir::toNativeSeparators(script) + "\"",
+                              sargs, QIODevice::ReadOnly);
       }
     }
   });

@@ -591,14 +591,14 @@
              <string notr="true">color: green; font-weight: bold;</string>
             </property>
             <property name="text">
-             <string>Start</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="labelQueueInfoStop">
             <property name="text">
-             <string>Stop</string>
+             <string/>
             </property>
            </widget>
           </item>

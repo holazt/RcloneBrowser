@@ -443,6 +443,9 @@ MainWindow::MainWindow() {
   ui.buttonStopAllJobs->setEnabled(false);
   ui.buttonCleanNotRunning->setEnabled(false);
 
+  // initial queue status
+  ui.labelQueueInfoStop->setText("Queue is not running.");
+
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
     PreferencesDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {

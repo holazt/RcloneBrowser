@@ -257,7 +257,7 @@ Code signing certificates donations
 
 If you would like to donate towards code signing keys please feel free to [do it](https://www.paypal.me/kapitainsky). If I don't raise required $500 I will give all money to some charity. Please see my note regarding it at the end of [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it) section. I will keep all updated with amount raised.
 
-Raised so far: 6.4 USD (1.3% of the required target)
+Raised so far: 7.82 USD (1.6% of the required target)
 
 [1]: https://travis-ci.org/kapitainsky/RcloneBrowser
 [2]: https://ci.appveyor.com/project/kapitainsky/RcloneBrowser

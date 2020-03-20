@@ -146,11 +146,11 @@ Build instructions
 
 ### Linux
 1.  Install dependencies for your particular distribution:
-    *   **Debian/Ubuntu and derivatives**: `sudo apt update && sudo apt -y install git g++ cmake make qtdeclarative5-dev` 
-    *   **Suse/OpenSuse**: `sudo zypper ref && sudo zypper --non-interactive install git cmake make gcc-c++ libQt5Core-devel libQt5Widgets-devel libQt5Network-devel`
-    *   **RHEL/CentOS**: `sudo yum -y install git gcc-c++ cmake make qt5-qtdeclarative`
-    *   **Fedora**: `sudo dnf -y install git g++ cmake make qt5-qtdeclarative-devel`
-    *   **Arch/Manjaro**: `sudo pacman -Sy --noconfirm --needed git gcc cmake make qt5-declarative`
+    *   **Debian/Ubuntu and derivatives**: `sudo apt update && sudo apt -y install git g++ cmake make qtdeclarative5-dev qtmultimedia5-dev`
+    *   **Suse/OpenSuse**: `sudo zypper ref && sudo zypper --non-interactive install git cmake make gcc-c++ libQt5Core-devel libQt5Widgets-devel libQt5Network-devel libqt5-qtmultimedia-devel`
+    *   **RHEL/CentOS**: `sudo yum -y install git gcc-c++ cmake make qt5-qtdeclarative qt5-qtmultimedia-devel`
+    *   **Fedora**: `sudo dnf -y install git g++ cmake make qt5-qtdeclarative-devel qt5-qtmultimedia-devel`
+    *   **Arch/Manjaro**: `sudo pacman -Sy --noconfirm --needed git gcc cmake make qt5-declarative qt5-multimedia`
 2.  Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3.  Go to source folder `cd RcloneBrowser`
 4.  Create new build folder - `mkdir build && cd build`
@@ -159,7 +159,7 @@ Build instructions
 7.  Install `sudo make install`
 
 ### FreeBSD
-1.  Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-qmake`
+1.  Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-multimedia qt5-qmake`
 2.  Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3.  Go to source folder `cd RcloneBrowser`
 4.  Create new build folder - `mkdir build && cd build`
@@ -181,7 +181,7 @@ Build instructions
 *Note: rclone for openBSD does not support `mount` hence this feature is disabled in Rclone Browser. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]*
 
 ### NetBSD
-1.  Install dependencies `sudo pkgin install git cmake qt5-qtdeclarative`
+1.  Install dependencies `sudo pkgin install git cmake qt5-qtdeclarative qt5-qtmultimedia`
 2.  Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3.  Go to source folder `cd RcloneBrowser`
 4.  Create new build folder - `mkdir build && cd build`
@@ -224,16 +224,19 @@ In standard operations mode all configurations files are stored in the following
     *   preferences: ~/Library/Preferences/com.rclone-browser.rclone-browser.plist
     *   tasks file:  ~/Library/Application Support/rclone-browser/rclone-browser/tasks.bin
     *   lock file:   in $TMPDIR assigned by OS
+    *   queue file:  ~/Library/Application Support/rclone-browser/rclone-browser/queue.conf
 
 *   Linux/BSD:
     *   preferences: ~/.config/rclone-browser/rclone-browser.conf
     *   tasks file:  ~/.local/share/rclone-browser/rclone-browser/tasks.bin
     *   lock file:   in $TMPDIR or /tmp if $TMPDIR is not defined
+    *   queue file:  ~/.local/share/rclone-browser/rclone-browser/queue.conf
 
 *   Windows:
     *   preferences: in registry Computer\HKEY_CURRENT_USER\Software\rclone-browser\rclone-browser
     *   tasks file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
     *   lock file:   %HOMEPATH%\AppData\Local\Temp\
+    *   queue file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\queue.conf
 
 Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` or `RcloneBrowser.app` create `RcloneBrowser.ini`. For Linux create a directory (not a file) with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage file - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
 

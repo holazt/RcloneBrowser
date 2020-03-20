@@ -445,6 +445,7 @@ MainWindow::MainWindow() {
 
   // initial queue status
   ui.labelQueueInfoStop->setText("Queue is not running.");
+  setQueueButtons();
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
     PreferencesDialog dialog(this);

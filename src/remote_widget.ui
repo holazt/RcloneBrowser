@@ -639,10 +639,10 @@ rclone about</string>
   </action>
   <action name="actionNewMount">
    <property name="text">
-    <string>New Mount</string>
+    <string>Mount</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mount remote&lt;/p&gt;&lt;p&gt;rclone mount&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mount remote to local filesystem&lt;/p&gt;&lt;p&gt;rclone mount&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

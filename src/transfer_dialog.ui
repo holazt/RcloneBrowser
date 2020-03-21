@@ -665,7 +665,7 @@ QToolButton:pressed {
              </size>
             </property>
             <property name="toolTip">
-             <string>--min-age</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--min-age&lt;/p&gt;&lt;p&gt;10000 or 3d&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -769,7 +769,7 @@ QToolButton:pressed {
              </size>
             </property>
             <property name="toolTip">
-             <string>--max-age</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--max-age&lt;/p&gt;&lt;p&gt;10000 or 3d&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -859,7 +859,7 @@ QToolButton:pressed {
              </size>
             </property>
             <property name="toolTip">
-             <string>--min-size</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--min-size&lt;/p&gt;&lt;p&gt;e.g.: 500 or 10M &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -946,7 +946,7 @@ QToolButton:pressed {
              </size>
             </property>
             <property name="toolTip">
-             <string>--bwlimit</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--bwlimit&lt;/p&gt;&lt;p&gt;e.g. 500 or 10M&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>

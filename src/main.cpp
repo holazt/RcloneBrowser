@@ -7,6 +7,14 @@ extern void qt_set_sequence_auto_mnemonic(bool b);
 
 int main(int argc, char *argv[]) {
 
+  // set locale to UK english
+  // would be great to let Qt manage it but it leads to issue like this one:
+  // https://github.com/kapitainsky/RcloneBrowser/issues/96
+  // maybe one day somebody looks into localizing RB and solves this better
+  // From now on chaps - we speak english only
+  QLocale l(QLocale::English, QLocale::UnitedKingdom);
+  QLocale::setDefault(l);
+
 #ifdef Q_OS_MACOS
   qt_set_sequence_auto_mnemonic(true);
 #endif

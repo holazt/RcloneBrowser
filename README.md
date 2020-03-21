@@ -6,7 +6,9 @@ Rclone browser
 ==============
 Simple cross platfrom GUI for [rclone](https://rclone.org/) command line tool.
 
-Supports macOS, GNU/Linux, BSD family and Windows.
+Supports macOS, Windows, GNU/Linux and BSD family.
+
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/readme/osLogos.png" width="50%" />
 
 Table of contents
 -------------------

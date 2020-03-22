@@ -205,6 +205,7 @@ getDateTimeSection(const QDateTime & dt) const
             return dt.date().year();
         default:
             qFatal("Shouldn't be here");
+        return 0;
     }
 }
 

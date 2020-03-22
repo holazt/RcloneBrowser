@@ -73,12 +73,13 @@ MainWindow::MainWindow() {
 
 #else
 
-  qApp->setStyle(QStyleFactory::create("Fusion"));
-
   QString sysInfo = QSysInfo::productVersion();
   // enable dark mode for older macOS
   if (sysInfo == "10.9" || sysInfo == "10.10" || sysInfo == "10.11" ||
       sysInfo == "10.12" || sysInfo == "10.13") {
+
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+
     auto settings = GetSettings();
     bool darkMode = settings->value("Settings/darkMode").toBool();
     if (darkMode) {
@@ -2561,7 +2562,7 @@ darkModeIconScale =lightModeiconScale;
 
              } else {
                // for macOS > 10.13 native dark mode does not change IconSize base
-               size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
+               size = 1.5 * lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                if (iconsColour == "white") {
                   img_add = "_inv";
                } else {

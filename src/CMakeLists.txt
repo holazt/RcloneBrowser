@@ -63,6 +63,7 @@ set(MOC
   icon_cache.h
   list_of_job_options.h
   item_model.h
+  qcron.h
 )
 
 set(OTHER
@@ -70,6 +71,8 @@ set(OTHER
   utils.h
   job_options.h
   global.h
+  qcronfield.h
+  qcronnode.h
 )
 
 set(SOURCE
@@ -92,6 +95,9 @@ set(SOURCE
   utils.cpp
   job_options.cpp
   list_of_job_options.cpp
+  qcron.cpp
+  qcronfield.cpp
+  qcronnode.cpp
 )
 
 if(WIN32)

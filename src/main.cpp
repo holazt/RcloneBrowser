@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
       !qEnvironmentVariableIsSet("QT_SCALE_FACTOR") &&
       !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
   }
 #endif
 

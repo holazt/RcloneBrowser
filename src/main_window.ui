@@ -104,7 +104,7 @@
           <item>
            <widget class="QToolButton" name="buttonPrefs">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;Rclone Browser preferences (ALT-p)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Rclone Browser preferences (ALT-p)</string>
             </property>
             <property name="statusTip">
              <string>Rclone Browser preferences</string>
@@ -720,7 +720,7 @@
     <string>&amp;Preferences...</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rclone Browser preferences (ALT-p)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>Rclone Browser preferences (ALT-p)</string>
    </property>
    <property name="shortcut">
     <string>Alt+P</string>

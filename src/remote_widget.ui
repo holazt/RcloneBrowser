@@ -205,7 +205,7 @@
           <item>
            <widget class="QToolButton" name="buttonTools">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;Show additional tools&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Show additional tools</string>
             </property>
             <property name="statusTip">
              <string>Show additional tools</string>
@@ -626,7 +626,7 @@ rclone about</string>
     <string>Tools</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show additional tools&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>Show additional tools</string>
    </property>
   </action>
   <action name="actionDedupe">

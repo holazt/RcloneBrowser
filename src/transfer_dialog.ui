@@ -246,6 +246,9 @@ QToolButton:pressed {
               </property>
               <item>
                <widget class="QRadioButton" name="rbSync">
+                <property name="toolTip">
+                 <string>rclone sync</string>
+                </property>
                 <property name="text">
                  <string>Sync</string>
                 </property>
@@ -311,6 +314,9 @@ QToolButton:pressed {
               </property>
               <item>
                <widget class="QRadioButton" name="rbCopy">
+                <property name="toolTip">
+                 <string>rclone copy</string>
+                </property>
                 <property name="text">
                  <string>Copy</string>
                 </property>
@@ -341,6 +347,9 @@ QToolButton:pressed {
               </property>
               <item>
                <widget class="QRadioButton" name="rbMove">
+                <property name="toolTip">
+                 <string>rclone move</string>
+                </property>
                 <property name="text">
                  <string>Move</string>
                 </property>

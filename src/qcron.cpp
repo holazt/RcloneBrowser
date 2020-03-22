@@ -127,13 +127,17 @@ getPreviousFields(EField field)
     {
         case YEAR:
             fields << MONTH;
+        /* FALLTHROUGH */
         case MONTH:
             fields << DOM;
+        /* FALLTHROUGH */
         case DOW:
         case DOM:
             fields << HOUR;
+        /* FALLTHROUGH */
         case HOUR:
             fields << MINUTE;
+        /* FALLTHROUGH */
         case MINUTE:
             break;
         default:

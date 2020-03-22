@@ -33,12 +33,13 @@ MainWindow::MainWindow() {
 #endif
 
 #if !defined(Q_OS_MACOS)
+  qApp->setStyle(QStyleFactory::create("Fusion"));
+
   bool darkMode = settings->value("Settings/darkMode").toBool();
 
   // enable dark mode for Windows and Linux
   if (darkMode) {
 
-    qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
     darkPalette.setColor(QPalette::WindowText, Qt::white);
@@ -72,15 +73,15 @@ MainWindow::MainWindow() {
 
 #else
 
-  // enable dark mode for older macOS
-  QString sysInfo = QSysInfo::productVersion();
+  qApp->setStyle(QStyleFactory::create("Fusion"));
 
+  QString sysInfo = QSysInfo::productVersion();
+  // enable dark mode for older macOS
   if (sysInfo == "10.9" || sysInfo == "10.10" || sysInfo == "10.11" ||
       sysInfo == "10.12" || sysInfo == "10.13") {
     auto settings = GetSettings();
     bool darkMode = settings->value("Settings/darkMode").toBool();
     if (darkMode) {
-      qApp->setStyle(QStyleFactory::create("Fusion"));
 
       QPalette darkPalette;
       darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
@@ -2505,6 +2506,11 @@ void MainWindow::rcloneListRemotes() {
               darkModeIconScale = 10;
             }
 
+//!!! disable scaling - all is fusion now
+// let's leave scaling logic for now
+darkModeIconScale =lightModeiconScale;
+
+
 #if !defined(Q_OS_MACOS)
             // _inv only for dark mode
             // we use darkModeIni to apply mode active at startup
@@ -2555,7 +2561,7 @@ void MainWindow::rcloneListRemotes() {
 
              } else {
                // for macOS > 10.13 native dark mode does not change IconSize base
-               size = 1.5 * lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
+               size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
                if (iconsColour == "white") {
                   img_add = "_inv";
                } else {

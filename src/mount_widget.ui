@@ -128,7 +128,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Folder:</string>
+         <string>Mount point:</string>
         </property>
         <property name="buddy">
          <cstring>folder</cstring>

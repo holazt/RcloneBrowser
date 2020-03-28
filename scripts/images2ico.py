@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# to install "pip3 install Pillow"
+
 # packs multiple images (bmp/png/...) into ico file
 # width and height of images must be <= 256
 # pixel format of images must be 32-bit RGBA

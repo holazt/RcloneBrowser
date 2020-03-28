@@ -1,48 +1,55 @@
 #pragma once
 
+#include "icon_cache.h"
+#include "job_options.h"
 #include "pch.h"
 #include "ui_main_window.h"
-#include "icon_cache.h"
 
 class JobWidget;
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
 public:
-    MainWindow();
-    ~MainWindow();
+  MainWindow();
+  ~MainWindow();
 
 private slots:
-    void rcloneGetVersion();
-    void rcloneConfig();
-    void rcloneListRemotes();
+  void rcloneGetVersion();
+  void rcloneConfig();
+  void rcloneListRemotes();
+  void listTasks();
 
-    void addTransfer(const QString& message, const QString& source, const QString& dest, const QStringList& args);
-    void addMount(const QString& remote, const QString& folder);
-    void addStream(const QString& remote, const QString& stream);
+  void addTransfer(const QString &message, const QString &source,
+                   const QString &dest, const QStringList &args);
+  void addMount(const QString &remote, const QString &folder);
+  void addStream(const QString &remote, const QString &stream);
 
 private:
-    Ui::MainWindow ui;
+  Ui::MainWindow ui;
 
-    QSystemTrayIcon mSystemTray;
-    JobWidget* mLastFinished = nullptr;
+  QSystemTrayIcon mSystemTray;
+  JobWidget *mLastFinished = nullptr;
 
-    bool mAlwaysShowInTray;
-    bool mCloseToTray;
-    bool mNotifyFinishedTransfers;
+  bool mAlwaysShowInTray;
+  bool mCloseToTray;
+  bool mNotifyFinishedTransfers;
 
-    QLabel* mStatusMessage;
+  QLabel *mStatusMessage;
 
-    IconCache mIcons;
+  IconCache mIcons;
 
-    bool mFirstTime = true;
-    int mJobCount = 0;
+  bool mFirstTime = true;
+  int mJobCount = 0;
 
-    bool canClose();
-    void closeEvent(QCloseEvent* ev) override;
-    bool getConfigPassword(QProcess* p);
+  bool canClose();
+  void closeEvent(QCloseEvent *ev) override;
+  bool getConfigPassword(QProcess *p);
 
-    void addEmptyJobsMessage();
+  void addEmptyJobsMessage();
+
+  void runItem(JobOptionsListWidgetItem *item, bool dryrun = false);
+  void editSelectedTask();
+  QIcon mUploadIcon;
+  QIcon mDownloadIcon;
 };

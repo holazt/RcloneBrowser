@@ -6,16 +6,17 @@
 
 #include <memory>
 
-#include <QtDebug>
 #include <QtCore>
+#include <QtDebug>
 #include <QtGui>
+#include <QtNetwork>
 #include <QtWidgets>
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
 #include <QtWinExtras>
 #endif
 
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
 #include <QtMacExtras>
 #endif
 

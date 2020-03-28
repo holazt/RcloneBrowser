@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>784</width>
+    <width>912</width>
     <height>552</height>
    </rect>
   </property>
@@ -152,6 +152,26 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="buttonTree">
+            <property name="text">
+             <string>&amp;Tree</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonLink">
+            <property name="text">
+             <string>&amp;Link</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonExport">
             <property name="text">
              <string>E&amp;xport...</string>
@@ -162,13 +182,39 @@
            </widget>
           </item>
           <item>
-           <spacer name="spacer">
+           <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
               <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxShared">
+            <property name="toolTip">
+             <string>Shared with Me (Google Drive)</string>
+            </property>
+            <property name="text">
+             <string>Shared</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Minimum</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
               <height>20</height>
              </size>
             </property>
@@ -235,6 +281,9 @@
    <property name="text">
     <string>&amp;Mount</string>
    </property>
+   <property name="toolTip">
+    <string>rclone mount</string>
+   </property>
   </action>
   <action name="stream">
    <property name="text">
@@ -245,6 +294,9 @@
    <property name="text">
     <string>&amp;New Folder</string>
    </property>
+   <property name="toolTip">
+    <string>rclone mkdir</string>
+   </property>
    <property name="shortcut">
     <string>F7</string>
    </property>
@@ -253,6 +305,9 @@
    <property name="text">
     <string>R&amp;ename</string>
    </property>
+   <property name="toolTip">
+    <string>rclone moveto</string>
+   </property>
    <property name="shortcut">
     <string>F2</string>
    </property>
@@ -260,6 +315,9 @@
   <action name="purge">
    <property name="text">
     <string>De&amp;lete</string>
+   </property>
+   <property name="toolTip">
+    <string>rclone purge|delete</string>
    </property>
    <property name="shortcut">
     <string>Del</string>
@@ -279,15 +337,45 @@
    <property name="text">
     <string>&amp;Get Size</string>
    </property>
+   <property name="toolTip">
+    <string>rclone size</string>
+   </property>
+  </action>
+  <action name="getTree">
+   <property name="text">
+    <string>DirTree</string>
+   </property>
+   <property name="toolTip">
+    <string>rclone tree</string>
+   </property>
   </action>
   <action name="export_">
    <property name="text">
     <string>E&amp;xport</string>
    </property>
+   <property name="toolTip">
+    <string>Export files list</string>
+   </property>
   </action>
   <action name="move">
    <property name="text">
     <string>M&amp;ove</string>
+   </property>
+   <property name="toolTip">
+    <string>rclone move</string>
+   </property>
+  </action>
+  <action name="shared">
+   <property name="text">
+    <string>Shared</string>
+   </property>
+  </action>
+  <action name="link">
+   <property name="text">
+    <string>Public Link</string>
+   </property>
+   <property name="toolTip">
+    <string>rclone link</string>
    </property>
   </action>
  </widget>
@@ -301,6 +389,7 @@
   <tabstop>buttonUpload</tabstop>
   <tabstop>buttonDownload</tabstop>
   <tabstop>buttonSize</tabstop>
+  <tabstop>buttonTree</tabstop>
   <tabstop>path</tabstop>
   <tabstop>tree</tabstop>
  </tabstops>

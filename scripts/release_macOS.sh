@@ -2,68 +2,72 @@
 
 set -e
 
-QTDIR=~/Qt/5.8.0-desktop
+QTDIR=/usr/local/opt/qt
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/..
-VERSION=`cat $ROOT/VERSION`-`git rev-parse --short HEAD`
+VERSION=$(cat "$ROOT"/VERSION)-$(git rev-parse --short HEAD)
 BUILD="$ROOT"/build
-TARGET=rclone-browser-$VERSION-macOS
+TARGET=rclone-browser-$VERSION-macos
+DMG=rclone-browser-$VERSION-macos
 APP="$TARGET"/"Rclone Browser.app"
 
-rm -rf "$BUILD"
+# clean from previous builds (if for the same version in releases)
+if [ -d "$BUILD" ]; then
+  rm -rf "$BUILD"
+fi
+if [ -d "$ROOT"/release/"$TARGET" ]; then
+  rm -rf "$ROOT"/release/"$TARGET"*
+fi
+if [ -f "$ROOT"/release/"$DMG".dmg ]; then
+  rm "$ROOT"/release/"$DMG".dmg
+fi
+if [ -d "$ROOT"/release/"Rclone Browser.app" ]; then
+  rm -rf "$ROOT"/release/"Rclone Browser.app"
+fi
+
+
+
 mkdir -p "$BUILD"
 cd "$BUILD"
+# brew install cmake qt5
 cmake .. -DCMAKE_PREFIX_PATH="$QTDIR" -DCMAKE_BUILD_TYPE=Release
-make -j2
-cd ..
+# brew install coreutils
+make --jobs=$(nproc --all)
+cd build
+"$QTDIR"/bin/macdeployqt rclone-browser.app -executable="rclone-browser.app/Contents/MacOS/rclone-browser" -qmldir=../src/
+cd ../..
 
-rm -rf "$TARGET"
+
+mkdir -p release
+cd release
 mkdir "$TARGET"
-cp "$ROOT"/README.md "$TARGET"/Readme.txt
-cp "$ROOT"/CHANGELOG.md "$TARGET"/Changelog.txt
-cp "$ROOT"/LICENSE "$TARGET"/License.txt
 cp -R "$BUILD"/build/rclone-browser.app "$APP"
+cp "$ROOT"/README.md "$APP"/Readme.md
+cp "$ROOT"/CHANGELOG.md "$APP"/Changelog.md
+cp "$ROOT"/LICENSE "$APP"/License.txt
 mv "$APP"/Contents/MacOS/rclone-browser "$APP"/Contents/MacOS/"Rclone Browser"
 
 sed -i .bak 's/rclone-browser/Rclone Browser/g' "$APP"/Contents/Info.plist
 rm "$APP"/Contents/*.bak
-
-FRAMEWORKS=("Core" "Gui" "Widgets" "PrintSupport" "MacExtras")
-
-mkdir "$APP"/Contents/Frameworks
-for FX in "${FRAMEWORKS[@]}"
-do
-  cp -R "$QTDIR"/lib/Qt${FX}.framework "$APP"/Contents/Frameworks/
-  FXPATH="$APP"/Contents/Frameworks/Qt${FX}.framework
-  install_name_tool -id @executable_path/../Frameworks/Qt${FX}.framework/Versions/5/Qt${FX} "${FXPATH}"/Versions/5/Qt${FX}
-  rm -rf "$FXPATH"/Headers
-  rm -rf "$FXPATH"/*.prl
-  rm -rf "$FXPATH"/*_debug
-  rm -rf "$FXPATH"/Versions/5/Headers
-  rm -rf "$FXPATH"/Versions/5/*_debug
-done
-
-mkdir -p "$APP"/Contents/Plugins/platforms
-cp "$QTDIR"/plugins/platforms/libqcocoa.dylib "$APP"/Contents/Plugins/platforms
-
-change()
-{
-  for x in $2
-  do
-    install_name_tool -change @rpath/Qt$x.framework/Versions/5/Qt$x @executable_path/../Frameworks/Qt$x.framework/Versions/5/Qt$x "$1"
-  done
-}
-
-change "$APP"/Contents/MacOS/"Rclone Browser" "Core Gui Widgets MacExtras"
-change "$APP"/Contents/Frameworks/QtGui.framework/QtGui "Core"
-change "$APP"/Contents/Frameworks/QtWidgets.framework/QtWidgets "Core Gui"
-change "$APP"/Contents/Frameworks/QtMacExtras.framework/QtMacExtras "Core Gui Widgets"
-change "$APP"/Contents/Frameworks/QtPrintSupport.framework/QtPrintSupport "Core Gui Widgets"
-change "$APP"/Contents/Plugins/platforms/libqcocoa.dylib "Core Gui Widgets PrintSupport"
 
 cat >"$APP"/Contents/MacOS/qt.conf <<EOF
 [Paths]
 Plugins = Plugins
 EOF
 
-zip -q -r9 "$TARGET".zip "$TARGET"
+echo
+echo "Preparing zip file"
+# brew install p7zip
+7za a -mx=9 -r -tzip "$TARGET".zip "$TARGET"
+
+## gpg --detach-sign "$TARGET".zip.sig "$TARGET".zip
+
+echo
+echo "Preparing dmg file"
+# brew install node && npm install -g appdmg
+# https://github.com/LinusU/node-appdmg
+cp -R "$TARGET"/"Rclone Browser.app" .
+cd ../scripts
+appdmg ../assets/appdmg.json ../release/"$DMG".dmg
+cd ../release
+rm -rf "Rclone Browser.app"

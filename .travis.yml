@@ -6,7 +6,6 @@ matrix:
 
     - os: linux
       language: cpp
-      dist: trusty
       sudo: false
       addons:
         apt:
@@ -16,14 +15,4 @@ matrix:
         - mkdir build && cd build
         - cmake ..
         - cmake --build .
-
-    - os: osx
-      language: cpp
-      osx_image: xcode8.2
-      install:
-        - brew update
-        - brew install qt5
-      script:
-        - mkdir build && cd build
-        - cmake -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake ..
-        - cmake --build .
+        

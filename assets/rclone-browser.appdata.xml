@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Dariusz Bogdanski <dariuszb@me.com> -->
+<component type="desktop-application">
+  <id>org.kapitainsky.rclone_browser</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Rclone Browser</name>
+  <summary>Simple cross platfrom GUI for rclone command line</summary>
+  <description>
+    <p>Rclone Browser is a cross-platform Qt5 GUI for Rclone, a command line tool to synchronize (and mount) files from remote cloud storage services like Google Drive, OneDrive, Nextcloud, Dropbox, Amazon Drive and S3, Mega, and others. Use it to copy a file from one cloud storage service to another, from a cloud storage to your system or the other way around, and to mount some cloud storage on your system with a single click.</p>
+    <p> - Allows to browse and modify any rclone remote, including encrypted ones</p>
+    <p> - Uses same configuration file as rclone, no extra configuration required</p>
+    <p> - Supports custom location and encryption for .rclone.conf configuration file</p>
+    <p> - Simultaneously navigate multiple repositories in separate tabs</p>
+    <p> - Lists files hierarchically with file name, size and modify date</p>
+    <p> - All rclone commands are executed asynchronously, no freezing GUI</p>
+    <p> - File hierarchy is lazily cached in memory, for faster traversal of folders</p>
+    <p> - Allows to upload, download, create new folders, rename or delete files and folders</p>
+    <p> - Allows to calculate size of folder, export list of files and copy rclone command to clipboard</p>
+    <p> - Can process multiple upload or download jobs in background</p>
+    <p> - Drag and drop support for dragging files from local file explorer for uploading</p>
+    <p> - Streaming media files for playback in player like vlc or similar</p>
+    <p> - Mount and unmount folders on macOS, GNU/Linux and Windows (for Windows requires winfsp)</p>
+    <p> - Optionally minimizes to tray, with notifications when upload/download finishes</p>
+    <p> - Supports portable mode (create .ini file next to executable with same name), rclone and .rclone.conf path now can be relative to executable</p>
+    <p> - Supports drive-shared-with-me (Google Drive specific)</p>
+    <p> - For remotes supporting public link sharing has an option (right-click menu) to fetch it</p>
+    <p> - Supports tasks. Created jobs can be saved and run or edited later</p>
+    <p> - Configurable dark mode for all systems</p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/kapitainsky/RcloneBrowser/wiki/images/IMGdefault.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/kapitainsky/RcloneBrowser/wiki/images/IMGtransfer.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/kapitainsky/RcloneBrowser/</url>
+  <url type="bugtracker">https://github.com/kapitainsky/RcloneBrowser/issues/</url>
+  <url type="faq">https://github.com/kapitainsky/RcloneBrowser/wiki</url>
+  <url type="help">https://github.com/kapitainsky/RcloneBrowser/issues/</url>
+  <releases>
+    <release version="1.6.0" date="2019-10-30" />
+  </releases>
+  <developer_name>Dariusz Bogdanski and contributors</developer_name>
+  <update_contact>dariuszb@me.com</update_contact>
+  <provides>
+    <binary>rclone-browser</binary>
+  </provides>
+</component>

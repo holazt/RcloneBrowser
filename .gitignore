@@ -1,5 +1,5 @@
 .DS_Store
-build
+build*
 *.user*
 scripts/*.zip
 scripts/*.png
@@ -7,4 +7,6 @@ obj-*-linux-gnu
 debian/files
 debian/debhelper-build-stamp
 debian/rclone-browser*
-
+/release
+/bs0.cmd
+/src/*.autosave

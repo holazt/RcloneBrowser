@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
+    <width>966</width>
     <height>449</height>
    </rect>
   </property>
@@ -99,29 +99,29 @@
         </property>
        </spacer>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="transferred">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4a">
+        <property name="text">
+         <string>Total size:</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="buddy">
+         <cstring>totalsize</cstring>
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
-       <widget class="QLineEdit" name="errors">
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="totalsize">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -132,6 +132,38 @@
        </widget>
       </item>
       <item row="3" column="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Remaining time:</string>
+        </property>
+        <property name="buddy">
+         <cstring>eta</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLineEdit" name="eta">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4">
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>Errors:</string>
@@ -141,7 +173,29 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="4">
+      <item row="3" column="5">
+       <widget class="QLineEdit" name="errors">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="6">
        <widget class="QLabel" name="label_8">
         <property name="text">
          <string>Checks:</string>
@@ -151,13 +205,35 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="7">
+       <widget class="QLineEdit" name="checks">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="2">
        <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Bandwidth:</string>
+         <string>Elapsed time:</string>
         </property>
         <property name="buddy">
-         <cstring>bandwidth</cstring>
+         <cstring>elapsed</cstring>
         </property>
        </widget>
       </item>
@@ -168,6 +244,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -229,17 +311,17 @@
       <item row="2" column="4">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Elapsed time:</string>
+         <string>Bandwidth:</string>
         </property>
         <property name="buddy">
-         <cstring>elapsed</cstring>
+         <cstring>bandwidth</cstring>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_4">
+      <item row="2" column="6">
+       <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Transferred:</string>
+         <string>Transfers:</string>
         </property>
         <property name="buddy">
          <cstring>transferred</cstring>
@@ -257,12 +339,18 @@
        </widget>
       </item>
       <item row="2" column="3">
-       <widget class="QLineEdit" name="bandwidth">
+       <widget class="QLineEdit" name="elapsed">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -305,12 +393,18 @@
        </widget>
       </item>
       <item row="2" column="5">
-       <widget class="QLineEdit" name="elapsed">
+       <widget class="QLineEdit" name="bandwidth">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -320,13 +414,19 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="5">
-       <widget class="QLineEdit" name="checks">
+      <item row="2" column="7">
+       <widget class="QLineEdit" name="transferred">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -357,8 +457,8 @@
   <tabstop>source</tabstop>
   <tabstop>dest</tabstop>
   <tabstop>size</tabstop>
-  <tabstop>bandwidth</tabstop>
   <tabstop>elapsed</tabstop>
+  <tabstop>bandwidth</tabstop>
   <tabstop>showOutput</tabstop>
   <tabstop>output</tabstop>
  </tabstops>

@@ -446,48 +446,7 @@ void MainWindow::rcloneGetVersion() {
             counter++;
           };
 
-          QFileInfo appBundlePath;
-#ifdef Q_OS_MACOS
-          if (IsPortableMode()) {
-
-            QFileInfo applicationPath = qApp->applicationFilePath();
-            QFileInfo MacOSPath = applicationPath.dir().path();
-            QFileInfo ContentsPath = MacOSPath.dir().path();
-            appBundlePath = ContentsPath.dir().path();
-
-            mStatusMessage->setText(
-                rclone_info1 + " in " +
-                QDir::toNativeSeparators(GetRclone().replace(
-                    appBundlePath.fileName() + "/Contents/MacOS/../../../",
-                    "")) +
-                ", " + rclone_info2 + ", " + rclone_info3);
-
-          } else {
-
-            mStatusMessage->setText(rclone_info1 + " in " +
-                                    QDir::toNativeSeparators(GetRclone()) +
-                                    ", " + rclone_info2 + ", " + rclone_info3);
-          }
-#else
-#ifdef Q_OS_WIN
-          mStatusMessage->setText(rclone_info1 + " in " +
-                                  QDir::toNativeSeparators(GetRclone()) + ", " +
-                                  rclone_info2 + ", " + rclone_info3);
-#else
-          if (IsPortableMode()) {
-            QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
-            QString appImageConfigFolder = xdg_config_home.right(xdg_config_home.length()-xdg_config_home.lastIndexOf("/"));
-
-            mStatusMessage->setText(rclone_info1 + " in " +
-                                  QDir::toNativeSeparators(GetRclone().replace(appImageConfigFolder + "/..",  "")) + ", " +
-                                  rclone_info2 + ", " + rclone_info3);
-          } else {
-            mStatusMessage->setText(rclone_info1 + " in " +
-                                  QDir::toNativeSeparators(GetRclone()) + ", " +
-                                  rclone_info2 + ", " + rclone_info3);
-         }
-#endif
-#endif
+          mStatusMessage->setText(rclone_info1);
 
           rcloneListRemotes();
         } else {

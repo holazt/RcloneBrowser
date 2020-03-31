@@ -22,9 +22,9 @@ call "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary
 
 
 if "%ARCH%" == "x86" (
-set QT=C:\Qt5.14.1\5.14.1\msvc2017\
+set QT=C:\Qt\5.14.2\msvc2017\
 ) else (
-set QT=C:\Qt5.14.1\5.14.1\msvc2017_64\
+set QT=C:\Qt\5.14.2\msvc2017_64\
 )
 set PATH=%QT%\bin;%PATH%
 

@@ -1,7 +1,8 @@
 @echo off
-setlocal enabledelayedexpansion
 
 call :setESC
+
+setlocal enabledelayedexpansion
 
 if "%1" == "" (
   echo Please specify x86 ^(32-bit^) or x64 ^(64-bit^) architecture in cmdline

@@ -3898,7 +3898,15 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         }
 
         --mTransferJobCount;
-        if (--mJobCount == 0) {
+
+       if (mTransferJobCount == 0) {
+        // allow entering sleep 
+#if defined(Q_OS_WIN)
+        SetThreadExecutionState(ES_CONTINUOUS);
+#endif
+       }
+
+        if (--mJobCount == 0) {        
           ui.tabs->setTabText(1, "Jobs");
         } else {
           ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
@@ -4120,6 +4128,12 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ++mTransferJobCount;
+
+  // prevent OS sleep when transfer running
+#if defined(Q_OS_WIN)
+  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_AWAYMODE_REQUIRED);
+#endif
+  
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);

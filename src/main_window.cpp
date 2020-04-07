@@ -525,6 +525,9 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/alwaysShowInTray",
                          dialog.getAlwaysShowInTray());
       settings->setValue("Settings/closeToTray", dialog.getCloseToTray());
+      settings->setValue("Settings/startMinimisedToTray",
+                         dialog.getStartMinimisedToTray());
+
       settings->setValue("Settings/notifyFinishedTransfers",
                          dialog.getNotifyFinishedTransfers());
       settings->setValue("Settings/soundNotif", dialog.getSoundNotif());
@@ -1978,6 +1981,15 @@ MainWindow::MainWindow() {
   // we start all auto mount tasks with 1s delay - so RB has chance to start
   // properly
   QTimer::singleShot(1000, this, SLOT(autoStartMounts()));
+
+  // start minimised to tray
+  if ((settings->value("Settings/startMinimisedToTray").toBool())) {
+#ifdef Q_OS_MACOS
+    osxHideDockIcon();
+#endif
+    mSystemTray.show();
+    QTimer::singleShot(0, this, SLOT(hide()));
+  }
 }
 
 MainWindow::~MainWindow() {

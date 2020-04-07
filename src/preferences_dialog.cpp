@@ -151,6 +151,15 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.queueScript->setText(queueScript);
   });
 
+  QObject::connect(ui.closeToTray, &QCheckBox::clicked, this, [=]() {
+    if (ui.closeToTray->isChecked()) {
+      ui.startMinimisedToTray->setDisabled(false);
+    } else {
+      ui.startMinimisedToTray->setChecked(false);
+      ui.startMinimisedToTray->setDisabled(true);
+    }
+  });
+
   ui.rclone->setText(
       QDir::toNativeSeparators(settings->value("Settings/rclone").toString()));
   ui.rcloneConf->setText(QDir::toNativeSeparators(
@@ -191,6 +200,14 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
         settings->value("Settings/alwaysShowInTray", false).toBool());
     ui.closeToTray->setChecked(
         settings->value("Settings/closeToTray", false).toBool());
+    ui.startMinimisedToTray->setChecked(
+        settings->value("Settings/startMinimisedToTray", false).toBool());
+
+    if (!(settings->value("Settings/closeToTray", false).toBool())) {
+      ui.startMinimisedToTray->setChecked(false);
+      ui.startMinimisedToTray->setDisabled(true);
+    }
+
     ui.notifyFinishedTransfers->setChecked(
         settings->value("Settings/notifyFinishedTransfers", true).toBool());
   } else {
@@ -198,6 +215,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.alwaysShowInTray->setDisabled(true);
     ui.closeToTray->setChecked(false);
     ui.closeToTray->setDisabled(true);
+    ui.startMinimisedToTray->setChecked(false);
+    ui.startMinimisedToTray->setDisabled(true);
     ui.notifyFinishedTransfers->setChecked(false);
     ui.notifyFinishedTransfers->setDisabled(true);
   }
@@ -382,6 +401,10 @@ bool PreferencesDialog::getCheckRcloneUpdates() const {
 
 bool PreferencesDialog::getAlwaysShowInTray() const {
   return ui.alwaysShowInTray->isChecked();
+}
+
+bool PreferencesDialog::getStartMinimisedToTray() const {
+  return ui.startMinimisedToTray->isChecked();
 }
 
 bool PreferencesDialog::getCloseToTray() const {

@@ -2120,6 +2120,8 @@ void MainWindow::quitApp(void) {
         QString("Some mounts can't be unmounted. Make sure that they are "
                 "not used by other programs. You can also try to unmount "
                 "them directly from your OS."));
+
+    mAppQuittingStatus = false;
     return;
   }
 
@@ -3005,7 +3007,6 @@ bool MainWindow::canClose() {
   }
 
   if (button == QMessageBox::Yes) {
-
     // make sure terminated job is not removed from the queue
     // we make close process aware that it is quitting
     mAppQuittingStatus = true;
@@ -4397,6 +4398,11 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
 
   QObject::connect(widget, &SchedulerWidget::runTask, this, [=]() {
     QMutexLocker locker(&mMutex);
+
+    // when quitting (waiting for unmount) don't start new tasks
+    if (mAppQuittingStatus) {
+      return;
+    }
 
     QString taskID = widget->getSchedulerTaskId();
     QString requestID = widget->getSchedulerRequestId();

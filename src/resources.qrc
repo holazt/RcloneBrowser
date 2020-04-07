@@ -79,6 +79,9 @@
     <file>images/qbutton_icons/addtoqueue_inv.png</file>
     <file>images/qbutton_icons/addtoqueue.png</file>
 
+    <file>images/qbutton_icons/addtoscheduler_inv.png</file>
+    <file>images/qbutton_icons/addtoscheduler.png</file>
+
     <file>images/qbutton_icons/removefromqueue.png</file>
     <file>images/qbutton_icons/removefromqueue_inv.png</file>
 
@@ -94,6 +97,8 @@
     <file>images/qbutton_icons/mount1.png</file>
     <file>images/qbutton_icons/mount1_inv.png</file>
 
+    <file>images/qbutton_icons/pause.png</file>
+    <file>images/qbutton_icons/pause_inv.png</file>
 
     <file>images/program_icons/rclone-browser512.png</file>
 

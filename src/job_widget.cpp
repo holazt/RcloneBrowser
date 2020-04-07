@@ -4,7 +4,8 @@
 JobWidget::JobWidget(QProcess *process, const QString &info,
                      const QStringList &args, const QString &source,
                      const QString &dest, const QString &uniqueID,
-                     const QString &transferMode, QWidget *parent)
+                     const QString &transferMode, const QString &requestId,
+                     QWidget *parent)
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
@@ -24,6 +25,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
   QString infoTrimmed;
 
+  mRequestId = requestId;
   mUniqueID = uniqueID;
   mTransferMode = transferMode;
 
@@ -304,18 +306,27 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                 "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
+          mJobFinalStatus = "finished";
           ui.progress_info->hide();
         } else {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
+
+          if (status == 9) {
+
+            mJobFinalStatus = "stopped";
+          } else {
+            mJobFinalStatus = "error";
+          }
+
           ui.progress_info->hide();
         }
 
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
 
-        emit finished(ui.info->text());
+        emit finished(ui.info->text(), mJobFinalStatus);
       });
 
   ui.showDetails->setStyleSheet(
@@ -338,11 +349,14 @@ void JobWidget::cancel() {
   ui.showDetails->setStyleSheet(
       "QToolButton { border: 0; color: red; font-weight: bold;}");
   ui.showDetails->setText("  Stopped");
+  mJobFinalStatus = "stopped";
   ui.progress_info->hide();
   ui.cancel->setToolTip("Close");
   ui.cancel->setStatusTip("Close");
 }
 
 QString JobWidget::getUniqueID() { return mUniqueID; }
+
+QString JobWidget::getRequestId() { return mRequestId; }
 
 QString JobWidget::getTransferMode() { return mTransferMode; }

@@ -607,8 +607,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       } else {
         info = QString("%1 from %2").arg(t.getMode()).arg(src);
       }
-      emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
-                       "");
+      emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(), "",
+                       QUuid::createUuid().toString());
     }
   });
 
@@ -635,8 +635,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         info = QString("%1 from %2").arg(t.getMode()).arg(src);
       }
 
-      emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
-                       "");
+      emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(), "",
+                       QUuid::createUuid().toString());
     }
   });
 
@@ -964,7 +964,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
           QStringList args = t.getOptions();
           emit addTransfer(QString("%1 from %2").arg(t.getMode()).arg(src), src,
-                           dst, args, QUuid::createUuid().toString(), "");
+                           dst, args, QUuid::createUuid().toString(), "",
+                           QUuid::createUuid().toString());
         }
       });
 

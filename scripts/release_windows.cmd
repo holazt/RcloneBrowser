@@ -79,7 +79,7 @@ copy "%ROOT%\CHANGELOG.md" "%TARGET%\Changelog.md" || ( call :setESC & echo. & e
 copy "%ROOT%\LICENSE" "%TARGET%\License.txt" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 copy "%BUILD%\RcloneBrowser.exe" "%TARGET%" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 
-windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg "%TARGET%\RcloneBrowser.exe" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+windeployqt.exe --no-translations --no-angle --no-compiler-runtime "%TARGET%\RcloneBrowser.exe" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 rd /s /q "%TARGET%\imageformats" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 
 rem include all MSVCruntime dlls

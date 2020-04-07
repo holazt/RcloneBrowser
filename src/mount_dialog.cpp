@@ -207,7 +207,7 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
 
     getOptions();
     JobOptions *jobo = mJobOptions;
-    ListOfJobOptions::getInstance()->Persist(jobo);
+    { ListOfJobOptions::getInstance()->Persist(jobo); }
     this->close();
   });
 

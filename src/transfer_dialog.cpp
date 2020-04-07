@@ -155,7 +155,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     }
 
     JobOptions *jobo = getJobOptions();
-    ListOfJobOptions::getInstance()->Persist(jobo);
+    { ListOfJobOptions::getInstance()->Persist(jobo); }
     // always close on save
     // if (mIsEditMode)
     this->close();

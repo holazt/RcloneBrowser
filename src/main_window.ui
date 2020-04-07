@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>696</width>
-    <height>411</height>
+    <width>833</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -231,8 +231,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>648</width>
-             <height>245</height>
+             <width>785</width>
+             <height>300</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -373,10 +373,26 @@
           <item>
            <widget class="QToolButton" name="buttonAddToQueue">
             <property name="toolTip">
-             <string>Add selected tasks to the queue for later execution</string>
+             <string>Add to the queue</string>
             </property>
             <property name="statusTip">
-             <string>Add selected tasks to the queue for later execution</string>
+             <string>Add selected transfer tasks to the queue</string>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonAddToScheduler">
+            <property name="toolTip">
+             <string>Add to the scheduler</string>
+            </property>
+            <property name="statusTip">
+             <string>Add selected transfer tasks to the scheduler</string>
             </property>
             <property name="text">
              <string>Add</string>
@@ -588,7 +604,7 @@
           <item>
            <widget class="QLabel" name="labelQueueInfoStart">
             <property name="styleSheet">
-             <string notr="true">color: green; font-weight: bold;</string>
+             <string notr="true">color: darkgreen; font-weight: bold;</string>
             </property>
             <property name="text">
              <string/>
@@ -667,6 +683,176 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Scheduler</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QToolButton" name="buttonStartScheduler">
+            <property name="toolTip">
+             <string>Start scheduler</string>
+            </property>
+            <property name="statusTip">
+             <string>Start scheduler</string>
+            </property>
+            <property name="text">
+             <string>Start</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonStopScheduler">
+            <property name="toolTip">
+             <string>Stop scheduler</string>
+            </property>
+            <property name="statusTip">
+             <string>Stop scheduler</string>
+            </property>
+            <property name="text">
+             <string>Stop</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_10">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelSchedulerInfoStart">
+            <property name="styleSheet">
+             <string notr="true">color: darkgreen; font-weight: bold;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelSchedulerInfoStop">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_19">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="layoutcontrol1_sch">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>CheckBox</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>5</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="jobsArea_2">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>785</width>
+             <height>300</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QVBoxLayout" name="schedulers">
+              <item>
+               <widget class="QLabel" name="noSchedulesAvailable">
+                <property name="text">
+                 <string>No schedules are available</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -676,7 +862,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>696</width>
+     <width>833</width>
      <height>22</height>
     </rect>
    </property>
@@ -892,6 +1078,30 @@
     <string>Stop all selected tasks</string>
    </property>
   </action>
+  <action name="actionAddToScheduler">
+   <property name="text">
+    <string>Add to the scheduler</string>
+   </property>
+   <property name="toolTip">
+    <string>Add selected transfer tasks to the scheduler</string>
+   </property>
+  </action>
+  <action name="actionStartScheduler">
+   <property name="text">
+    <string>Start</string>
+   </property>
+   <property name="toolTip">
+    <string>Start all schedulers</string>
+   </property>
+  </action>
+  <action name="actionStopScheduler">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop scheduler</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>tabs</tabstop>
@@ -940,6 +1150,22 @@
    <hints>
     <hint type="sourcelabel">
      <x>289</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonAddToScheduler</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAddToScheduler</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>380</x>
      <y>73</y>
     </hint>
     <hint type="destinationlabel">

@@ -45,6 +45,7 @@ set(UI
   mount_widget.ui
   stream_widget.ui
   preferences_dialog.ui
+  scheduler_widget.ui
 )
 
 set(MOC
@@ -64,6 +65,9 @@ set(MOC
   list_of_job_options.h
   item_model.h
   qcron.h
+  scheduler_widget.h
+  hours_spinbox.h
+  minutes_spinbox.h
 )
 
 set(OTHER
@@ -98,6 +102,9 @@ set(SOURCE
   qcron.cpp
   qcronfield.cpp
   qcronnode.cpp
+  scheduler_widget.cpp
+  hours_spinbox.cpp
+  minutes_spinbox.cpp
 )
 
 if(WIN32)

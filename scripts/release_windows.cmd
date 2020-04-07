@@ -1,7 +1,8 @@
 @echo off
-setlocal enabledelayedexpansion
 
 call :setESC
+
+setlocal enabledelayedexpansion
 
 if "%1" == "" (
   echo Please specify x86 ^(32-bit^) or x64 ^(64-bit^) architecture in cmdline
@@ -22,9 +23,9 @@ call "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary
 
 
 if "%ARCH%" == "x86" (
-set QT=C:\Qt5.14.1\5.14.1\msvc2017\
+set QT=C:\Qt\5.14.2\msvc2017\
 ) else (
-set QT=C:\Qt5.14.1\5.14.1\msvc2017_64\
+set QT=C:\Qt\5.14.2\msvc2017_64\
 )
 set PATH=%QT%\bin;%PATH%
 
@@ -78,7 +79,7 @@ copy "%ROOT%\CHANGELOG.md" "%TARGET%\Changelog.md" || ( call :setESC & echo. & e
 copy "%ROOT%\LICENSE" "%TARGET%\License.txt" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 copy "%BUILD%\RcloneBrowser.exe" "%TARGET%" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 
-windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg "%TARGET%\RcloneBrowser.exe" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+windeployqt.exe --no-translations --no-angle --no-compiler-runtime "%TARGET%\RcloneBrowser.exe" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 rd /s /q "%TARGET%\imageformats" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 
 rem include all MSVCruntime dlls
@@ -87,11 +88,11 @@ copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\vcruntime140*.dll" "%TARGET%
 
 rem include relevant openssl libraries
 if "%ARCH%" == "x86" (
-copy "c:\Program Files (x86)\openssl-1.1.1d-win32\libssl-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
-copy "c:\Program Files (x86)\openssl-1.1.1d-win32\libcrypto-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files (x86)\openssl-1.1.1f-win32\libssl-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files (x86)\openssl-1.1.1f-win32\libcrypto-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 ) else (
-copy "c:\Program Files\openssl-1.1.1d-win64\libssl-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
-copy "c:\Program Files\openssl-1.1.1d-win64\libcrypto-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files\openssl-1.1.1f-win64\libssl-1_1-x64.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files\openssl-1.1.1f-win64\libcrypto-1_1-x64.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 )
 
 (

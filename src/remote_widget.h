@@ -18,7 +18,8 @@ public:
 signals:
   void addTransfer(const QString &message, const QString &source,
                    const QString &remote, const QStringList &args,
-                   const QString &uniqueId, const QString &transferMode);
+                   const QString &uniqueId, const QString &transferMode,
+                   const QString &requestId);
   void addStream(const QString &remote, const QString &stream,
                  const QString &remoteType);
   void addNewMount(const QString &remote, const QString &folder,

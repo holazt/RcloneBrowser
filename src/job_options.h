@@ -99,14 +99,16 @@ public:
 class JobOptionsListWidgetItem : public QListWidgetItem {
 public:
   JobOptionsListWidgetItem(JobOptions *jo, const QIcon &icon,
-                           const QString &text)
-      : QListWidgetItem(icon, text), mJobData(jo) {}
+                           const QString &text, const QString &requestId)
+      : QListWidgetItem(icon, text), mJobData(jo), mRequestId(requestId) {}
 
   void SetData(JobOptions *jo) { mJobData = jo; }
   JobOptions *GetData() { return mJobData; }
+  QString GetRequestId() { return mRequestId; }
 
 private:
   JobOptions *mJobData;
+  QString mRequestId;
 };
 
 class SerializationException : public QException {

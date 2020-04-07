@@ -705,7 +705,6 @@ MainWindow::MainWindow() {
   QObject::connect(
       ui.tasksListWidget, &QWidget::customContextMenuRequested, this,
       [=](const QPoint &pos) {
-
         setTasksButtons();
         auto items = ui.tasksListWidget->selectedItems();
         bool isMount = false;
@@ -1462,7 +1461,6 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionStartQueue
   QObject::connect(ui.actionStartQueue, &QAction::triggered, this, [=]() {
-
     mQueueStatus = true;
 
     auto settings = GetSettings();
@@ -1533,7 +1531,6 @@ MainWindow::MainWindow() {
   });
 
   QObject::connect(ui.actionStopQueue, &QAction::triggered, this, [=]() {
-
     mQueueStatus = false;
 
     auto settings = GetSettings();
@@ -1900,7 +1897,7 @@ MainWindow::MainWindow() {
   }
 
   if ((settings->value("Settings/queueStatus").toBool())) {
-     ui.actionStartQueue->trigger();
+    ui.actionStartQueue->trigger();
   }
 
   QObject::connect(&mSystemTray, &QSystemTrayIcon::activated, this,
@@ -1981,7 +1978,6 @@ MainWindow::MainWindow() {
   // we start all auto mount tasks with 1s delay - so RB has chance to start
   // properly
   QTimer::singleShot(1000, this, SLOT(autoStartMounts()));
-
 }
 
 MainWindow::~MainWindow() {
@@ -4276,7 +4272,6 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
                    [=]() { saveSchedulerFile(); });
 
   QObject::connect(widget, &SchedulerWidget::stopTask, this, [=]() {
-
     QMutexLocker locker(&mStopTaskMutex);
     QString requestID = widget->getSchedulerRequestId();
 
@@ -4389,7 +4384,6 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
   });
 
   QObject::connect(widget, &SchedulerWidget::runTask, this, [=]() {
-
     QMutexLocker locker(&mMutex);
 
     QString taskID = widget->getSchedulerTaskId();

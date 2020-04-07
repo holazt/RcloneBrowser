@@ -3880,14 +3880,15 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
           mLastFinished = widget;
 #if defined(Q_OS_WIN)
           mSystemTray.showMessage(
-              "Rclone Browser - Transfer finished", info,
+              "Rclone Browser - transfer " + jobFinalStatus, info,
               QIcon(":media/images/program_icons/rclone-browser512.png"));
 #else
 #if defined(Q_OS_MACOS)
-          mSystemTray.showMessage("Rclone Browser - Transfer finished", info);
+          mSystemTray.showMessage("Rclone Browser - transfer " + jobFinalStatus,
+                                  info);
 #else
-          mSystemTray.showMessage("Rclone Browser - Transfer finished", info,
-                                  QSystemTrayIcon::Information);
+          mSystemTray.showMessage("Rclone Browser - transfer " + jobFinalStatus,
+                                  info, QSystemTrayIcon::Information);
 #endif
 #endif
         }
@@ -3899,14 +3900,14 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
         --mTransferJobCount;
 
-       if (mTransferJobCount == 0) {
-        // allow entering sleep 
+        if (mTransferJobCount == 0) {
+      // allow entering sleep
 #if defined(Q_OS_WIN)
-        SetThreadExecutionState(ES_CONTINUOUS);
+          SetThreadExecutionState(ES_CONTINUOUS);
 #endif
-       }
+        }
 
-        if (--mJobCount == 0) {        
+        if (--mJobCount == 0) {
           ui.tabs->setTabText(1, "Jobs");
         } else {
           ui.tabs->setTabText(1, QString("Jobs (%1)").arg(mJobCount));
@@ -4131,9 +4132,10 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
   // prevent OS sleep when transfer running
 #if defined(Q_OS_WIN)
-  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_AWAYMODE_REQUIRED);
+  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED |
+                          ES_AWAYMODE_REQUIRED);
 #endif
-  
+
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);

@@ -1462,7 +1462,11 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionStartQueue
   QObject::connect(ui.actionStartQueue, &QAction::triggered, this, [=]() {
+
     mQueueStatus = true;
+
+    auto settings = GetSettings();
+    settings->setValue("Settings/queueStatus", "true");
 
     ui.tabs->setTabText(3, QString("Queue (%1)>>(0)").arg(mQueueCount));
 
@@ -1529,7 +1533,11 @@ MainWindow::MainWindow() {
   });
 
   QObject::connect(ui.actionStopQueue, &QAction::triggered, this, [=]() {
+
     mQueueStatus = false;
+
+    auto settings = GetSettings();
+    settings->setValue("Settings/queueStatus", "false");
 
     if (ui.queueListWidget->count() > 0) {
       ui.queueListWidget->item(0)->setBackground(QBrush());
@@ -1889,6 +1897,10 @@ MainWindow::MainWindow() {
     ui.labelSchedulerInfoStop->show();
 
     ui.tabs->setTabText(4, QString("Scheduler (%1)").arg(mSchedulersCount));
+  }
+
+  if ((settings->value("Settings/queueStatus").toBool())) {
+     ui.actionStartQueue->trigger();
   }
 
   QObject::connect(&mSystemTray, &QSystemTrayIcon::activated, this,

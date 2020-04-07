@@ -477,10 +477,6 @@ void SchedulerWidget::checkSchedule(void) {
     mNextRun = nextRun();
     updateInfoFields();
 
-    qDebug() << "mGlobalStop: " << mGlobalStop;
-    qDebug() << "mSchedulerStatus: " << mSchedulerStatus;
-    qDebug() << "mTaskRunning: " << mTaskRunning;
-
     if (!mGlobalStop && (mSchedulerStatus == "activated") && !mTaskRunning) {
       mRequestId = QUuid::createUuid().toString();
       mManualStart = false;

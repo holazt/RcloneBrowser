@@ -112,6 +112,8 @@ if(WIN32)
 elseif(APPLE)
   set(OTHER ${OTHER} osx_helper.h)
   set(SOURCE ${SOURCE} osx_helper.mm)
+  set(OTHER ${OTHER} mac_os_notifications.h)
+  set(SOURCE ${SOURCE} mac_os_notifications.mm)
 endif()
 
 set(QRC resources.qrc)

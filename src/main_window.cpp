@@ -12,6 +12,7 @@
 #include "utils.h"
 #ifdef Q_OS_MACOS
 #include "global.h"
+#include "mac_os_notifications.h"
 #include "osx_helper.h"
 #endif
 
@@ -3884,8 +3885,8 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
               QIcon(":media/images/program_icons/rclone-browser512.png"));
 #else
 #if defined(Q_OS_MACOS)
-          mSystemTray.showMessage("Rclone Browser - transfer " + jobFinalStatus,
-                                  info);
+          MacOsNotification::Display(
+              "Rclone Browser - transfer " + jobFinalStatus, info);
 #else
           mSystemTray.showMessage("Rclone Browser - transfer " + jobFinalStatus,
                                   info, QSystemTrayIcon::Information);

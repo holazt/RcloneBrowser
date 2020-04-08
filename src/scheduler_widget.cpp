@@ -830,7 +830,7 @@ void SchedulerWidget::updateTaskStatus(const QString requestID,
       mLastRunFinished = "";
       mLastRunStatus = "running";
       mTaskRunning = true;
-      ui.info->setStyleSheet("QLineEdit { color: darkgreen; font-weight: bold; "
+      ui.info->setStyleSheet("QLineEdit { color: green; font-weight: bold; "
                              "background-color: rgba(0, 0, 0, 0);}");
     }
 
@@ -840,7 +840,7 @@ void SchedulerWidget::updateTaskStatus(const QString requestID,
       mLastRunFinished = "";
       mLastRunStatus = "in the queue";
       mTaskRunning = true;
-      ui.info->setStyleSheet("QLineEdit { color: darkgreen; font-weight: bold; "
+      ui.info->setStyleSheet("QLineEdit { color: green; font-weight: bold; "
                              "background-color: rgba(0, 0, 0, 0);}");
     }
 
@@ -1033,7 +1033,7 @@ void SchedulerWidget::updateInfoFields(void) {
     if (mSchedulerStatus == "activated") {
 
       ui.showDetails->setStyleSheet(
-          "QToolButton { border: 0; color: darkgreen; font-weight: bold;}");
+          "QToolButton { border: 0; color: green; font-weight: bold;}");
 
       ui.showDetails->setText("  Active");
 
@@ -1051,14 +1051,14 @@ void SchedulerWidget::updateInfoFields(void) {
 
   if (mLastRunStatus == "running" || mLastRunStatus == "in the queue") {
     ui.lastRunStatus->setStyleSheet(
-        "QLabel { color: darkgreen; font-weight: bold;}");
+        "QLabel { color: green; font-weight: bold;}");
     ui.runTask->setEnabled(false);
     ui.stopTask->setEnabled(true);
   }
 
   if (mLastRunStatus == "finished") {
     ui.lastRunStatus->setStyleSheet(
-        "QLabel { color: darkgreen; font-weight: bold;}");
+        "QLabel { color: green; font-weight: bold;}");
     ui.runTask->setEnabled(true);
     ui.stopTask->setEnabled(false);
   }

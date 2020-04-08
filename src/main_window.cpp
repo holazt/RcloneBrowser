@@ -610,7 +610,8 @@ MainWindow::MainWindow() {
         this, "Rclone Browser",
         QString(
             R"(<h3>GUI for rclone, v)" RCLONE_BROWSER_VERSION "</h3>"
-            R"(<p>Copyright &copy; 2019</p>)"
+
+            R"(<p>Copyright &copy; 2019-2020 <a href="https://github.com/kapitainsky/RcloneBrowser/blob/master/LICENSE">kapitainsky</a></p>)"
 
             R"(<p>Current development and maintenance<br /><a href="https://github.com/kapitainsky/RcloneBrowser">kapitainsky</a></p>)"
 
@@ -918,7 +919,7 @@ MainWindow::MainWindow() {
                     ui.queueListWidget->item(0));
             mQueueTaskRunning = true;
             runItem(item, "queue", item->GetRequestId());
-            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+            ui.queueListWidget->item(0)->setBackground(Qt::green);
             setQueueButtons();
           } else {
             mQueueTaskRunning = false;
@@ -1215,14 +1216,14 @@ MainWindow::MainWindow() {
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
               (transfer->isRunning)) {
-            ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+            ui.tasksListWidget->item(k)->setBackground(Qt::green);
           }
         }
 
         if (auto mount = qobject_cast<MountWidget *>(widget)) {
           if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
               (mount->isRunning)) {
-            ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+            ui.tasksListWidget->item(k)->setBackground(Qt::green);
           }
         }
       }
@@ -1446,7 +1447,7 @@ MainWindow::MainWindow() {
                 ui.queueListWidget->item(0));
 
         runItem(item, "queue", item->GetRequestId());
-        ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+        ui.queueListWidget->item(0)->setBackground(Qt::green);
         mQueueTaskRunning = true;
         ui.tabs->setTabText(3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
       }
@@ -1534,7 +1535,7 @@ MainWindow::MainWindow() {
       mQueueTaskRunning = true;
       runItem(item, "queue", item->GetRequestId());
       ui.tabs->setTabText(3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
-      ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+      ui.queueListWidget->item(0)->setBackground(Qt::green);
       ui.queueListWidget->item(0)->setSelected(false);
       //      }
     }
@@ -3397,7 +3398,7 @@ void MainWindow::listTasks() {
             ui.queueListWidget->insertItem(i, item_insert);
 
             if (i == 0 && mQueueStatus) {
-              ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+              ui.queueListWidget->item(0)->setBackground(Qt::green);
             }
           }
         } // for j
@@ -3501,14 +3502,14 @@ void MainWindow::listTasks() {
       if (auto transfer = qobject_cast<JobWidget *>(widget)) {
         if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
             (transfer->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+          ui.tasksListWidget->item(k)->setBackground(Qt::green);
         }
       }
 
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
         if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
             (mount->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+          ui.tasksListWidget->item(k)->setBackground(Qt::green);
         }
       }
     }
@@ -3536,7 +3537,7 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
         static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
     JobOptions *joTasks = item->GetData();
     if (joTasks->uniqueId.toString() == jo->uniqueId.toString()) {
-      ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+      ui.tasksListWidget->item(k)->setBackground(Qt::green);
     }
   }
 
@@ -3799,14 +3800,14 @@ void MainWindow::editSelectedTask() {
       if (auto transfer = qobject_cast<JobWidget *>(widget)) {
         if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
             (transfer->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+          ui.tasksListWidget->item(k)->setBackground(Qt::green);
         }
       }
 
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
         if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
             (mount->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
+          ui.tasksListWidget->item(k)->setBackground(Qt::green);
         }
       }
     }
@@ -4018,7 +4019,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
                 ui.tabs->setTabText(
                     3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
 
-                ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+                ui.queueListWidget->item(0)->setBackground(Qt::green);
               } else {
 
                 ui.tabs->setTabText(
@@ -4042,7 +4043,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
                 mQueueTaskRunning = true;
                 runItem(item, "queue", item->GetRequestId());
-                ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+                ui.queueListWidget->item(0)->setBackground(Qt::green);
                 ui.tabs->setTabText(
                     3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
               }
@@ -4512,7 +4513,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
                       ui.queueListWidget->item(0));
 
               runItem(item, "scheduler", item->GetRequestId());
-              ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+              ui.queueListWidget->item(0)->setBackground(Qt::green);
               mQueueTaskRunning = true;
               ui.tabs->setTabText(
                   3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));

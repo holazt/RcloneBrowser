@@ -233,18 +233,21 @@ In standard operations mode all configurations files are stored in the following
     *   tasks file:  ~/Library/Application Support/rclone-browser/rclone-browser/tasks.bin
     *   lock file:   in $TMPDIR assigned by OS
     *   queue file:  ~/Library/Application Support/rclone-browser/rclone-browser/queue.conf
+    *   scheduler file:  ~/Library/Application Support/rclone-browser/rclone-browser/scheduler.conf
 
 *   Linux/BSD:
     *   preferences: ~/.config/rclone-browser/rclone-browser.conf
     *   tasks file:  ~/.local/share/rclone-browser/rclone-browser/tasks.bin
     *   lock file:   in $TMPDIR or /tmp if $TMPDIR is not defined
     *   queue file:  ~/.local/share/rclone-browser/rclone-browser/queue.conf
+    *   scheduler file:  ~/.local/share/rclone-browser/rclone-browser/scheduler.conf
 
 *   Windows:
     *   preferences: in registry Computer\HKEY_CURRENT_USER\Software\rclone-browser\rclone-browser
     *   tasks file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
     *   lock file:   %HOMEPATH%\AppData\Local\Temp\
     *   queue file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\queue.conf
+    *   scheduler file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\scheduler.conf
 
 Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` or `RcloneBrowser.app` create `RcloneBrowser.ini`. For Linux create a directory (not a file) with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage file - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
 

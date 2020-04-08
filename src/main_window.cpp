@@ -13,12 +13,19 @@
 #ifdef Q_OS_MACOS
 #include "global.h"
 #include "mac_os_notifications.h"
+#include "mac_os_power_saving.h"
 #include "osx_helper.h"
 #endif
 
 MainWindow::MainWindow() {
 
   ui.setupUi(this);
+
+#ifdef Q_OS_MACOS
+  // macOS power saving control object
+  mMacOsPowerSaving = new MacOsPowerSaving();
+#endif
+
   if (IsPortableMode()) {
     this->setWindowTitle("Rclone Browser - portable mode - BETA release");
   } else {
@@ -3877,7 +3884,6 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         QMutexLocker locker(&mMutex);
 
         if (mNotifyFinishedTransfers) {
-          qApp->alert(this);
           mLastFinished = widget;
 #if defined(Q_OS_WIN)
           mSystemTray.showMessage(
@@ -3905,6 +3911,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
       // allow entering sleep
 #if defined(Q_OS_WIN)
           SetThreadExecutionState(ES_CONTINUOUS);
+#endif
+#if defined(Q_OS_MACOS)
+          mMacOsPowerSaving->resumePowerSaving();
 #endif
         }
 
@@ -4135,6 +4144,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 #if defined(Q_OS_WIN)
   SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED |
                           ES_AWAYMODE_REQUIRED);
+#endif
+#if defined(Q_OS_MACOS)
+  mMacOsPowerSaving->suspendPowerSaving();
 #endif
 
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));

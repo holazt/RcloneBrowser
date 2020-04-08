@@ -2,7 +2,10 @@ MIT License
 
 Copyright (c) 2019-2020 kapitainsky (Rclone Browser)
 Copyright (c) 2017 Martins Mozeiko  (Rclone Browser)
-Copyright (c) 2015 Mankalas (crontab parser)
+Copyright (c) 2015 Mankalas (qcron)
+Copyright (c) 2013 Linus Unnebäck (node-appdmg)
+Copyright (c) 1997-2020 Jordan Russell (Inno Setup - Windows Installer)
+Portions Copyright (c) 2000-2020 Martijn (Inno Setup - Windows Installer)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

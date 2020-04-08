@@ -4174,7 +4174,9 @@ void MainWindow::runQueueScript(const QString &script) {
                      p->deleteLater();
                    });
 
-  p->start("\"" + QDir::toNativeSeparators(script) + "\"");
+  QStringList sargs;
+
+  p->start(QDir::toNativeSeparators(script), sargs, QIODevice::ReadOnly);
 }
 
 void MainWindow::addNewMount(const QString &remote, const QString &folder,

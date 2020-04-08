@@ -919,7 +919,7 @@ MainWindow::MainWindow() {
                     ui.queueListWidget->item(0));
             mQueueTaskRunning = true;
             runItem(item, "queue", item->GetRequestId());
-            ui.queueListWidget->item(0)->setBackground(Qt::green);
+            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
             setQueueButtons();
           } else {
             mQueueTaskRunning = false;
@@ -1216,14 +1216,14 @@ MainWindow::MainWindow() {
         if (auto transfer = qobject_cast<JobWidget *>(widget)) {
           if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
               (transfer->isRunning)) {
-            ui.tasksListWidget->item(k)->setBackground(Qt::green);
+            ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
           }
         }
 
         if (auto mount = qobject_cast<MountWidget *>(widget)) {
           if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
               (mount->isRunning)) {
-            ui.tasksListWidget->item(k)->setBackground(Qt::green);
+            ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
           }
         }
       }
@@ -1447,7 +1447,7 @@ MainWindow::MainWindow() {
                 ui.queueListWidget->item(0));
 
         runItem(item, "queue", item->GetRequestId());
-        ui.queueListWidget->item(0)->setBackground(Qt::green);
+        ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
         mQueueTaskRunning = true;
         ui.tabs->setTabText(3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
       }
@@ -1535,7 +1535,7 @@ MainWindow::MainWindow() {
       mQueueTaskRunning = true;
       runItem(item, "queue", item->GetRequestId());
       ui.tabs->setTabText(3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
-      ui.queueListWidget->item(0)->setBackground(Qt::green);
+      ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
       ui.queueListWidget->item(0)->setSelected(false);
       //      }
     }
@@ -3398,7 +3398,7 @@ void MainWindow::listTasks() {
             ui.queueListWidget->insertItem(i, item_insert);
 
             if (i == 0 && mQueueStatus) {
-              ui.queueListWidget->item(0)->setBackground(Qt::green);
+              ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
             }
           }
         } // for j
@@ -3502,14 +3502,14 @@ void MainWindow::listTasks() {
       if (auto transfer = qobject_cast<JobWidget *>(widget)) {
         if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
             (transfer->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::green);
+          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
         }
       }
 
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
         if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
             (mount->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::green);
+          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
         }
       }
     }
@@ -3531,13 +3531,13 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
 
   JobOptions *jo = item->GetData();
 
-  // running items have green background
+  // running items have darkGreen background
   for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
     JobOptionsListWidgetItem *item =
         static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
     JobOptions *joTasks = item->GetData();
     if (joTasks->uniqueId.toString() == jo->uniqueId.toString()) {
-      ui.tasksListWidget->item(k)->setBackground(Qt::green);
+      ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
     }
   }
 
@@ -3800,14 +3800,14 @@ void MainWindow::editSelectedTask() {
       if (auto transfer = qobject_cast<JobWidget *>(widget)) {
         if ((transfer->getUniqueID() == joTasks->uniqueId.toString()) &&
             (transfer->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::green);
+          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
         }
       }
 
       if (auto mount = qobject_cast<MountWidget *>(widget)) {
         if ((mount->getUniqueID() == joTasks->uniqueId.toString()) &&
             (mount->isRunning)) {
-          ui.tasksListWidget->item(k)->setBackground(Qt::green);
+          ui.tasksListWidget->item(k)->setBackground(Qt::darkGreen);
         }
       }
     }
@@ -3927,7 +3927,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                              (ui.jobs->count() - 2) / 2);
 
-        // transfer finished - remove green from tasks list
+        // transfer finished - remove darkGreen from tasks list
         auto transfer = qobject_cast<JobWidget *>(widget);
         for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
           JobOptionsListWidgetItem *item =
@@ -4019,7 +4019,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
                 ui.tabs->setTabText(
                     3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
 
-                ui.queueListWidget->item(0)->setBackground(Qt::green);
+                ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
               } else {
 
                 ui.tabs->setTabText(
@@ -4043,7 +4043,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
                 mQueueTaskRunning = true;
                 runItem(item, "queue", item->GetRequestId());
-                ui.queueListWidget->item(0)->setBackground(Qt::green);
+                ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
                 ui.tabs->setTabText(
                     3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
               }
@@ -4237,7 +4237,7 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
 
-    // mount finished - we remove green from task list
+    // mount finished - we remove darkGreen from task list
     auto mount = qobject_cast<MountWidget *>(widget);
     for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
       JobOptionsListWidgetItem *item =
@@ -4513,7 +4513,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
                       ui.queueListWidget->item(0));
 
               runItem(item, "scheduler", item->GetRequestId());
-              ui.queueListWidget->item(0)->setBackground(Qt::green);
+              ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
               mQueueTaskRunning = true;
               ui.tabs->setTabText(
                   3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));

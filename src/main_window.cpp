@@ -1280,10 +1280,9 @@ MainWindow::MainWindow() {
     auto selection = ui.tasksListWidget->selectedItems();
 
     auto settings = GetSettings();
-
     bool sortTask = settings->value("Settings/sortTask").toBool();
 
-    auto items = sortListWidget(selection, sortTask);
+    auto items = sortListWidget(selection, !sortTask);
 
     QString itemsToAdd;
 

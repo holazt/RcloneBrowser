@@ -113,7 +113,10 @@ std::unique_ptr<QSettings> GetSettings() {
 
 void ReadSettings(QSettings *settings, QObject *widget) {
   QString name = widget->objectName();
-  if (!name.isEmpty() && settings->contains(name)) {
+
+  if (!name.isEmpty() &&
+      (settings->contains(name) || settings->contains(name + "/size"))) {
+
     if (QRadioButton *obj = qobject_cast<QRadioButton *>(widget)) {
       obj->setChecked(settings->value(name).toBool());
       return;
@@ -134,6 +137,7 @@ void ReadSettings(QSettings *settings, QObject *widget) {
       obj->setText(settings->value(name).toString());
       return;
     }
+
     if (QPlainTextEdit *obj = qobject_cast<QPlainTextEdit *>(widget)) {
       int count = settings->beginReadArray(name);
       QStringList lines;
@@ -156,6 +160,11 @@ void ReadSettings(QSettings *settings, QObject *widget) {
 
 void WriteSettings(QSettings *settings, QObject *widget) {
   QString name = widget->objectName();
+
+  if (QRadioButton *obj = qobject_cast<QRadioButton *>(widget)) {
+    settings->setValue(name, obj->isChecked());
+    return;
+  }
   if (QCheckBox *obj = qobject_cast<QCheckBox *>(widget)) {
     settings->setValue(name, obj->isChecked());
     return;
@@ -177,6 +186,7 @@ void WriteSettings(QSettings *settings, QObject *widget) {
     return;
   }
   if (QPlainTextEdit *obj = qobject_cast<QPlainTextEdit *>(widget)) {
+
     QString text = obj->toPlainText().trimmed();
     if (!text.isEmpty()) {
       QStringList lines = text.split('\n');
@@ -185,6 +195,9 @@ void WriteSettings(QSettings *settings, QObject *widget) {
         settings->setArrayIndex(i);
         settings->setValue("value", lines[i]);
       }
+      settings->endArray();
+    } else {
+      settings->beginWriteArray(name, 0);
       settings->endArray();
     }
     return;
@@ -274,25 +287,26 @@ QStringList GetRemoteModeRcloneOptions() {
   return driveSharedOption;
 }
 
-QStringList GetDefaultRcloneOptionsList() {
+QStringList GetDefaultOptionsList(const QString &settingsOptions) {
   auto settings = GetSettings();
-  QString defaultRcloneOptions =
-      settings->value("Settings/defaultRcloneOptions").toString();
-  QStringList defaultRcloneOptionsList;
+  QString defaultOptions =
+      settings->value("Settings/" + settingsOptions).toString();
+  //      settings->value("Settings/defaultRcloneOptions").toString();
+  QStringList defaultOptionsList;
 
-  if (!defaultRcloneOptions.isEmpty()) {
+  if (!defaultOptions.isEmpty()) {
     // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1
     // arg2" --option-3 arg3 should generate "--option-1" "--option-2=\"arg1
     // arg2\"" "--option-3" "arg3"
-    for (QString arg : defaultRcloneOptions.split(
-             QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+    for (QString arg :
+         defaultOptions.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
       if (!arg.isEmpty()) {
-        defaultRcloneOptionsList << arg.replace("\"", "");
+        defaultOptionsList << arg.replace("\"", "");
       }
     }
   }
 
-  return defaultRcloneOptionsList;
+  return defaultOptionsList;
 }
 
 QStringList GetShowHidden() {

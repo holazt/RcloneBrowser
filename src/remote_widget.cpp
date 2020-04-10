@@ -416,10 +416,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QProcess process;
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
-      process.setArguments(QStringList() << "mkdir" << GetRcloneConf()
-                                         << GetRemoteModeRcloneOptions()
-                                         << GetDefaultRcloneOptionsList()
-                                         << remote + ":" + folder);
+      process.setArguments(QStringList()
+                           << "mkdir" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
+                           << remote + ":" + folder);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("New Folder", "Creating...", folderMsg, &process,
@@ -446,12 +447,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QProcess process;
       UseRclonePassword(&process);
       process.setProgram(GetRclone());
-      process.setArguments(
-          QStringList() << "moveto" << GetRcloneConf()
-                        << GetRemoteModeRcloneOptions()
-                        << GetDefaultRcloneOptionsList() << remote + ":" + path
-                        << remote + ":" +
-                               model->path(index.parent()).filePath(name));
+      process.setArguments(QStringList()
+                           << "moveto" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
+                           << remote + ":" + path
+                           << remote + ":" +
+                                  model->path(index.parent()).filePath(name));
       process.setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog progress("Rename", "Renaming...", pathMsg, &process, this);
@@ -480,7 +482,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process.setArguments(QStringList()
                            << "move" << GetRcloneConf()
                            << GetRemoteModeRcloneOptions()
-                           << GetDefaultRcloneOptionsList()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
                            << remote + ":" + path << remote + ":" + name);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
@@ -510,7 +512,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process.setArguments(QStringList()
                            << (model->isFolder(index) ? "purge" : "delete")
                            << GetRcloneConf() << GetRemoteModeRcloneOptions()
-                           << GetDefaultRcloneOptionsList()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
                            << remote + ":" + path);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
@@ -568,10 +570,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess *process = new QProcess;
     UseRclonePassword(process);
     process->setProgram(GetRclone());
-    process->setArguments(QStringList() << "link" << GetRcloneConf()
-                                        << GetRemoteModeRcloneOptions()
-                                        << GetDefaultRcloneOptionsList()
-                                        << remote + ":" + path);
+    process->setArguments(QStringList()
+                          << "link" << GetRcloneConf()
+                          << GetRemoteModeRcloneOptions()
+                          << GetDefaultOptionsList("defaultRcloneOptions")
+                          << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress =
         new ProgressDialog("Fetch Public Link", "Running... ",
@@ -596,19 +599,27 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     TransferDialog t(false, false, remote, path, true, remoteType, _remoteMode,
                      this);
     if (t.exec() == QDialog::Accepted) {
-      QString src = t.getSource();
-      QString dst = t.getDest();
 
-      QStringList args = t.getOptions();
-      QString info;
+      if (t.getDryRun() || t.getTaskId() == "") {
 
-      if (args.value(1) == "--dry-run") {
-        info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+        QString src = t.getSource();
+        QString dst = t.getDest();
+        QStringList args = t.getOptions();
+        QString info;
+
+        if (t.getDryRun()) {
+          args << "--dry-run";
+          info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+        } else {
+          info = QString("%1 from %2").arg(t.getMode()).arg(src);
+        }
+        emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
+                         "", QUuid::createUuid().toString());
+
       } else {
-        info = QString("%1 from %2").arg(t.getMode()).arg(src);
+
+        emit addSavedTransfer(t.getTaskId(), t.getDryRun(), t.getAddToQueue());
       }
-      emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(), "",
-                       QUuid::createUuid().toString());
     }
   });
 
@@ -622,21 +633,27 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     TransferDialog t(true, false, remote, path, model->isFolder(index),
                      remoteType, _remoteMode, this);
     if (t.exec() == QDialog::Accepted) {
-      QString src = t.getSource();
-      QString dst = t.getDest();
 
-      QStringList args = t.getOptions();
+      if (t.getDryRun() || t.getTaskId() == "") {
 
-      QString info;
+        QString src = t.getSource();
+        QString dst = t.getDest();
+        QStringList args = t.getOptions();
+        QString info;
 
-      if (args.value(1) == "--dry-run") {
-        info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+        if (t.getDryRun()) {
+          args << "--dry-run";
+          info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+        } else {
+          info = QString("%1 from %2").arg(t.getMode()).arg(src);
+        }
+
+        emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
+                         "", QUuid::createUuid().toString());
+
       } else {
-        info = QString("%1 from %2").arg(t.getMode()).arg(src);
+        emit addSavedTransfer(t.getTaskId(), t.getDryRun(), t.getAddToQueue());
       }
-
-      emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(), "",
-                       QUuid::createUuid().toString());
     }
   });
 
@@ -654,7 +671,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setArguments(
         QStringList() << "tree"
                       << "-d" << GetRcloneConf() << GetRemoteModeRcloneOptions()
-                      << GetDefaultRcloneOptionsList() << remote + ":" + path);
+                      << GetDefaultOptionsList("defaultRcloneOptions")
+                      << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress = new ProgressDialog(
         "Show directories tree", "Running... ",
@@ -676,10 +694,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QProcess *process = new QProcess;
     UseRclonePassword(process);
     process->setProgram(GetRclone());
-    process->setArguments(QStringList() << "size" << GetRcloneConf()
-                                        << GetRemoteModeRcloneOptions()
-                                        << GetDefaultRcloneOptionsList()
-                                        << remote + ":" + path);
+    process->setArguments(QStringList()
+                          << "size" << GetRcloneConf()
+                          << GetRemoteModeRcloneOptions()
+                          << GetDefaultOptionsList("defaultRcloneOptions")
+                          << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress = new ProgressDialog(
         "Get Size", "Running... ", "Size of: " + remote + ":" + pathMsg,
@@ -721,7 +740,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       process->setProgram(GetRclone());
       process->setArguments(QStringList()
                             << GetRcloneConf() << GetRemoteModeRcloneOptions()
-                            << GetDefaultRcloneOptionsList() << e.getOptions());
+                            << GetDefaultOptionsList("defaultRcloneOptions")
+                            << e.getOptions());
       process->setProcessChannelMode(QProcess::MergedChannels);
 
       ProgressDialog *progress = new ProgressDialog(
@@ -863,9 +883,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       UseRclonePassword(process);
       process->setProgram(GetRclone());
 
-      process->setArguments(QStringList() << GetRcloneConf() << e.getOptions()
-                                          << GetRemoteModeRcloneOptions()
-                                          << GetDefaultRcloneOptionsList());
+      process->setArguments(QStringList()
+                            << GetRcloneConf() << e.getOptions()
+                            << GetRemoteModeRcloneOptions()
+                            << GetDefaultOptionsList("defaultRcloneOptions"));
       process->setProcessChannelMode(QProcess::MergedChannels);
 
       QString checkcommand = "Integity check";
@@ -873,12 +894,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         checkcommand = "Integrity cryptcheck";
       }
 
-      ProgressDialog *progress =
-          new ProgressDialog(checkcommand, "Running... ",
-                             "rclone " + e.getOptions().join(" ") + " " +
-                                 GetRemoteModeRcloneOptions().join(" ") + " " +
-                                 GetDefaultRcloneOptionsList().join(" "),
-                             process, this, false);
+      ProgressDialog *progress = new ProgressDialog(
+          checkcommand, "Running... ",
+          "rclone " + e.getOptions().join(" ") + " " +
+              GetRemoteModeRcloneOptions().join(" ") + " " +
+              GetDefaultOptionsList("defaultRcloneOptions").join(" "),
+          process, this, false);
 
       progress->expand();
       progress->allowToClose();
@@ -903,18 +924,19 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       UseRclonePassword(process);
       process->setProgram(GetRclone());
 
-      process->setArguments(QStringList() << GetRcloneConf() << e.getOptions()
-                                          << GetRemoteModeRcloneOptions()
-                                          << GetDefaultRcloneOptionsList());
+      process->setArguments(QStringList()
+                            << GetRcloneConf() << e.getOptions()
+                            << GetRemoteModeRcloneOptions()
+                            << GetDefaultOptionsList("defaultRcloneOptions"));
 
       process->setProcessChannelMode(QProcess::MergedChannels);
 
-      ProgressDialog *progress =
-          new ProgressDialog("rclone dedupe", "Running... ",
-                             "rclone " + e.getOptions().join(" ") + " " +
-                                 GetRemoteModeRcloneOptions().join(" ") + " " +
-                                 GetDefaultRcloneOptionsList().join(" "),
-                             process, this, false);
+      ProgressDialog *progress = new ProgressDialog(
+          "rclone dedupe", "Running... ",
+          "rclone " + e.getOptions().join(" ") + " " +
+              GetRemoteModeRcloneOptions().join(" ") + " " +
+              GetDefaultOptionsList("defaultRcloneOptions").join(" "),
+          process, this, false);
 
       progress->expand();
       progress->allowToClose();
@@ -931,7 +953,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setArguments(QStringList()
                           << "about" << GetRcloneConf()
                           << GetRemoteModeRcloneOptions()
-                          << GetDefaultRcloneOptionsList() << remote + ":");
+                          << GetDefaultOptionsList("defaultRcloneOptions")
+                          << remote + ":");
     process->setProcessChannelMode(QProcess::MergedChannels);
 
     ProgressDialog *progress = new ProgressDialog(

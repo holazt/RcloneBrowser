@@ -20,6 +20,9 @@ public:
   QString getSource() const;
   QString getDest() const;
   QStringList getOptions();
+  bool getDryRun();
+  QString getTaskId();
+  bool getAddToQueue();
 
   JobOptions *getJobOptions();
 
@@ -32,8 +35,15 @@ private:
   bool mIsEditMode;
   QString mRemoteMode;
   QString mRemoteType;
+  QString mTaskId = "";
+  bool mAddToQueue = false;
 
   JobOptions *mJobOptions;
+
+  void save_AutoName_AddToQueue();
+  bool saveTaskToFile();
+  void transferWriteSettings();
+  void generateAutoTaskName();
 
   void putJobOptions();
 

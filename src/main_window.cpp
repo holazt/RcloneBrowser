@@ -677,6 +677,9 @@ MainWindow::MainWindow() {
                        &MainWindow::addStream);
       QObject::connect(remote, &RemoteWidget::addTransfer, this,
                        &MainWindow::addTransfer);
+      QObject::connect(remote, &RemoteWidget::addSavedTransfer, this,
+                       &MainWindow::addSavedTransfer);
+
       int index = ui.tabs->addTab(remote, name);
       ui.tabs->setCurrentIndex(index);
     }
@@ -2967,7 +2970,8 @@ void MainWindow::rcloneListRemotes() {
   UseRclonePassword(p);
   p->start(GetRclone(),
            QStringList() << "listremotes" << GetRcloneConf()
-                         << GetDefaultRcloneOptionsList() << "--long"
+                         << GetDefaultOptionsList("defaultRcloneOptions")
+                         << "--long"
                          << "--ask-password=false",
            QIODevice::ReadOnly);
 }
@@ -3861,6 +3865,97 @@ void MainWindow::saveSchedulerFile(void) {
   file.close();
 }
 
+void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,
+                                  bool addToQueue) {
+
+  QMutexLocker locker(&mMutex);
+
+  // find task based on taskID
+  for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+    JobOptionsListWidgetItem *item =
+        static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+    JobOptions *joTask = item->GetData();
+
+    if (uniqueId == joTask->uniqueId.toString()) {
+
+      if (!addToQueue) {
+
+        // run immediately
+        runItem(item, "task", QUuid::createUuid().toString(), false);
+        break;
+      } else {
+        // add to queue
+
+        bool isQueueEmpty = (ui.queueListWidget->count() == 0);
+
+        QIcon jobIcon;
+
+        if (joTask->jobType == JobOptions::JobType::Download) {
+          if (joTask->operation == JobOptions::Mount) {
+            jobIcon = mMountIcon;
+          } else {
+            jobIcon = mDownloadIcon;
+          }
+        }
+        if (joTask->jobType == JobOptions::JobType::Upload) {
+          jobIcon = mUploadIcon;
+        }
+
+        JobOptionsListWidgetItem *newitem =
+            new JobOptionsListWidgetItem(joTask, jobIcon, joTask->description,
+                                         QUuid::createUuid().toString());
+
+        ui.queueListWidget->addItem(newitem);
+        mQueueCount = mQueueCount + 1;
+
+        // if queue was empty we start first taks if queue is running and
+        // there is no other transfer job running
+        if (mQueueStatus && isQueueEmpty && (mTransferJobCount == 0)) {
+
+          if (mQueueCount > 0) {
+
+            JobOptionsListWidgetItem *item =
+                static_cast<JobOptionsListWidgetItem *>(
+                    ui.queueListWidget->item(0));
+
+            runItem(item, "scheduler", item->GetRequestId());
+            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+            mQueueTaskRunning = true;
+            ui.tabs->setTabText(
+                3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
+          }
+
+        } else {
+
+          if (mQueueStatus) {
+
+            if (mQueueCount == 0) {
+              ui.tabs->setTabText(3,
+                                  QString("Queue (%1)>>(0)").arg(mQueueCount));
+            } else {
+              if (!mQueueTaskRunning) {
+                ui.tabs->setTabText(
+                    3, QString("Queue (%1)>>(0)").arg(mQueueCount));
+              } else {
+                ui.tabs->setTabText(
+                    3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
+              }
+            }
+          } else {
+            if (mQueueCount == 0) {
+              ui.tabs->setTabText(3, QString("Queue"));
+            } else {
+              ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+            }
+          }
+        }
+        saveQueueFile();
+        break;
+      }
+    }
+  }
+}
+
 void MainWindow::addTransfer(const QString &message, const QString &source,
                              const QString &dest, const QStringList &args,
                              const QString &uniqueId,
@@ -4600,7 +4695,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
     }
   };
 
-  args << GetDefaultRcloneOptionsList();
+  args << GetDefaultOptionsList("defaultRcloneOptions");
 
   args << GetRcloneConf();
 

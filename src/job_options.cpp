@@ -132,12 +132,6 @@ QStringList JobOptions::getOptions() const {
     list << "--delete-excluded";
   }
 
-  if (!excluded.isEmpty()) {
-    for (auto line : excluded.split('\n')) {
-      list << "--exclude" << line;
-    }
-  }
-
   if (!extra.isEmpty()) {
 
     for (auto line : extra.split('\n')) {
@@ -150,6 +144,13 @@ QStringList JobOptions::getOptions() const {
           list << arg.replace("\"", "");
         }
       }
+    }
+  }
+
+  // excluded after extra options as they can contain included
+  if (!excluded.isEmpty()) {
+    for (auto line : excluded.split('\n')) {
+      list << "--exclude" << line;
     }
   }
 
@@ -179,9 +180,20 @@ QStringList JobOptions::getOptions() const {
   list << "--stats-file-name-length"
        << "0";
 
-  QStringList defaultRcloneOptionsList = GetDefaultRcloneOptionsList();
-  if (!defaultRcloneOptionsList.isEmpty()) {
-    list << defaultRcloneOptionsList;
+  if (!GetDefaultOptionsList("defaultRcloneOptions").isEmpty()) {
+    list << GetDefaultOptionsList("defaultRcloneOptions");
+  }
+
+  if (jobType == JobOptions::JobType::Download) {
+    if (!GetDefaultOptionsList("defaultDownloadOptions").isEmpty()) {
+      list << GetDefaultOptionsList("defaultDownloadOptions");
+    }
+  }
+
+  if (jobType == JobOptions::JobType::Upload) {
+    if (!GetDefaultOptionsList("defaultUploadOptions").isEmpty()) {
+      list << GetDefaultOptionsList("defaultUploadOptions");
+    }
   }
 
   return list;

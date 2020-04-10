@@ -20,6 +20,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   fontsize = (settings->value("Settings/fontSize").toInt());
   setMinimumWidth(minimumWidth() + (fontsize * 50));
 
+  if (mIsEditMode) {
+    ui.cb_taskAutoName->hide();
+    ui.cb_taskAddToQueue->hide();
+  }
+
   // lock vertical resizing
   resize(0, 0);
   adjustSize();
@@ -61,24 +66,103 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   ui.comboBoxSpacer3->hide();
   ui.comboBoxSpacer4->hide();
 
-  if (!mIsEditMode) {
-    QPushButton *dryRun =
-        ui.buttonBox->addButton("Dry run", QDialogButtonBox::AcceptRole);
-
-    QPushButton *run =
-        ui.buttonBox->addButton("&Run", QDialogButtonBox::AcceptRole);
-    run->setToolTip("ALT-r");
-
-    QObject::connect(dryRun, &QPushButton::clicked, this,
-                     [=]() { mDryRun = true; });
-  }
-
   QPushButton *saveTask = ui.buttonBox->addButton(
       "&Save task", QDialogButtonBox::ButtonRole::ActionRole);
+
+  QPushButton *dryRun =
+      ui.buttonBox->addButton("Dry run", QDialogButtonBox::AcceptRole);
+
+  QObject::connect(dryRun, &QPushButton::clicked, this,
+                   [=]() { mDryRun = true; });
+
+  QPushButton *run =
+      ui.buttonBox->addButton("&Run", QDialogButtonBox::AcceptRole);
+
+  QObject::connect(run, &QPushButton::clicked, this, [=]() {});
+
+  run->setToolTip("ALT-r");
+
+  saveTask->setDefault(true);
+
+  if (!mIsEditMode) {
+
+    saveTask->setEnabled(false);
+    ui.buttonBox->button(QDialogButtonBox::Cancel)->setDefault(true);
+
+    QObject::connect(ui.cb_taskAutoName, &QCheckBox::clicked, this, [=]() {
+      if (ui.cb_taskAutoName->isChecked()) {
+        saveTask->setEnabled(true);
+        saveTask->setDefault(true);
+        run->setText("Save and &Run");
+        dryRun->setText("Save and Dry run");
+      } else {
+
+        if (ui.le_taskName->text().trimmed().isEmpty()) {
+          run->setText("&Run");
+          dryRun->setText("Dry run");
+          saveTask->setEnabled(false);
+          ui.buttonBox->button(QDialogButtonBox::Cancel)->setDefault(true);
+        } else {
+          run->setText("Save and &Run");
+          dryRun->setText("Save and Dry run");
+          saveTask->setEnabled(true);
+          saveTask->setDefault(true);
+        }
+      }
+    });
+
+    QObject::connect(ui.cb_taskAddToQueue, &QCheckBox::clicked, this, [=]() {
+      auto settings = GetSettings();
+      if (ui.cb_taskAddToQueue->isChecked()) {
+      } else {
+      }
+    });
+
+    QObject::connect(ui.le_taskName, &QLineEdit::textChanged, this, [=]() {
+      if (ui.le_taskName->text().trimmed().isEmpty()) {
+
+        if (ui.cb_taskAutoName->isChecked()) {
+          run->setText("Save and &Run");
+          dryRun->setText("Save and Dry run");
+          saveTask->setEnabled(true);
+          saveTask->setDefault(true);
+        } else {
+          run->setText("&Run");
+          dryRun->setText("Dry run");
+          saveTask->setEnabled(false);
+          ui.buttonBox->button(QDialogButtonBox::Cancel)->setDefault(true);
+        }
+
+      } else {
+        run->setText("Save and &Run");
+        dryRun->setText("Save and Dry run");
+        saveTask->setEnabled(true);
+        saveTask->setDefault(true);
+      }
+    });
+
+  } else {
+    // edit mode
+    QObject::connect(ui.le_taskName, &QLineEdit::textChanged, this, [=]() {
+      if (ui.le_taskName->text().trimmed().isEmpty()) {
+        saveTask->setEnabled(false);
+        ui.buttonBox->button(QDialogButtonBox::Cancel)->setDefault(true);
+      } else {
+        saveTask->setEnabled(true);
+        saveTask->setDefault(true);
+      }
+    });
+
+    dryRun->setEnabled(false);
+    run->setEnabled(false);
+    dryRun->hide();
+    run->hide();
+  }
 
   QObject::connect(
       ui.buttonBox->button(QDialogButtonBox::RestoreDefaults),
       &QPushButton::clicked, this, [=]() {
+        ui.rbCopy->setChecked(true);
         ui.cbSyncDelete->setCurrentIndex(0);
         // set combobox tooltips
         ui.cbSyncDelete->setItemData(0, "--delete-during", Qt::ToolTipRole);
@@ -112,53 +196,20 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         ui.spinLowLevelRetries->setValue(10);
         ui.checkDeleteExcluded->setChecked(false);
         ui.textExclude->clear();
-        auto settings = GetSettings();
-        if (isDownload) {
-          // download
-          ui.pte_textExtra->setPlainText(
-              settings->value("Settings/defaultDownloadOptions").toString());
-        } else {
-          // upload
-          ui.pte_textExtra->setPlainText(
-              settings->value("Settings/defaultUploadOptions").toString());
-        }
+        ui.pte_textExtra->clear();
       });
 
   ui.buttonBox->button(QDialogButtonBox::RestoreDefaults)->click();
 
   QObject::connect(saveTask, &QPushButton::clicked, this, [=]() {
-    // validate before saving task...
-    if (ui.textDescription->text().isEmpty()) {
-      QMessageBox::warning(this, "Warning",
-                           "Please enter task description to save!");
-      ui.tabWidget->setCurrentIndex(0);
-      ui.textDescription->setFocus(Qt::FocusReason::OtherFocusReason);
+    if (saveTaskToFile()) {
+
+      // always close on save
+      // if (mIsEditMode)
+      this->close();
+    } else {
       return;
     }
-
-    // even though the below does not match the condition on the Run buttons
-    // it SEEMS like blanking either one would be a problem, right?
-    if (mIsDownload) {
-      if (ui.textDest->text().isEmpty()) {
-        QMessageBox::warning(this, "Error",
-                             "Invalid task, destination is required!");
-        ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
-        return;
-      }
-    } else {
-      if (ui.textSource->text().isEmpty()) {
-        QMessageBox::warning(this, "Error",
-                             "Invalid task, source is  required!");
-        ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
-        return;
-      }
-    }
-
-    JobOptions *jobo = getJobOptions();
-    { ListOfJobOptions::getInstance()->Persist(jobo); }
-    // always close on save
-    // if (mIsEditMode)
-    this->close();
   });
 
   QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, this,
@@ -267,9 +318,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     };
   });
 
-  settings->beginGroup("Transfer");
-  ReadSettings(settings.get(), this);
-  settings->endGroup();
+  if (!mIsEditMode) {
+    settings->beginGroup("Transfer");
+    ReadSettings(settings.get(), this);
+    settings->endGroup();
+  }
 
   ui.buttonSourceFile->setVisible(!isDownload);
   ui.buttonSourceFolder->setVisible(!isDownload);
@@ -291,8 +344,6 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.remoteMode->setText("drive, --drive-shared-with-me");
     }
   }
-
-  ui.textDescription->clear();
 
   if (mIsEditMode && mJobOptions != nullptr) {
     // it's not really valid for only one of these things to be true.
@@ -322,8 +373,6 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.l_sourceRemote->setEnabled(false);
       ui.l_sourceRemote->setText(remote + ":");
 
-      ui.pte_textExtra->setPlainText(
-          settings->value("Settings/defaultDownloadOptions").toString());
       ui.textSource->setText(path.path());
       QString folder;
       QString default_folder =
@@ -352,8 +401,6 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       ui.l_destRemote->setEnabled(false);
       ui.l_destRemote->setText(remote + ":");
 
-      ui.pte_textExtra->setPlainText(
-          settings->value("Settings/defaultUploadOptions").toString());
       QString folder;
       QString default_folder =
           (settings->value("Settings/defaultUploadDir").toString());
@@ -385,16 +432,47 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       };
     };
   }
+
+  if (!mIsEditMode) {
+    // restore from settings
+    if (settings->value("Settings/transferAutoName").toBool()) {
+      ui.cb_taskAutoName->setChecked(true);
+      run->setText("Save and &Run");
+      dryRun->setText("Save and Dry run");
+      saveTask->setEnabled(true);
+      saveTask->setDefault(true);
+    } else {
+      ui.cb_taskAutoName->setChecked(false);
+      run->setText("&Run");
+      dryRun->setText("Dry run");
+      saveTask->setEnabled(false);
+    }
+
+    ui.cb_taskAddToQueue->setChecked(
+        settings->value("Settings/transferAddToQueue").toBool());
+
+  } else {
+    ui.cb_taskAutoName->setChecked(false);
+    ui.cb_taskAddToQueue->setChecked(false);
+  }
+
+  ui.le_defaultRcloneOptions->setText(
+      settings->value("Settings/defaultRcloneOptions").toString());
+
+  if (isDownload) {
+    ui.label_defaultTransferOptions->setText("Default download options:");
+    ui.le_defaultTransferOptions->setText(
+        settings->value("Settings/defaultDownloadOptions").toString());
+  } else {
+    ui.label_defaultTransferOptions->setText("Default upload options:");
+    ui.le_defaultTransferOptions->setText(
+        settings->value("Settings/defaultUploadOptions").toString());
+  }
 }
 
 TransferDialog::~TransferDialog() {
   if (result() == QDialog::Accepted) {
-    auto settings = GetSettings();
-    settings->beginGroup("Transfer");
-    WriteSettings(settings.get(), this);
-    settings->remove("textSource");
-    settings->remove("textDest");
-    settings->endGroup();
+    transferWriteSettings();
   }
 }
 
@@ -438,6 +516,12 @@ QStringList TransferDialog::getOptions() {
   return newWay;
 }
 
+bool TransferDialog::getDryRun() { return mDryRun; }
+
+bool TransferDialog::getAddToQueue() { return mAddToQueue; }
+
+QString TransferDialog::getTaskId() { return mTaskId; }
+
 /*
  * Apply the displayed/edited values on the UI to the
  * JobOptions object.
@@ -458,8 +542,8 @@ JobOptions *TransferDialog::getJobOptions() {
     mJobOptions->operation = JobOptions::Sync;
   }
 
-  mJobOptions->dryRun = mDryRun;
-  ;
+  //  mJobOptions->dryRun = mDryRun;
+  mJobOptions->dryRun = false;
 
   if (ui.rbSync->isChecked()) {
     mJobOptions->sync = true;
@@ -520,8 +604,8 @@ JobOptions *TransferDialog::getJobOptions() {
   mJobOptions->lowLevelRetries = ui.spinLowLevelRetries->text();
   mJobOptions->deleteExcluded = ui.checkDeleteExcluded->isChecked();
 
-  mJobOptions->excluded = ui.textExclude->toPlainText().trimmed();
   mJobOptions->extra = ui.pte_textExtra->toPlainText().trimmed();
+  mJobOptions->excluded = ui.textExclude->toPlainText().trimmed();
 
   mJobOptions->isFolder = mIsFolder;
 
@@ -533,7 +617,7 @@ JobOptions *TransferDialog::getJobOptions() {
     mJobOptions->dest = ui.l_destRemote->text() + ui.textDest->text();
   }
 
-  mJobOptions->description = ui.textDescription->text();
+  mJobOptions->description = ui.le_taskName->text();
   mJobOptions->remoteType = mRemoteType;
   mJobOptions->remoteMode = mRemoteMode;
 
@@ -611,7 +695,7 @@ void TransferDialog::putJobOptions() {
                                     (mJobOptions->dest).indexOf(":") - 1));
   }
 
-  ui.textDescription->setText(mJobOptions->description);
+  ui.le_taskName->setText(mJobOptions->description);
 
   if (mJobOptions->remoteMode == "") {
     // task saved before googleDriveMode was added
@@ -638,20 +722,136 @@ void TransferDialog::putJobOptions() {
 }
 
 void TransferDialog::done(int r) {
+
   if (r == QDialog::Accepted) {
     if (mIsDownload) {
       if (ui.textDest->text().isEmpty()) {
-        QMessageBox::warning(this, "Warning", "Please enter destination!");
+        QMessageBox::warning(this, "Warning", "Please enter destination.");
         ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
         return;
       }
     } else {
       if (ui.textSource->text().isEmpty()) {
-        QMessageBox::warning(this, "Warning", "Please enter source!");
+        QMessageBox::warning(this, "Warning", "Please enter source.");
         ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
+        return;
+      }
+    }
+    if (!mIsEditMode) {
+      save_AutoName_AddToQueue();
+    }
+
+    if (ui.cb_taskAutoName->isChecked() ||
+        !ui.le_taskName->text().trimmed().isEmpty()) {
+      // save before run
+      generateAutoTaskName();
+      if (saveTaskToFile()) {
+        mAddToQueue = ui.cb_taskAddToQueue->isChecked();
+      } else {
         return;
       }
     }
   }
   QDialog::done(r);
+}
+
+void TransferDialog::save_AutoName_AddToQueue(void) {
+
+  auto settings = GetSettings();
+
+  if (ui.cb_taskAutoName->isChecked()) {
+    settings->setValue("Settings/transferAutoName", "true");
+  } else {
+    settings->setValue("Settings/transferAutoName", "false");
+  }
+
+  if (ui.cb_taskAddToQueue->isChecked()) {
+    settings->setValue("Settings/transferAddToQueue", "true");
+  } else {
+    settings->setValue("Settings/transferAddToQueue", "false");
+  }
+}
+
+bool TransferDialog::saveTaskToFile() {
+
+  // only generated if needed
+  generateAutoTaskName();
+
+  // validate before saving task...
+  if (ui.le_taskName->text().trimmed().isEmpty()) {
+    QMessageBox::warning(this, "Error", "Please enter task name to save.");
+    ui.tabWidget->setCurrentIndex(0);
+    ui.le_taskName->setFocus(Qt::FocusReason::OtherFocusReason);
+    return false;
+  }
+
+  // even though the below does not match the condition on the Run buttons
+  // it SEEMS like blanking either one would be a problem, right?
+  if (mIsDownload) {
+    if (ui.textDest->text().isEmpty()) {
+      QMessageBox::warning(this, "Error",
+                           "Invalid task, destination is required.");
+      ui.tabWidget->setCurrentIndex(0);
+      ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
+      return false;
+    }
+  } else {
+    if (ui.textSource->text().isEmpty()) {
+      QMessageBox::warning(this, "Error", "Invalid task, source is  required.");
+      ui.tabWidget->setCurrentIndex(0);
+      ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
+      return false;
+    }
+  }
+
+  if (!mIsEditMode) {
+    save_AutoName_AddToQueue();
+    transferWriteSettings();
+  }
+
+  JobOptions *jobo = getJobOptions();
+  ListOfJobOptions::getInstance()->Persist(jobo);
+
+  mTaskId = jobo->uniqueId.toString();
+
+  return true;
+}
+
+void TransferDialog::transferWriteSettings() {
+  auto settings = GetSettings();
+
+  settings->beginGroup("Transfer");
+
+  WriteSettings(settings.get(), this);
+  settings->remove("textSource");
+  settings->remove("textDest");
+  settings->remove("cb_taskAddToQueue");
+  settings->remove("cb_taskAutoName");
+  settings->remove("le_taskName");
+  settings->remove("le_defaultRcloneOptions");
+  settings->remove("le_defaultTransferOptions");
+
+  settings->endGroup();
+}
+
+void TransferDialog::generateAutoTaskName() {
+
+  if (ui.cb_taskAutoName->isChecked() &&
+      ui.le_taskName->text().trimmed().isEmpty()) {
+    // generate auto task name
+
+    QDate date = QDate::currentDate();
+    QTime time = QTime::currentTime();
+
+    QString name = "_tmp_" + date.toString("ddMMMyyyy") + "_" +
+                   time.toString("HHmmss") + "_";
+
+    if (mIsDownload) {
+      name = name + ui.l_sourceRemote->text().replace(":", "");
+    } else {
+      name = name + ui.l_destRemote->text().replace(":", "");
+    }
+
+    ui.le_taskName->setText(name);
+  }
 }

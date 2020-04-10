@@ -37,6 +37,8 @@ private slots:
   void addScheduler(const QString &taskId, const QString &taskName,
                     const QStringList &args);
 
+  void addSavedTransfer(const QString &uniqueId, bool dryRun, bool addToQueue);
+
   void runQueueScript(const QString &script);
 
   void slotCloseTab(int index);

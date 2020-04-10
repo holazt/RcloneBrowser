@@ -217,6 +217,14 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/startMinimisedToTray", "false");
   };
 
+  if (!(settings->contains("Settings/transferAutoName"))) {
+    settings->setValue("Settings/transferAutoName", "false");
+  };
+
+  if (!(settings->contains("Settings/transferAddToQueue"))) {
+    settings->setValue("Settings/transferAddToQueue", "false");
+  };
+
   // use ports (49152-65535) -
   // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
   // during first run the rcPortStartWin key might not exist

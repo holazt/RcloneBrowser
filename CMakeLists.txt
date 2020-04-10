@@ -13,6 +13,7 @@ if(WIN32)
 elseif(APPLE)
   find_package(Qt5MacExtras REQUIRED)
   find_library(COCOA_LIB Cocoa REQUIRED)
+  find_library(IOKKIT_LIB IOKit REQUIRED)
 endif()
 
 if(WIN32)

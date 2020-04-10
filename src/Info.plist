@@ -10,5 +10,7 @@
     <string>APPL</string>
     <key>CFBundleExecutable</key>
     <string>rclone-browser</string>
+    <key>CFBundleIdentifier</key>
+    <string>Rclone Browser</string>
 </dict>
 </plist>

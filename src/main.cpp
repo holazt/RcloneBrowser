@@ -208,6 +208,23 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/schedulerStatus", "true");
   };
 
+  // true - queue runing, false - queue not runing
+  if (!(settings->contains("Settings/queueStatus"))) {
+    settings->setValue("Settings/queueStatus", "true");
+  };
+
+  if (!(settings->contains("Settings/startMinimisedToTray"))) {
+    settings->setValue("Settings/startMinimisedToTray", "false");
+  };
+
+  if (!(settings->contains("Settings/transferAutoName"))) {
+    settings->setValue("Settings/transferAutoName", "false");
+  };
+
+  if (!(settings->contains("Settings/transferAddToQueue"))) {
+    settings->setValue("Settings/transferAddToQueue", "false");
+  };
+
   // use ports (49152-65535) -
   // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
   // during first run the rcPortStartWin key might not exist

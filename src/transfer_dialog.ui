@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>770</width>
-    <height>590</height>
+    <height>717</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -239,6 +239,12 @@ QToolButton:pressed {
             <string>Transfer mode</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
             <item row="3" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <property name="spacing">
@@ -338,6 +344,19 @@ QToolButton:pressed {
                 </property>
                </widget>
               </item>
+              <item>
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
              </layout>
             </item>
             <item row="2" column="0">
@@ -368,6 +387,19 @@ QToolButton:pressed {
                 </property>
                </widget>
               </item>
+              <item>
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
              </layout>
             </item>
             <item row="1" column="0">
@@ -395,6 +427,12 @@ QToolButton:pressed {
             <string>Skip files</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_3">
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
             <item row="2" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout_6">
               <property name="spacing">
@@ -422,6 +460,19 @@ QToolButton:pressed {
                  </size>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -452,6 +503,19 @@ QToolButton:pressed {
                  </size>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_9">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -555,31 +619,27 @@ QToolButton:pressed {
         </layout>
        </item>
        <item>
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Other</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>Task description</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="textDescription">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_GoogleDrive">
             <item>
@@ -648,6 +708,100 @@ QToolButton:pressed {
              <string>Don't update mod-time if files are identical</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Task</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Task name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="le_taskName">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="maxLength">
+             <number>70</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_taskAutoName">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;if task name is empty auto name will be generated: _tmp_ddMMyyyy_HHmmss_remoteName&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Auto task name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_taskAddToQueue">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;add to the queue instead of running immediately&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Add to the queue (Save and Run)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -1031,11 +1185,53 @@ QToolButton:pressed {
       <attribute name="title">
        <string>Extra options</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_7">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <item>
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Default rclone options:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_defaultRcloneOptions">
+           <property name="toolTip">
+            <string>options set in preferences</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item>
+          <widget class="QLabel" name="label_defaultTransferOptions">
+           <property name="text">
+            <string>Default download options:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_defaultTransferOptions">
+           <property name="toolTip">
+            <string>options set in preferences</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QPlainTextEdit" name="pte_textExtra">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra options to apply for transfer e.g.:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;--fast-list&lt;br/&gt;--include &amp;quot;*.jpg&amp;quot; --ignore-case&lt;br/&gt;--include-from include-file.txt --no-traverse&lt;br/&gt;--files-from files-from.txt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra options to apply for transfer e.g.:&lt;br/&gt;&lt;br/&gt;--fast-list&lt;br/&gt;--include &amp;quot;*.jpg&amp;quot; --ignore-case&lt;br/&gt;--include-from include-file.txt --no-traverse&lt;br/&gt;--files-from files-from.txt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -1059,7 +1255,7 @@ QToolButton:pressed {
        <item>
         <widget class="QPlainTextEdit" name="textExclude">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;every line represents --exclude pattern&lt;/p&gt;&lt;p&gt;example patterns:&lt;/p&gt;&lt;p&gt;file.jpg&lt;br/&gt;/pictures/new/*.png&lt;br/&gt;/dir1/dir2/**&lt;br/&gt;&amp;quot;/directory with spaces&amp;quot;&lt;/p&gt;&lt;p&gt;check rclone online documentation for details.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;every line represents --exclude pattern&lt;/p&gt;&lt;p&gt;example patterns:&lt;/p&gt;&lt;p&gt;file.jpg&lt;br/&gt;/pictures/new/*.png&lt;br/&gt;/dir1/dir2/**&lt;br/&gt;&amp;quot;/directory with spaces&amp;quot;&lt;/p&gt;&lt;p&gt;check rclone online documentation for details.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="lineWrapMode">
           <enum>QPlainTextEdit::NoWrap</enum>

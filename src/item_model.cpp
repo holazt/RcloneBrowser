@@ -530,16 +530,16 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
   lsd->start(GetRclone(),
              QStringList() << "lsd" << GetRcloneConf()
                            << GetRemoteModeRcloneOptions() << GetShowHidden()
-                           << GetDefaultRcloneOptionsList()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
                            << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
-  lsl->start(GetRclone(),
-             QStringList() << "lsl" << GetRcloneConf()
-                           << GetRemoteModeRcloneOptions() << GetShowHidden()
-                           << "--max-depth"
-                           << "1" << GetDefaultRcloneOptionsList()
-                           << mRemote + ":" + parent->path.path(),
-             QIODevice::ReadOnly);
+  lsl->start(
+      GetRclone(),
+      QStringList() << "lsl" << GetRcloneConf() << GetRemoteModeRcloneOptions()
+                    << GetShowHidden() << "--max-depth"
+                    << "1" << GetDefaultOptionsList("defaultRcloneOptions")
+                    << mRemote + ":" + parent->path.path(),
+      QIODevice::ReadOnly);
 }
 
 void ItemModel::sortRecursive(Item *item, const ItemSorter &sorter) {

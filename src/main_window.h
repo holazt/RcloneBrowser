@@ -3,6 +3,9 @@
 #include "job_options.h"
 #include "pch.h"
 #include "ui_main_window.h"
+#ifdef Q_OS_MACOS
+#include "mac_os_power_saving.h"
+#endif
 
 class JobWidget;
 
@@ -33,6 +36,8 @@ private slots:
 
   void addScheduler(const QString &taskId, const QString &taskName,
                     const QStringList &args);
+
+  void addSavedTransfer(const QString &uniqueId, bool dryRun, bool addToQueue);
 
   void runQueueScript(const QString &script);
 
@@ -104,6 +109,10 @@ private:
   QIcon mDownloadIcon;
   QIcon mMountIcon;
   QMessageBox *mQuittingErrorMsgBox = NULL;
+
+#ifdef Q_OS_MACOS
+  MacOsPowerSaving *mMacOsPowerSaving;
+#endif
 
   // used for tasks transitions - prevent race conditions
   QMutex mMutex;

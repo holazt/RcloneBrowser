@@ -26,6 +26,7 @@ signals:
                    const QString &remoteType, const QStringList &args,
                    const QString &script, const QString &uniqueId,
                    const QString &info);
+  void addSavedTransfer(const QString &uniqueId, bool dryRun, bool addToQueue);
 
 private:
   Ui::RemoteWidget ui;

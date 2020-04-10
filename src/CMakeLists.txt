@@ -112,6 +112,12 @@ if(WIN32)
 elseif(APPLE)
   set(OTHER ${OTHER} osx_helper.h)
   set(SOURCE ${SOURCE} osx_helper.mm)
+
+  set(OTHER ${OTHER} mac_os_notifications.h)
+  set(SOURCE ${SOURCE} mac_os_notifications.mm)
+
+  set(OTHER ${OTHER} mac_os_power_saving.h)
+  set(SOURCE ${SOURCE} mac_os_power_saving.mm)
 endif()
 
 set(QRC resources.qrc)
@@ -151,7 +157,7 @@ if(WIN32)
 elseif(APPLE)
   set_source_files_properties(icon.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
   add_executable(rclone-browser MACOSX_BUNDLE ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT} icon.icns)
-  target_link_libraries(rclone-browser Qt5::Widgets Qt5::Network Qt5::MacExtras Qt5::Multimedia ${COCOA_LIB})
+  target_link_libraries(rclone-browser Qt5::Widgets Qt5::Network Qt5::MacExtras Qt5::Multimedia ${COCOA_LIB} ${IOKKIT_LIB})
   set_target_properties(rclone-browser PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
 
 else()

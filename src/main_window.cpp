@@ -12,12 +12,20 @@
 #include "utils.h"
 #ifdef Q_OS_MACOS
 #include "global.h"
+#include "mac_os_notifications.h"
+#include "mac_os_power_saving.h"
 #include "osx_helper.h"
 #endif
 
 MainWindow::MainWindow() {
 
   ui.setupUi(this);
+
+#ifdef Q_OS_MACOS
+  // macOS power saving control object
+  mMacOsPowerSaving = new MacOsPowerSaving();
+#endif
+
   if (IsPortableMode()) {
     this->setWindowTitle("Rclone Browser - portable mode - BETA release");
   } else {
@@ -525,6 +533,9 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/alwaysShowInTray",
                          dialog.getAlwaysShowInTray());
       settings->setValue("Settings/closeToTray", dialog.getCloseToTray());
+      settings->setValue("Settings/startMinimisedToTray",
+                         dialog.getStartMinimisedToTray());
+
       settings->setValue("Settings/notifyFinishedTransfers",
                          dialog.getNotifyFinishedTransfers());
       settings->setValue("Settings/soundNotif", dialog.getSoundNotif());
@@ -599,7 +610,8 @@ MainWindow::MainWindow() {
         this, "Rclone Browser",
         QString(
             R"(<h3>GUI for rclone, v)" RCLONE_BROWSER_VERSION "</h3>"
-            R"(<p>Copyright &copy; 2019</p>)"
+
+            R"(<p>Copyright &copy; 2019-2020 <a href="https://github.com/kapitainsky/RcloneBrowser/blob/master/LICENSE">kapitainsky</a></p>)"
 
             R"(<p>Current development and maintenance<br /><a href="https://github.com/kapitainsky/RcloneBrowser">kapitainsky</a></p>)"
 
@@ -665,6 +677,9 @@ MainWindow::MainWindow() {
                        &MainWindow::addStream);
       QObject::connect(remote, &RemoteWidget::addTransfer, this,
                        &MainWindow::addTransfer);
+      QObject::connect(remote, &RemoteWidget::addSavedTransfer, this,
+                       &MainWindow::addSavedTransfer);
+
       int index = ui.tabs->addTab(remote, name);
       ui.tabs->setCurrentIndex(index);
     }
@@ -705,7 +720,6 @@ MainWindow::MainWindow() {
   QObject::connect(
       ui.tasksListWidget, &QWidget::customContextMenuRequested, this,
       [=](const QPoint &pos) {
-
         setTasksButtons();
         auto items = ui.tasksListWidget->selectedItems();
         bool isMount = false;
@@ -1270,10 +1284,9 @@ MainWindow::MainWindow() {
     auto selection = ui.tasksListWidget->selectedItems();
 
     auto settings = GetSettings();
-
     bool sortTask = settings->value("Settings/sortTask").toBool();
 
-    auto items = sortListWidget(selection, sortTask);
+    auto items = sortListWidget(selection, !sortTask);
 
     QString itemsToAdd;
 
@@ -1464,6 +1477,9 @@ MainWindow::MainWindow() {
   QObject::connect(ui.actionStartQueue, &QAction::triggered, this, [=]() {
     mQueueStatus = true;
 
+    auto settings = GetSettings();
+    settings->setValue("Settings/queueStatus", "true");
+
     ui.tabs->setTabText(3, QString("Queue (%1)>>(0)").arg(mQueueCount));
 
     ui.buttonStopQueue->setEnabled(true);
@@ -1530,6 +1546,9 @@ MainWindow::MainWindow() {
 
   QObject::connect(ui.actionStopQueue, &QAction::triggered, this, [=]() {
     mQueueStatus = false;
+
+    auto settings = GetSettings();
+    settings->setValue("Settings/queueStatus", "false");
 
     if (ui.queueListWidget->count() > 0) {
       ui.queueListWidget->item(0)->setBackground(QBrush());
@@ -1891,6 +1910,10 @@ MainWindow::MainWindow() {
     ui.tabs->setTabText(4, QString("Scheduler (%1)").arg(mSchedulersCount));
   }
 
+  if ((settings->value("Settings/queueStatus").toBool())) {
+    ui.actionStartQueue->trigger();
+  }
+
   QObject::connect(&mSystemTray, &QSystemTrayIcon::activated, this,
                    [=](QSystemTrayIcon::ActivationReason reason) {
                      if (reason == QSystemTrayIcon::DoubleClick ||
@@ -1970,6 +1993,14 @@ MainWindow::MainWindow() {
   // properly
   QTimer::singleShot(1000, this, SLOT(autoStartMounts()));
 
+  // start minimised to tray
+  if ((settings->value("Settings/startMinimisedToTray").toBool())) {
+#ifdef Q_OS_MACOS
+    osxHideDockIcon();
+#endif
+    mSystemTray.show();
+    QTimer::singleShot(0, this, SLOT(hide()));
+  }
 }
 
 MainWindow::~MainWindow() {
@@ -2100,6 +2131,8 @@ void MainWindow::quitApp(void) {
         QString("Some mounts can't be unmounted. Make sure that they are "
                 "not used by other programs. You can also try to unmount "
                 "them directly from your OS."));
+
+    mAppQuittingStatus = false;
     return;
   }
 
@@ -2937,7 +2970,8 @@ void MainWindow::rcloneListRemotes() {
   UseRclonePassword(p);
   p->start(GetRclone(),
            QStringList() << "listremotes" << GetRcloneConf()
-                         << GetDefaultRcloneOptionsList() << "--long"
+                         << GetDefaultOptionsList("defaultRcloneOptions")
+                         << "--long"
                          << "--ask-password=false",
            QIODevice::ReadOnly);
 }
@@ -2985,7 +3019,6 @@ bool MainWindow::canClose() {
   }
 
   if (button == QMessageBox::Yes) {
-
     // make sure terminated job is not removed from the queue
     // we make close process aware that it is quitting
     mAppQuittingStatus = true;
@@ -3502,7 +3535,7 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
 
   JobOptions *jo = item->GetData();
 
-  // running items have green background
+  // running items have darkGreen background
   for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
     JobOptionsListWidgetItem *item =
         static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
@@ -3832,6 +3865,100 @@ void MainWindow::saveSchedulerFile(void) {
   file.close();
 }
 
+void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,
+                                  bool addToQueue) {
+
+  QMutexLocker locker(&mMutex);
+
+  // keep for future use
+  if (dryRun) {}
+
+  // find task based on taskID
+  for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
+    JobOptionsListWidgetItem *item =
+        static_cast<JobOptionsListWidgetItem *>(ui.tasksListWidget->item(k));
+    JobOptions *joTask = item->GetData();
+
+    if (uniqueId == joTask->uniqueId.toString()) {
+
+      if (!addToQueue) {
+
+        // run immediately
+        runItem(item, "task", QUuid::createUuid().toString(), false);
+        break;
+      } else {
+        // add to queue
+
+        bool isQueueEmpty = (ui.queueListWidget->count() == 0);
+
+        QIcon jobIcon;
+
+        if (joTask->jobType == JobOptions::JobType::Download) {
+          if (joTask->operation == JobOptions::Mount) {
+            jobIcon = mMountIcon;
+          } else {
+            jobIcon = mDownloadIcon;
+          }
+        }
+        if (joTask->jobType == JobOptions::JobType::Upload) {
+          jobIcon = mUploadIcon;
+        }
+
+        JobOptionsListWidgetItem *newitem =
+            new JobOptionsListWidgetItem(joTask, jobIcon, joTask->description,
+                                         QUuid::createUuid().toString());
+
+        ui.queueListWidget->addItem(newitem);
+        mQueueCount = mQueueCount + 1;
+
+        // if queue was empty we start first taks if queue is running and
+        // there is no other transfer job running
+        if (mQueueStatus && isQueueEmpty && (mTransferJobCount == 0)) {
+
+          if (mQueueCount > 0) {
+
+            JobOptionsListWidgetItem *item =
+                static_cast<JobOptionsListWidgetItem *>(
+                    ui.queueListWidget->item(0));
+
+            runItem(item, "scheduler", item->GetRequestId());
+            ui.queueListWidget->item(0)->setBackground(Qt::darkGreen);
+            mQueueTaskRunning = true;
+            ui.tabs->setTabText(
+                3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
+          }
+
+        } else {
+
+          if (mQueueStatus) {
+
+            if (mQueueCount == 0) {
+              ui.tabs->setTabText(3,
+                                  QString("Queue (%1)>>(0)").arg(mQueueCount));
+            } else {
+              if (!mQueueTaskRunning) {
+                ui.tabs->setTabText(
+                    3, QString("Queue (%1)>>(0)").arg(mQueueCount));
+              } else {
+                ui.tabs->setTabText(
+                    3, QString("Queue (%1)>>(1)").arg(mQueueCount - 1));
+              }
+            }
+          } else {
+            if (mQueueCount == 0) {
+              ui.tabs->setTabText(3, QString("Queue"));
+            } else {
+              ui.tabs->setTabText(3, QString("Queue (%1)").arg(mQueueCount));
+            }
+          }
+        }
+        saveQueueFile();
+        break;
+      }
+    }
+  }
+}
+
 void MainWindow::addTransfer(const QString &message, const QString &source,
                              const QString &dest, const QStringList &args,
                              const QString &uniqueId,
@@ -3855,18 +3982,18 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         QMutexLocker locker(&mMutex);
 
         if (mNotifyFinishedTransfers) {
-          qApp->alert(this);
           mLastFinished = widget;
 #if defined(Q_OS_WIN)
           mSystemTray.showMessage(
-              "Rclone Browser - Transfer finished", info,
+              "Rclone Browser - transfer " + jobFinalStatus, info,
               QIcon(":media/images/program_icons/rclone-browser512.png"));
 #else
 #if defined(Q_OS_MACOS)
-          mSystemTray.showMessage("Rclone Browser - Transfer finished", info);
+          MacOsNotification::Display(
+              "Rclone Browser - transfer " + jobFinalStatus, info);
 #else
-          mSystemTray.showMessage("Rclone Browser - Transfer finished", info,
-                                  QSystemTrayIcon::Information);
+          mSystemTray.showMessage("Rclone Browser - transfer " + jobFinalStatus,
+                                  info, QSystemTrayIcon::Information);
 #endif
 #endif
         }
@@ -3877,6 +4004,17 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         }
 
         --mTransferJobCount;
+
+        if (mTransferJobCount == 0) {
+      // allow entering sleep
+#if defined(Q_OS_WIN)
+          SetThreadExecutionState(ES_CONTINUOUS);
+#endif
+#if defined(Q_OS_MACOS)
+          mMacOsPowerSaving->resumePowerSaving();
+#endif
+        }
+
         if (--mJobCount == 0) {
           ui.tabs->setTabText(1, "Jobs");
         } else {
@@ -3887,7 +4025,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                              (ui.jobs->count() - 2) / 2);
 
-        // transfer finished - remove green from tasks list
+        // transfer finished - remove darkGreen from tasks list
         auto transfer = qobject_cast<JobWidget *>(widget);
         for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
           JobOptionsListWidgetItem *item =
@@ -4099,6 +4237,16 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ++mTransferJobCount;
+
+  // prevent OS sleep when transfer running
+#if defined(Q_OS_WIN)
+  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED |
+                          ES_AWAYMODE_REQUIRED);
+#endif
+#if defined(Q_OS_MACOS)
+  mMacOsPowerSaving->suspendPowerSaving();
+#endif
+
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
@@ -4125,7 +4273,9 @@ void MainWindow::runQueueScript(const QString &script) {
                      p->deleteLater();
                    });
 
-  p->start("\"" + QDir::toNativeSeparators(script) + "\"");
+  QStringList sargs;
+
+  p->start(QDir::toNativeSeparators(script), sargs, QIODevice::ReadOnly);
 }
 
 void MainWindow::addNewMount(const QString &remote, const QString &folder,
@@ -4185,7 +4335,7 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
 
-    // mount finished - we remove green from task list
+    // mount finished - we remove darkGreen from task list
     auto mount = qobject_cast<MountWidget *>(widget);
     for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
       JobOptionsListWidgetItem *item =
@@ -4264,7 +4414,6 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
                    [=]() { saveSchedulerFile(); });
 
   QObject::connect(widget, &SchedulerWidget::stopTask, this, [=]() {
-
     QMutexLocker locker(&mStopTaskMutex);
     QString requestID = widget->getSchedulerRequestId();
 
@@ -4377,8 +4526,12 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
   });
 
   QObject::connect(widget, &SchedulerWidget::runTask, this, [=]() {
-
     QMutexLocker locker(&mMutex);
+
+    // when quitting (waiting for unmount) don't start new tasks
+    if (mAppQuittingStatus) {
+      return;
+    }
 
     QString taskID = widget->getSchedulerTaskId();
     QString requestID = widget->getSchedulerRequestId();
@@ -4545,7 +4698,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
     }
   };
 
-  args << GetDefaultRcloneOptionsList();
+  args << GetDefaultOptionsList("defaultRcloneOptions");
 
   args << GetRcloneConf();
 

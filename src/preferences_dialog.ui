@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
+    <width>663</width>
     <height>758</height>
    </rect>
   </property>
@@ -432,14 +432,7 @@
           <string>System Tray</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="alwaysShowInTray">
-            <property name="text">
-             <string>Always show in system tray</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QCheckBox" name="notifyFinishedTransfers">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Attempts to use OS specific notification features to notify about finished transfers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -456,10 +449,24 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="alwaysShowInTray">
+            <property name="text">
+             <string>Always show in system tray</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
            <widget class="QCheckBox" name="cb_soundNotif">
             <property name="text">
              <string>Play sound when transfer finishes</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="startMinimisedToTray">
+            <property name="text">
+             <string>Start minimised to system tray</string>
             </property>
            </widget>
           </item>

@@ -313,9 +313,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
 
-          if (status == 9) {
-
-            mJobFinalStatus = "stopped";
+          if (mJobFinalStatus == "stopped") {
           } else {
             mJobFinalStatus = "error";
           }
@@ -325,7 +323,6 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
-
         emit finished(ui.info->text(), mJobFinalStatus);
       });
 
@@ -343,13 +340,14 @@ void JobWidget::cancel() {
     return;
   }
 
+  mJobFinalStatus = "stopped";
+
   mProcess->kill();
   mProcess->waitForFinished();
 
   ui.showDetails->setStyleSheet(
       "QToolButton { border: 0; color: red; font-weight: bold;}");
   ui.showDetails->setText("  Stopped");
-  mJobFinalStatus = "stopped";
   ui.progress_info->hide();
   ui.cancel->setToolTip("Close");
   ui.cancel->setStatusTip("Close");

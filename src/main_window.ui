@@ -604,7 +604,7 @@
           <item>
            <widget class="QLabel" name="labelQueueInfoStart">
             <property name="styleSheet">
-             <string notr="true">color: darkgreen; font-weight: bold;</string>
+             <string notr="true">color: green; font-weight: bold;</string>
             </property>
             <property name="text">
              <string/>
@@ -741,7 +741,7 @@
           <item>
            <widget class="QLabel" name="labelSchedulerInfoStart">
             <property name="styleSheet">
-             <string notr="true">color: darkgreen; font-weight: bold;</string>
+             <string notr="true">color: green; font-weight: bold;</string>
             </property>
             <property name="text">
              <string/>

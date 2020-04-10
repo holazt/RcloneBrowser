@@ -26,6 +26,7 @@ public:
 
   bool getAlwaysShowInTray() const;
   bool getCloseToTray() const;
+  bool getStartMinimisedToTray() const;
   bool getNotifyFinishedTransfers() const;
   bool getSoundNotif() const;
 

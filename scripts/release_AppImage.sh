@@ -132,12 +132,9 @@ cp "$ROOT"/LICENSE "$TEMP_BASE"/"$TARGET"/AppDir/License.txt
 linuxdeploy --appdir AppDir --desktop-file=AppDir/usr/share/applications/rclone-browser.desktop --plugin qt
 #linuxdeploy-plugin-qt --appdir AppDir
 
-if [ $(arch) != "armv7l" ]
-then
-  # we add openssl 1.1.1 libs needed for distros still using openssl 1.0
-  cp /opt/openssl-1.1.1/lib/libssl.so.1.1 ./AppDir/usr/bin/
-  cp /opt/openssl-1.1.1/lib/libcrypto.so.1.1 ./AppDir/usr/bin/
-fi
+# we add openssl 1.1.1 libs needed for distros still using openssl 1.0
+cp /opt/openssl-1.1.1/lib/libssl.so.1.1 ./AppDir/usr/bin/
+cp /opt/openssl-1.1.1/lib/libcrypto.so.1.1 ./AppDir/usr/bin/
 
 # https://github.com/linuxdeploy/linuxdeploy-plugin-appimage
 linuxdeploy-plugin-appimage --appdir=AppDir

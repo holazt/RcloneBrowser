@@ -3870,6 +3870,9 @@ void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,
 
   QMutexLocker locker(&mMutex);
 
+  // keep for future use
+  if (dryRun) {}
+
   // find task based on taskID
   for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
     JobOptionsListWidgetItem *item =

@@ -173,6 +173,27 @@ MainWindow::MainWindow() {
     img_add = "_inv";
   }
 
+  ui.actionRefresh->setIcon(
+      QIcon(":media/images/qbutton_icons/refresh" + img_add + ".png"));
+  ui.actionOpen->setIcon(
+      QIcon(":media/images/qbutton_icons/open_remote" + img_add + ".png"));
+  ui.actionConfig->setIcon(
+      QIcon(":media/images/qbutton_icons/rclone_config" + img_add + ".png"));
+  // Preferences button action is triggered via slot defined in ui file
+  // as we dont want pref icon in the menu
+  ui.buttonPrefs->setIcon(
+      QIcon(":media/images/qbutton_icons/preferences" + img_add + ".png"));
+
+  ui.actionStopAllTransfers->setIcon(
+      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
+  ui.actionCleanNotRunning->setIcon(
+      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
+  // triggered via slot so button text can be different than action menu
+  ui.buttonSortByTime->setIcon(
+      QIcon(":media/images/qbutton_icons/sortTimeZA" + img_add + ".png"));
+  ui.buttonSortByStatus->setIcon(
+      QIcon(":media/images/qbutton_icons/sortZA" + img_add + ".png"));
+
   ui.actionDryRun->setIcon(
       QIcon(":media/images/qbutton_icons/dryrun" + img_add + ".png"));
   ui.actionRun->setIcon(
@@ -183,20 +204,6 @@ MainWindow::MainWindow() {
       QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   ui.actionStop->setIcon(
       QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
-  ui.actionRefresh->setIcon(
-      QIcon(":media/images/qbutton_icons/refresh" + img_add + ".png"));
-  ui.actionOpen->setIcon(
-      QIcon(":media/images/qbutton_icons/open_remote" + img_add + ".png"));
-  ui.actionConfig->setIcon(
-      QIcon(":media/images/qbutton_icons/rclone_config" + img_add + ".png"));
-  ui.actionStopAllTransfers->setIcon(
-      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
-  ui.actionCleanNotRunning->setIcon(
-      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
-  // Preferences button action is triggered via slot defined in ui file
-  // as we dont want pref icon in the menu
-  ui.buttonPrefs->setIcon(
-      QIcon(":media/images/qbutton_icons/preferences" + img_add + ".png"));
 
   // triggered via slot so button text can be different than action menu
   ui.buttonAddToQueue->setIcon(
@@ -234,12 +241,18 @@ MainWindow::MainWindow() {
 
   QPixmap sortZAPixmap(":media/images/qbutton_icons/sortZA" + img_add + ".png");
   QPixmap sortAZPixmap(":media/images/qbutton_icons/sortAZ" + img_add + ".png");
+  QPixmap sortTimeZAPixmap(":media/images/qbutton_icons/sortTimeZA" + img_add +
+                           ".png");
+  QPixmap sortTimeAZPixmap(":media/images/qbutton_icons/sortTimeAZ" + img_add +
+                           ".png");
 
   QIcon arrowDownIcon(arrowDownPixmap);
   QIcon arrowUpIcon(arrowUpPixmap);
   QIcon mount1Icon(mount1Pixmap);
   QIcon sortZAIcon(sortZAPixmap);
   QIcon sortAZIcon(sortAZPixmap);
+  QIcon sortTimeZAIcon(sortTimeZAPixmap);
+  QIcon sortTimeAZIcon(sortTimeAZPixmap);
 
   ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
   ui.buttonRunTask->setDefaultAction(ui.actionRun);
@@ -273,9 +286,11 @@ MainWindow::MainWindow() {
   // no foucs on any e.g. after start
   ui.open->setEnabled(false);
 
-  // both buttons inactive after start
+  // jobs buttons inactive after start
   ui.buttonStopAllJobs->setEnabled(false);
   ui.buttonCleanNotRunning->setEnabled(false);
+  ui.buttonSortByTime->setEnabled(false);
+  ui.buttonSortByStatus->setEnabled(false);
 
   int icon_w = 16;
   int icon_h = 16;
@@ -348,6 +363,10 @@ MainWindow::MainWindow() {
     ui.buttonStopScheduler->setMinimumWidth(button_width);
     ui.buttonStartScheduler->setIconSize(QSize(icon_w, icon_h));
     ui.buttonStartScheduler->setMinimumWidth(button_width);
+    ui.buttonSortByTime->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSortByTime->setMinimumWidth(button_width);
+    ui.buttonSortByStatus->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSortByStatus->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -396,6 +415,10 @@ MainWindow::MainWindow() {
       ui.buttonStopScheduler->setMinimumWidth(button_width);
       ui.buttonStartScheduler->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonStartScheduler->setMinimumWidth(button_width);
+      ui.buttonSortByTime->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSortByTime->setMinimumWidth(button_width);
+      ui.buttonSortByStatus->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSortByStatus->setMinimumWidth(button_width);
 
     } else {
       // button style - icononly
@@ -443,8 +466,15 @@ MainWindow::MainWindow() {
       ui.buttonStopScheduler->setIconSize(QSize(icon_w, icon_h));
       ui.buttonStartScheduler->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonStartScheduler->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSortByTime->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSortByTime->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSortByStatus->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSortByStatus->setIconSize(QSize(icon_w, icon_h));
     }
   }
+
+  // initial sortByTime
+  ui.buttonSortByStatus->setStyleSheet("QToolButton {border: 0;}");
 
   // layout spacers - otherwise layout of different tabs differ due to checkbox
   // on queue tab
@@ -846,6 +876,8 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionStopAllTransfers
   QObject::connect(ui.actionStopAllTransfers, &QAction::triggered, this, [=]() {
+    mDoNotSort = true;
+
     // we only stop transfer jobs - others are intact
     if (mTransferJobCount != 0) {
 
@@ -930,6 +962,9 @@ MainWindow::MainWindow() {
         }
       }
     }
+
+    mDoNotSort = false;
+    sortJobs();
   });
 
   QObject::connect(ui.actionSortTask, &QAction::triggered, this, [=]() {
@@ -1233,7 +1268,9 @@ MainWindow::MainWindow() {
     }
   });
 
+  //!!! QObject::connect(ui.actionStartScheduler
   QObject::connect(ui.actionStartScheduler, &QAction::triggered, this, [=]() {
+    mDoNotSort = true;
     auto settings = GetSettings();
     settings->setValue("Settings/schedulerStatus", "true");
 
@@ -1255,9 +1292,13 @@ MainWindow::MainWindow() {
     ui.tabs->setTabText(4, QString("Scheduler (%1)>>(%2)")
                                .arg(mSchedulersCount)
                                .arg(mRunningSchedulersCount));
+    mDoNotSort = false;
+    sortJobs();
   });
 
+  //!!!  QObject::connect(ui.actionStopScheduler
   QObject::connect(ui.actionStopScheduler, &QAction::triggered, this, [=]() {
+    mDoNotSort = true;
     auto settings = GetSettings();
     settings->setValue("Settings/schedulerStatus", "false");
 
@@ -1277,6 +1318,53 @@ MainWindow::MainWindow() {
     ui.labelSchedulerInfoStop->show();
 
     ui.tabs->setTabText(4, QString("Scheduler (%1)").arg(mSchedulersCount));
+    mDoNotSort = false;
+    sortJobs();
+  });
+
+  //!!!  QObject::connect(ui.actionSortByStatus
+  QObject::connect(ui.actionSortByStatus, &QAction::triggered, this, [=]() {
+    ui.buttonSortByTime->setStyleSheet("QToolButton {border: 0;}");
+    ui.buttonSortByStatus->setStyleSheet("QToolButton {}");
+
+    if (mJobsSort != "byDate") {
+      mJobsStatusSortOrder = !mJobsStatusSortOrder;
+    }
+
+    mJobsSort = "byStatus";
+
+    if (mJobsStatusSortOrder) {
+      ui.buttonSortByStatus->setIcon(sortAZIcon);
+    } else {
+      ui.buttonSortByStatus->setIcon(sortZAIcon);
+    }
+
+    sortJobs();
+  });
+
+  //!!!  QObject::connect(ui.actionSortByTime
+  QObject::connect(ui.actionSortByTime, &QAction::triggered, this, [=]() {
+    ui.buttonSortByStatus->setStyleSheet("QToolButton {border: 0;}");
+    ui.buttonSortByTime->setStyleSheet("QToolButton {}");
+
+    // flip sort order
+    if (mJobsSort != "byStatus") {
+      mJobsTimeSortOrder = !mJobsTimeSortOrder;
+    }
+    mJobsSort = "byDate";
+    // QToolButton { border: 0; }\n\nQToolButton:pressed {\n border: 4;\n
+    // border-radius: 10px;\n border-style: inset;\n border-color: rgba(1, 1, 1,
+    // 0);\n}
+
+    // ui.buttonSortByTime->setStyleSheet("QToolButton { border: none; } ")
+
+    if (mJobsTimeSortOrder) {
+      ui.buttonSortByTime->setIcon(sortTimeAZIcon);
+    } else {
+      ui.buttonSortByTime->setIcon(sortTimeZAIcon);
+    }
+
+    sortJobs();
   });
 
   //!!!  QObject::connect(ui.actionAddToScheduler
@@ -3530,8 +3618,69 @@ void MainWindow::listTasks() {
 void MainWindow::runItem(JobOptionsListWidgetItem *item,
                          const QString &transferMode, const QString &requestId,
                          bool dryrun) {
+
+  QMutexLocker locker(&mRunItemMutex);
+
   if (item == nullptr)
     return;
+
+  // if more than n jobs let's delete some old inactive one
+
+  int widgetsCount = ui.jobs->count();
+
+  if ((widgetsCount - 2) / 2 > 150) {
+
+    // find the oldest inactive job
+
+    QDateTime dt = QDateTime::currentDateTime();
+    QDateTime widgetStartDateTime = dt;
+    int remove;
+    bool foundOldest = false;
+
+    for (int i = widgetsCount - 2; i >= 0; i = i - 2) {
+
+      QWidget *widget = ui.jobs->itemAt(i)->widget();
+
+      if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+
+        if (!(transfer->isRunning)) {
+          widgetStartDateTime = transfer->getStartDateTime();
+          foundOldest = true;
+        }
+
+      } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+        if (!(mount->isRunning)) {
+          widgetStartDateTime = mount->getStartDateTime();
+          foundOldest = true;
+        }
+      } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+        if (!(stream->isRunning)) {
+          widgetStartDateTime = stream->getStartDateTime();
+          foundOldest = true;
+        }
+      }
+
+      if (dt > widgetStartDateTime) {
+        dt = widgetStartDateTime;
+        remove = i;
+      }
+
+    } //  for (int i
+
+    if (foundOldest) {
+      // remove the oldest from jobs
+      QWidget *widget = ui.jobs->itemAt(remove)->widget();
+
+      if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+        emit transfer->closed();
+      } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+        emit mount->closed();
+      } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+        emit stream->closed();
+      } else {
+      }
+    }
+  }
 
   JobOptions *jo = item->GetData();
 
@@ -3871,7 +4020,8 @@ void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,
   QMutexLocker locker(&mMutex);
 
   // keep for future use
-  if (dryRun) {}
+  if (dryRun) {
+  }
 
   // find task based on taskID
   for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {
@@ -4211,6 +4361,10 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
             }
           }
         }
+
+        // job status changed so we have to sort jobs list
+
+        sortJobs();
       });
 
   QObject::connect(widget, &JobWidget::closed, this, [=]() {
@@ -4222,6 +4376,13 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
     ui.jobs->removeWidget(line);
     widget->deleteLater();
     delete line;
+
+    int _jobsCount = (ui.jobs->count() - 2) / 2;
+    ui.buttonSortByTime->setEnabled(_jobsCount > 1);
+    ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
+
+    //    sortJobs();
+
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
@@ -4237,6 +4398,12 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ++mTransferJobCount;
+
+  int _jobsCount = (ui.jobs->count() - 2) / 2;
+  ui.buttonSortByTime->setEnabled(_jobsCount > 1);
+  ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
+
+  sortJobs();
 
   // prevent OS sleep when transfer running
 #if defined(Q_OS_WIN)
@@ -4257,6 +4424,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
+
+  // job status changed so we have to sort jobs list
+  sortJobs();
 }
 
 //  runs queueScript
@@ -4347,6 +4517,7 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
       }
     }
     setTasksButtons();
+    sortJobs();
   });
 
   QObject::connect(widget, &MountWidget::closed, this, [=]() {
@@ -4369,6 +4540,7 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
+  sortJobs();
 }
 
 void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
@@ -4415,6 +4587,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
 
   QObject::connect(widget, &SchedulerWidget::stopTask, this, [=]() {
     QMutexLocker locker(&mStopTaskMutex);
+    mDoNotSort = true;
     QString requestID = widget->getSchedulerRequestId();
 
     // stop if running
@@ -4498,6 +4671,8 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
         }
       }
     }
+    mDoNotSort = false;
+    sortJobs();
   });
 
   QObject::connect(widget, &SchedulerWidget::editTask, this, [=]() {
@@ -4527,7 +4702,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
 
   QObject::connect(widget, &SchedulerWidget::runTask, this, [=]() {
     QMutexLocker locker(&mMutex);
-
+    mDoNotSort = true;
     // when quitting (waiting for unmount) don't start new tasks
     if (mAppQuittingStatus) {
       return;
@@ -4645,6 +4820,8 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
         }
       }
     }
+    mDoNotSort = false;
+    sortJobs();
   });
 
   ui.schedulers->insertWidget(0, widget);
@@ -4718,6 +4895,7 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
     ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
+    sortJobs();
   });
 
   QObject::connect(widget, &StreamWidget::closed, this, [=]() {
@@ -4746,6 +4924,8 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
   ui.buttonCleanNotRunning->setEnabled(mJobCount != (ui.jobs->count() - 2) / 2);
+
+  sortJobs();
 }
 
 void MainWindow::slotCloseTab(int index) {
@@ -4765,4 +4945,118 @@ void MainWindow::slotCloseTab(int index) {
       }
     }
   }
+}
+
+void MainWindow::sortJobs() {
+
+  //  bool mJobsTimeSortOrder = false;
+  //  bool mJobsStatusSortOrder = false;
+  //  QString mJobsSort = "byDate";
+
+  //  QMutexLocker locker(&mMutex);
+
+  QMutexLocker locker(&mJobsSortMutex);
+
+  // don't sort when quitting or stopping all transfers
+  if (mAppQuittingStatus) {
+    return;
+  }
+  if (mDoNotSort) {
+    return;
+  }
+
+  int widgetsCount = ui.jobs->count();
+  int move;
+  QDateTime dt;
+  QDateTime widgetStartDateTime;
+  QString widgetStatus = 0;
+  QString ws;
+
+  for (int i = 0; i < (widgetsCount - 2) / 2 - 1; i = i + 1) {
+
+    for (int j = widgetsCount - 4; j >= i * 2; j = j - 2) {
+
+      QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+      if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+        widgetStartDateTime = transfer->getStartDateTime();
+        widgetStatus = transfer->getStatus();
+
+      } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+        widgetStartDateTime = mount->getStartDateTime();
+        widgetStatus = mount->getStatus();
+
+      } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+        widgetStartDateTime = stream->getStartDateTime();
+        widgetStatus = stream->getStatus();
+      }
+
+      if (mJobsSort == "byDate") {
+        if (j == widgetsCount - 4) {
+          move = j;
+          dt = widgetStartDateTime;
+        } else {
+          if (mJobsTimeSortOrder) {
+            if (dt > widgetStartDateTime) {
+              move = j;
+              dt = widgetStartDateTime;
+            }
+          } else {
+            if (dt < widgetStartDateTime) {
+              move = j;
+              dt = widgetStartDateTime;
+            }
+          }
+        }
+      }
+
+      if (mJobsSort == "byStatus") {
+
+        if (j == widgetsCount - 4) {
+          move = j;
+          ws = widgetStatus;
+        } else {
+          if (mJobsStatusSortOrder) {
+            if (ws > widgetStatus) {
+              move = j;
+              ws = widgetStatus;
+            }
+          } else {
+            if (ws < widgetStatus) {
+              move = j;
+              ws = widgetStatus;
+            }
+          }
+        }
+      }
+
+    } // for (int j
+
+    // move to top
+    QWidget *widget = ui.jobs->itemAt(move)->widget();
+    QWidget *widget_line = ui.jobs->itemAt(move + 1)->widget();
+    auto line = qobject_cast<QFrame *>(widget_line);
+
+    if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+      ui.jobs->removeWidget(transfer);
+      ui.jobs->removeWidget(line);
+      ui.jobs->insertWidget(i * 2, transfer);
+      ui.jobs->insertWidget(i * 2 + 1, line);
+    } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+      ui.jobs->removeWidget(mount);
+      ui.jobs->removeWidget(line);
+      ui.jobs->insertWidget(i * 2, mount);
+      ui.jobs->insertWidget(i * 2 + 1, line);
+    } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+      ui.jobs->removeWidget(stream);
+      ui.jobs->removeWidget(line);
+      ui.jobs->insertWidget(i * 2, stream);
+      ui.jobs->insertWidget(i * 2 + 1, line);
+    } else {
+      //
+      break;
+    }
+  } //  for (int i
+
+  return;
 }

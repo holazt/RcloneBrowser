@@ -9,6 +9,8 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
+  updateStartFinishInfo();
+
   mUniqueID = uniqueID;
   QProcess *mScriptProcess = new QProcess();
 
@@ -273,6 +275,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
         }
 
         QString info = "Mounted " + ui.info->text();
+        mStatus = "0_zmount_mounted";
         ui.showDetails->setToolTip("Show details");
         ui.showDetails->setStatusTip("Show details");
         QString infoTrimmed;
@@ -293,18 +296,23 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                 "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
+          mStatus = "1_zmount_finished";
           ui.showDetails->setToolTip("Show details");
           ui.showDetails->setStatusTip("Show details");
         } else {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
+          mStatus = "1_zmount_erro";
           ui.showDetails->setToolTip("Show details");
           ui.showDetails->setStatusTip("Show details");
         }
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
         ui.cancel->setEnabled(true);
+
+        mFinishDateTime = QDateTime::currentDateTime();
+        updateStartFinishInfo();
         emit finished();
       });
 }
@@ -333,6 +341,7 @@ void MountWidget::cancel() {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Mounted");
+          mStatus = "0_zmount_mounted";
           ui.showDetails->setToolTip("Unmounting failed - check if mount"
                                      " is not used by other programs");
           ui.showDetails->setStatusTip("Unmounting failed - check if mount"
@@ -389,3 +398,17 @@ void MountWidget::cancel() {
 
 QString MountWidget::getUniqueID() { return mUniqueID; }
 QString MountWidget::getUnmountingError() { return mUnmountingError; }
+QDateTime MountWidget::getStartDateTime() { return mStartDateTime; }
+
+void MountWidget::updateStartFinishInfo() {
+
+  ui.le_StartFinishInfo->setText(
+      "Started:   " +
+      QLocale(QLocale::English)
+          .toString(mStartDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t") +
+      "              " + "Finished:  " +
+      QLocale(QLocale::English)
+          .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
+}
+
+QString MountWidget::getStatus() { return mStatus; }

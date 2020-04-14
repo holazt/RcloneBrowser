@@ -9,6 +9,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
+  updateStartFinishInfo();
+
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
   mArgs.append(args);
   mArgs.append(GetRcloneConf());
@@ -307,6 +309,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
           }
           ui.showDetails->setText("  Finished");
           mJobFinalStatus = "finished";
+          mStatus = "1_transfer_finished";
           ui.progress_info->hide();
         } else {
           ui.showDetails->setStyleSheet(
@@ -316,10 +319,14 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
           if (mJobFinalStatus == "stopped") {
           } else {
             mJobFinalStatus = "error";
+            mStatus = "2_transfer_error";
           }
 
           ui.progress_info->hide();
         }
+
+        mFinishDateTime = QDateTime::currentDateTime();
+        updateStartFinishInfo();
 
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
@@ -341,6 +348,7 @@ void JobWidget::cancel() {
   }
 
   mJobFinalStatus = "stopped";
+  mStatus = "2_transfer_stopped";
 
   mProcess->kill();
   mProcess->waitForFinished();
@@ -358,3 +366,18 @@ QString JobWidget::getUniqueID() { return mUniqueID; }
 QString JobWidget::getRequestId() { return mRequestId; }
 
 QString JobWidget::getTransferMode() { return mTransferMode; }
+
+QDateTime JobWidget::getStartDateTime() { return mStartDateTime; }
+
+void JobWidget::updateStartFinishInfo() {
+
+  ui.le_StartFinishInfo->setText(
+      "Started:   " +
+      QLocale(QLocale::English)
+          .toString(mStartDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t") +
+      "              " + "Finished:  " +
+      QLocale(QLocale::English)
+          .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
+}
+
+QString JobWidget::getStatus() { return mStatus; }

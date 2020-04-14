@@ -13,6 +13,8 @@ public:
               QWidget *parent = nullptr);
   ~MountWidget();
   bool isRunning = true;
+  QDateTime getStartDateTime();
+  QString getStatus();
 
 public slots:
   void cancel();
@@ -36,4 +38,12 @@ private:
   QString mRcPort = "0";
   QStringList mArgs;
   QString mUniqueID = "";
+
+  // 0 - running, 1 - finished, 2 - error
+  // we add "z" to make mounts listed after transfers
+  QString mStatus = "0_zmount_mounted";
+
+  QDateTime mStartDateTime = QDateTime::currentDateTime();
+  QDateTime mFinishDateTime;
+  void updateStartFinishInfo();
 };

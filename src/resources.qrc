@@ -100,6 +100,11 @@
     <file>images/qbutton_icons/pause.png</file>
     <file>images/qbutton_icons/pause_inv.png</file>
 
+    <file>images/qbutton_icons/sortTimeAZ.png</file>
+    <file>images/qbutton_icons/sortTimeZA.png</file>
+    <file>images/qbutton_icons/sortTimeAZ_inv.png</file>
+    <file>images/qbutton_icons/sortTimeZA_inv.png</file>
+
     <file>images/program_icons/rclone-browser512.png</file>
 
     <file>images/tooltips/textandicon.png</file>

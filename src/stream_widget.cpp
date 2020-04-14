@@ -7,6 +7,8 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
     : QWidget(parent), mRclone(rclone), mPlayer(player) {
   ui.setupUi(this);
 
+  updateStartFinishInfo();
+
   QString remoteTrimmed;
 
   auto settings = GetSettings();
@@ -145,14 +147,19 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                 "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
+          mStatus = "1_stream_finished";
         } else {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
+          mStatus = "2_stream_error";
         }
 
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
+
+        mFinishDateTime = QDateTime::currentDateTime();
+        updateStartFinishInfo();
 
         emit finished();
         //          emit closed();
@@ -161,6 +168,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.showDetails->setStyleSheet(
       "QToolButton { border: 0; color: green; font-weight: bold;}");
   ui.showDetails->setText("  Streaming");
+  mStatus = "0_stream_streaming";
 }
 
 StreamWidget::~StreamWidget() {}
@@ -174,3 +182,18 @@ void StreamWidget::cancel() {
   mRclone->kill();
   mRclone->waitForFinished();
 }
+
+QDateTime StreamWidget::getStartDateTime() { return mStartDateTime; }
+
+void StreamWidget::updateStartFinishInfo() {
+
+  ui.le_StartFinishInfo->setText(
+      "Started:   " +
+      QLocale(QLocale::English)
+          .toString(mStartDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t") +
+      "              " + "Finished:  " +
+      QLocale(QLocale::English)
+          .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
+}
+
+QString StreamWidget::getStatus() { return mStatus; }

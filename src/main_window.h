@@ -88,6 +88,9 @@ private:
   // so job is not removed from the queue
   bool mAppQuittingStatus = false;
 
+  // don't sort then stopping all transfers
+  bool mDoNotSort = false;
+
   bool canClose();
   void closeEvent(QCloseEvent *ev) override;
   bool getConfigPassword(QProcess *p);
@@ -120,6 +123,8 @@ private:
   QMutex mSaveSchedulerFileMutex;
   QMutex mStopTaskMutex;
   QMutex mRunTaskMutex;
+  QMutex mRunItemMutex;
+  QMutex mJobsSortMutex;
 
   // if waiting for processes we show dialog - this is used to calculate delay
   int mQuitInfoDelay = 0;
@@ -127,4 +132,9 @@ private:
   void addTasksToQueue();
 
   void restoreSchedulersFromFile();
+
+  void sortJobs();
+  bool mJobsTimeSortOrder = false;
+  bool mJobsStatusSortOrder = false;
+  QString mJobsSort = "byDate";
 };

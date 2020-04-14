@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
-    <height>635</height>
+    <width>881</width>
+    <height>655</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -165,20 +165,6 @@ QToolButton:pressed {
          <property name="bottomMargin">
           <number>10</number>
          </property>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="remote">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Mount Point:</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="1">
           <widget class="QLineEdit" name="folder">
            <property name="sizePolicy">
@@ -192,10 +178,46 @@ QToolButton:pressed {
            </property>
           </widget>
          </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="remote">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0" alignment="Qt::AlignRight">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Remote:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Mount Point:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="le_StartFinishInfo">
+           <property name="contextMenuPolicy">
+            <enum>Qt::NoContextMenu</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">* { background-color: rgba(0, 0, 0, 0); }</string>
+           </property>
+           <property name="text">
+            <string>Started: Sat, 11-Apr-2020 09:15:01 BST                                                 Finished: Sat, 11-Apr-2020 09:15:01 BST</string>
+           </property>
+           <property name="frame">
+            <bool>false</bool>
+           </property>
+           <property name="cursorPosition">
+            <number>126</number>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

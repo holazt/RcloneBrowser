@@ -2091,7 +2091,7 @@ MainWindow::MainWindow() {
 
   // we start all auto mount tasks with 1s delay - so RB has chance to start
   // properly
-  QTimer::singleShot(1000, this, SLOT(autoStartMounts()));
+  QTimer::singleShot(1000, Qt::CoarseTimer, this, SLOT(autoStartMounts()));
 
   // start minimised to tray
   if ((settings->value("Settings/startMinimisedToTray").toBool())) {
@@ -2243,7 +2243,7 @@ void MainWindow::quitApp(void) {
     QApplication::quit();
   } else {
     // something still running we check again a bit later then
-    QTimer::singleShot(200, this, SLOT(quitApp()));
+    QTimer::singleShot(200, Qt::CoarseTimer, this, SLOT(quitApp()));
     ++mQuitInfoDelay;
   }
 }

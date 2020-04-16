@@ -1201,7 +1201,7 @@ void RemoteWidget::initialModelLoading() {
 
   if (model->rowCount(index) == 1) {
     // try again later
-    QTimer::singleShot(200, this, SLOT(initialModelLoading()));
+    QTimer::singleShot(200, Qt::CoarseTimer, this, SLOT(initialModelLoading()));
   } else {
 
     for (int i = 0; i < model->rowCount(index); ++i) {

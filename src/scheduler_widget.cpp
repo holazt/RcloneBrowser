@@ -96,7 +96,7 @@ SchedulerWidget::SchedulerWidget(const QString &taskId, const QString &taskName,
   ui.saveStatus->hide();
 
   // start timer based scheduler
-  QTimer::singleShot(5000, this, SLOT(checkSchedule()));
+  QTimer::singleShot(5000, Qt::VeryCoarseTimer, this, SLOT(checkSchedule()));
 
   QObject::connect(ui.start, &QPushButton::clicked, this, [=]() {
     mSchedulerStatus = "activated";
@@ -503,7 +503,8 @@ void SchedulerWidget::checkSchedule(void) {
     diff = 0;
   };
 
-  QTimer::singleShot(diff + 1000, this, SLOT(checkSchedule()));
+  QTimer::singleShot(diff + 1000, Qt::VeryCoarseTimer, this,
+                     SLOT(checkSchedule()));
 
   return;
 }

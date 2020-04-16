@@ -4506,6 +4506,10 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
 
+  int _jobsCount = (ui.jobs->count() - 2) / 2;
+  ui.buttonSortByTime->setEnabled(_jobsCount > 1);
+  ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
+
   QObject::connect(widget, &MountWidget::finished, this, [=]() {
     if (--mJobCount == 0) {
       ui.tabs->setTabText(1, "Jobs");
@@ -4537,6 +4541,11 @@ void MainWindow::addNewMount(const QString &remote, const QString &folder,
     ui.jobs->removeWidget(line);
     widget->deleteLater();
     delete line;
+
+    int _jobsCount = (ui.jobs->count() - 2) / 2;
+    ui.buttonSortByTime->setEnabled(_jobsCount > 1);
+    ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
+
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
@@ -4918,6 +4927,11 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
+
+    int _jobsCount = (ui.jobs->count() - 2) / 2;
+    ui.buttonSortByTime->setEnabled(_jobsCount > 1);
+    ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
+
     ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
     ui.buttonCleanNotRunning->setEnabled(mJobCount !=
                                          (ui.jobs->count() - 2) / 2);
@@ -4929,6 +4943,10 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
 
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
+
+  int _jobsCount = (ui.jobs->count() - 2) / 2;
+  ui.buttonSortByTime->setEnabled(_jobsCount > 1);
+  ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
 
   player->start(stream, QProcess::ReadOnly);
   UseRclonePassword(rclone);

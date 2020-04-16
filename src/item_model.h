@@ -101,9 +101,14 @@ private:
   QRegExp mRegExpFolder;
   QRegExp mRegExpFile;
 
+  QMutex mRcloneLsProcessCountMutex;
+
   Item *get(const QModelIndex &index) const;
   void load(const QPersistentModelIndex &parentIndex, Item *parent);
 
   void sortRecursive(Item *item, const ItemSorter &sorter);
   void sort(const QModelIndex &parent, Item *item);
+
+  // rclone lsl/lsd processes count;
+  int mLocalRcloneLsProcessCount = 0;
 };

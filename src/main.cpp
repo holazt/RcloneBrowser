@@ -225,6 +225,16 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/transferAddToQueue", "false");
   };
 
+  // preemptive content loading on/off
+  if (!(settings->contains("Settings/preemptiveLoading"))) {
+    settings->setValue("Settings/preemptiveLoading", "true");
+  };
+
+  // preemptive content loading level (0,1,2)
+  if (!(settings->contains("Settings/preemptiveLoadingLevel"))) {
+    settings->setValue("Settings/preemptiveLoadingLevel", "0");
+  }
+
   // use ports (49152-65535) -
   // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
   // during first run the rcPortStartWin key might not exist

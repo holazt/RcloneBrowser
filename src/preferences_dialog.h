@@ -34,7 +34,12 @@ public:
   bool getShowFileIcons() const;
   bool getRowColors() const;
   bool getShowHidden() const;
+
   bool getDarkMode() const;
+
+  bool getPreemptiveLoading() const;
+  QString getPreemptiveLoadingLevel() const;
+
   QString getButtonStyle() const;
   QString getIconsLayout() const;
   QString getIconsColour() const;

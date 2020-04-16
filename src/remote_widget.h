@@ -1,5 +1,6 @@
 #pragma once
 
+#include "item_model.h"
 #include "pch.h"
 #include "ui_remote_widget.h"
 
@@ -28,7 +29,44 @@ signals:
                    const QString &info);
   void addSavedTransfer(const QString &uniqueId, bool dryRun, bool addToQueue);
 
+private slots:
+
+  void initialModelLoading();
+  void preemptiveLoadingProcessor();
+
+  void switchRemoteType();
+
 private:
   Ui::RemoteWidget ui;
   bool mButtonToolsState = false;
+
+  QString mRemoteType;
+
+  ItemModel *model;
+  QModelIndex mRootIndex;
+
+  // folders' indexes with already preloaded subfolders
+  QModelIndexList mPreemptiveLoadingListDone;
+  // folders already refreshed itself
+  QModelIndexList mPreemptiveLoadingListDoneNodes;
+  // queue of folders to refresh (preload)
+  QModelIndexList mPreemptiveLoadingList;
+  // queue of expanded folders still refreshing to refresh later all subfolders
+  QModelIndexList mPreemptiveLoadingListPending;
+
+  // mPreemptiveLoadingList deduplication status (run dedup when true)
+  bool mPreemptiveLoadingListDups = true;
+  // preemtive actions mutex
+  QMutex preemptiveLoadingProcessorMutex;
+  // preemptive loading on/off (true/false)
+  bool mPreemptiveLoading = true;
+
+  // Qtimer count for flashing info
+  int mCount = 0;
+
+  // Qtimer count for preeemptive loading level update
+  int mCountLevel = 0;
+
+  // how many rclone lsl/lsd processes for preeemptive loading
+  int mMaxRcloneLsProcessCount = 10;
 };

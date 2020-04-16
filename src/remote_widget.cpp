@@ -21,18 +21,25 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
   bool isLocal = remoteType == "local";
   bool isGoogle = remoteType == "drive";
+  mRemoteType = remoteType;
 
   QString root = isLocal ? "/" : QString();
 
   QString remoteMode = "main";
-
   //  QString remoteMode_ = "main";
+
+  auto settings = GetSettings();
 
 #ifndef Q_OS_WIN
   isLocal = false;
 #endif
 
 #ifdef Q_OS_WIN
+  // check if required rclone version
+  QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
+  unsigned int rcloneVersionResult =
+      compareVersion(rcloneVersion.toStdString(), "1.50");
+
   // as with Fusion style in Windows QTreeView font size does not scale
   // with QApplication::font() changes we control it manually using style sheet
 
@@ -44,12 +51,27 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.tree->setStyleSheet(fontStyleSheet);
 #endif
 
-  auto settings = GetSettings();
+  if (settings->value("Settings/preemptiveLoading").toBool()) {
+    mPreemptiveLoading = true;
+  } else {
+    mPreemptiveLoading = false;
+  }
+
+  int preemptiveLoadingLevel =
+      settings->value("Settings/preemptiveLoadingLevel").toInt();
+  if (preemptiveLoadingLevel == 0) {
+    mMaxRcloneLsProcessCount = 10;
+  }
+  if (preemptiveLoadingLevel == 1) {
+    mMaxRcloneLsProcessCount = 20;
+  }
+  if (preemptiveLoadingLevel == 2) {
+    mMaxRcloneLsProcessCount = 40;
+  }
 
   QString buttonStyle = settings->value("Settings/buttonStyle").toString();
   QString buttonSize = settings->value("Settings/buttonSize").toString();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
-  QString rcloneVersion = settings->value("Settings/rcloneVersion").toString();
   settings->setValue("Settings/remoteMode", "main");
   ui.tree->setAlternatingRowColors(
       settings->value("Settings/rowColors", false).toBool());
@@ -298,7 +320,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.tree->sortByColumn(0, Qt::AscendingOrder);
   ui.tree->header()->setSectionsMovable(false);
 
-  ItemModel *model = new ItemModel(iconCache, remote, this);
+  model = new ItemModel(iconCache, remote, this);
   ui.tree->setModel(model);
   QTimer::singleShot(0, ui.tree, SLOT(setFocus()));
 
@@ -307,6 +329,57 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.tree->resizeColumnToContents(1);
     ui.tree->resizeColumnToContents(2);
   });
+
+  QObject::connect(ui.tree, &QAbstractItemView::clicked, this, [=]() {
+    // not used now
+  });
+
+  QObject::connect(
+      ui.tree, &QTreeView::expanded, this, [=](const QModelIndex &index) {
+        if (!mPreemptiveLoading) {
+          return;
+        }
+
+        // preemptive loading
+        QMutexLocker locker(&preemptiveLoadingProcessorMutex);
+
+        if (!mPreemptiveLoadingListDoneNodes.contains(index)) {
+          mPreemptiveLoadingListDoneNodes.append(index);
+        }
+
+        if (!mPreemptiveLoadingListDone.contains(index)) {
+
+          if (model->isLoading(model->index(0, 0, index))) {
+            mPreemptiveLoadingListPending.append(index);
+            mPreemptiveLoadingListDone.append(index);
+          } else {
+            mPreemptiveLoadingListDone.append(index);
+            // preload children
+            for (int i = 0; i < model->rowCount(index); ++i) {
+              if (model->isFolder(model->index(i, 0, index))) {
+                mPreemptiveLoadingList.append(model->index(i, 0, index));
+                mPreemptiveLoadingListDups = true;
+              }
+            }
+          }
+        }
+
+        /*
+              QModelIndex parentIndex = index.parent();
+                if (!mPreemptiveLoadingListDone.contains(parentIndex)) {
+                  // preload peers
+                  for (int i = 0; i < model->rowCount(parentIndex); ++i) {
+                    if (model->isFolder(model->index(i, 0, parentIndex))) {
+                      mPreemptiveLoadingList.append(model->index(i, 0,
+           parentIndex)); mPreemptiveLoadingListDups = true;
+                    }
+                  }
+                  mPreemptiveLoadingListDone.append(parentIndex);
+                }
+        */
+
+        QTimer::singleShot(0, this, SLOT(preemptiveLoadingProcessor()));
+      });
 
   QObject::connect(
       ui.tree->selectionModel(), &QItemSelectionModel::selectionChanged, this,
@@ -354,10 +427,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.upload->setDisabled(driveModeButtons);
 
 #if defined(Q_OS_WIN32)
-          // check if required version
-          unsigned int result =
-              compareVersion(rcloneVersion.toStdString(), "1.50");
-          if (result == 2) {
+          // check if required rclone version
+          if (rcloneVersionResult == 2) {
+            // rclone version before 1.50 - no mount in Windows
             ui.actionNewMount->setDisabled(true);
           } else {
             ui.actionNewMount->setDisabled(!isFolder);
@@ -1066,7 +1138,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QModelIndex index = model->addRoot("/", root);
     ui.tree->selectionModel()->select(
         index, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
+    mRootIndex = index;
+
+    mPreemptiveLoadingListDone.append(index);
+
     ui.tree->expand(index);
+    QTimer::singleShot(200, Qt::CoarseTimer, this, SLOT(initialModelLoading()));
   }
 
   QShortcut *close = new QShortcut(QKeySequence::Close, this);
@@ -1076,50 +1153,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.shared, &QAction::triggered, [=]() {
-    /*
-      // connected when QComboBox cb_GoogleDriveMode emits signal
-     currentIndexChanged(int)
-      // in remote_widget.ui configured via in Qt Creator
-     <connections>
-      <connection>
-       <sender>cb_GoogleDriveMode</sender>
-       <signal>currentIndexChanged(int)</signal>
-       <receiver>shared</receiver>
-       <slot>trigger()</slot>
-       <hints>
-        <hint type="sourcelabel">
-         <x>881</x>
-         <y>27</y>
-        </hint>
-        <hint type="destinationlabel">
-         <x>-1</x>
-         <y>-1</y>
-        </hint>
-       </hints>
-      </connection>
-     </connections>
-    */
+    ui.cb_GoogleDriveMode->setDisabled(true);
 
-    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+    ui.tree->hideColumn(0);
+    ui.tree->hideColumn(1);
+    ui.tree->hideColumn(2);
 
-    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-    QModelIndex top = index;
-
-    // get top parent
-    while (!model->isTopLevel(top)) {
-      top = top.parent();
-    }
-
-    int i = 0;
-    // clear top folder's rows
-    while (model->removeRow(0, top)) {
-      ++i;
-    }
-
-    ui.tree->selectionModel()->clear();
-    ui.tree->selectionModel()->select(top, QItemSelectionModel::Select |
-                                               QItemSelectionModel::Rows);
-    model->refresh(top);
+    QTimer::singleShot(0, this, SLOT(switchRemoteType()));
   });
 }
 
@@ -1150,4 +1190,219 @@ QString setRemoteMode(int index, QString remoteType) {
   }
 
   return mode;
+}
+
+void RemoteWidget::initialModelLoading() {
+  QMutexLocker locker(&preemptiveLoadingProcessorMutex);
+  setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), mRemoteType);
+
+  // model and mRootIndex in private
+  QModelIndex index = mRootIndex;
+
+  if (model->rowCount(index) == 1) {
+    // try again later
+    QTimer::singleShot(200, this, SLOT(initialModelLoading()));
+  } else {
+
+    for (int i = 0; i < model->rowCount(index); ++i) {
+      if (model->isFolder(model->index(i, 0, index))) {
+        mPreemptiveLoadingList.append(model->index(i, 0, index));
+      }
+    }
+
+    QTimer::singleShot(0, this, SLOT(preemptiveLoadingProcessor()));
+  }
+  return;
+}
+
+void RemoteWidget::preemptiveLoadingProcessor() {
+
+  QMutexLocker locker(&preemptiveLoadingProcessorMutex);
+
+  if (!mPreemptiveLoading) {
+    return;
+  }
+
+  // update aggressivness of preloading every few secs
+  mCountLevel++;
+  if ((mCountLevel % 30) == 0) {
+
+    mCountLevel = 1;
+
+    auto settings = GetSettings();
+
+    if (settings->value("Settings/preemptiveLoading").toBool()) {
+      mPreemptiveLoading = true;
+    } else {
+      mPreemptiveLoading = false;
+    }
+
+    int preemptiveLoadingLevel =
+        settings->value("Settings/preemptiveLoadingLevel").toInt();
+
+    if (preemptiveLoadingLevel == 0) {
+      mMaxRcloneLsProcessCount = 10;
+    }
+    if (preemptiveLoadingLevel == 1) {
+      mMaxRcloneLsProcessCount = 20;
+    }
+    if (preemptiveLoadingLevel == 2) {
+      mMaxRcloneLsProcessCount = 40;
+    }
+  }
+
+  bool runAgain = false;
+
+  setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), mRemoteType);
+
+  QModelIndex tmpIndex;
+  QModelIndexList tmpList;
+  int tmpCount;
+
+  tmpCount = mPreemptiveLoadingListPending.count();
+
+  if (tmpCount > 0) {
+
+    for (int i = tmpCount - 1; i >= 0; i--) {
+
+      tmpIndex = mPreemptiveLoadingListPending.at(i);
+
+      if (!model->isLoading(model->index(0, 0, tmpIndex))) {
+        tmpIndex = mPreemptiveLoadingListPending.takeAt(i);
+        // preload children
+        for (int j = 0; j < model->rowCount(tmpIndex); ++j) {
+          if (model->isFolder(model->index(i, 0, tmpIndex))) {
+            mPreemptiveLoadingList.append(model->index(j, 0, tmpIndex));
+            mPreemptiveLoadingListDups = true;
+          }
+        }
+      }
+    }
+  }
+
+  tmpList.clear();
+  tmpCount = mPreemptiveLoadingList.count();
+
+  if (tmpCount > 0) {
+    if (global.rcloneLsProcessCount < mMaxRcloneLsProcessCount) {
+
+      // remove duplicates if new indexes were added
+      if (mPreemptiveLoadingListDups) {
+        for (int i = tmpCount - 1; i >= 0; --i) {
+          tmpIndex = mPreemptiveLoadingList.at(i);
+          if (!tmpList.contains(tmpIndex)) {
+            tmpList.prepend(tmpIndex);
+          }
+        }
+        mPreemptiveLoadingList = tmpList;
+        mPreemptiveLoadingListDups = false;
+      }
+
+      // one refresh will trigger two rclone processes - lsl and lsd
+      int rcloneLsProcessesFreeCount =
+          (mMaxRcloneLsProcessCount - global.rcloneLsProcessCount) / 2;
+
+      for (int i = 0; i < rcloneLsProcessesFreeCount; ++i) {
+        if (rcloneLsProcessesFreeCount <= 0) {
+          break;
+        }
+
+        tmpCount = mPreemptiveLoadingList.count();
+        for (int j = 0; j < tmpCount; ++j) {
+          if (rcloneLsProcessesFreeCount <= 0) {
+            break;
+          }
+
+          // process from the bottom so last clicked folder is processed first
+          QModelIndex index =
+              mPreemptiveLoadingList.takeAt(mPreemptiveLoadingList.count() - 1);
+
+          if (!mPreemptiveLoadingListDone.contains(index)) {
+
+            if (!mPreemptiveLoadingListDoneNodes.contains(index)) {
+              // force model update
+              // model->refresh(index);
+              model->index(1, 0, index).isValid();
+              rcloneLsProcessesFreeCount--;
+              mPreemptiveLoadingListDoneNodes.append(index);
+            }
+          }
+        }
+      }
+      runAgain = true;
+    } else {
+      runAgain = true;
+    }
+  } else {
+    if (mPreemptiveLoadingListPending.count() > 0) {
+      runAgain = true;
+    }
+  }
+
+  if (runAgain) {
+    QTimer::singleShot(300, Qt::CoarseTimer, this,
+                       SLOT(preemptiveLoadingProcessor()));
+  }
+
+  return;
+}
+
+void RemoteWidget::switchRemoteType() {
+  QMutexLocker locker(&preemptiveLoadingProcessorMutex);
+
+  // clear mPreemptiveLoadingList
+  mPreemptiveLoadingList.clear();
+
+  // we can only switch when pending preemptive loading jobs are finished
+  if (global.rcloneLsProcessCount == 0) {
+
+    mCount = 0;
+
+    ui.cb_GoogleDriveMode->setDisabled(false);
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), mRemoteType);
+
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+    QModelIndex top = index;
+
+    // get top parent
+    while (!model->isTopLevel(top)) {
+      top = top.parent();
+    }
+    int i = 0;
+    // clear top folder's rows
+    while (model->removeRow(0, top)) {
+      ++i;
+    }
+
+    ui.tree->selectionModel()->clear();
+    ui.tree->selectionModel()->select(top, QItemSelectionModel::Select |
+                                               QItemSelectionModel::Rows);
+    model->refresh(top);
+
+    ui.tree->showColumn(0);
+    ui.tree->showColumn(1);
+    ui.tree->showColumn(2);
+    ui.path->setAlignment(Qt::AlignLeft);
+    ui.path->clear();
+    mRootIndex = top;
+    mPreemptiveLoadingListDone.append(top);
+    QTimer::singleShot(200, Qt::CoarseTimer, this, SLOT(initialModelLoading()));
+
+  } else {
+
+    // there are still rclone ls jobs running - we wait
+    mCount++;
+    ui.path->setAlignment(Qt::AlignHCenter);
+
+    if (mCount % 2 == 0) {
+      if (ui.path->text().isEmpty()) {
+        ui.path->setText(
+            "*****    Please wait - finishing background jobs    *****");
+      } else {
+        ui.path->clear();
+      }
+    }
+
+    QTimer::singleShot(300, Qt::CoarseTimer, this, SLOT(switchRemoteType()));
+  }
 }

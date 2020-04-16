@@ -575,6 +575,12 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showFileIcons", dialog.getShowFileIcons());
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
+
+      settings->setValue("Settings/preemptiveLoading",
+                         dialog.getPreemptiveLoading());
+      settings->setValue("Settings/preemptiveLoadingLevel",
+                         dialog.getPreemptiveLoadingLevel().trimmed());
+
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/buttonStyle",
                          dialog.getButtonStyle().trimmed());
@@ -701,6 +707,7 @@ MainWindow::MainWindow() {
       QString remoteType = type;
 
       auto remote = new RemoteWidget(&mIcons, name, remoteType, ui.tabs);
+
       QObject::connect(remote, &RemoteWidget::addNewMount, this,
                        &MainWindow::addNewMount);
       QObject::connect(remote, &RemoteWidget::addStream, this,
@@ -709,11 +716,16 @@ MainWindow::MainWindow() {
                        &MainWindow::addTransfer);
       QObject::connect(remote, &RemoteWidget::addSavedTransfer, this,
                        &MainWindow::addSavedTransfer);
-
       int index = ui.tabs->addTab(remote, name);
       ui.tabs->setCurrentIndex(index);
     }
   });
+
+  QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, this,
+                   [=](const int &index) {
+                     // delete remote widget when tab closed
+                     ui.tabs->widget(index)->deleteLater();
+                   });
 
   QObject::connect(ui.tabs, &QTabWidget::tabCloseRequested, ui.tabs,
                    &QTabWidget::removeTab);

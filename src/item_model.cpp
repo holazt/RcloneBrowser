@@ -1,4 +1,5 @@
 #include "item_model.h"
+#include "global.h"
 #include "icon_cache.h"
 #include "utils.h"
 #include <algorithm>
@@ -117,14 +118,29 @@ ItemModel::ItemModel(IconCache *icons, const QString &remote, QObject *parent)
       });
 }
 
-ItemModel::~ItemModel() { delete mRoot; }
+ItemModel::~ItemModel() {
+  delete mRoot;
+
+  // when remote widget terminated free global rclone ls processes
+  global.rcloneLsProcessCount =
+      global.rcloneLsProcessCount - mLocalRcloneLsProcessCount;
+
+  if (global.rcloneLsProcessCount < 0) {
+    global.rcloneLsProcessCount = 0;
+  }
+}
 
 const QDir &ItemModel::path(const QModelIndex &index) const {
   return get(index)->path;
 }
 
 bool ItemModel::isLoading(const QModelIndex &index) const {
-  return get(index)->parent->isLoading();
+  // if invalid index return false instead of crashing
+  if ((index.row() != -1) && (index.column() != -1)) {
+    return get(index)->parent->isLoading();
+  } else {
+    return false;
+  }
 }
 
 void ItemModel::refresh(const QModelIndex &index) {
@@ -393,6 +409,15 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   auto rcloneFinished = [=]() {
     sender()->deleteLater();
+    // free rclone ls count (global and local)
+    mRcloneLsProcessCountMutex.lock();
+    if (global.rcloneLsProcessCount > 0) {
+      global.rcloneLsProcessCount--;
+    }
+    if (mLocalRcloneLsProcessCount > 0) {
+      mLocalRcloneLsProcessCount--;
+    }
+    mRcloneLsProcessCountMutex.unlock();
 
     parent->state =
         parent->state == Item::Loading1 ? Item::Loading2 : Item::Ready;
@@ -526,6 +551,14 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
   timer->start(100);
   UseRclonePassword(lsd);
   UseRclonePassword(lsl);
+
+  // keep track of number of lsl and lsd rclone processes
+  mRcloneLsProcessCountMutex.lock();
+  global.rcloneLsProcessCount++;
+  global.rcloneLsProcessCount++;
+  mLocalRcloneLsProcessCount++;
+  mLocalRcloneLsProcessCount++;
+  mRcloneLsProcessCountMutex.unlock();
 
   lsd->start(GetRclone(),
              QStringList() << "lsd" << GetRcloneConf()

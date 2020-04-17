@@ -39,7 +39,7 @@ private slots:
 
   void addSavedTransfer(const QString &uniqueId, bool dryRun, bool addToQueue);
 
-  void runQueueScript(const QString &script);
+  void runScript(const QString &script);
 
   void slotCloseTab(int index);
 

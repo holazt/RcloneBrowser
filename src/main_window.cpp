@@ -552,8 +552,6 @@ MainWindow::MainWindow() {
                          dialog.getDefaultUploadOptions().trimmed());
       settings->setValue("Settings/defaultRcloneOptions",
                          dialog.getDefaultRcloneOptions().trimmed());
-      settings->setValue("Settings/queueScript",
-                         dialog.getQueueScript().trimmed());
 
       settings->setValue("Settings/checkRcloneBrowserUpdates",
                          dialog.getCheckRcloneBrowserUpdates());
@@ -576,11 +574,6 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/rowColors", dialog.getRowColors());
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
 
-      settings->setValue("Settings/preemptiveLoading",
-                         dialog.getPreemptiveLoading());
-      settings->setValue("Settings/preemptiveLoadingLevel",
-                         dialog.getPreemptiveLoadingLevel().trimmed());
-
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
       settings->setValue("Settings/buttonStyle",
                          dialog.getButtonStyle().trimmed());
@@ -600,6 +593,18 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/https_proxy",
                          dialog.getHttpsProxy().trimmed());
       settings->setValue("Settings/no_proxy", dialog.getNoProxy().trimmed());
+
+      settings->setValue("Settings/preemptiveLoading",
+                         dialog.getPreemptiveLoading());
+      settings->setValue("Settings/preemptiveLoadingLevel",
+                         dialog.getPreemptiveLoadingLevel().trimmed());
+
+      settings->setValue("Settings/queueScript",
+                         dialog.getQueueScript().trimmed());
+      settings->setValue("Settings/transferOnScript",
+                         dialog.getTransferOnScript().trimmed());
+      settings->setValue("Settings/transferOffScript",
+                         dialog.getTransferOffScript().trimmed());
 
       // set queueScriptRun tooltip
       QString queueScriptRunToolTip =
@@ -952,7 +957,7 @@ MainWindow::MainWindow() {
               QString queueScript =
                   settings->value("Settings/queueScript", false).toString();
               if (!queueScript.isEmpty()) {
-                runQueueScript(queueScript);
+                runScript(queueScript);
               }
             }
           }
@@ -4168,6 +4173,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
         --mTransferJobCount;
 
         if (mTransferJobCount == 0) {
+
       // allow entering sleep
 #if defined(Q_OS_WIN)
           SetThreadExecutionState(ES_CONTINUOUS);
@@ -4175,6 +4181,13 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 #if defined(Q_OS_MACOS)
           mMacOsPowerSaving->resumePowerSaving();
 #endif
+          // run custom script
+          auto settings = GetSettings();
+          QString transferOffScript =
+              settings->value("Settings/transferOffScript", false).toString();
+          if (!transferOffScript.isEmpty()) {
+            runScript(transferOffScript);
+          }
         }
 
         if (--mJobCount == 0) {
@@ -4241,7 +4254,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
                 QString queueScript =
                     settings->value("Settings/queueScript", false).toString();
                 if (!queueScript.isEmpty()) {
-                  runQueueScript(queueScript);
+                  runScript(queueScript);
                 }
               }
             }
@@ -4426,6 +4439,14 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   mMacOsPowerSaving->suspendPowerSaving();
 #endif
 
+  // run custom script
+  auto settings = GetSettings();
+  QString transferOnScript =
+      settings->value("Settings/transferOnScript", false).toString();
+  if (!transferOnScript.isEmpty()) {
+    runScript(transferOnScript);
+  }
+
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
 
   ui.buttonStopAllJobs->setEnabled(mTransferJobCount != 0);
@@ -4441,8 +4462,8 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   sortJobs();
 }
 
-//  runs queueScript
-void MainWindow::runQueueScript(const QString &script) {
+//  runs Script
+void MainWindow::runScript(const QString &script) {
 
   QProcess *p = new QProcess();
 

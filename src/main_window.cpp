@@ -2089,6 +2089,7 @@ MainWindow::MainWindow() {
       auto settings = GetSettings();
       settings->setValue("Settings/rclone", rclone);
       SetRclone(rclone);
+      rcloneGetVersion();
     }
   } else {
     rcloneGetVersion();
@@ -2792,6 +2793,18 @@ void MainWindow::rcloneGetVersion() {
         p->deleteLater();
       });
 
+  QObject::connect(
+      p, &QProcess::errorOccurred, this, [=](QProcess::ProcessError error) {
+        QString errorString =
+            QMetaEnum::fromType<QProcess::ProcessError>().valueToKey(error);
+
+        QMessageBox::information(
+            this, "Error",
+            "Cannot start rclone\n\n Error: " + errorString +
+                "\n\nPlease verify rclone excecutable location.");
+        emit ui.preferences->trigger();
+      });
+
   UseRclonePassword(p);
   p->start(GetRclone(),
            QStringList() << "version"
@@ -3070,6 +3083,18 @@ void MainWindow::rcloneListRemotes() {
         }
         p->deleteLater();
         ui.open->setEnabled(false);
+      });
+
+  QObject::connect(
+      p, &QProcess::errorOccurred, this, [=](QProcess::ProcessError error) {
+        QString errorString =
+            QMetaEnum::fromType<QProcess::ProcessError>().valueToKey(error);
+
+        QMessageBox::information(
+            this, "Error",
+            "Cannot start rclone\n\n Error: " + errorString +
+                "\n\nPlease verify rclone excecutable location.");
+        emit ui.preferences->trigger();
       });
 
   UseRclonePassword(p);

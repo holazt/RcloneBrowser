@@ -235,6 +235,16 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/preemptiveLoadingLevel", "0");
   }
 
+  // script to run when transfer jobs start
+  if (!(settings->contains("Settings/transferOnScript"))) {
+    settings->setValue("Settings/transferOnScript", "");
+  };
+
+  // script to run when last transfer jobs finished
+  if (!(settings->contains("Settings/transferOffScript"))) {
+    settings->setValue("Settings/transferOffScript", "");
+  };
+
   // use ports (49152-65535) -
   // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
   // during first run the rcPortStartWin key might not exist

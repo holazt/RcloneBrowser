@@ -19,7 +19,6 @@ public:
   QString getDefaultDownloadOptions() const;
   QString getDefaultUploadOptions() const;
   QString getDefaultRcloneOptions() const;
-  QString getQueueScript() const;
 
   bool getCheckRcloneBrowserUpdates() const;
   bool getCheckRcloneUpdates() const;
@@ -37,9 +36,6 @@ public:
 
   bool getDarkMode() const;
 
-  bool getPreemptiveLoading() const;
-  QString getPreemptiveLoadingLevel() const;
-
   QString getButtonStyle() const;
   QString getIconsLayout() const;
   QString getIconsColour() const;
@@ -52,6 +48,13 @@ public:
   QString getHttpProxy() const;
   QString getHttpsProxy() const;
   QString getNoProxy() const;
+
+  bool getPreemptiveLoading() const;
+  QString getPreemptiveLoadingLevel() const;
+
+  QString getQueueScript() const;
+  QString getTransferOnScript() const;
+  QString getTransferOffScript() const;
 
 private:
   Ui::PreferencesDialog ui;

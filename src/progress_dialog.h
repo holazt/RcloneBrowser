@@ -25,4 +25,5 @@ private:
   int mMinimumWidth;
   int mMinimumHeight;
   int mHeight;
+  bool mIsRunning = true;
 };

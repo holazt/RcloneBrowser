@@ -2,7 +2,6 @@
 
 class Global {
 public:
-
   // global variable to keep used RC ports
   QList<int> usedRcPorts = QList<int>() << 1 << 2;
 

@@ -651,7 +651,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ProgressDialog *progress =
         new ProgressDialog("Fetch Public Link", "Running... ",
                            "Public link for: " + remote + ":" + pathMsg,
-                           process, this, false, true);
+                           process, NULL, false, true);
     progress->expand();
     progress->allowToClose();
     progress->show();
@@ -748,7 +748,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress = new ProgressDialog(
         "Show directories tree", "Running... ",
-        "rclone tree -d " + remote + ":" + pathMsg, process, this, false);
+        "rclone tree -d " + remote + ":" + pathMsg, process, NULL, false);
     progress->expand();
     progress->allowToClose();
     progress->resize(1000, 600);
@@ -774,7 +774,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress = new ProgressDialog(
         "Get Size", "Running... ", "Size of: " + remote + ":" + pathMsg,
-        process, this, false);
+        process, NULL, false);
 
     progress->expand();
     progress->allowToClose();
@@ -819,7 +819,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ProgressDialog *progress = new ProgressDialog(
           "Export", "Running... ",
           "Exporting content of " + remote + ":" + pathMsg + "\nto " + dst,
-          process, this, false);
+          process, NULL, false);
 
       file->setParent(progress);
 
@@ -971,7 +971,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           "rclone " + e.getOptions().join(" ") + " " +
               GetRemoteModeRcloneOptions().join(" ") + " " +
               GetDefaultOptionsList("defaultRcloneOptions").join(" "),
-          process, this, false);
+          process, NULL, false);
 
       progress->expand();
       progress->allowToClose();
@@ -1008,7 +1008,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           "rclone " + e.getOptions().join(" ") + " " +
               GetRemoteModeRcloneOptions().join(" ") + " " +
               GetDefaultOptionsList("defaultRcloneOptions").join(" "),
-          process, this, false);
+          process, NULL, false);
 
       progress->expand();
       progress->allowToClose();
@@ -1031,7 +1031,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
     ProgressDialog *progress = new ProgressDialog(
         "Get remote Info", "Runnning... ", "rclone about " + remote + ":",
-        process, this, false);
+        process, NULL, false);
 
     progress->expand();
     progress->allowToClose();
@@ -1201,7 +1201,7 @@ void RemoteWidget::initialModelLoading() {
 
   if (model->rowCount(index) == 1) {
     // try again later
-    QTimer::singleShot(200, this, SLOT(initialModelLoading()));
+    QTimer::singleShot(200, Qt::CoarseTimer, this, SLOT(initialModelLoading()));
   } else {
 
     for (int i = 0; i < model->rowCount(index); ++i) {

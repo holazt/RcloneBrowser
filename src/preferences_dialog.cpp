@@ -151,6 +151,60 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
     ui.queueScript->setText(queueScript);
   });
 
+  QObject::connect(
+      ui.transferOnScriptBrowse, &QPushButton::clicked, this, [=]() {
+        QString transferOnScript = QFileDialog::getOpenFileName(
+            this, "Select script", ui.transferOnScript->text());
+        if (transferOnScript.isEmpty()) {
+          return;
+        }
+
+        if (!QFileInfo(transferOnScript).isExecutable()) {
+          QMessageBox::critical(this, "Error",
+                                QString("File\n\n %1\n\n is not executable.")
+                                    .arg(transferOnScript));
+          return;
+        }
+
+        if (QFileInfo(transferOnScript) ==
+            QFileInfo(qApp->applicationFilePath())) {
+          QMessageBox::critical(
+              this, "Error",
+              "You selected RcloneBrowser executable!\nPlease "
+              "select your script executable instead.");
+          return;
+        }
+
+        ui.transferOnScript->setText(transferOnScript);
+      });
+
+  QObject::connect(
+      ui.transferOffScriptBrowse, &QPushButton::clicked, this, [=]() {
+        QString transferOffScript = QFileDialog::getOpenFileName(
+            this, "Select script", ui.transferOffScript->text());
+        if (transferOffScript.isEmpty()) {
+          return;
+        }
+
+        if (!QFileInfo(transferOffScript).isExecutable()) {
+          QMessageBox::critical(this, "Error",
+                                QString("File\n\n %1\n\n is not executable.")
+                                    .arg(transferOffScript));
+          return;
+        }
+
+        if (QFileInfo(transferOffScript) ==
+            QFileInfo(qApp->applicationFilePath())) {
+          QMessageBox::critical(
+              this, "Error",
+              "You selected RcloneBrowser executable!\nPlease "
+              "select your script executable instead.");
+          return;
+        }
+
+        ui.transferOffScript->setText(transferOffScript);
+      });
+
   QObject::connect(ui.closeToTray, &QCheckBox::clicked, this, [=]() {
     if (ui.closeToTray->isChecked()) {
       ui.startMinimisedToTray->setDisabled(false);
@@ -187,8 +241,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/defaultUploadOptions").toString());
   ui.defaultRcloneOptions->setText(
       settings->value("Settings/defaultRcloneOptions").toString());
-  ui.queueScript->setText(QDir::toNativeSeparators(
-      settings->value("Settings/queueScript").toString()));
 
   ui.checkRcloneBrowserUpdates->setChecked(
       settings->value("Settings/checkRcloneBrowserUpdates", true).toBool());
@@ -231,20 +283,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/rowColors", true).toBool());
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
-  ui.cb_preemptiveLoading->setChecked(
-      settings->value("Settings/preemptiveLoading", true).toBool());
 
   ui.darkMode->setChecked(settings->value("Settings/darkMode", true).toBool());
-
-  if ((settings->value("Settings/preemptiveLoadingLevel").toString()) == "2") {
-    ui.rb_preemptiveLoading_2->setChecked(true);
-  } else {
-    if (settings->value("Settings/preemptiveLoadingLevel").toString() == "1") {
-      ui.rb_preemptiveLoading_1->setChecked(true);
-    } else {
-      ui.rb_preemptiveLoading_0->setChecked(true);
-    }
-  }
 
   if ((settings->value("Settings/buttonStyle").toString()) == "icononly") {
     ui.cb_icononly->setChecked(true);
@@ -364,6 +404,25 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.http_proxy->setText(settings->value("Settings/http_proxy").toString());
   ui.https_proxy->setText(settings->value("Settings/https_proxy").toString());
   ui.no_proxy->setText(settings->value("Settings/no_proxy").toString());
+
+  ui.cb_preemptiveLoading->setChecked(
+      settings->value("Settings/preemptiveLoading", true).toBool());
+  if ((settings->value("Settings/preemptiveLoadingLevel").toString()) == "2") {
+    ui.rb_preemptiveLoading_2->setChecked(true);
+  } else {
+    if (settings->value("Settings/preemptiveLoadingLevel").toString() == "1") {
+      ui.rb_preemptiveLoading_1->setChecked(true);
+    } else {
+      ui.rb_preemptiveLoading_0->setChecked(true);
+    }
+  }
+
+  ui.queueScript->setText(QDir::toNativeSeparators(
+      settings->value("Settings/queueScript").toString()));
+  ui.transferOnScript->setText(QDir::toNativeSeparators(
+      settings->value("Settings/transferOnScript").toString()));
+  ui.transferOffScript->setText(QDir::toNativeSeparators(
+      settings->value("Settings/transferOffScript").toString()));
 }
 
 PreferencesDialog::~PreferencesDialog() {}
@@ -398,10 +457,6 @@ QString PreferencesDialog::getDefaultUploadOptions() const {
 
 QString PreferencesDialog::getDefaultRcloneOptions() const {
   return ui.defaultRcloneOptions->text();
-}
-
-QString PreferencesDialog::getQueueScript() const {
-  return ui.queueScript->text();
 }
 
 bool PreferencesDialog::getCheckRcloneBrowserUpdates() const {
@@ -446,24 +501,6 @@ bool PreferencesDialog::getRowColors() const {
 
 bool PreferencesDialog::getShowHidden() const {
   return ui.showHidden->isChecked();
-}
-
-bool PreferencesDialog::getPreemptiveLoading() const {
-  return ui.cb_preemptiveLoading->isChecked();
-}
-
-bool PreferencesDialog::getDarkMode() const { return ui.darkMode->isChecked(); }
-
-QString PreferencesDialog::getPreemptiveLoadingLevel() const {
-  if (ui.rb_preemptiveLoading_2->isChecked()) {
-    return "2";
-  } else {
-    if (ui.rb_preemptiveLoading_1->isChecked()) {
-      return "1";
-    } else {
-      return "0";
-    }
-  }
 }
 
 QString PreferencesDialog::getButtonStyle() const {
@@ -579,4 +616,34 @@ bool PreferencesDialog::getUseProxy() const {
   } else {
     return true;
   }
+}
+
+bool PreferencesDialog::getPreemptiveLoading() const {
+  return ui.cb_preemptiveLoading->isChecked();
+}
+
+bool PreferencesDialog::getDarkMode() const { return ui.darkMode->isChecked(); }
+
+QString PreferencesDialog::getPreemptiveLoadingLevel() const {
+  if (ui.rb_preemptiveLoading_2->isChecked()) {
+    return "2";
+  } else {
+    if (ui.rb_preemptiveLoading_1->isChecked()) {
+      return "1";
+    } else {
+      return "0";
+    }
+  }
+}
+
+QString PreferencesDialog::getQueueScript() const {
+  return ui.queueScript->text();
+}
+
+QString PreferencesDialog::getTransferOnScript() const {
+  return ui.transferOnScript->text();
+}
+
+QString PreferencesDialog::getTransferOffScript() const {
+  return ui.transferOffScript->text();
 }

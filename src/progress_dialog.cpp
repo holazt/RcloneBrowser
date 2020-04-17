@@ -60,6 +60,15 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
       QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
   ui.buttonShowOutput->setIconSize(QSize(24, 24));
 
+  QPushButton *cancelButton =
+      ui.buttonBox->addButton("&Cancel", QDialogButtonBox::RejectRole);
+
+  QObject::connect(cancelButton, &QPushButton::clicked, this, [=]() {
+    if (mIsRunning) {
+      process->kill();
+    }
+  });
+
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
                    &QDialog::reject);
 
@@ -106,6 +115,9 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
                    static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(
                        &QProcess::finished),
                    this, [=](int code, QProcess::ExitStatus status) {
+                     mIsRunning = false;
+                     cancelButton->setText("&Close");
+
                      if (status == QProcess::NormalExit && code == 0) {
 
                        if (iconsColour == "white") {

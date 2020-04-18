@@ -46,6 +46,7 @@ set(UI
   stream_widget.ui
   preferences_dialog.ui
   scheduler_widget.ui
+  delete_progress_dialog.ui
 )
 
 set(MOC
@@ -68,6 +69,7 @@ set(MOC
   scheduler_widget.h
   hours_spinbox.h
   minutes_spinbox.h
+  delete_progress_dialog.h
 )
 
 set(OTHER
@@ -105,6 +107,7 @@ set(SOURCE
   scheduler_widget.cpp
   hours_spinbox.cpp
   minutes_spinbox.cpp
+  delete_progress_dialog.cpp
 )
 
 if(WIN32)

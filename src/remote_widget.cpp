@@ -1,6 +1,7 @@
 #include "remote_widget.h"
 #include "check_dialog.h"
 #include "dedupe_dialog.h"
+#include "delete_progress_dialog.h"
 #include "export_dialog.h"
 #include "global.h"
 #include "icon_cache.h"
@@ -324,6 +325,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.tree->setModel(model);
   QTimer::singleShot(0, ui.tree, SLOT(setFocus()));
 
+  connect(ui.tree->selectionModel(),
+          SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+          SLOT(processSelection(QItemSelection, QItemSelection)));
+
   QObject::connect(model, &QAbstractItemModel::layoutChanged, this, [=]() {
     ui.tree->header()->setSectionResizeMode(0, QHeaderView::Stretch);
     ui.tree->resizeColumnToContents(1);
@@ -383,80 +388,119 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
   QObject::connect(
       ui.tree->selectionModel(), &QItemSelectionModel::selectionChanged, this,
-      [=](const QItemSelection &selection) {
-        for (auto child : findChildren<QAction *>()) {
-          child->setDisabled(selection.isEmpty());
-        }
+      [=]() {
+        QModelIndex index;
+        QModelIndexList selection = ui.tree->selectionModel()->selectedRows();
+
+        int multiSelectCount = selection.count();
 
         if (selection.isEmpty()) {
+          for (auto child : findChildren<QAction *>()) {
+            child->setDisabled(true);
+          }
+          ui.getInfo->setDisabled(false);
           ui.path->clear();
           return;
         }
 
-        QModelIndex index = selection.indexes().front();
+        if (multiSelectCount > 1) {
+          for (auto child : findChildren<QAction *>()) {
+            child->setDisabled(true);
+          }
+          ui.purge->setDisabled(false);
+          ui.download->setDisabled(false);
+          ui.getInfo->setDisabled(false);
+          ui.path->clear();
+          return;
+        }
+
+        // there is only once item selected
+        index = selection.at(0);
 
         bool topLevel = model->isTopLevel(index);
         bool isFolder = model->isFolder(index);
-
+        bool driveModeButtons = false;
+        bool isNotMountable = false;
         QDir path;
+
+        if (remoteType == "drive") {
+          // for Google Drive --drive-shared-with-me is read only
+          driveModeButtons = (ui.cb_GoogleDriveMode->currentIndex() == 1);
+        }
+
+#if defined(Q_OS_WIN32)
+        // check if required rclone version
+        if (rcloneVersionResult == 2) {
+          // rclone version before 1.50 - no mount in Windows
+          isNotMountable = true;
+        } else {
+        };
+#endif
+
+// mount is not supported by rclone on these systems
+#if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
+        isNotMountable = true;
+#endif
+
+        // local file system is not mountable
+        if (remoteType == "local") {
+          isNotMountable = true;
+        }
+
         if (model->isLoading(index)) {
           ui.refresh->setDisabled(true);
+
+          ui.mkdir->setDisabled(true);
           ui.move->setDisabled(true);
           ui.rename->setDisabled(true);
           ui.purge->setDisabled(true);
+
           ui.actionNewMount->setDisabled(true);
           ui.stream->setDisabled(true);
           ui.upload->setDisabled(true);
           ui.download->setDisabled(true);
+
+          ui.getSize->setDisabled(true);
+
+          ui.getTree->setDisabled(true);
+          ui.link->setDisabled(true);
+          ui.export_->setDisabled(true);
+          ui.actionCheck->setDisabled(true);
+          ui.actionDedupe->setDisabled(true);
+
+          ui.getInfo->setDisabled(false);
+
           ui.cb_GoogleDriveMode->setDisabled(true);
           path = model->path(model->parent(index));
+
         } else {
+
           ui.refresh->setDisabled(false);
-
-          bool driveModeButtons = false;
-
-          if (remoteType == "drive") {
-            // for Google Drive --drive-shared-with-me is read only
-            driveModeButtons = (ui.cb_GoogleDriveMode->currentIndex() == 1);
-          }
 
           ui.mkdir->setDisabled(driveModeButtons);
           ui.rename->setDisabled(topLevel || driveModeButtons);
           ui.move->setDisabled(topLevel || driveModeButtons);
           ui.purge->setDisabled(topLevel || driveModeButtons);
-          ui.upload->setDisabled(driveModeButtons);
 
-#if defined(Q_OS_WIN32)
-          // check if required rclone version
-          if (rcloneVersionResult == 2) {
-            // rclone version before 1.50 - no mount in Windows
-            ui.actionNewMount->setDisabled(true);
-          } else {
-            ui.actionNewMount->setDisabled(!isFolder);
-          };
-#else
-// mount is not supported by rclone on these systems
-#if defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
-          ui.actionNewMount->setDisabled(true);
-#else
-          if (remoteType == "local") {
-            ui.actionNewMount->setDisabled(true);
-          } else {
-            ui.actionNewMount->setDisabled(!isFolder);
-          }
-#endif
-#endif
-
+          ui.actionNewMount->setDisabled(!isFolder || isNotMountable);
           ui.stream->setDisabled(isFolder);
+          ui.upload->setDisabled(!isFolder || driveModeButtons);
+          ui.download->setDisabled(false);
+
+          ui.getSize->setDisabled(!isFolder);
+          ui.getTree->setDisabled(!isFolder);
+          ui.link->setDisabled(topLevel);
+          ui.export_->setDisabled(!isFolder);
+          ui.actionCheck->setDisabled(!isFolder);
+          ui.actionDedupe->setDisabled(!isFolder || driveModeButtons);
+
+          ui.getInfo->setDisabled(false);
+
           ui.cb_GoogleDriveMode->setDisabled(!isGoogle);
+
           path = model->path(index);
         }
 
-        ui.getSize->setDisabled(!isFolder);
-        ui.getTree->setDisabled(!isFolder);
-        ui.export_->setDisabled(!isFolder);
-        ui.actionCheck->setDisabled(!isFolder);
-        ui.actionDedupe->setDisabled(!isFolder);
         ui.path->setText(isLocal ? QDir::toNativeSeparators(path.path())
                                  : path.path());
       });
@@ -565,38 +609,46 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
+  //!!! QObject::connect(ui.purge
   QObject::connect(ui.purge, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
-    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-
-    QString path = model->path(index).path();
-    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+    QModelIndexList selection = ui.tree->selectionModel()->selectedRows();
+    QModelIndex index;
 
     int button = QMessageBox::question(
         this, "Delete",
-        QString("Are you sure you want to delete %1 ?").arg(pathMsg),
+        QString("Are you sure you want to delete %1 selected item(s)?")
+            .arg(selection.count()),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (button == QMessageBox::Yes) {
-      QProcess process;
-      UseRclonePassword(&process);
-      process.setProgram(GetRclone());
-      process.setArguments(QStringList()
-                           << (model->isFolder(index) ? "purge" : "delete")
-                           << GetRcloneConf() << GetRemoteModeRcloneOptions()
-                           << GetDefaultOptionsList("defaultRcloneOptions")
-                           << remote + ":" + path);
-      process.setProcessChannelMode(QProcess::MergedChannels);
 
-      ProgressDialog progress("Delete", "Deleting...", pathMsg, &process, this);
-      if (progress.exec() == QDialog::Accepted) {
-        QModelIndex parent = index.parent();
-        QModelIndex next = parent.model()->index(index.row() + 1, 0);
-        ui.tree->selectionModel()->select(next.isValid() ? next : parent,
-                                          QItemSelectionModel::SelectCurrent);
-        model->removeRow(index.row(), parent);
+      // list of rclone args for delete operations
+      QList<QStringList> pDataList;
+
+      for (int i = 0; i < selection.count(); i++) {
+
+        index = selection.at(i);
+
+        QString path = model->path(index).path();
+        QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+
+        QStringList args;
+        args << (model->isFolder(index) ? "purge" : "delete") << GetRcloneConf()
+             << GetRemoteModeRcloneOptions()
+             << GetDefaultOptionsList("defaultRcloneOptions")
+             //             << remote + ":" + path << "--dry-run";
+             << remote + ":" + path;
+
+        pDataList.append(args);
       }
-    }
+
+      DeleteProgressDialog deleteProgress(pDataList, this, true);
+      deleteProgress.allowToClose();
+      if (deleteProgress.exec() == QDialog::Accepted) {
+        model->refresh(index.parent());
+      }
+    } // yes button
   });
 
   QObject::connect(ui.stream, &QAction::triggered, this, [=]() {
@@ -1405,4 +1457,27 @@ void RemoteWidget::switchRemoteType() {
 
     QTimer::singleShot(300, Qt::CoarseTimer, this, SLOT(switchRemoteType()));
   }
+}
+
+void RemoteWidget::processSelection(const QItemSelection &selected,
+                                    const QItemSelection &deselected) {
+
+  if (deselected.empty()) {
+  }
+
+  if (selected.empty())
+    return;
+
+  QItemSelectionModel *selectionModel = ui.tree->selectionModel();
+  QItemSelection selection = selectionModel->selection();
+  const QModelIndex parent = ui.tree->currentIndex().parent();
+  QItemSelection invalid;
+
+  Q_FOREACH (QModelIndex index, selection.indexes()) {
+    if (index.parent() == parent)
+      continue;
+    invalid.select(index, index);
+  }
+
+  selectionModel->select(invalid, QItemSelectionModel::Deselect);
 }

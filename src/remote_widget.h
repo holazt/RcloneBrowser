@@ -36,6 +36,9 @@ private slots:
 
   void switchRemoteType();
 
+  void processSelection(const QItemSelection &selected,
+                        const QItemSelection &deselected);
+
 private:
   Ui::RemoteWidget ui;
   bool mButtonToolsState = false;

@@ -8,6 +8,10 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
 
   ui.setupUi(this);
 
+  // remove window close button
+  setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint |
+                 Qt::WindowMinMaxButtonsHint);
+
   resize(0, 0);
 
   setWindowTitle(title);
@@ -168,3 +172,8 @@ void ProgressDialog::allowToClose() { ui.buttonBox->setEnabled(true); }
 //{
 //    return ui.output->toPlainText();
 //}
+
+void ProgressDialog::closeEvent(QCloseEvent *ev) {
+  ev->ignore();
+  return;
+}

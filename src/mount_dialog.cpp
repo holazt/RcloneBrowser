@@ -363,14 +363,16 @@ QStringList MountDialog::getOptions() {
 
     QString rcUser;
     for (int i = 0; i < 10; ++i) {
-      int index = qrand() % possibleCharacters.length();
+      int index =
+          QRandomGenerator::global()->generate() % possibleCharacters.length();
       QChar nextChar = possibleCharacters.at(index);
       rcUser.append(nextChar);
     }
 
     QString rcPass;
     for (int i = 0; i < 22; ++i) {
-      int index = qrand() % possibleCharacters.length();
+      int index =
+          QRandomGenerator::global()->generate() % possibleCharacters.length();
       QChar nextChar = possibleCharacters.at(index);
       rcPass.append(nextChar);
     }

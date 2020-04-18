@@ -148,7 +148,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       return;
     }
 
-    ui.queueScript->setText(queueScript);
+    ui.queueScript->setText("\"" + queueScript + "\"");
   });
 
   QObject::connect(
@@ -174,8 +174,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
               "select your script executable instead.");
           return;
         }
-
-        ui.transferOnScript->setText(transferOnScript);
+        ui.transferOnScript->setText("\"" + transferOnScript + "\"");
       });
 
   QObject::connect(
@@ -202,7 +201,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
           return;
         }
 
-        ui.transferOffScript->setText(transferOffScript);
+        ui.transferOffScript->setText("\"" + transferOffScript + "\"");
       });
 
   QObject::connect(ui.closeToTray, &QCheckBox::clicked, this, [=]() {

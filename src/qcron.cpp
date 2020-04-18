@@ -75,7 +75,7 @@ void QCron::_parsePattern(QString &pattern) {
     _setError("'\n' is an invalid field separator.");
     return;
   }
-  QStringList fields = pattern.simplified().split(" ", QString::SkipEmptyParts);
+  QStringList fields = pattern.simplified().split(" ", Qt::SkipEmptyParts);
   int nb_fields = fields.size();
   if (nb_fields != 6) {
     _setError(

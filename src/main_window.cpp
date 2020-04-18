@@ -2174,13 +2174,14 @@ void MainWindow::autoStartMounts(void) {
 void MainWindow::quitApp(void) {
   // wait for all processes to stop
   if (mQuitInfoDelay == 3) {
+
     QMessageBox *msgBox = new QMessageBox(
         QMessageBox::Warning, "Quitting",
-        "Terminating all processes\nbefore quitting, please wait.", 0, this,
-        //                        Qt::WindowStaysOnTopHint);
-        Qt::FramelessWindowHint);
-
-    msgBox->setStandardButtons(0);
+        "Terminating all processes\nbefore quitting, please wait.",
+        QMessageBox::NoButton, this);
+    msgBox->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                           Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+    msgBox->setStandardButtons(QMessageBox::NoButton);
     msgBox->setCursor(Qt::WaitCursor);
     msgBox->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -2526,7 +2527,7 @@ void MainWindow::rcloneGetVersion() {
           };
 #endif
 
-          QStringList lines = version.split("\n", QString::SkipEmptyParts);
+          QStringList lines = version.split("\n", Qt::SkipEmptyParts);
           QString rclone_info2;
           QString rclone_info3;
 
@@ -3856,14 +3857,16 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
 
       QString rcUser;
       for (int i = 0; i < 10; ++i) {
-        int index = qrand() % possibleCharacters.length();
+        int index = QRandomGenerator::global()->generate() %
+                    possibleCharacters.length();
         QChar nextChar = possibleCharacters.at(index);
         rcUser.append(nextChar);
       }
 
       QString rcPass;
       for (int i = 0; i < 22; ++i) {
-        int index = qrand() % possibleCharacters.length();
+        int index = QRandomGenerator::global()->generate() %
+                    possibleCharacters.length();
         QChar nextChar = possibleCharacters.at(index);
         rcPass.append(nextChar);
       }
@@ -4029,7 +4032,8 @@ void MainWindow::saveQueueFile(void) {
 
     JobOptions *jo = jobItem->GetData();
 
-    out << jo->uniqueId.toString() << "," << jobItem->GetRequestId() << endl;
+    out << jo->uniqueId.toString() << "," << jobItem->GetRequestId()
+        << Qt::endl;
   }
 
   file.close();
@@ -4049,7 +4053,7 @@ void MainWindow::saveSchedulerFile(void) {
     QWidget *widget = ui.schedulers->itemAt(i)->widget();
     if (auto scheduler = qobject_cast<SchedulerWidget *>(widget)) {
       QStringList args = scheduler->getSchedulerParameters();
-      out << args.join(",") << endl;
+      out << args.join(",") << Qt::endl;
     }
   }
 
@@ -4501,9 +4505,18 @@ void MainWindow::runScript(const QString &script) {
                      p->deleteLater();
                    });
 
-  QStringList sargs;
+  QStringList scriptList;
 
-  p->start(QDir::toNativeSeparators(script), sargs, QIODevice::ReadOnly);
+  for (QString arg : script.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+    if (!arg.isEmpty()) {
+      scriptList << arg.replace("\"", "");
+    }
+  }
+
+  QString scriptCmd = scriptList.takeAt(0);
+  QStringList scriptArgs = scriptList;
+
+  p->start(scriptCmd, scriptArgs, QIODevice::ReadOnly);
 }
 
 void MainWindow::addNewMount(const QString &remote, const QString &folder,
@@ -4994,7 +5007,19 @@ void MainWindow::addStream(const QString &remote, const QString &stream,
   ui.buttonSortByTime->setEnabled(_jobsCount > 1);
   ui.buttonSortByStatus->setEnabled(_jobsCount > 1);
 
-  player->start(stream, QProcess::ReadOnly);
+  QStringList streamPrefsList;
+
+  for (QString arg : stream.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+    if (!arg.isEmpty()) {
+      streamPrefsList << arg.replace("\"", "");
+    }
+  }
+
+  QString streamCmd = streamPrefsList.takeAt(0);
+  QStringList streamArgs = streamPrefsList;
+
+  player->start(streamCmd, streamArgs, QProcess::ReadOnly);
+
   UseRclonePassword(rclone);
   rclone->start(GetRclone(), QStringList() << args, QProcess::WriteOnly);
 

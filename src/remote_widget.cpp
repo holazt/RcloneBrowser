@@ -1430,6 +1430,7 @@ void RemoteWidget::switchRemoteType() {
     ui.tree->selectionModel()->select(top, QItemSelectionModel::Select |
                                                QItemSelectionModel::Rows);
     model->refresh(top);
+    QTimer::singleShot(0, ui.tree, SLOT(setFocus()));
 
     ui.tree->showColumn(0);
     ui.tree->showColumn(1);

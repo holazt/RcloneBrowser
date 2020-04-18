@@ -58,6 +58,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   resize(0, 0);
   setMaximumHeight(this->height());
 
+  ui.rclone->setFocus(Qt::FocusReason::OtherFocusReason);
+
   QObject::connect(ui.rcloneBrowse, &QPushButton::clicked, this, [=]() {
     QString rclone = QFileDialog::getOpenFileName(
         this, "Select rclone executable", ui.rclone->text());

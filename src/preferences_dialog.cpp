@@ -58,6 +58,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   resize(0, 0);
   setMaximumHeight(this->height());
 
+  ui.rclone->setFocus(Qt::FocusReason::OtherFocusReason);
+
   QObject::connect(ui.rcloneBrowse, &QPushButton::clicked, this, [=]() {
     QString rclone = QFileDialog::getOpenFileName(
         this, "Select rclone executable", ui.rclone->text());
@@ -148,7 +150,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       return;
     }
 
-    ui.queueScript->setText(queueScript);
+    ui.queueScript->setText("\"" + queueScript + "\"");
   });
 
   QObject::connect(
@@ -174,8 +176,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
               "select your script executable instead.");
           return;
         }
-
-        ui.transferOnScript->setText(transferOnScript);
+        ui.transferOnScript->setText("\"" + transferOnScript + "\"");
       });
 
   QObject::connect(
@@ -202,7 +203,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
           return;
         }
 
-        ui.transferOffScript->setText(transferOffScript);
+        ui.transferOffScript->setText("\"" + transferOffScript + "\"");
       });
 
   QObject::connect(ui.closeToTray, &QCheckBox::clicked, this, [=]() {

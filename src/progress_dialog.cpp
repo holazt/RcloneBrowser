@@ -8,6 +8,10 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
 
   ui.setupUi(this);
 
+  // remove window close button
+  setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint |
+                 Qt::WindowMinMaxButtonsHint);
+
   resize(0, 0);
 
   setWindowTitle(title);
@@ -31,7 +35,7 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
   ui.info->setText(message);
   ui.info->setCursorPosition(0);
 
-  ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+  // ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
   // apply font size preferences
   auto settings = GetSettings();
@@ -39,9 +43,14 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
   int fontsize = 0;
   fontsize = (settings->value("Settings/fontSize").toInt());
 
-  QFont font = ui.output->font();
+#if !defined(Q_OS_MACOS)
+  fontsize--;
+#endif
+
+  QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
   QFontMetrics fm(font);
   font.setPointSize(font.pointSize() + fontsize);
+
   ui.output->setFont(font);
 
   // icons style
@@ -168,3 +177,8 @@ void ProgressDialog::allowToClose() { ui.buttonBox->setEnabled(true); }
 //{
 //    return ui.output->toPlainText();
 //}
+
+void ProgressDialog::closeEvent(QCloseEvent *ev) {
+  ev->ignore();
+  return;
+}

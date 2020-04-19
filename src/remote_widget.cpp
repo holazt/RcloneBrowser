@@ -160,7 +160,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     icon_w = 96;
   }
   icon_h = icon_w;
-  int button_width = 55;
+  int button_width = 61;
 
   if (buttonStyle == "textandicon") {
     ui.buttonRefresh->setIconSize(QSize(icon_w, icon_h));
@@ -1430,6 +1430,7 @@ void RemoteWidget::switchRemoteType() {
     ui.tree->selectionModel()->select(top, QItemSelectionModel::Select |
                                                QItemSelectionModel::Rows);
     model->refresh(top);
+    QTimer::singleShot(0, ui.tree, SLOT(setFocus()));
 
     ui.tree->showColumn(0);
     ui.tree->showColumn(1);

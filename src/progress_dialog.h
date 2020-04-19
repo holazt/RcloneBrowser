@@ -20,6 +20,8 @@ signals:
   void outputAvailable(const QString &output) const;
 
 private:
+  void closeEvent(QCloseEvent *ev) override;
+
   Ui::ProgressDialog ui;
   int mWidth;
   int mMinimumWidth;

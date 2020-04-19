@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
   // during first run the iconSize key might not exist
   if (!(settings->contains("Settings/iconSize"))) {
     // if iconSize does not exist create new key
-    settings->setValue("Settings/iconSize", "S");
+    settings->setValue("Settings/iconSize", "M");
   };
 
   // during first run the iconsLayout key might not exist
@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
   // during first run the buttonStyle key might not exist
   if (!(settings->contains("Settings/buttonStyle"))) {
     // if buttonstyle does not exist create new key
-    settings->setValue("Settings/buttonStyle", "textandicon");
+    settings->setValue("Settings/buttonStyle", "icononly");
   };
 
   // during first run the fontSize key might not exist

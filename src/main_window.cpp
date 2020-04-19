@@ -312,7 +312,7 @@ MainWindow::MainWindow() {
     icon_w = 96;
   }
   icon_h = icon_w;
-  int button_width = 55;
+  int button_width = 61;
 
   if (buttonStyle == "textandicon") {
 

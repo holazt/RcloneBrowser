@@ -647,6 +647,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       deleteProgress.allowToClose();
       if (deleteProgress.exec() == QDialog::Accepted) {
         model->refresh(index.parent());
+      } else {
+        model->refresh(index.parent());
       }
     } // yes button
   });

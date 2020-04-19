@@ -72,6 +72,8 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   QPushButton *dryRun =
       ui.buttonBox->addButton("Dry run", QDialogButtonBox::AcceptRole);
 
+  dryRun->setToolTip("trial run with no permanent changes (--dry-run)");
+
   QObject::connect(dryRun, &QPushButton::clicked, this,
                    [=]() { mDryRun = true; });
 
@@ -216,6 +218,37 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
                    &QDialog::accept);
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
                    &QDialog::reject);
+
+  QObject::connect(
+      ui.tabWidget, &QTabWidget::currentChanged, this, [=](const int &index) {
+        // placeholder
+        if (index == 0) {
+        }
+
+        QStringList rcloneTransferCmd;
+
+        QString rcloneCmd = GetRclone();
+        QStringList rcloneConf = GetRcloneConf();
+        QStringList rcloneOptions = getOptions();
+
+        if (!rcloneCmd.isEmpty()) {
+          rcloneTransferCmd << "\"" + GetRclone() + "\"";
+        }
+
+        if (!rcloneOptions.isEmpty()) {
+          rcloneTransferCmd << rcloneOptions.takeAt(0);
+          rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
+          rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
+          rcloneTransferCmd << rcloneOptions;
+        }
+
+        if (!rcloneConf.isEmpty()) {
+          rcloneTransferCmd << rcloneConf.at(0);
+          rcloneTransferCmd << "\"" + rcloneConf.at(1) + "\"";
+        }
+
+        ui.rcloneCmd->setPlainText(rcloneTransferCmd.join(" "));
+      });
 
   QObject::connect(ui.buttonSourceFile, &QToolButton::clicked, this, [=]() {
     QString file = QFileDialog::getOpenFileName(this, "Choose file to upload");

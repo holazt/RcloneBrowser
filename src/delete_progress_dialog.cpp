@@ -35,9 +35,7 @@ DeleteProgressDialog::DeleteProgressDialog(const QList<QStringList> &pDataList,
       "QLabel { color: green; font-weight: bold; }");
 
   ui.info->setCursorPosition(0);
-  ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
-  // apply font size preferences
   auto settings = GetSettings();
 
   if (settings->value("Settings/preemptiveLoading").toBool()) {
@@ -65,12 +63,19 @@ DeleteProgressDialog::DeleteProgressDialog(const QList<QStringList> &pDataList,
     mMaxRcloneLsProcessCount = 0;
   }
 
+  // apply font size preferences
   int fontsize = 0;
   fontsize = (settings->value("Settings/fontSize").toInt());
 
-  QFont font = ui.output->font();
+#if !defined(Q_OS_MACOS)
+  fontsize--;
+#endif
+
+  QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
   QFontMetrics fm(font);
+
   font.setPointSize(font.pointSize() + fontsize);
+
   ui.output->setFont(font);
 
   // icons style

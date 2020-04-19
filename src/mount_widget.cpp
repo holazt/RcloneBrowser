@@ -46,10 +46,25 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
 
   ui.details->setVisible(false);
 
-  ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-  ui.output->setVisible(false);
+  auto settings = GetSettings();
 
-  ui.sOutput->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+  int fontsize = 0;
+  fontsize = (settings->value("Settings/fontSize").toInt());
+
+#if !defined(Q_OS_MACOS)
+  fontsize--;
+#endif
+
+  QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+  QFontMetrics fm(font);
+
+  font.setPointSize(font.pointSize() + fontsize);
+
+  ui.output->setFont(font);
+  ui.sOutput->setFont(font);
+
+  ui.details->setVisible(false);
+  ui.output->setVisible(false);
   ui.sOutput->setVisible(false);
   ui.l_script->setVisible(false);
 
@@ -62,7 +77,6 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
     ui.showScriptOutput->setToolTip(script);
   }
 
-  auto settings = GetSettings();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
 
   QString img_add = "";
@@ -290,7 +304,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
         if (status == 0) {
           if (iconsColour == "white") {
             ui.showDetails->setStyleSheet(
-                "QToolButton { border: 0; font-weight: bold;}");
+                "QToolButton { border: 0; wfont-weight: bold;}");
           } else {
             ui.showDetails->setStyleSheet(
                 "QToolButton { border: 0; color: black; font-weight: bold;}");

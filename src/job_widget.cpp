@@ -42,10 +42,23 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
   ui.details->setVisible(false);
 
-  ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+  auto settings = GetSettings();
+
+  int fontsize = 0;
+  fontsize = (settings->value("Settings/fontSize").toInt());
+
+#if !defined(Q_OS_MACOS)
+  fontsize--;
+#endif
+
+  QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+  QFontMetrics fm(font);
+
+  font.setPointSize(font.pointSize() + fontsize);
+
+  ui.output->setFont(font);
   ui.output->setVisible(false);
 
-  auto settings = GetSettings();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
 
   QString img_add = "";

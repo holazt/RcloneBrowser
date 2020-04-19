@@ -38,7 +38,19 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
 
   ui.details->setVisible(false);
 
-  ui.output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+  int fontsize = 0;
+  fontsize = (settings->value("Settings/fontSize").toInt());
+
+#if !defined(Q_OS_MACOS)
+  fontsize--;
+#endif
+
+  QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+  QFontMetrics fm(font);
+
+  font.setPointSize(font.pointSize() + fontsize);
+
+  ui.output->setFont(font);
   ui.output->setVisible(false);
 
   QString iconsColour = settings->value("Settings/iconsColour").toString();

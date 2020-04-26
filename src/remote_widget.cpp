@@ -456,8 +456,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         QDir path;
 
         if (remoteType == "drive") {
-          // for Google Drive --drive-shared-with-me is read only
-          driveModeButtons = (ui.cb_GoogleDriveMode->currentIndex() == 1);
+          // for Google Drive --drive-shared-with-me and --drive-trashed-only is
+          // read only
+          driveModeButtons = (ui.cb_GoogleDriveMode->currentIndex() == 1 ||
+                              ui.cb_GoogleDriveMode->currentIndex() == 2);
         }
 
 #if defined(Q_OS_WIN32)
@@ -1930,23 +1932,16 @@ void RemoteWidget::switchRemoteType() {
     ui.cb_GoogleDriveMode->setDisabled(false);
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), mRemoteType);
 
-    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-    QModelIndex top = index;
-
-    // get top parent
-    while (!model->isTopLevel(top)) {
-      top = top.parent();
-    }
-    int i = 0;
     // clear top folder's rows
-    while (model->removeRow(0, top)) {
+    int i = 0;
+    while (model->removeRow(0, mRootIndex)) {
       ++i;
     }
 
     ui.tree->selectionModel()->clear();
-    ui.tree->selectionModel()->select(top, QItemSelectionModel::Select |
-                                               QItemSelectionModel::Rows);
-    model->refresh(top);
+    ui.tree->selectionModel()->select(
+        mRootIndex, QItemSelectionModel::Select | QItemSelectionModel::Rows);
+    model->refresh(mRootIndex);
     QTimer::singleShot(0, ui.tree, SLOT(setFocus()));
 
     ui.tree->showColumn(0);
@@ -1954,8 +1949,7 @@ void RemoteWidget::switchRemoteType() {
     ui.tree->showColumn(2);
     ui.path->setAlignment(Qt::AlignLeft);
     ui.path->clear();
-    mRootIndex = top;
-    mPreemptiveLoadingListDone.append(top);
+    mPreemptiveLoadingListDone.append(mRootIndex);
     QTimer::singleShot(200, Qt::CoarseTimer, this, SLOT(initialModelLoading()));
 
   } else {

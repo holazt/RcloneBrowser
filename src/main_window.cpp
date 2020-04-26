@@ -16,6 +16,7 @@
 #include "mac_os_power_saving.h"
 #include "osx_helper.h"
 #endif
+#include "file_dialog.h"
 
 MainWindow::MainWindow() {
 
@@ -3984,9 +3985,11 @@ void MainWindow::editSelectedTask() {
 
     if (jobType == "Download" || jobType == "Upload") {
 
+      QStringList empty;
       TransferDialog td(isDownload, false, remote, path, jo->isFolder,
-                        remoteType, remoteMode, this, jo, true);
+                        remoteType, remoteMode, false, empty, this, jo, true);
       td.exec();
+
     } else {
       if (jobType == "Mount") {
         MountDialog md(remote, path, remoteType, remoteMode, this, jo, true);
@@ -4797,8 +4800,10 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
         QString remote = isDownload ? joTasks->source : joTasks->dest;
         QString path = isDownload ? joTasks->dest : joTasks->source;
 
+        QStringList empty;
         TransferDialog td(isDownload, false, remote, path, joTasks->isFolder,
-                          remoteType, remoteMode, this, joTasks, true);
+                          remoteType, remoteMode, false, empty, this, joTasks,
+                          true);
         td.exec();
         break;
       }

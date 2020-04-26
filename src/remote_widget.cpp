@@ -9,6 +9,7 @@
 #include "list_of_job_options.h"
 #include "mount_dialog.h"
 #include "progress_dialog.h"
+#include "remote_folder_dialog.h"
 #include "transfer_dialog.h"
 #include "utils.h"
 
@@ -19,6 +20,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.setupUi(this);
 
   ui.frameTools->hide();
+  ui.elidedMeasure->hide();
 
   bool isLocal = remoteType == "local";
   bool isGoogle = remoteType == "drive";
@@ -98,6 +100,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QIcon(":media/images/qbutton_icons/rename" + img_add + ".png"));
   ui.move->setIcon(
       QIcon(":media/images/qbutton_icons/move" + img_add + ".png"));
+  ui.copy->setIcon(
+      QIcon(":media/images/qbutton_icons/copy" + img_add + ".png"));
   ui.purge->setIcon(
       QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   ui.actionNewMount->setIcon(
@@ -124,10 +128,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       QIcon(":media/images/qbutton_icons/info" + img_add + ".png"));
   ui.actionDedupe->setIcon(
       QIcon(":media/images/qbutton_icons/dedupe" + img_add + ".png"));
+  ui.cleanup->setIcon(
+      QIcon(":media/images/qbutton_icons/cleanup" + img_add + ".png"));
 
   ui.buttonRefresh->setDefaultAction(ui.refresh);
   ui.buttonMkdir->setDefaultAction(ui.mkdir);
   ui.buttonRename->setDefaultAction(ui.rename);
+  ui.buttonCopy->setDefaultAction(ui.copy);
   ui.buttonMove->setDefaultAction(ui.move);
   ui.buttonPurge->setDefaultAction(ui.purge);
   ui.buttonMount->setDefaultAction(ui.actionNewMount);
@@ -199,6 +206,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     ui.buttonTools->setMinimumWidth(button_width);
     ui.buttonDedupe->setIconSize(QSize(icon_w, icon_h));
     ui.buttonDedupe->setMinimumWidth(button_width);
+    ui.buttonCopy->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonCopy->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -239,6 +248,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonTools->setMinimumWidth(button_width);
       ui.buttonDedupe->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonDedupe->setMinimumWidth(button_width);
+      ui.buttonCopy->setMinimumWidth(button_width);
+      ui.buttonCopy->setToolButtonStyle(Qt::ToolButtonTextOnly);
 
     } else {
       // button style - icononly
@@ -276,13 +287,16 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonTools->setIconSize(QSize(icon_w, icon_h));
       ui.buttonDedupe->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonDedupe->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonCopy->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonCopy->setIconSize(QSize(icon_w, icon_h));
     }
   }
 
   ui.refresh->setStatusTip("Refresh (F5)");
   ui.mkdir->setStatusTip("New Folder (F7) - rclone mkdir");
   ui.rename->setStatusTip("Rename (F2) - rclone moveto");
-  ui.move->setStatusTip("Move - rclone move");
+  ui.copy->setStatusTip("Server side copy - rclone copy");
+  ui.move->setStatusTip("Server side move - rclone move");
   ui.purge->setStatusTip("Delete (Del) - rclone purge|delete");
   ui.actionNewMount->setStatusTip(
       "Mount remote to local filesystem - rclone mount");
@@ -298,16 +312,23 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.actionDedupe->setStatusTip("Remove duplicated files - rclone dedupe");
   ui.getInfo->setStatusTip("Get remote info - rclone about");
   ui.actionTools->setStatusTip("Show additional tools");
+  ui.cleanup->setStatusTip("Clean up the remote if possible. Empty the trash "
+                           "or delete old file versions - rclone cleanup");
 
   QMenu *menuMode = new QMenu(this);
   menuMode->addAction(ui.getTree);
   menuMode->addAction(ui.link);
   menuMode->addAction(ui.export_);
   menuMode->addAction(ui.actionCheck);
+
   if (remoteType == "drive") {
     menuMode->addAction(ui.actionDedupe);
   }
-
+  //  if (remoteType == "drive" || remoteType == "b2" || remoteType =="mailru"
+  //  || remoteType =="mega" || remoteType =="pcloud" || remoteType =="yandex" )
+  //  {
+  menuMode->addAction(ui.cleanup);
+  //  }
   ui.buttonTools->setMenu(menuMode);
   ui.buttonTools->setPopupMode(QToolButton::InstantPopup);
 
@@ -337,6 +358,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
   QObject::connect(ui.tree, &QAbstractItemView::clicked, this, [=]() {
     // not used now
+
+    //    QModelIndex index;
+    //    QModelIndexList selection = ui.tree->selectionModel()->selectedRows();
+    //    index = selection.at(0);
+
+    //    qDebug() << "index: " << index;
   });
 
   QObject::connect(
@@ -399,6 +426,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
             child->setDisabled(true);
           }
           ui.getInfo->setDisabled(false);
+          ui.cleanup->setDisabled(false);
           ui.path->clear();
           return;
         }
@@ -407,8 +435,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           for (auto child : findChildren<QAction *>()) {
             child->setDisabled(true);
           }
+          ui.refresh->setDisabled(false);
           ui.purge->setDisabled(false);
+          ui.copy->setDisabled(false);
+          ui.move->setDisabled(false);
           ui.download->setDisabled(false);
+          ui.getSize->setDisabled(false);
           ui.getInfo->setDisabled(false);
           ui.path->clear();
           return;
@@ -451,6 +483,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.refresh->setDisabled(true);
 
           ui.mkdir->setDisabled(true);
+          ui.copy->setDisabled(true);
           ui.move->setDisabled(true);
           ui.rename->setDisabled(true);
           ui.purge->setDisabled(true);
@@ -469,6 +502,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.actionDedupe->setDisabled(true);
 
           ui.getInfo->setDisabled(false);
+          ui.cleanup->setDisabled(false);
 
           ui.cb_GoogleDriveMode->setDisabled(true);
           path = model->path(model->parent(index));
@@ -479,6 +513,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
           ui.mkdir->setDisabled(driveModeButtons);
           ui.rename->setDisabled(topLevel || driveModeButtons);
+          ui.copy->setDisabled(topLevel || driveModeButtons);
           ui.move->setDisabled(topLevel || driveModeButtons);
           ui.purge->setDisabled(topLevel || driveModeButtons);
 
@@ -487,7 +522,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.upload->setDisabled(!isFolder || driveModeButtons);
           ui.download->setDisabled(false);
 
-          ui.getSize->setDisabled(!isFolder);
+          ui.getSize->setDisabled(false);
           ui.getTree->setDisabled(!isFolder);
           ui.link->setDisabled(topLevel);
           ui.export_->setDisabled(!isFolder);
@@ -495,6 +530,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           ui.actionDedupe->setDisabled(!isFolder || driveModeButtons);
 
           ui.getInfo->setDisabled(false);
+          ui.cleanup->setDisabled(false);
 
           ui.cb_GoogleDriveMode->setDisabled(!isGoogle);
 
@@ -505,17 +541,43 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                                  : path.path());
       });
 
+  // QObject::connect(ui.refresh
   QObject::connect(ui.refresh, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
-    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-    model->refresh(index);
+    QModelIndexList multiSelection = ui.tree->selectionModel()->selectedRows();
+    int multiSelectCount = multiSelection.count();
+
+    if (multiSelectCount < 2) {
+      QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+      model->refresh(index);
+    } else {
+
+      bool parentRefreshed = false;
+      for (int i = 0; i < multiSelectCount; ++i) {
+        QModelIndex multiIndex = multiSelection.at(i);
+        if (model->isFolder(multiIndex)) {
+          model->refresh(multiIndex);
+        } else {
+          // refresh parent folder only once
+          if (!parentRefreshed) {
+            model->refresh(multiIndex);
+            parentRefreshed = true;
+          };
+        }
+      }
+    }
   });
 
+  // QObject::connect(ui.mkdir
   QObject::connect(ui.mkdir, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
 
     if (!model->isFolder(index)) {
       index = index.parent();
@@ -523,11 +585,22 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QDir path = model->path(index);
     QString pathMsg =
         isLocal ? QDir::toNativeSeparators(path.path()) : path.path();
+
+    if (pathMsg.isEmpty()) {
+      pathMsg = metrix.elidedText(remote, Qt::ElideMiddle, 500) + ":";
+    }
+
     QString name = QInputDialog::getText(
-        this, "New Folder", QString("Create folder in %1").arg(pathMsg));
+        this, "New Folder",
+        QString("Create folder in %1")
+                .arg("\"" + metrix.elidedText(pathMsg, Qt::ElideMiddle, 500)) +
+            "\"");
     if (!name.isEmpty()) {
       QString folder = path.filePath(name);
-      QString folderMsg = isLocal ? QDir::toNativeSeparators(folder) : folder;
+
+      QString folderMsg = metrix.elidedText(
+          (isLocal ? QDir::toNativeSeparators(folder) : folder),
+          Qt::ElideMiddle, 500);
 
       QProcess process;
       UseRclonePassword(&process);
@@ -547,8 +620,13 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
+  // QObject::connect(ui.rename
   QObject::connect(ui.rename, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -556,9 +634,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
     QString name = model->data(index, Qt::DisplayRole).toString();
-    name = QInputDialog::getText(this, "Rename",
-                                 QString("New name for %1").arg(pathMsg),
-                                 QLineEdit::Normal, name);
+    name = QInputDialog::getText(
+        this, "Rename",
+        QString("New name for %1")
+            .arg("\"" + metrix.elidedText(pathMsg, Qt::ElideMiddle, 500) +
+                 "\""),
+        QLineEdit::Normal, name);
     if (!name.isEmpty()) {
       QProcess process;
       UseRclonePassword(&process);
@@ -579,34 +660,309 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
-  QObject::connect(ui.move, &QAction::triggered, this, [=]() {
-    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+  //!!! QObject::connect(ui.copy
+  QObject::connect(ui.copy, &QAction::triggered, this, [=]() {
+    QString rMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    QString progressMsg;
+    QModelIndexList multiSelection = ui.tree->selectionModel()->selectedRows();
+    int multiSelectCount = multiSelection.count();
+    bool isMultiSelect = (multiSelection.count() > 1);
+    bool isMove = false; // copy operation
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    if (multiSelectCount == 0) {
+      return;
+    }
+
+    QStringList filterList;
+    QStringList filterListFinal;
+    QStringList args;
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-
+    QModelIndex sourceIndex;
+    QModelIndex sourceRefreshIndex;
+    QModelIndex destIndex;
     QString path = model->path(index).path();
+
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+    QString destFolder = model->path(index.parent()).path() + "/";
+    QString toolTip;
 
-    QString name = model->path(index.parent()).path() + "/";
-    name = QInputDialog::getText(this, "Move",
-                                 QString("New location for %1").arg(pathMsg),
-                                 QLineEdit::Normal, name);
-    if (!name.isEmpty()) {
-      QProcess process;
-      UseRclonePassword(&process);
-      process.setProgram(GetRclone());
-      process.setArguments(QStringList()
-                           << "move" << GetRcloneConf()
-                           << GetRemoteModeRcloneOptions()
-                           << GetDefaultOptionsList("defaultRcloneOptions")
-                           << remote + ":" + path << remote + ":" + name);
-      process.setProcessChannelMode(QProcess::MergedChannels);
+    if (isMultiSelect) {
+      sourceIndex = index.parent();
+      sourceRefreshIndex = sourceIndex;
+      path = model->path(index.parent()).path();
 
-      ProgressDialog progress("Move", "Moving...", pathMsg, &process, this);
-      if (progress.exec() == QDialog::Accepted) {
-        model->refresh(index);
+      // get sselection patterns for --filter
+      QStringList tmpList;
+      tmpList = getSelectionFilteringPatterns(multiSelection);
+
+      for (int i = 0; i < tmpList.count(); ++i) {
+        QString tmp = tmpList.at(i);
+        tmp = "+ " + tmp;
+        filterList << tmp;
+      }
+
+      filterList << "- *";
+
+    } else {
+      sourceIndex = index;
+
+      if (model->isTopLevel(sourceIndex)) {
+        sourceRefreshIndex = sourceIndex;
+      } else {
+        sourceRefreshIndex = sourceIndex.parent();
       }
     }
+
+    RemoteFolderDialog rfd(isMove, isMultiSelect, filterList, sourceIndex,
+                           remote, mRemoteType, rMode, isLocal, mRootIndex,
+                           model, this);
+
+    if (rfd.exec() == QDialog::Accepted) {
+
+      destIndex = rfd.pDestIndex;
+
+      args << rfd.getOptions();
+
+      filterListFinal << rfd.getFilterList();
+
+      // as we run rclone directly here we have to add --filter
+      for (int i = 0; i < filterListFinal.count(); ++i) {
+        args << "--filter";
+        args << filterListFinal.at(i);
+      }
+
+      if (isMultiSelect) {
+
+        destFolder = model->path(rfd.pDestIndex).path();
+        toolTip = QString("%1 items from \"%2\" to \"%3:%4\"")
+                      .arg(multiSelectCount)
+                      .arg(path)
+                      .arg(remote)
+                      .arg(destFolder);
+
+        pathMsg = QString("%1 items from \"%2\" to \"%3:%4\"")
+                      .arg(multiSelectCount)
+                      .arg(metrix.elidedText(path, Qt::ElideMiddle, 250))
+                      .arg(metrix.elidedText(remote, Qt::ElideMiddle, 150))
+                      .arg(metrix.elidedText(destFolder, Qt::ElideMiddle, 250));
+
+      } else {
+
+        if (model->isFolder(sourceIndex)) {
+          // folder
+          destFolder = (model->path(rfd.pDestIndex))
+                           .filePath((model->path(sourceIndex)).dirName());
+          sourceIndex = sourceIndex.parent();
+
+        } else {
+          // file
+          destFolder = model->path(rfd.pDestIndex).path();
+        }
+        toolTip = QString("\"%1\" to \"%2:%3\"")
+                      .arg(path)
+                      .arg(remote)
+                      .arg(destFolder);
+
+        pathMsg = QString("\"%1\" to \"%2:%3\"")
+                      .arg(metrix.elidedText(path, Qt::ElideMiddle, 250))
+                      .arg(metrix.elidedText(remote, Qt::ElideMiddle, 150))
+                      .arg(metrix.elidedText(destFolder, Qt::ElideMiddle, 250));
+      }
+
+    } else {
+
+      return;
+    }
+
+    QProcess process;
+    UseRclonePassword(&process);
+    process.setProgram(GetRclone());
+    process.setArguments(QStringList()
+                         << "copy" << GetRcloneConf()
+                         << GetRemoteModeRcloneOptions()
+                         << GetDefaultOptionsList("defaultRcloneOptions")
+                         << remote + ":" + path << remote + ":" + destFolder
+                         << args);
+
+    process.setProcessChannelMode(QProcess::MergedChannels);
+
+    ProgressDialog progress(
+        "Copy", "Copying... ", pathMsg, &process, this,
+        !(args.contains("--dry-run") || args.contains("--verbose")), false,
+        toolTip);
+
+    if (args.contains("--dry-run") || args.contains("--verbose")) {
+      progress.expand();
+    }
+    progress.allowToClose();
+
+    if (progress.exec() == QDialog::Accepted) {
+    }
+
+    // Refresh
+    model->refresh(destIndex);
+  });
+
+  //!!! QObject::connect(ui.move
+  QObject::connect(ui.move, &QAction::triggered, this, [=]() {
+    QString rMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    QString progressMsg;
+    QModelIndexList multiSelection = ui.tree->selectionModel()->selectedRows();
+    int multiSelectCount = multiSelection.count();
+    bool isMultiSelect = (multiSelection.count() > 1);
+    bool isMove = true;
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    if (multiSelectCount == 0) {
+      return;
+    }
+
+    QStringList filterList;
+    QStringList filterListFinal;
+    QStringList args;
+
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+    QModelIndex sourceIndex;
+    QModelIndex sourceRefreshIndex;
+    QModelIndex destIndex;
+    QString path = model->path(index).path();
+
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+    QString destFolder = model->path(index.parent()).path() + "/";
+    QString toolTip;
+
+    if (isMultiSelect) {
+      sourceIndex = index.parent();
+      sourceRefreshIndex = sourceIndex;
+      path = model->path(index.parent()).path();
+
+      // get sselection patterns for --filter
+      QStringList tmpList;
+      tmpList = getSelectionFilteringPatterns(multiSelection);
+
+      for (int i = 0; i < tmpList.count(); ++i) {
+        QString tmp = tmpList.at(i);
+        tmp = "+ " + tmp;
+        filterList << tmp;
+      }
+
+      filterList << "- *";
+
+    } else {
+      sourceIndex = index;
+
+      if (model->isTopLevel(sourceIndex)) {
+        sourceRefreshIndex = sourceIndex;
+      } else {
+        sourceRefreshIndex = sourceIndex.parent();
+      }
+    }
+
+    RemoteFolderDialog rfd(isMove, isMultiSelect, filterList, sourceIndex,
+                           remote, mRemoteType, rMode, isLocal, mRootIndex,
+                           model, this);
+
+    if (rfd.exec() == QDialog::Accepted) {
+
+      destIndex = rfd.pDestIndex;
+
+      args << rfd.getOptions();
+
+      filterListFinal << rfd.getFilterList();
+
+      // as we run rclone directly here we have to add --filter
+      for (int i = 0; i < filterListFinal.count(); ++i) {
+        args << "--filter";
+        args << filterListFinal.at(i);
+      }
+
+      if (isMultiSelect) {
+
+        destFolder = model->path(rfd.pDestIndex).path();
+        toolTip = QString("%1 items from \"%2\" to \"%3:%4\"")
+                      .arg(multiSelectCount)
+                      .arg(path)
+                      .arg(remote)
+                      .arg(destFolder);
+
+        pathMsg = QString("%1 items from \"%2\" to \"%3:%4\"")
+                      .arg(multiSelectCount)
+                      .arg(metrix.elidedText(path, Qt::ElideMiddle, 250))
+                      .arg(metrix.elidedText(remote, Qt::ElideMiddle, 150))
+                      .arg(metrix.elidedText(destFolder, Qt::ElideMiddle, 250));
+
+      } else {
+
+        if (model->isFolder(sourceIndex)) {
+          // folder
+          destFolder = (model->path(rfd.pDestIndex))
+                           .filePath((model->path(sourceIndex)).dirName());
+          sourceIndex = sourceIndex.parent();
+
+        } else {
+          // file
+          destFolder = model->path(rfd.pDestIndex).path();
+        }
+        toolTip = QString("\"%1\" to \"%2:%3\"")
+                      .arg(path)
+                      .arg(remote)
+                      .arg(destFolder);
+
+        pathMsg = QString("\"%1\" to \"%2:%3\"")
+                      .arg(metrix.elidedText(path, Qt::ElideMiddle, 250))
+                      .arg(metrix.elidedText(remote, Qt::ElideMiddle, 150))
+                      .arg(metrix.elidedText(destFolder, Qt::ElideMiddle, 250));
+      }
+
+    } else {
+
+      return;
+    }
+
+    QProcess process;
+    UseRclonePassword(&process);
+    process.setProgram(GetRclone());
+    process.setArguments(QStringList()
+                         << "move" << GetRcloneConf()
+                         << GetRemoteModeRcloneOptions()
+                         << GetDefaultOptionsList("defaultRcloneOptions")
+                         << remote + ":" + path << remote + ":" + destFolder
+                         << args);
+
+    process.setProcessChannelMode(QProcess::MergedChannels);
+
+    ProgressDialog progress(
+        "Move", "Moving... ", pathMsg, &process, this,
+        !(args.contains("--dry-run") || args.contains("--verbose")), false,
+        toolTip);
+
+    if (args.contains("--dry-run") || args.contains("--verbose")) {
+      progress.expand();
+    }
+    progress.allowToClose();
+
+    if (progress.exec() == QDialog::Accepted) {
+    }
+
+    // Refresh
+    model->refresh(sourceRefreshIndex);
+    mSrcIndex = sourceRefreshIndex;
+    mDestIndex = destIndex;
+
+    // refresh folders one by one
+    QTimer::singleShot(500, Qt::CoarseTimer, this, SLOT(refreshAfterMove()));
   });
 
   //!!! QObject::connect(ui.purge
@@ -637,7 +993,6 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         args << (model->isFolder(index) ? "purge" : "delete") << GetRcloneConf()
              << GetRemoteModeRcloneOptions()
              << GetDefaultOptionsList("defaultRcloneOptions")
-             //             << remote + ":" + path << "--dry-run";
              << remote + ":" + path;
 
         pDataList.append(args);
@@ -653,6 +1008,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     } // yes button
   });
 
+  // QObject::connect(ui.stream,
   QObject::connect(ui.stream, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
@@ -685,13 +1041,26 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     emit addStream(remote + ":" + path, stream, remoteType);
   });
 
+  // QObject::connect(ui.link
   QObject::connect(ui.link, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    QString toolTip;
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
     QString path = model->path(index).path();
-    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+
+    QString pathMsg =
+        metrix.elidedText((isLocal ? QDir::toNativeSeparators(path) : path),
+                          Qt::ElideMiddle, 500);
+
+    toolTip = "\"" + remote + ":" +
+              (isLocal ? QDir::toNativeSeparators(path) : path) + "\"";
 
     QProcess *process = new QProcess;
     UseRclonePassword(process);
@@ -704,13 +1073,16 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setProcessChannelMode(QProcess::MergedChannels);
     ProgressDialog *progress =
         new ProgressDialog("Fetch Public Link", "Running... ",
-                           "Public link for: " + remote + ":" + pathMsg,
-                           process, NULL, false, true);
+                           QString("Public link for: ") + "\"" +
+                               metrix.elidedText(remote, Qt::ElideMiddle, 150) +
+                               ":" + pathMsg + "\"",
+                           process, NULL, false, true, toolTip);
     progress->expand();
     progress->allowToClose();
     progress->show();
   });
 
+  //!!! QObject::connect(ui.upload
   QObject::connect(ui.upload, &QAction::triggered, this, [=]() {
     QString _remoteMode =
         setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
@@ -722,7 +1094,59 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
     QDir path = model->path(index);
 
+    QStringList empty;
     TransferDialog t(false, false, remote, path, true, remoteType, _remoteMode,
+                     false, empty, this);
+    if (t.exec() == QDialog::Accepted) {
+
+      if (t.getDryRun() || t.getTaskId() == "") {
+
+        QString src = t.getSource();
+        QString dst = t.getDest();
+        QStringList args = t.getOptions();
+        QString info;
+
+        if (t.getDryRun()) {
+          args << "--dry-run";
+          info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
+        } else {
+          info = QString("%1 from %2").arg(t.getMode()).arg(src);
+        }
+        emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
+                         "", QUuid::createUuid().toString());
+
+      } else {
+        emit addSavedTransfer(t.getTaskId(), t.getDryRun(), t.getAddToQueue());
+      }
+    }
+  });
+
+  //!!! QObject::connect(ui.download
+  QObject::connect(ui.download, &QAction::triggered, this, [=]() {
+    QString _remoteMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
+    QDir path = model->path(index);
+
+    QModelIndexList multiSelection = ui.tree->selectionModel()->selectedRows();
+    int multiSelectCount = multiSelection.count();
+    QStringList includedList;
+    bool isMultiselect = false;
+
+    if (multiSelectCount > 1) {
+
+      // selection control makes sure that all are on the same level so we can
+      // use any to derived download root
+
+      isMultiselect = true;
+      path = model->path(index.parent());
+
+      includedList = getSelectionFilteringPatterns(multiSelection);
+    }
+
+    TransferDialog t(true, false, remote, path, model->isFolder(index),
+                     remoteType, _remoteMode, isMultiselect, includedList,
                      this);
     if (t.exec() == QDialog::Accepted) {
 
@@ -739,40 +1163,6 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         } else {
           info = QString("%1 from %2").arg(t.getMode()).arg(src);
         }
-        emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
-                         "", QUuid::createUuid().toString());
-
-      } else {
-
-        emit addSavedTransfer(t.getTaskId(), t.getDryRun(), t.getAddToQueue());
-      }
-    }
-  });
-
-  QObject::connect(ui.download, &QAction::triggered, this, [=]() {
-    QString _remoteMode =
-        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
-
-    QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-    QDir path = model->path(index);
-
-    TransferDialog t(true, false, remote, path, model->isFolder(index),
-                     remoteType, _remoteMode, this);
-    if (t.exec() == QDialog::Accepted) {
-
-      if (t.getDryRun() || t.getTaskId() == "") {
-
-        QString src = t.getSource();
-        QString dst = t.getDest();
-        QStringList args = t.getOptions();
-        QString info;
-
-        if (t.getDryRun()) {
-          args << "--dry-run";
-          info = QString("Dry run, %1 from %2").arg(t.getMode()).arg(src);
-        } else {
-          info = QString("%1 from %2").arg(t.getMode()).arg(src);
-        }
 
         emit addTransfer(info, src, dst, args, QUuid::createUuid().toString(),
                          "", QUuid::createUuid().toString());
@@ -783,13 +1173,23 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     }
   });
 
+  //!!! QObject::connect(ui.getTree
   QObject::connect(ui.getTree, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
     QString path = model->path(index).path();
-    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+    QString pathMsg =
+        metrix.elidedText((isLocal ? QDir::toNativeSeparators(path) : path),
+                          Qt::ElideMiddle, 500);
+
+    QString toolTip = "\"" + remote + ":" +
+                      (isLocal ? QDir::toNativeSeparators(path) : path) + "\"";
 
     QProcess *process = new QProcess;
     UseRclonePassword(process);
@@ -800,43 +1200,99 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                       << GetDefaultOptionsList("defaultRcloneOptions")
                       << remote + ":" + path);
     process->setProcessChannelMode(QProcess::MergedChannels);
-    ProgressDialog *progress = new ProgressDialog(
-        "Show directories tree", "Running... ",
-        "rclone tree -d " + remote + ":" + pathMsg, process, NULL, false);
+    ProgressDialog *progress =
+        new ProgressDialog("Show directories tree", "Running... ",
+                           QString("rclone tree -d ") + "\"" +
+                               metrix.elidedText(remote, Qt::ElideMiddle, 150) +
+                               ":" + pathMsg + "\"",
+                           process, NULL, false, false, toolTip);
     progress->expand();
     progress->allowToClose();
-    progress->resize(1000, 600);
+    //    progress->resize(566, 350);
     progress->show();
   });
 
+  //!!! QObject::connect(ui.getSize
   QObject::connect(ui.getSize, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
+    QString progressMsg;
+    QModelIndexList multiSelection = ui.tree->selectionModel()->selectedRows();
+    int multiSelectCount = multiSelection.count();
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    if (multiSelectCount == 0)
+      return;
+
+    QString toolTip;
+    QStringList includedList;
+    QStringList includedListFinal;
+
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
-
     QString path = model->path(index).path();
-    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
 
+    QString pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
     QProcess *process = new QProcess;
+
+    if (multiSelectCount > 1) {
+
+      path = model->path(index.parent()).path();
+      pathMsg = isLocal ? QDir::toNativeSeparators(path) : path;
+      progressMsg =
+          QString("Size of selected %1 items in ").arg(multiSelectCount) +
+          "\"" + metrix.elidedText(remote, Qt::ElideMiddle, 150) + ":" +
+          metrix.elidedText(pathMsg, Qt::ElideMiddle, 500) + "\"";
+
+      includedList = getSelectionFilteringPatterns(multiSelection);
+
+      // as we run rclone directly here we have to add --filter
+      for (int i = 0; i < includedList.count(); ++i) {
+        includedListFinal << "--filter";
+        includedListFinal << "+ " + includedList.at(i);
+      }
+      includedListFinal << "--filter"
+                        << "- *";
+
+    } else {
+
+      toolTip = "\"" + remote + ":" + pathMsg + "\"";
+
+      progressMsg = QString("Size of ") + "\"" +
+                    metrix.elidedText(remote, Qt::ElideMiddle, 150) + ":" +
+                    metrix.elidedText(pathMsg, Qt::ElideMiddle, 500) + "\"";
+
+    } // if (multiSelectCount > 1)
+
     UseRclonePassword(process);
     process->setProgram(GetRclone());
     process->setArguments(QStringList()
                           << "size" << GetRcloneConf()
                           << GetRemoteModeRcloneOptions()
                           << GetDefaultOptionsList("defaultRcloneOptions")
-                          << remote + ":" + path);
+                          << remote + ":" + path << includedListFinal);
     process->setProcessChannelMode(QProcess::MergedChannels);
-    ProgressDialog *progress = new ProgressDialog(
-        "Get Size", "Running... ", "Size of: " + remote + ":" + pathMsg,
-        process, NULL, false);
+
+    ProgressDialog *progress =
+        new ProgressDialog("Get Size", "Running... ", progressMsg, process,
+                           NULL, false, false, toolTip);
 
     progress->expand();
     progress->allowToClose();
     progress->show();
   });
 
+  //!!! Object::connect(ui.export
   QObject::connect(ui.export_, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    // Elided....Text base measure
+    // progress dialog uses the same fonts
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    QString toolTip;
 
     QModelIndex index = ui.tree->selectionModel()->selectedRows().front();
 
@@ -870,10 +1326,17 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                             << e.getOptions());
       process->setProcessChannelMode(QProcess::MergedChannels);
 
+      toolTip =
+          "\"" + remote + ":" + pathMsg + "\"" + "\nto " + "\"" + dst + "\"";
+
       ProgressDialog *progress = new ProgressDialog(
           "Export", "Running... ",
-          "Exporting content of " + remote + ":" + pathMsg + "\nto " + dst,
-          process, NULL, false);
+          QString("Exporting content of ") + "\"" +
+              metrix.elidedText(remote, Qt::ElideMiddle, 150) + ":" +
+              metrix.elidedText(pathMsg, Qt::ElideMiddle, 500) + "\"" +
+              "\nto " + "\"" + metrix.elidedText(dst, Qt::ElideMiddle, 500) +
+              "\"",
+          process, NULL, false, false, toolTip);
 
       file->setParent(progress);
 
@@ -1073,6 +1536,11 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   QObject::connect(ui.getInfo, &QAction::triggered, this, [=]() {
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
+    // Elided....Text
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    QString toolTip = "\"" + remote + ":" + "\"";
+
     QProcess *process = new QProcess;
     UseRclonePassword(process);
     process->setProgram(GetRclone());
@@ -1084,12 +1552,54 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     process->setProcessChannelMode(QProcess::MergedChannels);
 
     ProgressDialog *progress = new ProgressDialog(
-        "Get remote Info", "Runnning... ", "rclone about " + remote + ":",
-        process, NULL, false);
+        "Get remote Info", "Runnning... ",
+        "rclone about \"" + metrix.elidedText(remote, Qt::ElideMiddle, 150) +
+            ":\"",
+        process, NULL, false, false, toolTip);
 
     progress->expand();
     progress->allowToClose();
     progress->show();
+  });
+
+  QObject::connect(ui.cleanup, &QAction::triggered, this, [=]() {
+    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+
+    // Elided....Text
+    QFontMetrics metrix(ui.elidedMeasure->font());
+
+    QString toolTip = "\"" + remote + ":" + "\"";
+
+    int button = QMessageBox::question(
+        this, "Cleanup",
+        QString("Are you sure you want to cleanup remote: \n\n %1 \n\nThis "
+                "action is irreversible.")
+            .arg("\"" + metrix.elidedText(remote, Qt::ElideMiddle, 250) +
+                 ":\""),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (button == QMessageBox::Yes) {
+
+      QProcess *process = new QProcess;
+      UseRclonePassword(process);
+      process->setProgram(GetRclone());
+      process->setArguments(QStringList()
+                            << "cleanup" << GetRcloneConf()
+                            << GetRemoteModeRcloneOptions()
+                            << GetDefaultOptionsList("defaultRcloneOptions")
+                            << remote + ":"
+                            << "-vv");
+      process->setProcessChannelMode(QProcess::MergedChannels);
+
+      ProgressDialog *progress = new ProgressDialog(
+          "Cleanup", "Runnning... ",
+          "rclone cleanup \"" +
+              metrix.elidedText(remote, Qt::ElideMiddle, 150) + ":\"",
+          process, NULL, false, false, toolTip);
+
+      progress->expand();
+      progress->allowToClose();
+      progress->show();
+    }
   });
 
   QObject::connect(
@@ -1103,8 +1613,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                            ? destPath.filePath(path.dirName())
                            : destPath.path();
 
+        QStringList empty;
         TransferDialog t(false, true, remote, dest, true, remoteType,
-                         remoteMode, this);
+                         remoteMode, false, empty, this);
         t.setSource(path.path());
 
         if (t.exec() == QDialog::Accepted) {
@@ -1128,6 +1639,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                      menu.addSeparator();
                      menu.addAction(ui.mkdir);
                      menu.addAction(ui.rename);
+                     menu.addAction(ui.copy);
                      menu.addAction(ui.move);
                      menu.addAction(ui.purge);
                      menu.addSeparator();
@@ -1404,8 +1916,12 @@ void RemoteWidget::preemptiveLoadingProcessor() {
 void RemoteWidget::switchRemoteType() {
   QMutexLocker locker(&preemptiveLoadingProcessorMutex);
 
-  // clear mPreemptiveLoadingList
+  // clear preemptive loading lists
   mPreemptiveLoadingList.clear();
+  mPreemptiveLoadingListDone.clear();
+  mPreemptiveLoadingListDoneNodes.clear();
+  mPreemptiveLoadingList.clear();
+  mPreemptiveLoadingListPending.clear();
 
   // we can only switch when pending preemptive loading jobs are finished
   if (global.rcloneLsProcessCount == 0) {
@@ -1464,7 +1980,6 @@ void RemoteWidget::switchRemoteType() {
 
 void RemoteWidget::processSelection(const QItemSelection &selected,
                                     const QItemSelection &deselected) {
-
   if (deselected.empty()) {
   }
 
@@ -1473,14 +1988,110 @@ void RemoteWidget::processSelection(const QItemSelection &selected,
 
   QItemSelectionModel *selectionModel = ui.tree->selectionModel();
   QItemSelection selection = selectionModel->selection();
+
   const QModelIndex parent = ui.tree->currentIndex().parent();
+  const QModelIndex currentItem = ui.tree->currentIndex();
+
+  //  QModelIndexList multiSelectionRows =
+  //      ui.tree->selectionModel()->selectedRows();
+  //  int multiSelectCount = multiSelectionRows.count();
+
   QItemSelection invalid;
+  QItemSelection valid;
 
   Q_FOREACH (QModelIndex index, selection.indexes()) {
-    if (index.parent() == parent)
+
+    if (index.parent() == parent) {
+      valid.select(index, index);
       continue;
+    }
+
     invalid.select(index, index);
   }
 
+  // for remotes with many roots (e.g. Windows with more than one drive) we dont
+  // allow selecting more than one
+
+  if (model->isTopLevel(currentItem)) {
+
+    Q_FOREACH (QModelIndex multiIndex, valid.indexes()) {
+
+      if (multiIndex.row() == currentItem.row())
+        continue;
+
+      if (model->isTopLevel(multiIndex)) {
+        invalid.select(multiIndex, multiIndex);
+      }
+    }
+  }
+
   selectionModel->select(invalid, QItemSelectionModel::Deselect);
+}
+
+QStringList RemoteWidget::getSelectionFilteringPatterns(
+    const QModelIndexList &multiSelection) {
+
+  QStringList includePatternsList;
+
+  int multiSelectionCount = multiSelection.count();
+
+  if (multiSelectionCount == 0) {
+    return includePatternsList;
+  }
+
+  for (int i = 0; i < multiSelectionCount; ++i) {
+    QModelIndex index = multiSelection.at(i);
+    QDir path = model->path(index);
+
+    /*
+     *  rclone filtering uses its own patterns parser
+     *  we have to esacape ? [ ] { } * \
+     *  otherwise items containing these characters will be missed
+     */
+    QString itemName = path.dirName();
+    itemName.replace("\\", "\\\\");
+    itemName.replace("[", "\\[");
+    itemName.replace("]", "\\]");
+    itemName.replace("?", "\\?");
+    itemName.replace("{", "\\{");
+    itemName.replace("}", "\\}");
+    itemName.replace("*", "\\*");
+
+    if (model->isFolder(index)) {
+      // directory
+      includePatternsList << "/" + itemName + "/**";
+    } else {
+      // file
+      includePatternsList << "/" + itemName;
+    }
+  }
+
+  return includePatternsList;
+}
+
+void RemoteWidget::refreshAfterMove() {
+
+  if (model->isLoading(model->index(0, 0, mSrcIndex))) {
+
+    QTimer::singleShot(300, Qt::CoarseTimer, this, SLOT(refreshAfterMove()));
+
+  } else {
+
+    // check if any parent is loading
+    // start with mDestIndex and go to the top;
+    QModelIndex top = mDestIndex;
+    bool isAnyParentLoading = false;
+    while (!model->isTopLevel(top)) {
+      if (model->isLoading(model->index(0, 0, top))) {
+        isAnyParentLoading = true;
+      }
+      top = top.parent();
+    }
+
+    if (!isAnyParentLoading) {
+      model->refresh(mDestIndex);
+    }
+  }
+
+  return;
 }

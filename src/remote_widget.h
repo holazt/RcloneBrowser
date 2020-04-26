@@ -39,6 +39,8 @@ private slots:
   void processSelection(const QItemSelection &selected,
                         const QItemSelection &deselected);
 
+  void refreshAfterMove();
+
 private:
   Ui::RemoteWidget ui;
   bool mButtonToolsState = false;
@@ -47,6 +49,10 @@ private:
 
   ItemModel *model;
   QModelIndex mRootIndex;
+
+  // get include patterns from selection
+  QStringList
+  getSelectionFilteringPatterns(const QModelIndexList &multiSelection);
 
   // folders' indexes with already preloaded subfolders
   QModelIndexList mPreemptiveLoadingListDone;
@@ -72,4 +78,8 @@ private:
 
   // how many rclone lsl/lsd processes for preeemptive loading
   int mMaxRcloneLsProcessCount = 10;
+
+  // two indexes to refresh after move
+  QModelIndex mSrcIndex;
+  QModelIndex mDestIndex;
 };

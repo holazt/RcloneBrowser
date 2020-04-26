@@ -47,6 +47,7 @@ set(UI
   preferences_dialog.ui
   scheduler_widget.ui
   delete_progress_dialog.ui
+  remote_folder_dialog.ui
 )
 
 set(MOC
@@ -70,6 +71,8 @@ set(MOC
   hours_spinbox.h
   minutes_spinbox.h
   delete_progress_dialog.h
+  file_dialog.h
+  remote_folder_dialog.h
 )
 
 set(OTHER
@@ -108,6 +111,8 @@ set(SOURCE
   hours_spinbox.cpp
   minutes_spinbox.cpp
   delete_progress_dialog.cpp
+  file_dialog.cpp
+  remote_folder_dialog.cpp
 )
 
 if(WIN32)

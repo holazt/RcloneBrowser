@@ -3,7 +3,8 @@
 
 ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
                                const QString &message, QProcess *process,
-                               QWidget *parent, bool close, bool trim)
+                               QWidget *parent, bool close, bool trim,
+                               QString toolTip)
     : QDialog(parent) {
 
   ui.setupUi(this);
@@ -14,7 +15,7 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
 
   resize(0, 0);
 
-  setWindowTitle(title);
+  setWindowTitle("Rclone Browser - " + title);
 
   // manually control window size to ensure resizing take into account output
   // field which can be hidden
@@ -26,6 +27,12 @@ ProgressDialog::ProgressDialog(const QString &title, const QString &operation,
   mMinimumHeight = this->height();
   ui.output->setVisible(false);
   adjustSize();
+
+  if (!toolTip.isEmpty()) {
+    QString toolTipPlacer =
+        QString("<html><head/><body><p>%1</p></body></html>").arg(toolTip);
+    ui.frame->setToolTip(tr(toolTipPlacer.toLocal8Bit().constData()));
+  }
 
   ui.labelOperation->setText(operation);
 

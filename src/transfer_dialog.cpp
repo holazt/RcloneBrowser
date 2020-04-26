@@ -1,24 +1,43 @@
 #include "transfer_dialog.h"
+#include "file_dialog.h"
 #include "list_of_job_options.h"
 #include "utils.h"
 
 TransferDialog::TransferDialog(bool isDownload, bool isDrop,
                                const QString &remote, const QDir &path,
                                bool isFolder, const QString &remoteType,
-                               const QString &remoteMode, QWidget *parent,
+                               const QString &remoteMode, bool isMultiItem,
+                               const QStringList &includeItems, QWidget *parent,
                                JobOptions *task, bool editMode)
     : QDialog(parent), mIsDownload(isDownload), mIsFolder(isFolder),
-      mIsEditMode(editMode), mRemoteMode(remoteMode), mRemoteType(remoteType),
-      mJobOptions(task) {
+      mIsEditMode(editMode), mRemote(remote), mRemoteMode(remoteMode),
+      mRemoteType(remoteType), mIsMultiItem(isMultiItem), mJobOptions(task) {
 
   ui.setupUi(this);
+
+  mRemote = mRemote.left((mRemote).indexOf(":"));
+
+  if (mJobOptions == nullptr) {
+    mJobOptions = new JobOptions(mIsDownload);
+  }
+
+  mJobOptionsRcloneCmd = new JobOptions(mIsDownload);
 
   auto settings = GetSettings();
 
   // set minimumWidth based on font size
   int fontsize = 0;
   fontsize = (settings->value("Settings/fontSize").toInt());
+
+#ifdef Q_OS_WIN
+  // fusion on Windows is smaller
+  setMinimumWidth(minimumWidth() * .9 + (fontsize * 20));
+#else
   setMinimumWidth(minimumWidth() + (fontsize * 50));
+#endif
+
+  // Elided....Text base measure
+  QFontMetrics metrix(ui.l_sourceRemote->font());
 
   if (mIsEditMode) {
     ui.cb_taskAutoName->hide();
@@ -33,7 +52,8 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   setMinimumHeight(this->height());
   QTimer::singleShot(0, this, SLOT(size()));
 
-  setWindowTitle(isDownload ? "Download" : "Upload");
+  setWindowTitle(isDownload ? "Rclone Browser - Download"
+                            : "Rclone Browser - Upload");
 
   QString iconsColour = settings->value("Settings/iconsColour").toString();
 
@@ -45,7 +65,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   ui.buttonSourceFile->setIcon(
       QIcon(":media/images/qbutton_icons/file" + img_add + ".png"));
-  ui.buttonSourceFolder->setIcon(
+  ui.buttonSourceItems->setIcon(
       QIcon(":media/images/qbutton_icons/folder" + img_add + ".png"));
   ui.buttonDest->setIcon(
       QIcon(":media/images/qbutton_icons/folder" + img_add + ".png"));
@@ -55,7 +75,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       QIcon(":media/images/qbutton_icons/restore" + img_add + ".png"));
 
   ui.buttonSourceFile->setIconSize(QSize(24, 24));
-  ui.buttonSourceFolder->setIconSize(QSize(24, 24));
+  ui.buttonSourceItems->setIconSize(QSize(24, 24));
   ui.buttonDest->setIconSize(QSize(24, 24));
   ui.buttonDefaultSource->setIconSize(QSize(24, 24));
   ui.buttonDefaultDest->setIconSize(QSize(24, 24));
@@ -143,8 +163,10 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       }
     });
 
-  } else {
+  } // if (!mIsEditMode)
+  else {
     // edit mode
+
     QObject::connect(ui.le_taskName, &QLineEdit::textChanged, this, [=]() {
       if (ui.le_taskName->text().trimmed().isEmpty()) {
         saveTask->setEnabled(false);
@@ -159,7 +181,46 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     run->setEnabled(false);
     dryRun->hide();
     run->hide();
-  }
+  } // if (!mIsEditMode) else
+
+    QObject::connect(ui.pte_textExtra, &QPlainTextEdit::textChanged, this, [=]() {
+      if (ui.pte_textExtra->toPlainText().trimmed().isEmpty()) {
+        ui.tabWidget->setTabText(2, "Extra Options");
+      } else {
+        ui.tabWidget->setTabText(2, "Extra Options(x)");
+      }
+    });
+
+    QObject::connect(ui.textInclude, &QPlainTextEdit::textChanged, this, [=]() {
+      if (ui.textInclude->toPlainText().trimmed().isEmpty()) {
+        ui.tabWidget->setTabText(3, "Include");
+      } else {
+        ui.tabWidget->setTabText(3, "Include(x)");
+      }
+    });
+
+    QObject::connect(ui.textExclude, &QPlainTextEdit::textChanged, this, [=]() {
+      if (ui.textExclude->toPlainText().trimmed().isEmpty()) {
+        ui.tabWidget->setTabText(4, "Exclude");
+      } else {
+        ui.tabWidget->setTabText(4, "Exclude(x)");
+      }
+    });
+
+    QObject::connect(ui.textFilter, &QPlainTextEdit::textChanged, this, [=]() {
+      if (ui.textFilter->toPlainText().trimmed().isEmpty()) {
+        ui.tabWidget->setTabText(5, "Filter");
+      } else {
+        ui.tabWidget->setTabText(5, "Filter(x)");
+      }
+    });
+
+
+  QObject::connect(ui.textSource, &QLineEdit::textChanged, this,
+                   [=]() { rcloneCmdUpdate(); });
+
+  QObject::connect(ui.textDest, &QLineEdit::textChanged, this,
+                   [=]() { rcloneCmdUpdate(); });
 
   QObject::connect(
       ui.buttonBox->button(QDialogButtonBox::RestoreDefaults),
@@ -184,6 +245,9 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
                                   Qt::ToolTipRole);
         //      ui.checkVerbose->setChecked(false);
         ui.checkSameFilesystem->setChecked(false);
+        ui.noTraverse->setChecked(false);
+        ui.createEmptySrcDirs->setChecked(true);
+        ui.deleteEmptySrcDirs->setChecked(false);
         ui.checkDontUpdateModified->setChecked(false);
         ui.spinTransfers->setValue(4);
         ui.spinCheckers->setValue(8);
@@ -197,8 +261,15 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         ui.spinRetries->setValue(3);
         ui.spinLowLevelRetries->setValue(10);
         ui.checkDeleteExcluded->setChecked(false);
+        ui.textInclude->clear();
         ui.textExclude->clear();
         ui.pte_textExtra->clear();
+
+        if (!mIsMultiItem || mIsEditMode) {
+          //          ui.textInclude->clear();
+        }
+
+        rcloneCmdUpdate();
       });
 
   ui.buttonBox->button(QDialogButtonBox::RestoreDefaults)->click();
@@ -219,36 +290,12 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
                    &QDialog::reject);
 
-  QObject::connect(
-      ui.tabWidget, &QTabWidget::currentChanged, this, [=](const int &index) {
-        // placeholder
-        if (index == 0) {
-        }
-
-        QStringList rcloneTransferCmd;
-
-        QString rcloneCmd = GetRclone();
-        QStringList rcloneConf = GetRcloneConf();
-        QStringList rcloneOptions = getOptions();
-
-        if (!rcloneCmd.isEmpty()) {
-          rcloneTransferCmd << "\"" + GetRclone() + "\"";
-        }
-
-        if (!rcloneOptions.isEmpty()) {
-          rcloneTransferCmd << rcloneOptions.takeAt(0);
-          rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
-          rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
-          rcloneTransferCmd << rcloneOptions;
-        }
-
-        if (!rcloneConf.isEmpty()) {
-          rcloneTransferCmd << rcloneConf.at(0);
-          rcloneTransferCmd << "\"" + rcloneConf.at(1) + "\"";
-        }
-
-        ui.rcloneCmd->setPlainText(rcloneTransferCmd.join(" "));
-      });
+  QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, this,
+                   [=](const int &index) {
+                     if (index == 6) {
+                       rcloneCmdUpdate();
+                     }
+                   });
 
   QObject::connect(ui.buttonSourceFile, &QToolButton::clicked, this, [=]() {
     QString file = QFileDialog::getOpenFileName(this, "Choose file to upload");
@@ -262,24 +309,152 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     }
   });
 
-  QObject::connect(ui.buttonSourceFolder, &QToolButton::clicked, this, [=]() {
+  QObject::connect(ui.buttonSourceItems, &QToolButton::clicked, this, [=]() {
     auto settings = GetSettings();
     QString last_used_source_folder =
         (settings->value("Settings/lastUsedSourceFolder").toString());
-    QString folder = QFileDialog::getExistingDirectory(
-        this, "Choose folder to upload", last_used_source_folder,
-        QFileDialog::ShowDirsOnly);
 
-    if (!folder.isEmpty()) {
+    QStringList itemsToUpload;
+    QString itemToUpload;
+    QString folder;
+    QString file;
 
-      // store new folder in lastUsedSourceFolder
-      settings->setValue("Settings/lastUsedSourceFolder", folder);
-      ui.textSource->setText(QDir::toNativeSeparators(folder));
+    //    FileDialog *fileDialog = new FileDialog(false);
+    FileDialog fileDialog(false);
+    fileDialog.setWindowTitle(
+        "Rclone Browser - Upload - choose items (one or many)");
+    fileDialog.setMinimumWidth(840);
+    fileDialog.setMinimumHeight(520);
 
-      if (!mIsEditMode) {
-        ui.textDest->setText(path.filePath(QFileInfo(folder).fileName()));
+    if (fileDialog.exec()) {
+
+      if (!ui.textFilter->toPlainText().isEmpty() &&
+          fileDialog.selectedUrls().count() > 1) {
+
+        int currentTab = ui.tabWidget->currentIndex();
+
+        ui.tabWidget->setCurrentIndex(5);
+        ui.textFilter->setFocus(Qt::FocusReason::OtherFocusReason);
+
+        int button = QMessageBox::question(
+            this, "New Filter rules",
+            QString(
+                "Choosing new multi source will overwrite existing --filter "
+                "patterns. Are you sure?"),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+        ui.tabWidget->setCurrentIndex(currentTab);
+
+        if (button == QMessageBox::Yes) {
+          ui.textFilter->clear();
+        } else {
+          return;
+        }
       }
-    }
+
+      QList<QUrl> listSelectedUrls = fileDialog.selectedUrls();
+      itemToUpload = listSelectedUrls.at(0).path();
+
+#ifdef Q_OS_WIN
+      // remove leading / e.g. "/C:/"
+      itemToUpload.remove(0, 1);
+#endif
+
+      if (listSelectedUrls.count() == 1) {
+        ui.multiInfo->hide();
+        // file or folder?
+        if (QDir(itemToUpload).exists()) {
+          folder = itemToUpload;
+
+          if (!folder.isEmpty()) {
+            // store new folder in lastUsedSourceFolder
+            settings->setValue("Settings/lastUsedSourceFolder", folder);
+            ui.textSource->setText(QDir::toNativeSeparators(folder));
+
+            if (!mIsEditMode) {
+              ui.textDest->setText(path.filePath(QFileInfo(folder).fileName()));
+            }
+          }
+
+        } else {
+          file = itemToUpload;
+
+          if (!file.isEmpty()) {
+            if (!mIsEditMode) {
+              ui.textSource->setText(QDir::toNativeSeparators(file));
+              ui.textDest->setText(path.path());
+            } else {
+              ui.textSource->setText(QDir::toNativeSeparators(file));
+            }
+          }
+        }
+      } else {
+        // multiple items
+        mIsMultiItem = true;
+        ui.multiInfo->show();
+
+        if (!mIsEditMode) {
+          ui.textDest->setText(path.path());
+        }
+        // selection control makes sure that all are on the same level so we can
+        // use any to derived download root
+        QFileInfo source(itemToUpload);
+        QDir sourceDir = source.absoluteDir();
+        ui.textSource->setText(QDir::toNativeSeparators(sourceDir.path()));
+
+        QStringList includePatternsList;
+
+        for (int i = 0; i < listSelectedUrls.count(); ++i) {
+
+          QString item = listSelectedUrls.at(i).path();
+
+#ifdef Q_OS_WIN
+          // remove leading / e.g. "/C:/"
+          item.remove(0, 1);
+#endif
+
+          QString itemName = QDir(item).dirName();
+
+          /*
+           *  rclone filtering uses its own patterns parser
+           *  we have to esacape ? [ ] { } * \
+           *  otherwise items containing these characters will be missed
+           */
+
+          itemName.replace("\\", "\\\\");
+          itemName.replace("[", "\\[");
+          itemName.replace("]", "\\]");
+          itemName.replace("?", "\\?");
+          itemName.replace("{", "\\{");
+          itemName.replace("}", "\\}");
+          itemName.replace("*", "\\*");
+
+          QFileInfo checkItem(item);
+
+          if (checkItem.isFile()) {
+            includePatternsList << "+ /" + itemName;
+          }
+
+          if (checkItem.isDir()) {
+            includePatternsList << "+ /" + itemName + "/**";
+            /*
+             */
+          }
+        }
+
+        includePatternsList << "- *";
+
+        QString includeItemsText;
+        for (int i = 0; i < includePatternsList.count(); ++i) {
+
+          includeItemsText =
+              includeItemsText + includePatternsList.at(i) + "\n";
+        }
+        ui.textFilter->setPlainText(includeItemsText);
+      }
+
+      rcloneCmdUpdate();
+    } // if (fileDialog->exec())
   });
 
   QObject::connect(ui.buttonDefaultSource, &QToolButton::clicked, this, [=]() {
@@ -289,6 +464,12 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // store default folder in lastUsedSourceFolder
     settings->setValue("Settings/lastUsedSourceFolder", default_folder);
     ui.textSource->setText(QDir::toNativeSeparators(default_folder));
+
+    if (!mIsEditMode) {
+      ui.textFilter->clear();
+      ui.multiInfo->hide();
+    }
+
     if (!default_folder.isEmpty()) {
       if (!mIsEditMode) {
         ui.textDest->setText(
@@ -301,31 +482,60 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     };
   });
 
+  //!!! QObject::connect(ui.buttonDest
   QObject::connect(ui.buttonDest, &QToolButton::clicked, this, [=]() {
     auto settings = GetSettings();
     QString last_used_dest_folder =
         (settings->value("Settings/lastUsedDestFolder").toString());
-    QString folder = QFileDialog::getExistingDirectory(
-        this, "Choose destination folder", last_used_dest_folder,
-        QFileDialog::ShowDirsOnly);
 
-    if (!folder.isEmpty()) {
-      // store new folder in lastUsedDestFolder
-      settings->setValue("Settings/lastUsedDestFolder", folder);
+    QString folder;
 
-      if (!mIsEditMode) {
-        if (isFolder) {
-          ui.textDest->setText(
-              QDir::toNativeSeparators(folder + "/" + path.dirName()));
+    /*
+        FileDialog *fileDialog = new FileDialog(true);
+        fileDialog->setWindowTitle("Choose destination directory for download");
+        fileDialog->setMinimumWidth(850);
+        fileDialog->setMinimumHeight(525);
+    */
+
+    FileDialog fileDialog(true);
+    fileDialog.setWindowTitle(
+        "Rclone Browser - Download - choose destination directory");
+    fileDialog.setMinimumWidth(840);
+    fileDialog.setMinimumHeight(520);
+
+    if (fileDialog.exec()) {
+      QList<QUrl> listSelectedUrls = fileDialog.selectedUrls();
+      folder = listSelectedUrls.at(0).path();
+
+#ifdef Q_OS_WIN
+      // remove leading / e.g. "/C:/"
+      folder.remove(0, 1);
+#endif
+
+      if (!folder.isEmpty()) {
+        // store new folder in lastUsedDestFolder
+        settings->setValue("Settings/lastUsedDestFolder", folder);
+        // if one or many
+
+        if (!mIsMultiItem) {
+          if (!mIsEditMode) {
+            if (isFolder) {
+              ui.textDest->setText(
+                  QDir::toNativeSeparators(folder + "/" + path.dirName()));
+            } else {
+              ui.textDest->setText(QDir::toNativeSeparators(folder));
+            }
+          } else {
+            ui.textDest->setText(QDir::toNativeSeparators(folder));
+          }
+
         } else {
           ui.textDest->setText(QDir::toNativeSeparators(folder));
         }
+        rcloneCmdUpdate();
+      } // if (!folder.isEmpty()
 
-      } else {
-
-        ui.textDest->setText(QDir::toNativeSeparators(folder));
-      }
-    }
+    } // if (fileDialog->exec())
   });
 
   QObject::connect(ui.buttonDefaultDest, &QToolButton::clicked, this, [=]() {
@@ -335,21 +545,44 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // store default_folder in lastUsedDestFolder
     settings->setValue("Settings/lastUsedDestFolder", default_folder);
     if (!default_folder.isEmpty()) {
-      if (!mIsEditMode) {
 
-        if (isFolder) {
-          ui.textDest->setText(
-              QDir::toNativeSeparators(default_folder + "/" + path.dirName()));
+      if (!mIsMultiItem) {
+        if (!mIsEditMode) {
+
+          if (isFolder) {
+            ui.textDest->setText(QDir::toNativeSeparators(default_folder + "/" +
+                                                          path.dirName()));
+          } else {
+            ui.textDest->setText(QDir::toNativeSeparators(default_folder));
+          }
         } else {
           ui.textDest->setText(QDir::toNativeSeparators(default_folder));
         }
+
       } else {
         ui.textDest->setText(QDir::toNativeSeparators(default_folder));
       }
+
     } else {
       ui.textDest->setText("");
     };
   });
+
+  if (!mIsMultiItem || mIsEditMode) {
+    ui.multiInfo->hide();
+
+  } else {
+    ui.multiInfo->show();
+    QString includeItemsText;
+
+    for (int i = 0; i < includeItems.count(); ++i) {
+      includeItemsText = includeItemsText + "+ " + includeItems.at(i) + "\n";
+    }
+
+    includeItemsText = includeItemsText + "- *\n";
+    ui.textFilter->setPlainText(includeItemsText);
+
+  }
 
   if (!mIsEditMode) {
     settings->beginGroup("Transfer");
@@ -358,11 +591,17 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   }
 
   ui.buttonSourceFile->setVisible(!isDownload);
-  ui.buttonSourceFolder->setVisible(!isDownload);
+  ui.buttonSourceItems->setVisible(!isDownload);
   ui.buttonDefaultSource->setVisible(!isDownload);
 
   ui.buttonDest->setVisible(isDownload);
-  ui.buttonDefaultDest->setVisible(isDownload);
+
+  // not used with new multi items transfers
+  //  ui.buttonDefaultDest->hide();
+  //  ui.buttonDefaultSource->hide();
+
+  // not in use
+  ui.buttonSourceFile->hide();
 
   if (mRemoteType != "drive") {
     ui.remoteMode->setText(mRemoteType);
@@ -385,16 +624,15 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     if (isDownload) {
       ui.l_destRemote->hide();
       ui.buttonSourceFile->setVisible(false);
-      ui.buttonSourceFolder->setVisible(false);
-      ui.buttonDefaultSource->setVisible(false);
+      ui.buttonSourceItems->setVisible(false);
+      ui.buttonDefaultSource->hide();
       ui.l_sourceRemote->setEnabled(false);
     } else {
       ui.l_sourceRemote->hide();
-      ui.buttonDefaultDest->setVisible(false);
+      ui.buttonDefaultDest->hide();
       ui.buttonDest->setVisible(false);
       ui.l_destRemote->setEnabled(false);
     }
-
     putJobOptions();
 
   } else {
@@ -402,9 +640,13 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     // set source and destination using defaults
     if (isDownload) {
       // download
+      ui.buttonDefaultSource->hide();
       ui.l_destRemote->hide();
       ui.l_sourceRemote->setEnabled(false);
-      ui.l_sourceRemote->setText(remote + ":");
+
+      ui.l_sourceRemote->setText(
+          metrix.elidedText(remote + ":", Qt::ElideMiddle, 150));
+      ui.l_sourceRemote->setToolTip(remote + ":");
 
       ui.textSource->setText(path.path());
       QString folder;
@@ -419,20 +661,32 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         folder = last_used_dest_folder;
       };
 
+      //!!! download
       if (!folder.isEmpty()) {
-        if (isFolder) {
-          ui.textDest->setText(
-              QDir::toNativeSeparators(folder + "/" + path.dirName()));
+
+        if (!mIsMultiItem) {
+
+          if (isFolder) {
+            ui.textDest->setText(
+                QDir::toNativeSeparators(folder + "/" + path.dirName()));
+          } else {
+            ui.textDest->setText(QDir::toNativeSeparators(folder));
+          }
         } else {
           ui.textDest->setText(QDir::toNativeSeparators(folder));
         }
       }
 
+      ui.textDest->setFocus(Qt::FocusReason::OtherFocusReason);
+
     } else {
       // upload
       ui.l_sourceRemote->hide();
       ui.l_destRemote->setEnabled(false);
-      ui.l_destRemote->setText(remote + ":");
+      ui.buttonDefaultDest->hide();
+      ui.l_destRemote->setText(
+          metrix.elidedText(remote + ":", Qt::ElideMiddle, 150));
+      ui.l_destRemote->setToolTip(remote + ":");
 
       QString folder;
       QString default_folder =
@@ -448,13 +702,29 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
       // if upload initiated from drag and drop we dont use default upload
       // folder
+
+      //!!! upload
       if (!isDrop) {
-        ui.textSource->setText(QDir::toNativeSeparators(folder));
-        if (!folder.isEmpty()) {
-          ui.textDest->setText(path.filePath(QFileInfo(folder).fileName()));
+
+        if (!isMultiItem) {
+
+          /*
+                  ui.textSource->setText(QDir::toNativeSeparators(folder));
+                  if (!folder.isEmpty()) {
+                    ui.textDest->setText(path.filePath(QFileInfo(folder).fileName()));
+                  } else {
+                    ui.textDest->setText(path.path());
+                  }
+          */
+          ui.textDest->setText(path.path());
+
         } else {
+
           ui.textDest->setText(path.path());
         }
+
+        ui.textSource->setFocus(Qt::FocusReason::OtherFocusReason);
+
       } else {
         // when dropping to root folder
         if (path.path() == ".") {
@@ -475,6 +745,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       saveTask->setEnabled(true);
       saveTask->setDefault(true);
     } else {
+
       ui.cb_taskAutoName->setChecked(false);
       run->setText("&Run");
       dryRun->setText("Dry run");
@@ -489,18 +760,30 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     ui.cb_taskAddToQueue->setChecked(false);
   }
 
-  ui.le_defaultRcloneOptions->setText(
+  ui.le_defaultRcloneOptions->setText(metrix.elidedText(
+      settings->value("Settings/defaultRcloneOptions").toString(),
+      Qt::ElideMiddle, 537));
+  ui.le_defaultRcloneOptions->setToolTip(
       settings->value("Settings/defaultRcloneOptions").toString());
 
   if (isDownload) {
     ui.label_defaultTransferOptions->setText("Default download options:");
-    ui.le_defaultTransferOptions->setText(
+    ui.le_defaultTransferOptions->setText(metrix.elidedText(
+        settings->value("Settings/defaultDownloadOptions").toString(),
+        Qt::ElideMiddle, 537));
+    ui.le_defaultTransferOptions->setToolTip(
         settings->value("Settings/defaultDownloadOptions").toString());
+
   } else {
     ui.label_defaultTransferOptions->setText("Default upload options:");
-    ui.le_defaultTransferOptions->setText(
+    ui.le_defaultTransferOptions->setText(metrix.elidedText(
+        settings->value("Settings/defaultUploadOptions").toString(),
+        Qt::ElideMiddle, 537));
+    ui.le_defaultTransferOptions->setToolTip(
         settings->value("Settings/defaultUploadOptions").toString());
   }
+
+  QTimer::singleShot(500, Qt::CoarseTimer, this, SLOT(showToolTip()));
 }
 
 TransferDialog::~TransferDialog() {
@@ -529,7 +812,7 @@ QString TransferDialog::getMode() const {
 
 QString TransferDialog::getSource() const {
   if (mIsDownload) {
-    return ui.l_sourceRemote->text() + ui.textSource->text();
+    return mRemote + ":" + ui.textSource->text();
   } else {
     return ui.textSource->text();
   }
@@ -539,12 +822,12 @@ QString TransferDialog::getDest() const {
   if (mIsDownload) {
     return ui.textDest->text();
   } else {
-    return ui.l_destRemote->text() + ui.textDest->text();
+    return mRemote + ":" + ui.textDest->text();
   }
 }
 
 QStringList TransferDialog::getOptions() {
-  JobOptions *jobo = getJobOptions();
+  JobOptions *jobo = getJobOptions(mJobOptions);
   QStringList newWay = jobo->getOptions();
   return newWay;
 }
@@ -561,100 +844,107 @@ QString TransferDialog::getTaskId() { return mTaskId; }
  *
  * This needs to be edited whenever options are added or changed.
  */
-JobOptions *TransferDialog::getJobOptions() {
-  if (mJobOptions == nullptr)
-    mJobOptions = new JobOptions(mIsDownload);
+JobOptions *TransferDialog::getJobOptions(JobOptions *taskOptions) {
+
+  //!!!
+  //  if (mJobOptions == nullptr)
+  //    mJobOptions = new JobOptions(mIsDownload);
 
   if (ui.rbCopy->isChecked()) {
-    mJobOptions->operation = JobOptions::Copy;
-    mJobOptions->sync = false;
+    taskOptions->operation = JobOptions::Copy;
+    taskOptions->sync = false;
   } else if (ui.rbMove->isChecked()) {
-    mJobOptions->operation = JobOptions::Move;
-    mJobOptions->sync = false;
+    taskOptions->operation = JobOptions::Move;
+    taskOptions->sync = false;
   } else if (ui.rbSync->isChecked()) {
-    mJobOptions->operation = JobOptions::Sync;
+    taskOptions->operation = JobOptions::Sync;
   }
 
-  //  mJobOptions->dryRun = mDryRun;
-  mJobOptions->dryRun = false;
+  //  taskOptions->dryRun = mDryRun;
+  taskOptions->dryRun = false;
 
   if (ui.rbSync->isChecked()) {
-    mJobOptions->sync = true;
+    taskOptions->sync = true;
     switch (ui.cbSyncDelete->currentIndex()) {
     case 0:
-      mJobOptions->syncTiming = JobOptions::During;
+      taskOptions->syncTiming = JobOptions::During;
       break;
     case 1:
-      mJobOptions->syncTiming = JobOptions::After;
+      taskOptions->syncTiming = JobOptions::After;
       break;
     case 2:
-      mJobOptions->syncTiming = JobOptions::Before;
+      taskOptions->syncTiming = JobOptions::Before;
       break;
     }
   }
 
-  mJobOptions->skipNewer = ui.checkSkipNewer->isChecked();
-  mJobOptions->skipExisting = ui.checkSkipExisting->isChecked();
+  taskOptions->skipNewer = ui.checkSkipNewer->isChecked();
+  taskOptions->skipExisting = ui.checkSkipExisting->isChecked();
 
   if (ui.checkCompare->isChecked()) {
-    mJobOptions->compare = true;
+    taskOptions->compare = true;
     switch (ui.cbCompare->currentIndex()) {
     case 0:
-      mJobOptions->compareOption = JobOptions::SizeAndModTime;
+      taskOptions->compareOption = JobOptions::SizeAndModTime;
       break;
     case 1:
-      mJobOptions->compareOption = JobOptions::Checksum;
+      taskOptions->compareOption = JobOptions::Checksum;
       break;
     case 2:
-      mJobOptions->compareOption = JobOptions::IgnoreSize;
+      taskOptions->compareOption = JobOptions::IgnoreSize;
       break;
     case 3:
-      mJobOptions->compareOption = JobOptions::SizeOnly;
+      taskOptions->compareOption = JobOptions::SizeOnly;
       break;
     case 4:
-      mJobOptions->compareOption = JobOptions::ChecksumIgnoreSize;
+      taskOptions->compareOption = JobOptions::ChecksumIgnoreSize;
       break;
     }
   } else {
-    mJobOptions->compare = false;
+    taskOptions->compare = false;
   };
 
-  //    mJobOptions->verbose = ui.checkVerbose->isChecked();
-  mJobOptions->sameFilesystem = ui.checkSameFilesystem->isChecked();
-  mJobOptions->dontUpdateModified = ui.checkDontUpdateModified->isChecked();
+  //    taskOptions->verbose = ui.checkVerbose->isChecked();
+  taskOptions->sameFilesystem = ui.checkSameFilesystem->isChecked();
+  taskOptions->dontUpdateModified = ui.checkDontUpdateModified->isChecked();
+  taskOptions->noTraverse = ui.noTraverse->isChecked();
+  taskOptions->createEmptySrcDirs = ui.createEmptySrcDirs->isChecked();
+  taskOptions->deleteEmptySrcDirs = ui.deleteEmptySrcDirs->isChecked();
 
-  mJobOptions->transfers = ui.spinTransfers->text();
-  mJobOptions->checkers = ui.spinCheckers->text();
-  mJobOptions->bandwidth = ui.textBandwidth->text();
-  mJobOptions->minSize = ui.textMinSize->text();
-  mJobOptions->minAge = ui.textMinAge->text();
-  mJobOptions->maxAge = ui.textMaxAge->text();
-  mJobOptions->maxDepth = ui.spinMaxDepth->value();
+  taskOptions->transfers = ui.spinTransfers->text();
+  taskOptions->checkers = ui.spinCheckers->text();
+  taskOptions->bandwidth = ui.textBandwidth->text();
+  taskOptions->minSize = ui.textMinSize->text();
+  taskOptions->minAge = ui.textMinAge->text();
+  taskOptions->maxAge = ui.textMaxAge->text();
+  taskOptions->maxDepth = ui.spinMaxDepth->value();
 
-  mJobOptions->connectTimeout = ui.spinConnectTimeout->text();
-  mJobOptions->idleTimeout = ui.spinIdleTimeout->text();
-  mJobOptions->retries = ui.spinRetries->text();
-  mJobOptions->lowLevelRetries = ui.spinLowLevelRetries->text();
-  mJobOptions->deleteExcluded = ui.checkDeleteExcluded->isChecked();
+  taskOptions->connectTimeout = ui.spinConnectTimeout->text();
+  taskOptions->idleTimeout = ui.spinIdleTimeout->text();
+  taskOptions->retries = ui.spinRetries->text();
+  taskOptions->lowLevelRetries = ui.spinLowLevelRetries->text();
+  taskOptions->deleteExcluded = ui.checkDeleteExcluded->isChecked();
 
-  mJobOptions->extra = ui.pte_textExtra->toPlainText().trimmed();
-  mJobOptions->excluded = ui.textExclude->toPlainText().trimmed();
+  taskOptions->extra = ui.pte_textExtra->toPlainText().trimmed();
+  taskOptions->included = ui.textInclude->toPlainText().trimmed();
+  taskOptions->excluded = ui.textExclude->toPlainText().trimmed();
+  taskOptions->filtered = ui.textFilter->toPlainText().trimmed();
 
-  mJobOptions->isFolder = mIsFolder;
+  taskOptions->isFolder = mIsFolder;
 
   if (mIsDownload) {
-    mJobOptions->source = ui.l_sourceRemote->text() + ui.textSource->text();
-    mJobOptions->dest = ui.textDest->text();
+    taskOptions->source = mRemote + ":" + ui.textSource->text();
+    taskOptions->dest = ui.textDest->text();
   } else {
-    mJobOptions->source = ui.textSource->text();
-    mJobOptions->dest = ui.l_destRemote->text() + ui.textDest->text();
+    taskOptions->source = ui.textSource->text();
+    taskOptions->dest = mRemote + ":" + ui.textDest->text();
   }
 
-  mJobOptions->description = ui.le_taskName->text();
-  mJobOptions->remoteType = mRemoteType;
-  mJobOptions->remoteMode = mRemoteMode;
+  taskOptions->description = ui.le_taskName->text();
+  taskOptions->remoteType = mRemoteType;
+  taskOptions->remoteMode = mRemoteMode;
 
-  return mJobOptions;
+  return taskOptions;
 }
 
 /*
@@ -692,8 +982,12 @@ void TransferDialog::putJobOptions() {
   ui.cbCompare->setItemData(3, "--size-only", Qt::ToolTipRole);
   ui.cbCompare->setItemData(4, "--checksum --ignore-size", Qt::ToolTipRole);
   // ui.checkVerbose->setChecked(mJobOptions->verbose);
+
   ui.checkSameFilesystem->setChecked(mJobOptions->sameFilesystem);
   ui.checkDontUpdateModified->setChecked(mJobOptions->dontUpdateModified);
+  ui.noTraverse->setChecked(mJobOptions->noTraverse);
+  ui.createEmptySrcDirs->setChecked(mJobOptions->createEmptySrcDirs);
+  ui.deleteEmptySrcDirs->setChecked(mJobOptions->deleteEmptySrcDirs);
 
   ui.spinTransfers->setValue(mJobOptions->transfers.toInt());
   ui.spinCheckers->setValue(mJobOptions->checkers.toInt());
@@ -709,20 +1003,36 @@ void TransferDialog::putJobOptions() {
   ui.spinLowLevelRetries->setValue(mJobOptions->lowLevelRetries.toInt());
   ui.checkDeleteExcluded->setChecked(mJobOptions->deleteExcluded);
 
+  ui.textInclude->setPlainText(mJobOptions->included);
   ui.textExclude->setPlainText(mJobOptions->excluded);
+  ui.textFilter->setPlainText(mJobOptions->filtered);
+
   ui.pte_textExtra->setPlainText(mJobOptions->extra);
 
+  // Elided....Text base measure
+  QFontMetrics metrix(ui.l_sourceRemote->font());
+
   if (mJobOptions->jobType == JobOptions::JobType::Download) {
-    ui.l_sourceRemote->setText(
+    ui.l_sourceRemote->setText(metrix.elidedText(
+        (mJobOptions->source).left((mJobOptions->source).indexOf(":") + 1),
+        Qt::ElideMiddle, 150));
+    ui.l_sourceRemote->setToolTip(
         (mJobOptions->source).left((mJobOptions->source).indexOf(":") + 1));
+
     ui.textSource->setText((mJobOptions->source)
                                .right((mJobOptions->source).length() -
                                       (mJobOptions->source).indexOf(":") - 1));
+
     ui.textDest->setText(mJobOptions->dest);
   } else {
     ui.textSource->setText(mJobOptions->source);
-    ui.l_destRemote->setText(
+
+    ui.l_destRemote->setText(metrix.elidedText(
+        (mJobOptions->dest).left((mJobOptions->dest).indexOf(":") + 1),
+        Qt::ElideMiddle, 150));
+    ui.l_destRemote->setToolTip(
         (mJobOptions->dest).left((mJobOptions->dest).indexOf(":") + 1));
+
     ui.textDest->setText((mJobOptions->dest)
                              .right((mJobOptions->dest).length() -
                                     (mJobOptions->dest).indexOf(":") - 1));
@@ -842,7 +1152,7 @@ bool TransferDialog::saveTaskToFile() {
     transferWriteSettings();
   }
 
-  JobOptions *jobo = getJobOptions();
+  JobOptions *jobo = getJobOptions(mJobOptions);
   ListOfJobOptions::getInstance()->Persist(jobo);
 
   mTaskId = jobo->uniqueId.toString();
@@ -863,7 +1173,7 @@ void TransferDialog::transferWriteSettings() {
   settings->remove("le_taskName");
   settings->remove("le_defaultRcloneOptions");
   settings->remove("le_defaultTransferOptions");
-
+  settings->remove("textFilter");
   settings->endGroup();
 }
 
@@ -880,11 +1190,43 @@ void TransferDialog::generateAutoTaskName() {
                    time.toString("HHmmss") + "_";
 
     if (mIsDownload) {
-      name = name + ui.l_sourceRemote->text().replace(":", "");
+      name = name + mRemote;
     } else {
-      name = name + ui.l_destRemote->text().replace(":", "");
+      name = name + mRemote;
     }
 
     ui.le_taskName->setText(name);
   }
+}
+
+void TransferDialog::rcloneCmdUpdate() {
+
+  // use temporary JobOptions object to get rclone options
+  QStringList rcloneOptions;
+  //  if (mJobOptionsRcloneCmd == nullptr)
+  //    mJobOptionsRcloneCmd = new JobOptions(mIsDownload);
+  JobOptions *jobo = getJobOptions(mJobOptionsRcloneCmd);
+  rcloneOptions = jobo->getOptions();
+
+  ui.rcloneCmd->setPlainText(GetRcloneCmd(rcloneOptions).join(" "));
+}
+
+void TransferDialog::showToolTip() {
+
+  if (!mIsDownload) {
+    if (!mIsEditMode) {
+      QToolTip::showText(ui.buttonSourceItems->mapToGlobal(QPoint(-195, 4)),
+                         "Choose items to upload");
+    }
+    ui.buttonSourceItems->setToolTip("Choose items to upload");
+  } else {
+    if (!mIsEditMode) {
+      QToolTip::showText(ui.buttonDest->mapToGlobal(QPoint(-230, 4)),
+                         "Choose destination directory");
+    }
+    ui.buttonDest->setToolTip("Choose destination directory");
+  }
+
+  // Choose items to upload
+  // Choose download destination folder
 }

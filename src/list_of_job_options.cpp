@@ -156,7 +156,9 @@ QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {
          << jo.DriveSharedWithMe << jo.source << jo.dest << jo.isFolder
          << jo.uniqueId << jo.remoteMode << jo.remoteType << jo.mountReadOnly
          << jo.mountCacheLevel << jo.mountVolume << jo.mountAutoStart
-         << jo.mountRcPort << jo.mountScript << jo.mountWinDriveMode;
+         << jo.mountRcPort << jo.mountScript << jo.mountWinDriveMode
+         << jo.included << jo.noTraverse << jo.createEmptySrcDirs << jo.filtered
+         << jo.deleteEmptySrcDirs;
 
   return stream;
 }
@@ -205,6 +207,20 @@ QDataStream &operator>>(QDataStream &stream, JobOptions &jo) {
     stream >> jo.mountRcPort;
     stream >> jo.mountScript;
     stream >> jo.mountWinDriveMode;
+  }
+
+  if (actualVersion >= 6) {
+    stream >> jo.included;
+  }
+
+  if (actualVersion >= 7) {
+    stream >> jo.noTraverse;
+    stream >> jo.createEmptySrcDirs;
+  }
+
+  if (actualVersion >= 8) {
+    stream >> jo.filtered;
+    stream >> jo.deleteEmptySrcDirs;
   }
 
   return stream;

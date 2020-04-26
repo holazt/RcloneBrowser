@@ -1817,6 +1817,12 @@ void RemoteWidget::preemptiveLoadingProcessor() {
 
   QMutexLocker locker(&preemptiveLoadingProcessorMutex);
 
+  // don't do preloading for local drives
+  if (mRemoteType == "local") {
+    clearPreemptiveQueues();
+    return;
+  }
+
   if (!mPreemptiveLoading) {
     return;
   }

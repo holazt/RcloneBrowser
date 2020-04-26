@@ -82,4 +82,6 @@ private:
   // two indexes to refresh after move
   QModelIndex mSrcIndex;
   QModelIndex mDestIndex;
+
+  void clearPreemptiveQueues();
 };

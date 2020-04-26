@@ -963,6 +963,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 
     // refresh folders one by one
     QTimer::singleShot(500, Qt::CoarseTimer, this, SLOT(refreshAfterMove()));
+
+    clearPreemptiveQueues();
   });
 
   //!!! QObject::connect(ui.purge
@@ -1005,6 +1007,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       } else {
         model->refresh(index.parent());
       }
+      clearPreemptiveQueues();
     } // yes button
   });
 
@@ -1917,11 +1920,7 @@ void RemoteWidget::switchRemoteType() {
   QMutexLocker locker(&preemptiveLoadingProcessorMutex);
 
   // clear preemptive loading lists
-  mPreemptiveLoadingList.clear();
-  mPreemptiveLoadingListDone.clear();
-  mPreemptiveLoadingListDoneNodes.clear();
-  mPreemptiveLoadingList.clear();
-  mPreemptiveLoadingListPending.clear();
+  clearPreemptiveQueues();
 
   // we can only switch when pending preemptive loading jobs are finished
   if (global.rcloneLsProcessCount == 0) {
@@ -2092,6 +2091,18 @@ void RemoteWidget::refreshAfterMove() {
       model->refresh(mDestIndex);
     }
   }
+
+  return;
+}
+
+void RemoteWidget::clearPreemptiveQueues() {
+
+  // clear preemptive loading lists
+  mPreemptiveLoadingList.clear();
+  mPreemptiveLoadingListDone.clear();
+  mPreemptiveLoadingListDoneNodes.clear();
+  mPreemptiveLoadingList.clear();
+  mPreemptiveLoadingListPending.clear();
 
   return;
 }

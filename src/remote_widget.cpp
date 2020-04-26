@@ -1957,14 +1957,17 @@ void RemoteWidget::switchRemoteType() {
   // clear preemptive loading lists
   clearPreemptiveQueues();
 
-  // we can only switch when pending preemptive loading jobs are finished
-  if (global.rcloneLsProcessCount == 0) {
+  // we can only switch when pending preemptive loading jobs are finished and
+  // root is not reloading
+  if (global.rcloneLsProcessCount == 0 &&
+      !model->isLoading(model->index(0, 0, mRootIndex))) {
 
     mCount = 0;
 
     ui.cb_GoogleDriveMode->setDisabled(false);
     setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), mRemoteType);
 
+    //!!!!!!!!! ???
     // clear top folder's rows
     int i = 0;
     while (model->removeRow(0, mRootIndex)) {

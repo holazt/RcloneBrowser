@@ -137,4 +137,5 @@ private:
   bool mJobsTimeSortOrder = false;
   bool mJobsStatusSortOrder = false;
   QString mJobsSort = "byDate";
+  QString mIconsLayout;
 };

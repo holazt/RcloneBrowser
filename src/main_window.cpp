@@ -2914,27 +2914,7 @@ void MainWindow::rcloneListRemotes() {
   ui.remotes->clear();
 
   auto settings = GetSettings();
-  QString iconsLayout = settings->value("Settings/iconsLayout").toString();
-
-  if (iconsLayout == "tiles") {
-    ui.remotes->setViewMode(QListWidget::IconMode);
-    // disable drag and drop
-    ui.remotes->setMovement(QListView::Static);
-    // always adjust icons after the window is resized
-    ui.remotes->setResizeMode(QListView::Adjust);
-    ui.remotes->setWrapping(true);
-    ui.remotes->setSpacing(10);
-  }
-  if (iconsLayout == "longlist") {
-    ui.remotes->setViewMode(QListWidget::ListMode);
-    ui.remotes->setResizeMode(QListView::Adjust);
-    ui.remotes->setWrapping(false);
-  }
-  if (iconsLayout == "list") {
-    ui.remotes->setViewMode(QListWidget::ListMode);
-    ui.remotes->setResizeMode(QListView::Adjust);
-    ui.remotes->setWrapping(true);
-  }
+  QString mIconsLayout = settings->value("Settings/iconsLayout").toString();
 
   QProcess *p = new QProcess();
 
@@ -2967,7 +2947,7 @@ void MainWindow::rcloneListRemotes() {
 
             QString name = parts[0].trimmed();
             QString type = parts[1].trimmed();
-            QString tooltip = type;
+            QString tooltip = "type: " + type + "\n\nname: " + name;
 
             QString img_add = "";
             int size;
@@ -3068,6 +3048,31 @@ void MainWindow::rcloneListRemotes() {
              }
 #endif
             ui.remotes->setIconSize(QSize(size, size));
+
+            if (mIconsLayout == "tiles") {
+              ui.remotes->setViewMode(QListWidget::IconMode);
+              // disable drag and drop
+              ui.remotes->setMovement(QListView::Static);
+              // always adjust icons after the window is resized
+              ui.remotes->setResizeMode(QListView::Adjust);
+              ui.remotes->setWrapping(true);
+              ui.remotes->setGridSize(QSize(size + 20, size + 40));
+              ui.remotes->setSpacing(10);
+              ui.remotes->setTextElideMode(Qt::ElideMiddle);
+            }
+            if (mIconsLayout == "longlist") {
+              ui.remotes->setViewMode(QListWidget::ListMode);
+              ui.remotes->setResizeMode(QListView::Adjust);
+              ui.remotes->setWrapping(false);
+              ui.remotes->setGridSize(QSize(size + 800, size + 20));
+            }
+            if (mIconsLayout == "list") {
+              ui.remotes->setViewMode(QListWidget::ListMode);
+              ui.remotes->setResizeMode(QListView::Adjust);
+              ui.remotes->setWrapping(true);
+              ui.remotes->setGridSize(QSize(size + 100, size + 20));
+              ui.remotes->setSpacing(10);
+            }
 
             QString path = ":media/images/remotes_icons/" +
                            type.replace(' ', '_') + img_add + ".png";

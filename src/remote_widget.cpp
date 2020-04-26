@@ -1568,7 +1568,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   });
 
   QObject::connect(ui.cleanup, &QAction::triggered, this, [=]() {
-    setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
+    QString rMode =
+        setRemoteMode(ui.cb_GoogleDriveMode->currentIndex(), remoteType);
 
     // Elided....Text
     QFontMetrics metrix(ui.elidedMeasure->font());
@@ -1584,26 +1585,52 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (button == QMessageBox::Yes) {
 
-      QProcess *process = new QProcess;
-      UseRclonePassword(process);
-      process->setProgram(GetRclone());
-      process->setArguments(QStringList()
-                            << "cleanup" << GetRcloneConf()
-                            << GetRemoteModeRcloneOptions()
-                            << GetDefaultOptionsList("defaultRcloneOptions")
-                            << remote + ":"
-                            << "-vv");
-      process->setProcessChannelMode(QProcess::MergedChannels);
+      QProcess process;
+      UseRclonePassword(&process);
+      process.setProgram(GetRclone());
+      process.setArguments(QStringList()
+                           << "cleanup" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
+                           << remote + ":"
+                           << "-vv");
+      process.setProcessChannelMode(QProcess::MergedChannels);
 
-      ProgressDialog *progress = new ProgressDialog(
+      ProgressDialog progress(
           "Cleanup", "Runnning... ",
           "rclone cleanup \"" +
               metrix.elidedText(remote, Qt::ElideMiddle, 150) + ":\"",
-          process, NULL, false, false, toolTip);
+          &process, NULL, false, false, toolTip);
 
-      progress->expand();
-      progress->allowToClose();
-      progress->show();
+      progress.expand();
+      progress.allowToClose();
+      progress.exec();
+
+      // if view in Google trash we have to refresh it completely
+      if (remoteType == "drive" && rMode == "trash") {
+
+        clearPreemptiveQueues();
+
+        // clear top folder's rows
+        int i = 0;
+        while (model->removeRow(0, mRootIndex)) {
+          ++i;
+        }
+
+        ui.tree->selectionModel()->clear();
+        ui.tree->selectionModel()->select(mRootIndex,
+                                          QItemSelectionModel::Select |
+                                              QItemSelectionModel::Rows);
+        model->refresh(mRootIndex);
+        QTimer::singleShot(0, ui.tree, SLOT(setFocus()));
+
+        ui.path->setAlignment(Qt::AlignLeft);
+        ui.path->clear();
+
+        mPreemptiveLoadingListDone.append(mRootIndex);
+        QTimer::singleShot(200, Qt::CoarseTimer, this,
+                           SLOT(initialModelLoading()));
+      }
     }
   });
 

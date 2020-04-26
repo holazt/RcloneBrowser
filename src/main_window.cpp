@@ -722,7 +722,16 @@ MainWindow::MainWindow() {
                        &MainWindow::addTransfer);
       QObject::connect(remote, &RemoteWidget::addSavedTransfer, this,
                        &MainWindow::addSavedTransfer);
-      int index = ui.tabs->addTab(remote, name);
+
+      QString nameTrimmed = name;
+
+      if (name.length() > 15) {
+        nameTrimmed = nameTrimmed.left(12) + "...";
+      }
+
+      int index = ui.tabs->addTab(remote, nameTrimmed);
+      ui.tabs->setTabToolTip(index,
+                             "type: " + remoteType + "\n\nname: " + name);
       ui.tabs->setCurrentIndex(index);
     }
   });

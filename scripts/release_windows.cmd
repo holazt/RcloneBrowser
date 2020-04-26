@@ -88,11 +88,11 @@ copy "%VCToolsRedistDir%\%ARCH%\Microsoft.VC142.CRT\vcruntime140*.dll" "%TARGET%
 
 rem include relevant openssl libraries
 if "%ARCH%" == "x86" (
-copy "c:\Program Files (x86)\openssl-1.1.1f-win32\libssl-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
-copy "c:\Program Files (x86)\openssl-1.1.1f-win32\libcrypto-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files (x86)\openssl-1.1.1g-win32\libssl-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files (x86)\openssl-1.1.1g-win32\libcrypto-1_1.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 ) else (
-copy "c:\Program Files\openssl-1.1.1f-win64\libssl-1_1-x64.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
-copy "c:\Program Files\openssl-1.1.1f-win64\libcrypto-1_1-x64.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files\openssl-1.1.1g-win64\libssl-1_1-x64.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
+copy "c:\Program Files\openssl-1.1.1g-win64\libcrypto-1_1-x64.dll" "%TARGET%\" || ( call :setESC & echo. & echo. & echo %ESC%[91mBuild FAILED.%ESC%[0m  & EXIT /B 1)
 )
 
 (

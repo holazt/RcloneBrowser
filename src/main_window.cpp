@@ -3677,7 +3677,7 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
 
   int widgetsCount = ui.jobs->count();
 
-  if ((widgetsCount - 2) / 2 > 150) {
+  if ((widgetsCount - 2) / 2 > 75) {
 
     // find the oldest inactive job
 

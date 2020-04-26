@@ -160,7 +160,12 @@ int main(int argc, char *argv[]) {
   // during first run the fontSize key might not exist
   if (!(settings->contains("Settings/fontSize"))) {
     // if fontSize does not exist create new key
+#ifdef Q_OS_WIN
+    // on Windows Fussion mode uses too small fonts
+    settings->setValue("Settings/fontSize", "1");
+#else
     settings->setValue("Settings/fontSize", "0");
+#endif
   };
 
   // during first run the buttonSize key might not exist

@@ -281,7 +281,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.showFileIcons->setChecked(
       settings->value("Settings/showFileIcons", true).toBool());
   ui.rowColors->setChecked(
-      settings->value("Settings/rowColors", true).toBool());
+      settings->value("Settings/rowColors", false).toBool());
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
 

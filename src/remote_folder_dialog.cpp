@@ -235,13 +235,13 @@ RemoteFolderDialog::RemoteFolderDialog(
         }
       });
 
-    QObject::connect(ui.textFilter, &QPlainTextEdit::textChanged, this, [=]() {
-      if (ui.textFilter->toPlainText().trimmed().isEmpty()) {
-        ui.tabWidget->setTabText(2, "Filter");
-      } else {
-        ui.tabWidget->setTabText(2, "Filter(x)");
-      }
-    });
+  QObject::connect(ui.textFilter, &QPlainTextEdit::textChanged, this, [=]() {
+    if (ui.textFilter->toPlainText().trimmed().isEmpty()) {
+      ui.tabWidget->setTabText(2, "Filter");
+    } else {
+      ui.tabWidget->setTabText(2, "Filter(x)");
+    }
+  });
 
   if (isMultiSelect) {
     ui.multiInfo->show();
@@ -258,9 +258,13 @@ RemoteFolderDialog::RemoteFolderDialog(
   }
 
   if (isMove) {
-    setWindowTitle("Rclone Browser - " + metrix.elidedText(remote + ":", Qt::ElideMiddle, 150) + " - choose server side move destination");
+    setWindowTitle("Rclone Browser - " +
+                   metrix.elidedText(remote + ":", Qt::ElideMiddle, 150) +
+                   " - choose server side move destination");
   } else {
-    setWindowTitle("Rclone Browser - " + metrix.elidedText(remote + ":", Qt::ElideMiddle, 150) + " - choose server side copy destination");
+    setWindowTitle("Rclone Browser - " +
+                   metrix.elidedText(remote + ":", Qt::ElideMiddle, 150) +
+                   " - choose server side copy destination");
   }
 
   QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, this,
@@ -290,18 +294,17 @@ RemoteFolderDialog::RemoteFolderDialog(
 
 RemoteFolderDialog::~RemoteFolderDialog() {
   if (result() == QDialog::Accepted) {
-  // save dialog options
-  auto settings = GetSettings();
+    // save dialog options
+    auto settings = GetSettings();
 
-  settings->beginGroup("RemoteFolder");
+    settings->beginGroup("RemoteFolder");
 
-  WriteSettings(settings.get(), this);
-  settings->remove("source");
-  settings->remove("destination");
-  settings->remove("textFilter");
-  settings->remove("rcloneCmd");
-  settings->endGroup();
-
+    WriteSettings(settings.get(), this);
+    settings->remove("source");
+    settings->remove("destination");
+    settings->remove("textFilter");
+    settings->remove("rcloneCmd");
+    settings->endGroup();
   }
 }
 

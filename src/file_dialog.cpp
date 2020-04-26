@@ -71,7 +71,6 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
     }
 
     m_listView->setAcceptDrops(false);
-
   }
 
   m_treeView = findChild<QTreeView *>();
@@ -123,7 +122,6 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
       ->setIcon(
           QIcon(":media/images/qbutton_icons/list_view" + img_add + ".png"));
 
-
   /*
   // custom sidebar URLs
 
@@ -172,7 +170,6 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
     this->setSidebarUrls(urls);
 
   */
-
 }
 
 bool FileDialog::eventFilter(QObject *watched, QEvent *event) {

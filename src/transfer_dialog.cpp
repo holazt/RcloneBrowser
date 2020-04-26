@@ -183,38 +183,37 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     run->hide();
   } // if (!mIsEditMode) else
 
-    QObject::connect(ui.pte_textExtra, &QPlainTextEdit::textChanged, this, [=]() {
-      if (ui.pte_textExtra->toPlainText().trimmed().isEmpty()) {
-        ui.tabWidget->setTabText(2, "Extra Options");
-      } else {
-        ui.tabWidget->setTabText(2, "Extra Options(x)");
-      }
-    });
+  QObject::connect(ui.pte_textExtra, &QPlainTextEdit::textChanged, this, [=]() {
+    if (ui.pte_textExtra->toPlainText().trimmed().isEmpty()) {
+      ui.tabWidget->setTabText(2, "Extra Options");
+    } else {
+      ui.tabWidget->setTabText(2, "Extra Options(x)");
+    }
+  });
 
-    QObject::connect(ui.textInclude, &QPlainTextEdit::textChanged, this, [=]() {
-      if (ui.textInclude->toPlainText().trimmed().isEmpty()) {
-        ui.tabWidget->setTabText(3, "Include");
-      } else {
-        ui.tabWidget->setTabText(3, "Include(x)");
-      }
-    });
+  QObject::connect(ui.textInclude, &QPlainTextEdit::textChanged, this, [=]() {
+    if (ui.textInclude->toPlainText().trimmed().isEmpty()) {
+      ui.tabWidget->setTabText(3, "Include");
+    } else {
+      ui.tabWidget->setTabText(3, "Include(x)");
+    }
+  });
 
-    QObject::connect(ui.textExclude, &QPlainTextEdit::textChanged, this, [=]() {
-      if (ui.textExclude->toPlainText().trimmed().isEmpty()) {
-        ui.tabWidget->setTabText(4, "Exclude");
-      } else {
-        ui.tabWidget->setTabText(4, "Exclude(x)");
-      }
-    });
+  QObject::connect(ui.textExclude, &QPlainTextEdit::textChanged, this, [=]() {
+    if (ui.textExclude->toPlainText().trimmed().isEmpty()) {
+      ui.tabWidget->setTabText(4, "Exclude");
+    } else {
+      ui.tabWidget->setTabText(4, "Exclude(x)");
+    }
+  });
 
-    QObject::connect(ui.textFilter, &QPlainTextEdit::textChanged, this, [=]() {
-      if (ui.textFilter->toPlainText().trimmed().isEmpty()) {
-        ui.tabWidget->setTabText(5, "Filter");
-      } else {
-        ui.tabWidget->setTabText(5, "Filter(x)");
-      }
-    });
-
+  QObject::connect(ui.textFilter, &QPlainTextEdit::textChanged, this, [=]() {
+    if (ui.textFilter->toPlainText().trimmed().isEmpty()) {
+      ui.tabWidget->setTabText(5, "Filter");
+    } else {
+      ui.tabWidget->setTabText(5, "Filter(x)");
+    }
+  });
 
   QObject::connect(ui.textSource, &QLineEdit::textChanged, this,
                    [=]() { rcloneCmdUpdate(); });
@@ -581,7 +580,6 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
     includeItemsText = includeItemsText + "- *\n";
     ui.textFilter->setPlainText(includeItemsText);
-
   }
 
   if (!mIsEditMode) {

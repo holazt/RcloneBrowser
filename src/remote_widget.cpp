@@ -287,7 +287,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
       ui.buttonTools->setIconSize(QSize(icon_w, icon_h));
       ui.buttonDedupe->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonDedupe->setIconSize(QSize(icon_w, icon_h));
-      ui.buttonCopy->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonCopy->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonCopy->setIconSize(QSize(icon_w, icon_h));
     }
   }

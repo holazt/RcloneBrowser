@@ -102,6 +102,9 @@
             <property name="text">
              <string>Copy</string>
             </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
            </widget>
           </item>
           <item>

@@ -15,6 +15,10 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
   ui.setupUi(this);
 
+  // remove window close button
+  setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint |
+                 Qt::WindowMinMaxButtonsHint);
+
   mRemote = mRemote.left((mRemote).indexOf(":"));
 
   if (mJobOptions == nullptr) {
@@ -318,12 +322,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     QString folder;
     QString file;
 
-    //    FileDialog *fileDialog = new FileDialog(false);
     FileDialog fileDialog(false);
     fileDialog.setWindowTitle(
         "Rclone Browser - Upload - choose items (one or many)");
-    fileDialog.setMinimumWidth(840);
-    fileDialog.setMinimumHeight(520);
+    fileDialog.setMinimumWidth(760);
+    fileDialog.setMinimumHeight(470);
 
     if (fileDialog.exec()) {
 
@@ -490,17 +493,17 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
     QString folder;
 
     /*
-        FileDialog *fileDialog = new FileDialog(true);
-        fileDialog->setWindowTitle("Choose destination directory for download");
-        fileDialog->setMinimumWidth(850);
-        fileDialog->setMinimumHeight(525);
+            FileDialog *fileDialog = new FileDialog(true);
+            fileDialog->setWindowTitle("Choose destination directory for
+       download"); fileDialog->setMinimumWidth(850);
+            fileDialog->setMinimumHeight(525);
     */
 
     FileDialog fileDialog(true);
     fileDialog.setWindowTitle(
         "Rclone Browser - Download - choose destination directory");
-    fileDialog.setMinimumWidth(840);
-    fileDialog.setMinimumHeight(520);
+    fileDialog.setMinimumWidth(760);
+    fileDialog.setMinimumHeight(470);
 
     if (fileDialog.exec()) {
       QList<QUrl> listSelectedUrls = fileDialog.selectedUrls();

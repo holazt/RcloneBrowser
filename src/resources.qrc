@@ -117,6 +117,9 @@
     <file>images/qbutton_icons/cleanup.png</file>
     <file>images/qbutton_icons/cleanup_inv.png</file>
 
+    <file>images/qbutton_icons/mkdir2.png</file>
+    <file>images/qbutton_icons/mkdir2_inv.png</file>
+
     <file>images/program_icons/rclone-browser512.png</file>
 
     <file>images/tooltips/textandicon.png</file>

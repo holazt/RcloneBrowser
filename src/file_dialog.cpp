@@ -2,6 +2,10 @@
 #include "utils.h"
 
 /*
+
+// it is a bit hack of existing QFileDialog class
+// but otherwise will require implemeting own QFileDialog like class
+
 // sample usage
   FileDialog *_f_dlg = new FileDialog(false);
 //  _f_dlg->setOption(QFileDialog::ReadOnly, true);
@@ -22,6 +26,11 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
 
   setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
 
+  auto settings = GetSettings();
+  if (settings->contains("FileDialog/geometry")) {
+    restoreGeometry(settings->value("FileDialog/geometry").toByteArray());
+  }
+
   mIsDownload = isDownload;
 
   m_btnOpen = NULL;
@@ -33,29 +42,46 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
   this->setOption(QFileDialog::DontUseNativeDialog, true);
 
   QList<QPushButton *> btns = this->findChildren<QPushButton *>();
-  for (int i = 0; i < btns.size(); ++i) {
-    QString text = btns[i]->text();
-    if (text.toLower().contains("open") || text.toLower().contains("choose")) {
-      m_btnOpen = btns[i];
-      break;
+  if (!btns.isEmpty()) {
+    // find accept button
+    for (int i = 0; i < btns.size(); ++i) {
+      QString text = btns[i]->text();
+      if (text.toLower().contains("open") ||
+          text.toLower().contains("choose")) {
+        m_btnOpen = btns[i];
+        break;
+      }
+    }
+
+    if (!mIsDownload) {
+      // for uploads we take control of accept button
+      m_btnOpen->installEventFilter(this);
+      m_btnOpen->disconnect(SIGNAL(clicked()));
+      connect(m_btnOpen, SIGNAL(clicked()), this, SLOT(chooseClicked()));
     }
   }
 
   if (!m_btnOpen)
     return;
 
-  // watch selection changes
-  findChild<QWidget *>("listView")->installEventFilter(this);
-  findChild<QWidget *>("treeView")->installEventFilter(this);
-
-  if (!mIsDownload) {
-    m_btnOpen->installEventFilter(this);
-    m_btnOpen->disconnect(SIGNAL(clicked()));
-    connect(m_btnOpen, SIGNAL(clicked()), this, SLOT(chooseClicked()));
+  // change filter name
+  QComboBox *fileTypeCombo = findChild<QComboBox *>("fileTypeCombo");
+  if (fileTypeCombo) {
+    fileTypeCombo->setItemText(fileTypeCombo->currentIndex(),
+                               "All Files and Directories");
   }
 
-  // findChild<QLabel *>("FileName")->setText("asdadaas");
-  findChild<QLineEdit *>("fileNameEdit")->setReadOnly(true);
+  /*
+    // remove "Delete" from contex menu
+    QAction *deleteAction = findChild<QAction *>("qt_delete_action");
+    if (deleteAction) {
+      deleteAction->setVisible(false);
+    }
+  */
+
+  if (findChild<QLineEdit *>("fileNameEdit")) {
+    findChild<QLineEdit *>("fileNameEdit")->setReadOnly(true);
+  }
 
   if (!mIsDownload) {
     // fileNameEdit lable
@@ -66,23 +92,60 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
   // enable multi select for both files and dirs
   m_listView = findChild<QListView *>("listView");
   if (m_listView) {
+
+#ifdef Q_OS_WIN
+    // as with Fusion style in Windows font size does not scale
+    // with QApplication::font() changes we control it manually using style
+    // sheet
+    QFont defaultFont = QApplication::font();
+    int fontSize = defaultFont.pointSize() + 3;
+
+    QString fontStyleSheet =
+        QString("QListView { font-size: %1px;}").arg(fontSize);
+    m_listView->setStyleSheet(fontStyleSheet);
+#endif
+
+    // watch selection changes
+    m_listView->installEventFilter(this);
+
     if (!mIsDownload) {
       m_listView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     }
 
+    // don't allow drag and drop inside m_listView
     m_listView->setAcceptDrops(false);
+#if defined(Q_OS_MACOS)
+    // on macOS we later re-enable if single object selected
+    m_listView->setDragEnabled(false);
+#endif
   }
 
   m_treeView = findChild<QTreeView *>();
   if (m_treeView) {
 
-    m_treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
-    m_treeView->resizeColumnToContents(1);
-    m_treeView->resizeColumnToContents(2);
-    m_treeView->resizeColumnToContents(3);
+#ifdef Q_OS_WIN
+    // as with Fusion style in Windows font size does not scale
+    // with QApplication::font() changes we control it manually using style
+    // sheet
+    QFont defaultFont = QApplication::font();
+    int fontSize = defaultFont.pointSize() + 3;
+
+    QString fontStyleSheet =
+        QString("QTreeView { font-size: %1px;}").arg(fontSize);
+    m_treeView->setStyleSheet(fontStyleSheet);
+#endif
+
+    // watch selection changes
+    m_treeView->installEventFilter(this);
+
+    QTimer::singleShot(0, this, SLOT(resizeColums()));
 
     // don't allow drag and drop inside m_treeView
     m_treeView->setAcceptDrops(false);
+#if defined(Q_OS_MACOS)
+    // on macOS we later re-enable if single object selected
+    m_treeView->setDragEnabled(false);
+#endif
 
     if (!mIsDownload) {
       m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -90,7 +153,6 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
   }
 
   // customise buttons
-  auto settings = GetSettings();
   QString iconsColour = settings->value("Settings/iconsColour").toString();
 
   QString img_add = "";
@@ -99,41 +161,96 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
     img_add = "_inv";
   }
 
-  findChild<QToolButton *>("toParentButton")
-      ->setIcon(
-          QIcon(":media/images/qbutton_icons/vuparrow" + img_add + ".png"));
+  // customise buttons
 
-  findChild<QToolButton *>("forwardButton")
-      ->setIcon(
-          QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+  int iconSize = 24;
 
-  findChild<QToolButton *>("backButton")
-      ->setIcon(
-          QIcon(":media/images/qbutton_icons/vleftarrow" + img_add + ".png"));
+  QToolButton *toParentButton = findChild<QToolButton *>("toParentButton");
+  if (toParentButton) {
+    toParentButton->setIcon(
+        QIcon(":media/images/qbutton_icons/vuparrow" + img_add + ".png"));
+    toParentButton->setStyleSheet(
+        "QToolButton { border: 0; } QToolButton:pressed { border: 4; "
+        "border-radius: 10px; border-style: inset; border-color: rgba(1, 1, 1, "
+        "0);}");
+    toParentButton->setIconSize(QSize(iconSize, iconSize));
+    connect(toParentButton, SIGNAL(clicked()), this, SLOT(clearSelection()));
+  }
 
-  findChild<QToolButton *>("newFolderButton")
-      ->setIcon(QIcon(":media/images/qbutton_icons/mkdir" + img_add + ".png"));
+  QToolButton *forwardButton = findChild<QToolButton *>("forwardButton");
+  if (forwardButton) {
+    forwardButton->setIcon(
+        QIcon(":media/images/qbutton_icons/vrightarrow" + img_add + ".png"));
+    forwardButton->setStyleSheet(
+        "QToolButton { border: 0; } QToolButton:pressed { border: 4; "
+        "border-radius: 10px; border-style: inset; border-color: rgba(1, 1, 1, "
+        "0);}");
+    forwardButton->setIconSize(QSize(iconSize, iconSize));
+    connect(forwardButton, SIGNAL(clicked()), this, SLOT(clearSelection()));
+  }
 
-  findChild<QToolButton *>("detailModeButton")
-      ->setIcon(QIcon(":media/images/qbutton_icons/detailed_view" + img_add +
-                      ".png"));
+  QToolButton *backButton = findChild<QToolButton *>("backButton");
+  if (backButton) {
+    backButton->setIcon(
+        QIcon(":media/images/qbutton_icons/vleftarrow" + img_add + ".png"));
+    backButton->setStyleSheet("QToolButton { border: 0; } QToolButton:pressed "
+                              "{ border: 4; border-radius: 10px; border-style: "
+                              "inset; border-color: rgba(1, 1, 1, 0);}");
+    backButton->setIconSize(QSize(iconSize, iconSize));
+    connect(backButton, SIGNAL(clicked()), this, SLOT(clearSelection()));
+  }
 
-  findChild<QToolButton *>("listModeButton")
-      ->setIcon(
-          QIcon(":media/images/qbutton_icons/list_view" + img_add + ".png"));
+  QToolButton *newFolderButton = findChild<QToolButton *>("newFolderButton");
+  if (newFolderButton) {
+    newFolderButton->setIcon(
+        QIcon(":media/images/qbutton_icons/mkdir2" + img_add + ".png"));
+    newFolderButton->setStyleSheet(
+        "QToolButton { border: 0; } QToolButton:pressed { border: 4; "
+        "border-radius: 10px; border-style: inset; border-color: rgba(1, 1, 1, "
+        "0);}");
 
-  /*
-  // custom sidebar URLs
+    newFolderButton->setIconSize(QSize(iconSize, iconSize));
+  }
+
+  QToolButton *detailModeButton = findChild<QToolButton *>("detailModeButton");
+  if (detailModeButton) {
+    detailModeButton->setIcon(
+        QIcon(":media/images/qbutton_icons/detailed_view" + img_add + ".png"));
+    detailModeButton->setStyleSheet(
+        "QToolButton { border: 0; } QToolButton:pressed { border: 4; "
+        "border-radius: 10px; border-style: inset; border-color: rgba(1, 1, 1, "
+        "0);}");
+    detailModeButton->setIconSize(QSize(iconSize, iconSize));
+  }
+
+  QToolButton *listModeButton = findChild<QToolButton *>("listModeButton");
+  if (listModeButton) {
+    listModeButton->setIcon(
+        QIcon(":media/images/qbutton_icons/list_view" + img_add + ".png"));
+    listModeButton->setStyleSheet(
+        "QToolButton { border: 0; } QToolButton:pressed { border: 4; "
+        "border-radius: 10px; border-style: inset; border-color: rgba(1, 1, 1, "
+        "0);}");
+    listModeButton->setIconSize(QSize(iconSize, iconSize));
+  }
+
+  // custom sidebar URLs - if never saved before create initial list
+
+  QSettings settingsFileDialog(QSettings::UserScope,
+                               QLatin1String("QtProject"));
+
+  if (!settingsFileDialog.childGroups().contains(QLatin1String("FileDialog"))) {
 
     QList<QUrl> urls;
 
     urls = this->sidebarUrls();
 
-    urls.clear();
+    //   urls.clear();
 
-    urls << QUrl("file:");
-    urls << QUrl::fromLocalFile(
-        QStandardPaths::standardLocations(QStandardPaths::HomeLocation).first());
+    //   urls << QUrl("file:");
+    //   urls << QUrl::fromLocalFile(
+    //       QStandardPaths::standardLocations(QStandardPaths::HomeLocation).first());
+
     urls << QUrl::fromLocalFile(
         QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation)
             .first());
@@ -150,17 +267,21 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
         QStandardPaths::standardLocations(QStandardPaths::MoviesLocation)
             .first());
     urls << QUrl::fromLocalFile(
-        QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+        QStandardPaths::standardLocations(QStandardPaths::MusicLocation)
+            .first());
 
+    // add also default Download and Upload directories
     QString default_folder;
 
-    if (mIsDownload) {
-      default_folder =
-          (settings->value("Settings/defaultDownloadDir").toString());
-    } else {
-      default_folder =
-    (settings->value("Settings/defaultUploadDir").toString());
+    default_folder =
+        (settings->value("Settings/defaultDownloadDir").toString());
+
+    if (!default_folder.isEmpty()) {
+
+      urls << QUrl::fromLocalFile(default_folder);
     }
+
+    default_folder = (settings->value("Settings/defaultUploadDir").toString());
 
     if (!default_folder.isEmpty()) {
 
@@ -168,8 +289,28 @@ FileDialog::FileDialog(bool isDownload) : QFileDialog() {
     }
 
     this->setSidebarUrls(urls);
+  }
 
-  */
+  // sidebar font size
+  QWidget *sidebar = findChild<QWidget *>("sidebar");
+  if (sidebar) {
+#ifdef Q_OS_WIN
+    // as with Fusion style in Windows font size does not scale
+    // with QApplication::font() changes we control it manually using style
+    // sheet
+    QFont defaultFont = QApplication::font();
+    int fontSize = defaultFont.pointSize() + 3;
+
+    QString fontStyleSheet =
+        QString("QWidget { font-size: %1px;}").arg(fontSize);
+    sidebar->setStyleSheet(fontStyleSheet);
+#endif
+  }
+}
+
+FileDialog::~FileDialog() {
+  auto settings = GetSettings();
+  settings->setValue("FileDialog/geometry", saveGeometry());
 }
 
 bool FileDialog::eventFilter(QObject *watched, QEvent *event) {
@@ -178,12 +319,18 @@ bool FileDialog::eventFilter(QObject *watched, QEvent *event) {
   // macOS implenmetation has a bug in multi item drag & drop - it crashes. Only
   // allow to drag and drop one folder
   if (qobject_cast<QTreeView *>(watched)) {
-    if (m_listView->selectionModel()->selectedRows().count() > 1) {
-      m_listView->setDragEnabled(false);
-      m_treeView->setDragEnabled(false);
-    } else {
-      m_listView->setDragEnabled(true);
+    if (m_treeView->selectionModel()->selectedRows().count() == 1) {
       m_treeView->setDragEnabled(true);
+    } else {
+      m_treeView->setDragEnabled(false);
+    }
+  }
+
+  if (qobject_cast<QListView *>(watched)) {
+    if (m_listView->selectionModel()->selectedRows().count() == 1) {
+      m_listView->setDragEnabled(true);
+    } else {
+      m_listView->setDragEnabled(false);
     }
   }
 #endif
@@ -220,3 +367,21 @@ void FileDialog::chooseClicked() {
 }
 
 QStringList FileDialog::selectedFiles() { return m_selectedFiles; }
+
+void FileDialog::clearSelection() {
+  // when forward, back or up pressed clear if anything already selected
+  static_cast<QTreeView *>(m_treeView)->selectionModel()->clearSelection();
+  static_cast<QListView *>(m_listView)->selectionModel()->clearSelection();
+
+  QLineEdit *fileNameEdit = findChild<QLineEdit *>("fileNameEdit");
+  if (fileNameEdit) {
+    fileNameEdit->clear();
+  }
+}
+
+void FileDialog::resizeColums() {
+  m_treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+  m_treeView->resizeColumnToContents(1);
+  m_treeView->resizeColumnToContents(2);
+  m_treeView->resizeColumnToContents(3);
+}

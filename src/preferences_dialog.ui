@@ -1307,7 +1307,7 @@
           <item row="4" column="1">
            <widget class="QLineEdit" name="transferOffScript">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Script executed when last transfer job finishes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Script executed when last transfer job finishes e.g.:&lt;br/&gt;&lt;br/&gt;&amp;quot;/usr/local/bin/keep_awake&amp;quot; -allowSleep&lt;br/&gt;&amp;quot;C:\Program Files\Tools\keep_awake.exe&amp;quot; -allowSleep -arg2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -1335,7 +1335,7 @@
           <item row="3" column="1">
            <widget class="QLineEdit" name="transferOnScript">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Script executed when transfer job starts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Script executed when transfer job starts e.g.:&lt;br/&gt;&lt;br/&gt;&amp;quot;/usr/local/bin/keep_awake&amp;quot; -arg1&lt;br/&gt;&amp;quot;C:\Program Files\Tools\keep_awake.exe&amp;quot; -arg1 -arg2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -1356,7 +1356,7 @@
           <item row="0" column="1">
            <widget class="QLineEdit" name="queueScript">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Script executed when queue processing is finished&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Script executed when queue processing is finished e.g.:&lt;br/&gt;&lt;br/&gt;&amp;quot;/usr/local/bin/put_to_slepp&amp;quot; -now&lt;br/&gt;&amp;quot;C:\Program Files\Tools\put_to_sleep.exe&amp;quot; -now -arg2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>

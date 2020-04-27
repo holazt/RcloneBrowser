@@ -15,6 +15,9 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
 
   auto settings = GetSettings();
 
+  // Elided....Text base measure
+  QFontMetrics metrix(ui.label_remote->font());
+
   // set minimumWidth based on font size
   int fontsize = 0;
   fontsize = (settings->value("Settings/fontSize").toInt());
@@ -113,6 +116,11 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
 #endif
 
   setWindowTitle("Mount remote");
+
+  ui.le_defaultMountOptions->setText(metrix.elidedText(
+      settings->value("Settings/mount").toString(), Qt::ElideMiddle, 537));
+  ui.le_defaultMountOptions->setToolTip(
+      "Set in preferences:\n\n" + settings->value("Settings/mount").toString());
 
   // set combo box tooltips
   ui.combob_cacheLevel->setItemData(0, "default", Qt::ToolTipRole);

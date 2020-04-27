@@ -765,6 +765,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
       settings->value("Settings/defaultRcloneOptions").toString(),
       Qt::ElideMiddle, 537));
   ui.le_defaultRcloneOptions->setToolTip(
+      "Set in preferences:\n\n" +
       settings->value("Settings/defaultRcloneOptions").toString());
 
   if (isDownload) {
@@ -773,6 +774,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         settings->value("Settings/defaultDownloadOptions").toString(),
         Qt::ElideMiddle, 537));
     ui.le_defaultTransferOptions->setToolTip(
+        "Set in preferences:\n\n" +
         settings->value("Settings/defaultDownloadOptions").toString());
 
   } else {
@@ -781,6 +783,7 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
         settings->value("Settings/defaultUploadOptions").toString(),
         Qt::ElideMiddle, 537));
     ui.le_defaultTransferOptions->setToolTip(
+        "Set in preferences:\n\n" +
         settings->value("Settings/defaultUploadOptions").toString());
   }
 

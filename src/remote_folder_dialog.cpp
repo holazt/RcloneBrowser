@@ -73,6 +73,7 @@ RemoteFolderDialog::RemoteFolderDialog(
       settings->value("Settings/defaultRcloneOptions").toString(),
       Qt::ElideMiddle, 537));
   ui.le_defaultRcloneOptions->setToolTip(
+      "Set in preferences:\n\n" +
       settings->value("Settings/defaultRcloneOptions").toString());
 
 #ifdef Q_OS_WIN

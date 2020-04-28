@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
+    <width>620</width>
     <height>758</height>
    </rect>
   </property>
@@ -471,13 +471,20 @@
           <string>User Interface</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0" colspan="2">
-           <widget class="QCheckBox" name="showFileIcons">
+          <item row="8" column="0">
+           <widget class="QCheckBox" name="darkMode">
+            <property name="text">
+             <string>Enable dark mode (requires application restart)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QCheckBox" name="rememberLastOptions">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display files as icons&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked new transfer dialog will use previous transfer options (if any modified).&lt;/p&gt;&lt;p&gt;When unchecked new transfer will always open with default options.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Show file icons</string>
+             <string>Remember last transfer options</string>
             </property>
            </widget>
           </item>
@@ -497,17 +504,20 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QCheckBox" name="darkMode">
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="showHidden">
             <property name="text">
-             <string>Enable dark mode</string>
+             <string>Show hidden files and folders</string>
             </property>
            </widget>
           </item>
-          <item row="8" column="0" colspan="3">
-           <widget class="QLabel" name="darkMode_info">
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="showFileIcons">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display files as icons&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
-             <string>Changing this option will require restarting the app.</string>
+             <string>Show file icons</string>
             </property>
            </widget>
           </item>
@@ -525,12 +535,21 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="showHidden">
-            <property name="text">
-             <string>Show hidden files and folders</string>
+          <item row="7" column="0">
+           <spacer name="verticalSpacer_13">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
-           </widget>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>

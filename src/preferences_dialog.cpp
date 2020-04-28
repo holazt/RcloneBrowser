@@ -24,7 +24,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       sysInfo == "10.12" || sysInfo == "10.13") {
   } else {
     ui.darkMode->hide();
-    ui.darkMode_info->hide();
+    // ui.darkMode_info->hide();
   }
 #endif
 
@@ -286,6 +286,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/showHidden", true).toBool());
 
   ui.darkMode->setChecked(settings->value("Settings/darkMode", true).toBool());
+
+  ui.rememberLastOptions->setChecked(
+      settings->value("Settings/rememberLastOptions", true).toBool());
 
   if ((settings->value("Settings/buttonStyle").toString()) == "icononly") {
     ui.cb_icononly->setChecked(true);
@@ -624,6 +627,10 @@ bool PreferencesDialog::getPreemptiveLoading() const {
 }
 
 bool PreferencesDialog::getDarkMode() const { return ui.darkMode->isChecked(); }
+
+bool PreferencesDialog::getRememberLastOptions() const {
+  return ui.rememberLastOptions->isChecked();
+}
 
 QString PreferencesDialog::getPreemptiveLoadingLevel() const {
   if (ui.rb_preemptiveLoading_2->isChecked()) {

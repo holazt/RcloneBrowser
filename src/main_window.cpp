@@ -590,6 +590,9 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
 
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
+      settings->setValue("Settings/rememberLastOptions",
+                         dialog.getRememberLastOptions());
+
       settings->setValue("Settings/buttonStyle",
                          dialog.getButtonStyle().trimmed());
       settings->setValue("Settings/iconsLayout",

@@ -250,6 +250,11 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/transferOffScript", "");
   };
 
+  // remember and re-use last transfer options
+  if (!(settings->contains("Settings/rememberLastOptions"))) {
+    settings->setValue("Settings/rememberLastOptions", "true");
+  };
+
   // use ports (49152-65535) -
   // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
   // during first run the rcPortStartWin key might not exist

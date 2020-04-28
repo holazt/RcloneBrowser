@@ -284,9 +284,11 @@ RemoteFolderDialog::RemoteFolderDialog(
   ui.tree->resizeColumnToContents(1);
   ui.tree->resizeColumnToContents(2);
 
-  settings->beginGroup("RemoteFolder");
-  ReadSettings(settings.get(), this);
-  settings->endGroup();
+  if (settings->value("Settings/rememberLastOptions", false).toBool()) {
+    settings->beginGroup("RemoteFolder");
+    ReadSettings(settings.get(), this);
+    settings->endGroup();
+  }
 
   if (!isMove) {
     ui.deleteEmptySrcDirs->setChecked(false);

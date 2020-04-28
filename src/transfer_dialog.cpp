@@ -586,9 +586,12 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
   }
 
   if (!mIsEditMode) {
-    settings->beginGroup("Transfer");
-    ReadSettings(settings.get(), this);
-    settings->endGroup();
+
+    if (settings->value("Settings/rememberLastOptions", false).toBool()) {
+      settings->beginGroup("Transfer");
+      ReadSettings(settings.get(), this);
+      settings->endGroup();
+    }
   }
 
   ui.buttonSourceFile->setVisible(!isDownload);

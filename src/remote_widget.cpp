@@ -539,8 +539,9 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
           path = model->path(index);
         }
 
-        ui.path->setText(isLocal ? QDir::toNativeSeparators(path.path())
-                                 : path.path());
+        ui.path->setText(
+            remote + ":" +
+            (isLocal ? QDir::toNativeSeparators(path.path()) : path.path()));
       });
 
   // QObject::connect(ui.refresh

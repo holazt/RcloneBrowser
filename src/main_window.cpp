@@ -34,8 +34,6 @@ MainWindow::MainWindow() {
   }
 
   auto settings = GetSettings();
-  ui.queueScriptRun->setChecked(
-      (settings->value("Settings/queueScriptRun").toBool()));
 
 #if defined(Q_OS_WIN)
   // disable "?" WindowContextHelpButton
@@ -624,15 +622,11 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/transferOffScript",
                          dialog.getTransferOffScript().trimmed());
 
-      // set queueScriptRun tooltip
-      QString queueScriptRunToolTip =
-          QString("Run script defined in preferences after all queue "
-                  "processing finishes.\n\n"
-                  "Can be used for example to hibernate your computer.\n\n") +
-          QString("Script set in preferences: ") + QString("\"") +
-          QString(settings->value("Settings/queueScript", false).toString()) +
-          QString("\"");
-      ui.queueScriptRun->setToolTip(queueScriptRunToolTip);
+      settings->setValue("Settings/queueScriptRun", dialog.getQueueScriptRun());
+      settings->setValue("Settings/jobStartScriptRun",
+                         dialog.getJobStartScriptRun());
+      settings->setValue("Settings/jobLastFinishedScriptRun",
+                         dialog.getJobLastFinishedScriptRun());
 
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
@@ -646,13 +640,6 @@ MainWindow::MainWindow() {
 
       mSystemTray.setVisible(mAlwaysShowInTray);
     }
-  });
-
-  QObject::connect(ui.actionQueueScriptRun, &QAction::triggered, this, [=]() {
-    // remember in settings queueScriptRun checkbox state
-    auto settings = GetSettings();
-    settings->setValue("Settings/queueScriptRun",
-                       ui.queueScriptRun->isChecked());
   });
 
   // intercept tab closure
@@ -982,7 +969,7 @@ MainWindow::MainWindow() {
             auto settings = GetSettings();
             if (settings->value("Settings/queueScriptRun", false).toBool()) {
               QString queueScript =
-                  settings->value("Settings/queueScript", false).toString();
+                  settings->value("Settings/queueScript").toString();
               if (!queueScript.isEmpty()) {
                 runScript(queueScript);
               }
@@ -3280,17 +3267,6 @@ void MainWindow::addTasksToQueue() {
 
   ui.queueListWidget->clear();
 
-  // set queueScriptRun tooltip
-  auto settings = GetSettings();
-  QString queueScriptRunToolTip =
-      QString("Run script defined in preferences after all queue processing "
-              "finishes.\n\n"
-              "Can be used for example to hibernate your computer.\n\n") +
-      QString("Script set in preferences: ") + QString("\"") +
-      QString(settings->value("Settings/queueScript", false).toString()) +
-      QString("\"");
-  ui.queueScriptRun->setToolTip(queueScriptRunToolTip);
-
   auto items = ui.tasksListWidget->selectedItems();
 
   ListOfJobOptions *ljo = ListOfJobOptions::getInstance();
@@ -4297,9 +4273,16 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
           // run custom script
           auto settings = GetSettings();
           QString transferOffScript =
-              settings->value("Settings/transferOffScript", false).toString();
-          if (!transferOffScript.isEmpty()) {
-            runScript(transferOffScript);
+              settings->value("Settings/transferOffScript").toString();
+
+          bool jobLastFinishedScriptRun =
+              settings->value("Settings/jobLastFinishedScriptRun", false)
+                  .toBool();
+          if (jobLastFinishedScriptRun) {
+
+            if (!transferOffScript.isEmpty()) {
+              runScript(transferOffScript);
+            }
           }
         }
 
@@ -4365,7 +4348,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
               if (queueScriptRun) {
                 QString queueScript =
-                    settings->value("Settings/queueScript", false).toString();
+                    settings->value("Settings/queueScript").toString();
                 if (!queueScript.isEmpty()) {
                   runScript(queueScript);
                 }
@@ -4555,9 +4538,16 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   // run custom script
   auto settings = GetSettings();
   QString transferOnScript =
-      settings->value("Settings/transferOnScript", false).toString();
-  if (!transferOnScript.isEmpty()) {
-    runScript(transferOnScript);
+      settings->value("Settings/transferOnScript").toString();
+
+  bool jobStartScriptRun =
+      settings->value("Settings/jobStartScriptRun", false).toBool();
+
+  if (jobStartScriptRun) {
+
+    if (!transferOnScript.isEmpty()) {
+      runScript(transferOnScript);
+    }
   }
 
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));

@@ -58,6 +58,10 @@ public:
   QString getTransferOnScript() const;
   QString getTransferOffScript() const;
 
+  bool getQueueScriptRun() const;
+  bool getJobStartScriptRun() const;
+  bool getJobLastFinishedScriptRun() const;
+
 private:
   Ui::PreferencesDialog ui;
 };

@@ -123,25 +123,35 @@ bool ListOfJobOptions::RestoreFromUserData(ListOfJobOptions &dataIn) {
 }
 
 bool ListOfJobOptions::PersistToUserData() {
-  QFile *file = GetPersistenceFile(
-      QIODevice::WriteOnly); // note this mode implies Truncate also
+  QFile *file = GetPersistenceFile(QIODevice::ReadOnly);
+
   if (file == nullptr)
     return false;
-  QDataStream outstream(file);
-  outstream.setVersion(QDataStream::Qt_5_2);
 
+  QFileInfo fileToSaveInfo(*file);
+
+  QSaveFile fileToSave(fileToSaveInfo.absoluteFilePath());
+
+  // note this mode implies Truncate also
+  if (!fileToSave.open(QIODevice::WriteOnly)) {
+    file->close();
+    delete file;
+    return false;
+  }
+
+  QDataStream outstream(&fileToSave);
+
+  outstream.setVersion(QDataStream::Qt_5_2);
   for (JobOptions *it : tasks) {
     outstream << *it;
   }
 
-  file->flush();
   file->close();
+  delete file;
 
   emit tasksListUpdated();
 
-  delete file;
-
-  return true;
+  return fileToSave.commit();
 }
 
 QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {

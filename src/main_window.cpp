@@ -4065,13 +4065,22 @@ void MainWindow::editSelectedTask() {
   // and the Save Task button closes it... so there is nothing more to do here
 }
 
-void MainWindow::saveQueueFile(void) {
+bool MainWindow::saveQueueFile(void) {
 
   QMutexLocker locker(&mSaveQueueFileMutex);
   QString filePath = GetConfigDir().absoluteFilePath("queue.conf");
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
   QFile file(filePath);
+#else
+  QSaveFile file(filePath);
+#endif
+
+  if (!file.open(QIODevice::WriteOnly)) {
+    return false;
+  }
+
   QTextStream out(&file);
-  file.open(QIODevice::WriteOnly);
 
   // loop over ui.queueListWidget
   for (int i = 0; i < ui.queueListWidget->count(); ++i) {
@@ -4090,17 +4099,31 @@ void MainWindow::saveQueueFile(void) {
 #endif
   }
 
-  file.close();
+  out.flush();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  return out.status() == QTextStream::Ok && file.commit();
+#else
+  return out.status() == QTextStream::Ok;
+#endif
 }
 
-void MainWindow::saveSchedulerFile(void) {
+bool MainWindow::saveSchedulerFile(void) {
 
   QMutexLocker locker(&mSaveSchedulerFileMutex);
   QString filePath = GetConfigDir().absoluteFilePath("scheduler.conf");
-  QFile file(filePath);
-  QTextStream out(&file);
-  file.open(QIODevice::WriteOnly);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
+  QFile file(filePath);
+#else
+  QSaveFile file(filePath);
+#endif
+
+  if (!file.open(QIODevice::WriteOnly)) {
+    return false;
+  };
+
+  QTextStream out(&file);
   int schedulersCount = ui.schedulers->count();
 
   for (int i = schedulersCount - 2; i >= 0; i = i - 2) {
@@ -4116,7 +4139,13 @@ void MainWindow::saveSchedulerFile(void) {
     }
   }
 
-  file.close();
+  out.flush();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  return out.status() == QTextStream::Ok && file.commit();
+#else
+  return out.status() == QTextStream::Ok;
+#endif
 }
 
 void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,

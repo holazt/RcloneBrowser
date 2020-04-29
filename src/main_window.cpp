@@ -1368,7 +1368,8 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionSortByStatus
   QObject::connect(ui.actionSortByStatus, &QAction::triggered, this, [=]() {
-    ui.buttonSortByTime->setStyleSheet("QToolButton {border: 0;}");
+    ui.buttonSortByTime->setStyleSheet(
+        "QToolButton {background-color: rgba(1, 1, 1, 0);}");
     ui.buttonSortByStatus->setStyleSheet("QToolButton {}");
 
     if (mJobsSort != "byDate") {
@@ -1388,7 +1389,8 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionSortByTime
   QObject::connect(ui.actionSortByTime, &QAction::triggered, this, [=]() {
-    ui.buttonSortByStatus->setStyleSheet("QToolButton {border: 0;}");
+    ui.buttonSortByStatus->setStyleSheet(
+        "QToolButton {background-color: rgba(1, 1, 1, 0);}");
     ui.buttonSortByTime->setStyleSheet("QToolButton {}");
 
     // flip sort order
@@ -4875,6 +4877,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
     mDoNotSort = true;
     // when quitting (waiting for unmount) don't start new tasks
     if (mAppQuittingStatus) {
+      mDoNotSort = false;
       return;
     }
 
@@ -4914,6 +4917,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
             QString uniqueId_queue = jo_queue->uniqueId.toString();
             if (taskID == uniqueId_queue) {
               widget->updateTaskStatus(requestID, "task already in the queue");
+              mDoNotSort = false;
               return;
             }
           }

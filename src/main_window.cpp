@@ -1368,8 +1368,7 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionSortByStatus
   QObject::connect(ui.actionSortByStatus, &QAction::triggered, this, [=]() {
-    ui.buttonSortByTime->setStyleSheet(
-        "QToolButton {background-color: rgba(1, 1, 1, 0);}");
+    ui.buttonSortByTime->setStyleSheet("QToolButton {border: 0;}");
     ui.buttonSortByStatus->setStyleSheet("QToolButton {}");
 
     if (mJobsSort != "byDate") {
@@ -1389,20 +1388,15 @@ MainWindow::MainWindow() {
 
   //!!!  QObject::connect(ui.actionSortByTime
   QObject::connect(ui.actionSortByTime, &QAction::triggered, this, [=]() {
-    ui.buttonSortByStatus->setStyleSheet(
-        "QToolButton {background-color: rgba(1, 1, 1, 0);}");
+    ui.buttonSortByStatus->setStyleSheet("QToolButton {border: 0;}");
     ui.buttonSortByTime->setStyleSheet("QToolButton {}");
 
     // flip sort order
     if (mJobsSort != "byStatus") {
       mJobsTimeSortOrder = !mJobsTimeSortOrder;
     }
-    mJobsSort = "byDate";
-    // QToolButton { border: 0; }\n\nQToolButton:pressed {\n border: 4;\n
-    // border-radius: 10px;\n border-style: inset;\n border-color: rgba(1, 1, 1,
-    // 0);\n}
 
-    // ui.buttonSortByTime->setStyleSheet("QToolButton { border: none; } ")
+    mJobsSort = "byDate";
 
     if (mJobsTimeSortOrder) {
       ui.buttonSortByTime->setIcon(sortTimeAZIcon);

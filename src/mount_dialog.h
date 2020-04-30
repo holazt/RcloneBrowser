@@ -33,6 +33,8 @@ private:
 
   JobOptions *mJobOptions;
 
+  void mountOptionsWriteSettings();
+
 private slots:
   void shrink();
 

@@ -481,10 +481,10 @@
           <item row="9" column="0">
            <widget class="QCheckBox" name="rememberLastOptions">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked new transfer dialog will use previous transfer options (if any modified).&lt;/p&gt;&lt;p&gt;When unchecked new transfer will always open with default options.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked new dialog (e.g. transfer, export or mount) will open with previously used options (if any modified).&lt;/p&gt;&lt;p&gt;When unchecked new dialog will always open with default options.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Remember last transfer options</string>
+             <string>Remember dialogs' last used options</string>
             </property>
            </widget>
           </item>

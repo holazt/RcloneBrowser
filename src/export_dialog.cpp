@@ -14,9 +14,6 @@ ExportDialog::ExportDialog(const QString &remote, const QDir &path,
 
   mTarget = remote + ":" + path.path();
 
-  ui.src->setText(mTarget);
-  ui.src->setCursorPosition(0);
-
   QObject::connect(ui.buttonBox->button(QDialogButtonBox::RestoreDefaults),
                    &QPushButton::clicked, this, [=]() {
                      ui.rbText->setChecked(true);
@@ -44,17 +41,22 @@ ExportDialog::ExportDialog(const QString &remote, const QDir &path,
   });
 
   auto settings = GetSettings();
-  settings->beginGroup("Export");
-  ReadSettings(settings.get(), this);
-  settings->endGroup();
+  if (settings->value("Settings/rememberLastOptions", false).toBool()) {
+    settings->beginGroup("ExportDialog");
+    ReadSettings(settings.get(), this);
+    settings->endGroup();
+  }
+
+  ui.src->setText(mTarget);
+  ui.src->setCursorPosition(0);
 }
 
 ExportDialog::~ExportDialog() {
   if (result() == QDialog::Accepted) {
     auto settings = GetSettings();
-    settings->beginGroup("Export");
+    settings->beginGroup("ExportDialog");
     WriteSettings(settings.get(), this);
-    settings->remove("textFile");
+    settings->remove("src");
     settings->endGroup();
   }
 }

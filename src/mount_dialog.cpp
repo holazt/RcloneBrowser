@@ -79,17 +79,20 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
     }
   }
 
+  // used drives' letters
+  QStringList disksUsed;
+  int firstDiskFreeIndex;
+
   // initailize drive letters
   QStringList drivesList;
   for (char l = 'A'; l <= 'Z'; ++l) {
     drivesList << QString(l);
   }
+  ui.combo_driveLetter->addItems(drivesList);
 
   // in edit mode we want all letters available
   if (!mIsEditMode) {
-
     // get used drives' letters
-    QStringList disksUsed;
 
     // get mounted drives (missing CD ROM but gets mounts)
     foreach (QFileInfo drive, QDir::drives()) {
@@ -105,14 +108,27 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
       }
     }
 
-    // remove disksUsed from DrivesList
-    for (const auto &i : disksUsed) {
-      if (drivesList.contains(i)) {
-        drivesList.removeOne(i);
+    // disable used drive letters in combo box
+    QStandardItemModel *model =
+        qobject_cast<QStandardItemModel *>(ui.combo_driveLetter->model());
+    Q_ASSERT(model != nullptr);
+    int j = 0;
+    bool freeLetterFound = false;
+    for (const auto &i : drivesList) {
+      if (disksUsed.contains(i)) {
+        QStandardItem *item = model->item(j);
+        // disable item
+        item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+      } else {
+        if (!freeLetterFound) {
+          firstDiskFreeIndex = j;
+          freeLetterFound = true;
+        }
       }
+      j++;
     }
   }
-  ui.combo_driveLetter->addItems(drivesList);
+
 #endif
 
   setWindowTitle("Mount remote");
@@ -141,6 +157,51 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
   }
 
   ui.remoteToMount->setCursorPosition(0);
+
+  if (!mIsEditMode) {
+
+    if (settings->value("Settings/rememberLastOptions", false).toBool()) {
+      settings->beginGroup("MountDialog");
+      ReadSettings(settings.get(), this);
+      settings->endGroup();
+    }
+
+#if defined(Q_OS_WIN)
+    if (ui.cb_driveLetter->isChecked()) {
+
+      ui.label_mountBase->setDisabled(true);
+      ui.le_mountBase->setDisabled(true);
+      ui.le_mountBaseBrowse->setDisabled(true);
+      ui.label_mountPointWin->setDisabled(true);
+      ui.le_mountPointWin->setDisabled(true);
+      ui.label_mountPointWinInfo->setDisabled(true);
+
+      ui.label_driveLetter->setDisabled(false);
+      ui.combo_driveLetter->setDisabled(false);
+      ui.label_driveLetterInfo->setDisabled(false);
+    }
+
+    if (ui.cb_mountPointWin->isChecked()) {
+
+      ui.label_mountBase->setDisabled(false);
+      ui.le_mountBase->setDisabled(false);
+      ui.le_mountBaseBrowse->setDisabled(false);
+      ui.label_mountPointWin->setDisabled(false);
+      ui.le_mountPointWin->setDisabled(false);
+      ui.label_mountPointWinInfo->setDisabled(false);
+
+      ui.label_driveLetter->setDisabled(true);
+      ui.combo_driveLetter->setDisabled(true);
+      ui.label_driveLetterInfo->setDisabled(true);
+    }
+
+    // if letter already used switch to firstDiskFreeIndex
+    if (disksUsed.contains(ui.combo_driveLetter->currentText())) {
+      ui.combo_driveLetter->setCurrentIndex(firstDiskFreeIndex);
+    }
+
+#endif
+  }
 
   QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, this,
                    &QDialog::accept);
@@ -212,6 +273,8 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
         // always close on save
         // if (mIsEditMode)
     */
+
+    mountOptionsWriteSettings();
 
     getOptions();
     JobOptions *jobo = mJobOptions;
@@ -548,7 +611,9 @@ void MountDialog::done(int r) {
     if (!validateOptions()) {
       return;
     }
+    mountOptionsWriteSettings();
   }
+
   QDialog::done(r);
 }
 
@@ -610,4 +675,15 @@ void MountDialog::putJobOptions() {
   ui.le_rcPort->setText(mJobOptions->mountRcPort);
 
   return;
+}
+
+void MountDialog::mountOptionsWriteSettings() {
+
+  auto settings = GetSettings();
+  settings->beginGroup("MountDialog");
+  WriteSettings(settings.get(), this);
+  settings->remove("remoteToMount");
+  settings->remove("taskName");
+  settings->remove("cb_taskAutostart");
+  settings->endGroup();
 }

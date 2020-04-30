@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>776</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -625,11 +625,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="textExtra">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;one option per line e.g.:&lt;br/&gt;&lt;br/&gt;--cache-dir &amp;quot;E:\!---Rclone_VFS_Cache&amp;quot;&lt;br/&gt;--vfs-cache-mode writes&lt;br/&gt;--vfs-cache-poll-interval 20m&lt;br/&gt;--vfs-cache-max-age 8760h&lt;br/&gt;--vfs-cache-max-size 1024G&lt;br/&gt;--attr-timeout 8700h&lt;br/&gt;--dir-cache-time 8760h&lt;br/&gt;--poll-interval 30s&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
+        <widget class="QPlainTextEdit" name="textExtra"/>
        </item>
        <item>
         <widget class="QLabel" name="label_5">

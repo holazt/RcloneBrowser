@@ -1181,6 +1181,7 @@ void TransferDialog::transferWriteSettings() {
   settings->remove("le_defaultRcloneOptions");
   settings->remove("le_defaultTransferOptions");
   settings->remove("textFilter");
+  settings->remove("rcloneCmd");
   settings->endGroup();
 }
 

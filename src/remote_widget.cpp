@@ -301,12 +301,12 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
   ui.actionNewMount->setStatusTip(
       "Mount remote to local filesystem - rclone mount");
   ui.stream->setStatusTip("Stream file - rclone cat | player -");
-  ui.upload->setStatusTip("Upload file/directory (ALT-u)");
-  ui.download->setStatusTip("Download file/directory (ALT-d)");
-  ui.getSize->setStatusTip("Get folder size - rclone size");
-  ui.getTree->setStatusTip("Show folders tree - rclone tree");
+  ui.upload->setStatusTip("Upload files/directories (ALT-u)");
+  ui.download->setStatusTip("Download files/directories (ALT-d)");
+  ui.getSize->setStatusTip("Get items size - rclone size");
+  ui.getTree->setStatusTip("Show directory tree - rclone tree");
   ui.link->setStatusTip("Fetch public link - rclone link");
-  ui.export_->setStatusTip("Export files list");
+  ui.export_->setStatusTip("Export files' list");
   ui.actionCheck->setStatusTip(
       "Check remote's integrity - rclone check/cryptcheck");
   ui.actionDedupe->setStatusTip("Remove duplicated files - rclone dedupe");

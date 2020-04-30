@@ -364,6 +364,11 @@ TransferDialog::TransferDialog(bool isDownload, bool isDrop,
 
       if (listSelectedUrls.count() == 1) {
         ui.multiInfo->hide();
+        if (mIsMultiItem) {
+          ui.textFilter->clear();
+        }
+        mIsMultiItem = false;
+
         // file or folder?
         if (QDir(itemToUpload).exists()) {
           folder = itemToUpload;

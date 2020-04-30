@@ -615,8 +615,8 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                            << remote + ":" + folder);
       process.setProcessChannelMode(QProcess::MergedChannels);
 
-      ProgressDialog progress("New Folder", "Creating...", folderMsg, &process,
-                              this);
+      ProgressDialog progress("New Folder", "Creating...",
+                              "\"" + folderMsg + "\"", &process, this);
       if (progress.exec() == QDialog::Accepted) {
         model->refresh(index);
       }
@@ -656,7 +656,10 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                                   model->path(index.parent()).filePath(name));
       process.setProcessChannelMode(QProcess::MergedChannels);
 
-      ProgressDialog progress("Rename", "Renaming...", pathMsg, &process, this);
+      ProgressDialog progress(
+          "Rename", "Renaming...",
+          "\"" + metrix.elidedText(pathMsg, Qt::ElideMiddle, 500) + "\"",
+          &process, this);
       if (progress.exec() == QDialog::Accepted) {
         model->rename(index, name);
       }
@@ -1306,6 +1309,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
     QString pathMsg = isLocal ? QDir::toNativeSeparators(path_info) : path_info;
 
     QDir path = model->path(index);
+
     ExportDialog e(remote, path, this);
 
     if (e.exec() == QDialog::Accepted) {
@@ -1321,7 +1325,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
         return;
       }
 
-      QRegExp re(R"(^(\d+) (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\.\d+ (.+)$)");
+      QRegExp re(R"(^\s*(\d+) (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\.\d+ (.+)$)");
 
       QProcess *process = new QProcess;
       UseRclonePassword(process);
@@ -1352,19 +1356,21 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
                          out.setCodec("UTF-8");
 
                          for (const auto &line : output.split('\n')) {
-                           if (re.exactMatch(line.trimmed())) {
+
+                           QString lineTmp = line;
+                           lineTmp.replace("\n", "");
+
+                           if (re.exactMatch(lineTmp)) {
                              QStringList cap = re.capturedTexts();
 
                              if (txt) {
-                               out << cap[3] << '\n';
+                               out << "\"" << cap[3] << "\"" << '\n';
                              } else {
                                QString name = cap[3];
-                               if (name.contains(' ') || name.contains(',') ||
-                                   name.contains('"')) {
-                                 name = '"' + name.replace("\"", "\"\"") + '"';
-                               }
-                               out << name << ',' << '"' << cap[2] << '"' << ','
-                                   << cap[1].toULongLong() << '\n';
+                               out << "\"" << name << "\""
+                                   << ","
+                                   << "\"" << cap[2] << "\""
+                                   << "," << cap[1].toULongLong() << '\n';
                              }
                            }
                          }

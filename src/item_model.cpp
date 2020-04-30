@@ -83,8 +83,9 @@ ItemModel::ItemModel(IconCache *icons, const QString &remote, QObject *parent)
     : QAbstractItemModel(parent), mRemote(remote),
       mFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)),
       mRegExpFolder(
-          R"(^[\d-]+ (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \s*[\d-]+ (.+)$)"),
-      mRegExpFile(R"(^(\d+) (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\.\d+ (.+)$)") {
+          R"(^\s*[\d-]+ (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \s*[\d-]+ (.+)$)"),
+      mRegExpFile(
+          R"(^\s*(\d+) (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\.\d+ (.+)$)") {
   QStyle *style = qApp->style();
   mDriveIcon = style->standardIcon(QStyle::SP_DriveNetIcon);
   mFolderIcon = style->standardIcon(QStyle::SP_DirIcon);
@@ -512,7 +513,11 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   QObject::connect(lsd, &QProcess::readyRead, this, [=]() {
     while (lsd->canReadLine()) {
-      if (mRegExpFolder.exactMatch(lsd->readLine().trimmed())) {
+
+      QString line = lsd->readLine();
+      line.replace("\n", "");
+
+      if (mRegExpFolder.exactMatch(line)) {
         QStringList cap = mRegExpFolder.capturedTexts();
 
         Item *child = new Item();
@@ -528,7 +533,11 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   QObject::connect(lsl, &QProcess::readyRead, this, [=]() {
     while (lsl->canReadLine()) {
-      if (mRegExpFile.exactMatch(lsl->readLine().trimmed())) {
+
+      QString line = lsl->readLine();
+      line.replace("\n", "");
+
+      if (mRegExpFile.exactMatch(line)) {
         QStringList cap = mRegExpFile.capturedTexts();
 
         Item *child = new Item();

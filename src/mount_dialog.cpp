@@ -209,6 +209,13 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
                    &QDialog::reject);
 
+  QObject::connect(ui.le_mountScript, &QLineEdit::textChanged, this, [=]() {
+    if (!ui.le_mountScript->text().trimmed().isEmpty() &&
+        ui.le_rcPort->text().trimmed().isEmpty()) {
+      ui.le_rcPort->setText("0");
+    }
+  });
+
   QObject::connect(ui.tb_mountScriptBrowse, &QPushButton::clicked, this, [=]() {
     QString mountScript = QFileDialog::getOpenFileName(
         this, "Select script", ui.le_mountScript->text());
@@ -549,14 +556,24 @@ bool MountDialog::validateOptions() {
 
 // only on Windows RC mode is mandatory (for unmount to work)
 #if !defined(Q_OS_WIN)
+  if (!ui.le_mountScript->text().trimmed().isEmpty() &&
+      ui.le_rcPort->text().trimmed().isEmpty()) {
+    QMessageBox::warning(this, "Warning",
+                         "Post mount script requires RC port.\n\nAllowed RC "
+                         "ports are between 1024 and "
+                         "65535 or 0 for auto.");
+    ui.tabWidget->setCurrentIndex(2);
+    ui.le_rcPort->setFocus(Qt::FocusReason::OtherFocusReason);
+    return false;
+  }
+
   if (!ui.le_rcPort->text().trimmed().isEmpty()) {
     if ((ui.le_rcPort->text().trimmed().toInt() < 1024 &&
          ui.le_rcPort->text().trimmed().toInt() > 0) ||
         ui.le_rcPort->text().trimmed().toInt() > 65535) {
-
       QMessageBox::warning(
           this, "Warning",
-          "Wrong RC port!\n\nAllowed RC ports are between 1024 and "
+          "Wrong RC port.\n\nAllowed RC ports are between 1024 and "
           "65535, 0 for auto or leave it empty.");
       ui.tabWidget->setCurrentIndex(2);
       ui.le_rcPort->setFocus(Qt::FocusReason::OtherFocusReason);
@@ -571,7 +588,7 @@ bool MountDialog::validateOptions() {
       ui.le_rcPort->text().trimmed().toInt() > 65535 ||
       ui.le_rcPort->text().trimmed().isEmpty()) {
     QMessageBox::warning(this, "Warning",
-                         "Wrong RC port!\n\nAllowed RC ports are between "
+                         "Wrong RC port.\n\nAllowed RC ports are between "
                          "1024 and 65535, or 0 for auto.");
     ui.tabWidget->setCurrentIndex(2);
     ui.le_rcPort->setFocus(Qt::FocusReason::OtherFocusReason);
@@ -585,7 +602,7 @@ bool MountDialog::validateOptions() {
 
       QMessageBox::warning(
           this, "Warning",
-          "Please enter mount base and mount point directories!");
+          "Please enter mount base and mount point directories.");
       ui.tabWidget->setCurrentIndex(0);
 
       if (ui.le_mountPointWin->text().trimmed().isEmpty()) {

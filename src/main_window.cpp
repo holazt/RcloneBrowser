@@ -495,6 +495,7 @@ MainWindow::MainWindow() {
   ui.layoutcontrol2->hide();
   ui.layoutcontrol3->hide();
   ui.layoutcontrol1_sch->hide();
+  ui.layoutcontrol1_queue->hide();
 
   // statusTips
   ui.actionRefresh->setStatusTip("Refresh remotes view");

@@ -4,7 +4,7 @@
 
 Rclone browser
 ==============
-Simple cross platfrom GUI for [rclone](https://rclone.org/) command line tool.
+Simple cross platform GUI for [rclone](https://rclone.org/) command line tool.
 
 Supports macOS, GNU/Linux, BSD family and Windows.
 

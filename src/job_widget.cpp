@@ -61,7 +61,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     QRegExp rxSize(
         R"(^Transferred:\s+(\S+ \S+) \(([^)]+)\)$)"); // Until rclone 1.42
     QRegExp rxSize2(
-        R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
+        R"(^Transferred:\s+([0-9.]+)(\S*) \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
     QRegExp rxErrors(R"(^Errors:\s+(\S+)$)");
     QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxChecks2(
@@ -76,6 +76,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         R"(^\*([^:]+):\s*([^%]+)% done.+(ETA: [^)]+)$)"); // Until rclone 1.38
     QRegExp rxProgress2(
         R"(\*([^:]+):\s*([^%]+)% \/[a-zA-z0-9.]+, [a-zA-z0-9.]+\/s, (\w+)$)"); // Starting with rclone 1.39
+    QRegExp rxProgress3(
+        R"(^\* ([^:]+):\s*([^%]+%) \/([0-9.]+\w+), ([0-9.]*[a-zA-Z\/]+s)*,)"); // Starting with rclone 1.56
 
     while (mProcess->canReadLine()) {
       QString line = mProcess->readLine().trimmed();
@@ -107,7 +109,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.size->setText(rxSize.cap(1));
         ui.bandwidth->setText(rxSize.cap(2));
       } else if (rxSize2.exactMatch(line)) {
-        ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "B" + ", " +
+        ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "Byte" + ", " +
                          rxSize2.cap(5));
         ui.bandwidth->setText(rxSize2.cap(6));
         ui.eta->setText(rxSize2.cap(8));
@@ -194,6 +196,45 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
         bar->setValue(rxProgress2.cap(2).toInt());
         bar->setToolTip("File name: " + name + "\nFile stats" + rxProgress2.cap(0).mid(rxProgress2.cap(0).indexOf(':')));
+
+        mUpdated.insert(label);
+      } else if (rxProgress3.exactMatch(line)) {
+        QString name = rxProgress3.cap(1).trimmed();
+
+        auto it = mActive.find(name);
+
+        QLabel *label;
+        QProgressBar *bar;
+        if (it == mActive.end()) {
+          label = new QLabel();
+
+          QString nameTrimmed;
+
+          if (name.length() > 47) {
+            nameTrimmed = name.left(25) + "..." + name.right(19);
+          } else {
+            nameTrimmed = name;
+          }
+
+          label->setText(nameTrimmed);
+
+          bar = new QProgressBar();
+          bar->setMinimum(0);
+          bar->setMaximum(100);
+          bar->setTextVisible(true);
+
+          label->setBuddy(bar);
+
+          ui.progress->addRow(label, bar);
+
+          mActive.insert(name, label);
+        } else {
+          label = it.value();
+          bar = static_cast<QProgressBar *>(label->buddy());
+        }
+
+        bar->setValue(rxProgress3.cap(2).toInt());
+        bar->setToolTip("File name: " + name + "\nFile stats" + rxProgress3.cap(0).mid(rxProgress3.cap(0).indexOf(':')));
 
         mUpdated.insert(label);
       }

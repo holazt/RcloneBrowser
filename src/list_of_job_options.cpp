@@ -6,7 +6,7 @@
 #include <utils.h>
 
 static QDataStream &operator>>(QDataStream &dataStream, JobOptions &jo);
-static QDataStream &operator<<(QDataStream &dataStream, JobOptions &jo);
+static QDataStream &operator<<(QDataStream &dataStream, const JobOptions &jo);
 static QDataStream &operator>>(QDataStream &in, JobOptions::Operation &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::SyncTiming &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::CompareOption &e);
@@ -143,7 +143,7 @@ bool ListOfJobOptions::PersistToUserData() {
   return true;
 }
 
-QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {
+QDataStream &operator<<(QDataStream &stream, const JobOptions &jo) {
   stream << jo.myName() << JobOptions::classVersion << jo.description
          << jo.jobType << jo.operation << /* jo.dryRun <<*/ jo.sync
          << jo.syncTiming << jo.skipNewer << jo.skipExisting << jo.compare

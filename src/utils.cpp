@@ -19,7 +19,7 @@ std::vector<std::string> split(const std::string &s, char d) {
   return r;
 }
 
-unsigned int compareVersion(std::string version1, std::string version2) {
+unsigned int compareVersion(const std::string &version1, const std::string &version2) {
   auto v1 = split(version1, '.');
   auto v2 = split(version2, '.');
   unsigned int max = v1.size() > v2.size() ? v1.size() : v2.size();
@@ -105,10 +105,10 @@ bool IsPortableMode() {
 
 std::unique_ptr<QSettings> GetSettings() {
   if (IsPortableMode()) {
-    return std::unique_ptr<QSettings>(
-        new QSettings(GetIniFilename(), QSettings::IniFormat));
+    return std::make_unique<QSettings>(
+        GetIniFilename(), QSettings::IniFormat);
   }
-  return std::unique_ptr<QSettings>(new QSettings);
+  return std::make_unique<QSettings>();
 }
 
 void ReadSettings(QSettings *settings, QObject *widget) {
@@ -274,7 +274,7 @@ QStringList GetDefaultRcloneOptionsList() {
       settings->value("Settings/defaultRcloneOptions").toString();
   QStringList defaultRcloneOptionsList;
   if (!defaultRcloneOptions.isEmpty()) {
-    for (auto arg : defaultRcloneOptions.split(' ')) {
+    for (const auto &arg : defaultRcloneOptions.split(' ')) {
       defaultRcloneOptionsList << arg;
     }
   }

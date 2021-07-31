@@ -15,7 +15,7 @@ JobOptions::JobOptions()
       syncTiming(UnknownTiming), skipNewer(false), skipExisting(false),
       compare(false), compareOption(), verbose(false), sameFilesystem(false),
       dontUpdateModified(false), maxDepth(0), deleteExcluded(false),
-      isFolder(false) {}
+      isFolder(false), DriveSharedWithMe(false) {}
 
 const qint32 JobOptions::classVersion = 3;
 
@@ -128,13 +128,13 @@ QStringList JobOptions::getOptions() const {
   }
 
   if (!excluded.isEmpty()) {
-    for (auto line : excluded.split('\n')) {
+    for (const auto &line : excluded.split('\n')) {
       list << "--exclude" << line;
     }
   }
 
   if (!extra.isEmpty()) {
-    for (auto arg : extra.split(' ')) {
+    for (const auto &arg : extra.split(' ')) {
       list << arg;
     }
   }

@@ -22,4 +22,4 @@ QStringList GetDriveSharedWithMe();
 QStringList GetDefaultRcloneOptionsList();
 QStringList GetShowHidden();
 
-unsigned int compareVersion(std::string, std::string);
+unsigned int compareVersion(const std::string &version1, const std::string &version2);

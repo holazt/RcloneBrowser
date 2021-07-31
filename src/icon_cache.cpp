@@ -4,9 +4,7 @@
 #include "osx_helper.h"
 #endif
 
-IconCache::IconCache(QObject *parent) : QObject(parent) {
-  mFileIcon = QFileIconProvider().icon(QFileIconProvider::File);
-
+IconCache::IconCache(QObject *parent) : QObject(parent), mFileIcon(QFileIconProvider().icon(QFileIconProvider::File)) {
 #if defined(Q_OS_WIN32)
   CoInitializeEx(NULL, COINIT_MULTITHREADED);
 #endif

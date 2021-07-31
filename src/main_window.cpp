@@ -93,53 +93,51 @@ MainWindow::MainWindow() {
 #endif
 
   mSystemTray.setIcon(qApp->windowIcon());
-  {
-    auto settings = GetSettings();
-    if (settings->contains("MainWindow/geometry")) {
-      restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
-    }
-    SetRclone(settings->value("Settings/rclone").toString());
-    SetRcloneConf(settings->value("Settings/rcloneConf").toString());
 
-    mAlwaysShowInTray =
-        settings->value("Settings/alwaysShowInTray", false).toBool();
-    mCloseToTray = settings->value("Settings/closeToTray", false).toBool();
-    mNotifyFinishedTransfers =
-        settings->value("Settings/notifyFinishedTransfers", true).toBool();
-
-    mSystemTray.setVisible(mAlwaysShowInTray);
-
-    // during first run the lastUsed keys might not exist
-    if (!(settings->contains("Settings/lastUsedSourceFolder"))) {
-      // if lastUsedSourceFolder does not exist create new empty key
-      settings->setValue("Settings/lastUsedSourceFolder", "");
-    };
-    if (!(settings->contains("Settings/lastUsedDestFolder"))) {
-      // if lastUsedDestFolder does not exist create new empty key
-      settings->setValue("Settings/lastUsedDestFolder", "");
-    };
-    if (!(settings->contains("Settings/defaultDownloadOptions"))) {
-      // if defaultDownloadOptions does not exist create new empty key
-      settings->setValue("Settings/defaultDownloadOptions", "");
-    };
-#ifdef Q_OS_MACOS
-    // for macOS by default exclude .DS_Store files from uploads
-    if (!(settings->contains("Settings/defaultUploadOptions"))) {
-      // if defaultDownloadOptions does not exist create new empty key
-      settings->setValue("Settings/defaultUploadOptions",
-                         "--exclude .DS_Store");
-    };
-#else
-    if (!(settings->contains("Settings/defaultUploadOptions"))) {
-      // if defaultDownloadOptions does not exist create new empty key
-      settings->setValue("Settings/defaultUploadOptions", "");
-    };
-#endif
-    if (!(settings->contains("Settings/defaultRcloneOptions"))) {
-      // if defaultRcloneOptions does not exist create new empty key
-      settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
-    };
+  if (settings->contains("MainWindow/geometry")) {
+    restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
   }
+  SetRclone(settings->value("Settings/rclone").toString());
+  SetRcloneConf(settings->value("Settings/rcloneConf").toString());
+
+  mAlwaysShowInTray =
+      settings->value("Settings/alwaysShowInTray", false).toBool();
+  mCloseToTray = settings->value("Settings/closeToTray", false).toBool();
+  mNotifyFinishedTransfers =
+      settings->value("Settings/notifyFinishedTransfers", true).toBool();
+
+  mSystemTray.setVisible(mAlwaysShowInTray);
+
+  // during first run the lastUsed keys might not exist
+  if (!(settings->contains("Settings/lastUsedSourceFolder"))) {
+    // if lastUsedSourceFolder does not exist create new empty key
+    settings->setValue("Settings/lastUsedSourceFolder", "");
+  };
+  if (!(settings->contains("Settings/lastUsedDestFolder"))) {
+    // if lastUsedDestFolder does not exist create new empty key
+    settings->setValue("Settings/lastUsedDestFolder", "");
+  };
+  if (!(settings->contains("Settings/defaultDownloadOptions"))) {
+    // if defaultDownloadOptions does not exist create new empty key
+    settings->setValue("Settings/defaultDownloadOptions", "");
+  };
+#ifdef Q_OS_MACOS
+  // for macOS by default exclude .DS_Store files from uploads
+  if (!(settings->contains("Settings/defaultUploadOptions"))) {
+    // if defaultDownloadOptions does not exist create new empty key
+    settings->setValue("Settings/defaultUploadOptions",
+                       "--exclude .DS_Store");
+  };
+#else
+  if (!(settings->contains("Settings/defaultUploadOptions"))) {
+    // if defaultDownloadOptions does not exist create new empty key
+    settings->setValue("Settings/defaultUploadOptions", "");
+  };
+#endif
+  if (!(settings->contains("Settings/defaultRcloneOptions"))) {
+    // if defaultRcloneOptions does not exist create new empty key
+    settings->setValue("Settings/defaultRcloneOptions", "--fast-list");
+  };
 
   QObject::connect(ui.preferences, &QAction::triggered, this, [=]() {
     PreferencesDialog dialog(this);
@@ -223,7 +221,7 @@ MainWindow::MainWindow() {
 
   QObject::connect(
       ui.remotes, &QListWidget::currentItemChanged, this,
-      [=](QListWidgetItem *current) { ui.open->setEnabled(current != NULL); });
+      [=](QListWidgetItem *current) { ui.open->setEnabled(current != nullptr); });
   QObject::connect(ui.remotes, &QListWidget::itemActivated, ui.open,
                    &QPushButton::clicked);
 
@@ -300,12 +298,13 @@ MainWindow::MainWindow() {
   mUploadIcon = style->standardIcon(QStyle::SP_ArrowUp);
   mDownloadIcon = style->standardIcon(QStyle::SP_ArrowDown);
 
-  ui.tabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
-  ui.tabs->tabBar()->setTabButton(0, QTabBar::LeftSide, nullptr);
-  ui.tabs->tabBar()->setTabButton(1, QTabBar::RightSide, nullptr);
-  ui.tabs->tabBar()->setTabButton(1, QTabBar::LeftSide, nullptr);
-  ui.tabs->tabBar()->setTabButton(2, QTabBar::RightSide, nullptr);
-  ui.tabs->tabBar()->setTabButton(2, QTabBar::LeftSide, nullptr);
+  QTabBar* tabBar = ui.tabs->tabBar();
+  tabBar->setTabButton(0, QTabBar::RightSide, nullptr);
+  tabBar->setTabButton(0, QTabBar::LeftSide, nullptr);
+  tabBar->setTabButton(1, QTabBar::RightSide, nullptr);
+  tabBar->setTabButton(1, QTabBar::LeftSide, nullptr);
+  tabBar->setTabButton(2, QTabBar::RightSide, nullptr);
+  tabBar->setTabButton(2, QTabBar::LeftSide, nullptr);
   ui.tabs->setCurrentIndex(0);
 
   listTasks();
@@ -369,7 +368,6 @@ MainWindow::MainWindow() {
           "Cannot check rclone version!\nPlease verify rclone location.");
       emit ui.preferences->trigger();
     } else {
-      auto settings = GetSettings();
       settings->setValue("Settings/rclone", rclone);
       SetRclone(rclone);
     }
@@ -439,9 +437,9 @@ void MainWindow::rcloneGetVersion() {
           int counter = 0;
           foreach (QString line, lines) {
             line = line.trimmed();
-            if (counter == 1)
+            if (counter == 1) // cppcheck-suppress knownConditionTrueFalse
               rclone_info2 = line.replace("- ", "");
-            if (counter == 2)
+            else if (counter == 2) // cppcheck-suppress knownConditionTrueFalse
               rclone_info3 = line.replace("- ", "");
             counter++;
           };
@@ -774,9 +772,6 @@ void MainWindow::rcloneListRemotes() {
             // medium scale by default
             double darkModeIconScale = 1.333;
             double lightModeiconScale = 2;
-            // to avoid "variable not used" compiler error
-            if (darkModeIconScale == lightModeiconScale) {
-            };
 
             // set icons scale based on iconSize value
             if (iconSize == "small") {
@@ -801,7 +796,7 @@ void MainWindow::rcloneListRemotes() {
               img_add = "_inv";
 
             } else {
-              img_add = "";
+              img_add.clear();
             }
 #if defined(Q_OS_WIN)
             // on Windows dark theme changes PM_ListViewIconSize size
@@ -832,7 +827,7 @@ void MainWindow::rcloneListRemotes() {
                  img_add = "_inv";
                } else {
                  size = lightModeiconScale * style->pixelMetric(QStyle::PM_ListViewIconSize);
-                 img_add = "";
+                 img_add.clear();
                }
 
              } else {

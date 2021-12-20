@@ -364,3 +364,66 @@ QDir GetConfigDir() {
   //  }
   return outputDir;
 }
+
+// build rclone cmd string (used for info, e.g. to show rclone cmd in transfer
+// dialog)
+QStringList GetRcloneCmd(const QStringList &args) {
+
+  QStringList rcloneTransferCmd;
+
+  QString rcloneCmd = (QDir::toNativeSeparators(GetRclone()));
+  QStringList rcloneConf = GetRcloneConf();
+
+  QStringList rcloneOptions = args;
+
+  // rclone executable
+  if (!rcloneCmd.isEmpty()) {
+    if (rcloneCmd.contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneCmd + "\"";
+    } else {
+      rcloneTransferCmd << rcloneCmd;
+    }
+  }
+
+  // rclone config
+  if (!rcloneConf.isEmpty()) {
+    // --config
+    rcloneTransferCmd << rcloneConf.at(0);
+    // file location
+    if (rcloneConf.at(1).contains(" ")) {
+      rcloneTransferCmd << "\"" + QDir::toNativeSeparators(rcloneConf.at(1)) +
+                               "\"";
+    } else {
+      rcloneTransferCmd << QDir::toNativeSeparators(rcloneConf.at(1));
+    }
+  }
+
+  if (!rcloneOptions.isEmpty() && rcloneOptions.count() > 1) {
+    // copy/move/sync
+    rcloneTransferCmd << rcloneOptions.takeAt(0);
+
+    // source and destination
+    if (rcloneOptions.at(0).contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
+    } else {
+      rcloneTransferCmd << rcloneOptions.takeAt(0);
+    }
+
+    if (rcloneOptions.at(0).contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
+    } else {
+      rcloneTransferCmd << rcloneOptions.takeAt(0);
+    }
+  }
+
+  // rclone remaining options
+  for (int j = 0; j < rcloneOptions.count(); ++j) {
+    if (rcloneOptions.at(j).contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneOptions.at(j) + "\"";
+    } else {
+      rcloneTransferCmd << rcloneOptions.at(j);
+    }
+  }
+
+  return rcloneTransferCmd;
+}

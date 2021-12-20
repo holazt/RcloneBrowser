@@ -160,7 +160,12 @@ int main(int argc, char *argv[]) {
   // during first run the fontSize key might not exist
   if (!(settings->contains("Settings/fontSize"))) {
     // if fontSize does not exist create new key
+#ifdef Q_OS_WIN
+    // on Windows Fussion mode uses too small fonts
+    settings->setValue("Settings/fontSize", "1");
+#else
     settings->setValue("Settings/fontSize", "0");
+#endif
   };
 
   // during first run the buttonSize key might not exist
@@ -185,18 +190,6 @@ int main(int argc, char *argv[]) {
   if (!(settings->contains("Settings/remoteType"))) {
     // if remoteType does not exist create new key
     settings->setValue("Settings/remoteType", "main");
-  };
-
-  // during first run the queueScript key might not exist
-  if (!(settings->contains("Settings/queueScript"))) {
-    // if queueScript does not exist create new key
-    settings->setValue("Settings/queueScript", "");
-  };
-
-  // during first run the queueScriptRun key might not exist
-  if (!(settings->contains("Settings/queueScriptRun"))) {
-    // if queueScriptRun does not exist create new key
-    settings->setValue("Settings/queueScriptRun", "false");
   };
 
   if (!(settings->contains("Settings/soundNotif"))) {
@@ -235,6 +228,11 @@ int main(int argc, char *argv[]) {
     settings->setValue("Settings/preemptiveLoadingLevel", "0");
   }
 
+  // during first run the queueScript key might not exist
+  if (!(settings->contains("Settings/queueScript"))) {
+    settings->setValue("Settings/queueScript", "");
+  };
+
   // script to run when transfer jobs start
   if (!(settings->contains("Settings/transferOnScript"))) {
     settings->setValue("Settings/transferOnScript", "");
@@ -243,6 +241,24 @@ int main(int argc, char *argv[]) {
   // script to run when last transfer jobs finished
   if (!(settings->contains("Settings/transferOffScript"))) {
     settings->setValue("Settings/transferOffScript", "");
+  };
+
+  // during first run the queueScriptRun key might not exist
+  if (!(settings->contains("Settings/queueScriptRun"))) {
+    settings->setValue("Settings/queueScriptRun", "false");
+  };
+
+  if (!(settings->contains("Settings/jobStartScriptRun"))) {
+    settings->setValue("Settings/jobStartScriptRun", "false");
+  };
+
+  if (!(settings->contains("Settings/jobLastFinishedScriptRun"))) {
+    settings->setValue("Settings/jobLastFinishedScriptRun", "false");
+  };
+
+  // remember and re-use last transfer options
+  if (!(settings->contains("Settings/rememberLastOptions"))) {
+    settings->setValue("Settings/rememberLastOptions", "true");
   };
 
   // use ports (49152-65535) -

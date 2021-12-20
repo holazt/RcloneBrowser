@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -142,6 +142,9 @@
           </property>
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="textElideMode">
+           <enum>Qt::ElideMiddle</enum>
           </property>
           <property name="isWrapping" stdset="0">
            <bool>false</bool>
@@ -680,9 +683,12 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="queueScriptRun">
+           <widget class="QCheckBox" name="layoutcontrol1_queue">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
-             <string>Run script when finished</string>
+             <string>CheckBox</string>
             </property>
            </widget>
           </item>
@@ -1183,22 +1189,6 @@
     <hint type="sourcelabel">
      <x>612</x>
      <y>71</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>queueScriptRun</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>actionQueueScriptRun</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>567</x>
-     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>

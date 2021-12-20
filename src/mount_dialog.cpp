@@ -15,6 +15,9 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
 
   auto settings = GetSettings();
 
+  // Elided....Text base measure
+  QFontMetrics metrix(ui.label_remote->font());
+
   // set minimumWidth based on font size
   int fontsize = 0;
   fontsize = (settings->value("Settings/fontSize").toInt());
@@ -76,17 +79,20 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
     }
   }
 
+  // used drives' letters
+  QStringList disksUsed;
+  int firstDiskFreeIndex;
+
   // initailize drive letters
   QStringList drivesList;
   for (char l = 'A'; l <= 'Z'; ++l) {
     drivesList << QString(l);
   }
+  ui.combo_driveLetter->addItems(drivesList);
 
   // in edit mode we want all letters available
   if (!mIsEditMode) {
-
     // get used drives' letters
-    QStringList disksUsed;
 
     // get mounted drives (missing CD ROM but gets mounts)
     foreach (QFileInfo drive, QDir::drives()) {
@@ -102,17 +108,35 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
       }
     }
 
-    // remove disksUsed from DrivesList
-    for (const auto &i : disksUsed) {
-      if (drivesList.contains(i)) {
-        drivesList.removeOne(i);
+    // disable used drive letters in combo box
+    QStandardItemModel *model =
+        qobject_cast<QStandardItemModel *>(ui.combo_driveLetter->model());
+    Q_ASSERT(model != nullptr);
+    int j = 0;
+    bool freeLetterFound = false;
+    for (const auto &i : drivesList) {
+      if (disksUsed.contains(i)) {
+        QStandardItem *item = model->item(j);
+        // disable item
+        item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+      } else {
+        if (!freeLetterFound) {
+          firstDiskFreeIndex = j;
+          freeLetterFound = true;
+        }
       }
+      j++;
     }
   }
-  ui.combo_driveLetter->addItems(drivesList);
+
 #endif
 
   setWindowTitle("Mount remote");
+
+  ui.le_defaultMountOptions->setText(metrix.elidedText(
+      settings->value("Settings/mount").toString(), Qt::ElideMiddle, 537));
+  ui.le_defaultMountOptions->setToolTip(
+      "Set in preferences:\n\n" + settings->value("Settings/mount").toString());
 
   // set combo box tooltips
   ui.combob_cacheLevel->setItemData(0, "default", Qt::ToolTipRole);
@@ -134,11 +158,63 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
 
   ui.remoteToMount->setCursorPosition(0);
 
+  if (!mIsEditMode) {
+
+    if (settings->value("Settings/rememberLastOptions", false).toBool()) {
+      settings->beginGroup("MountDialog");
+      ReadSettings(settings.get(), this);
+      settings->endGroup();
+    }
+
+#if defined(Q_OS_WIN)
+    if (ui.cb_driveLetter->isChecked()) {
+
+      ui.label_mountBase->setDisabled(true);
+      ui.le_mountBase->setDisabled(true);
+      ui.le_mountBaseBrowse->setDisabled(true);
+      ui.label_mountPointWin->setDisabled(true);
+      ui.le_mountPointWin->setDisabled(true);
+      ui.label_mountPointWinInfo->setDisabled(true);
+
+      ui.label_driveLetter->setDisabled(false);
+      ui.combo_driveLetter->setDisabled(false);
+      ui.label_driveLetterInfo->setDisabled(false);
+    }
+
+    if (ui.cb_mountPointWin->isChecked()) {
+
+      ui.label_mountBase->setDisabled(false);
+      ui.le_mountBase->setDisabled(false);
+      ui.le_mountBaseBrowse->setDisabled(false);
+      ui.label_mountPointWin->setDisabled(false);
+      ui.le_mountPointWin->setDisabled(false);
+      ui.label_mountPointWinInfo->setDisabled(false);
+
+      ui.label_driveLetter->setDisabled(true);
+      ui.combo_driveLetter->setDisabled(true);
+      ui.label_driveLetterInfo->setDisabled(true);
+    }
+
+    // if letter already used switch to firstDiskFreeIndex
+    if (disksUsed.contains(ui.combo_driveLetter->currentText())) {
+      ui.combo_driveLetter->setCurrentIndex(firstDiskFreeIndex);
+    }
+
+#endif
+  }
+
   QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, this,
                    &QDialog::accept);
 
   QObject::connect(ui.buttonBox, &QDialogButtonBox::rejected, this,
                    &QDialog::reject);
+
+  QObject::connect(ui.le_mountScript, &QLineEdit::textChanged, this, [=]() {
+    if (!ui.le_mountScript->text().trimmed().isEmpty() &&
+        ui.le_rcPort->text().trimmed().isEmpty()) {
+      ui.le_rcPort->setText("0");
+    }
+  });
 
   QObject::connect(ui.tb_mountScriptBrowse, &QPushButton::clicked, this, [=]() {
     QString mountScript = QFileDialog::getOpenFileName(
@@ -204,6 +280,8 @@ MountDialog::MountDialog(const QString &remote, const QDir &path,
         // always close on save
         // if (mIsEditMode)
     */
+
+    mountOptionsWriteSettings();
 
     getOptions();
     JobOptions *jobo = mJobOptions;
@@ -478,14 +556,24 @@ bool MountDialog::validateOptions() {
 
 // only on Windows RC mode is mandatory (for unmount to work)
 #if !defined(Q_OS_WIN)
+  if (!ui.le_mountScript->text().trimmed().isEmpty() &&
+      ui.le_rcPort->text().trimmed().isEmpty()) {
+    QMessageBox::warning(this, "Warning",
+                         "Post mount script requires RC port.\n\nAllowed RC "
+                         "ports are between 1024 and "
+                         "65535 or 0 for auto.");
+    ui.tabWidget->setCurrentIndex(2);
+    ui.le_rcPort->setFocus(Qt::FocusReason::OtherFocusReason);
+    return false;
+  }
+
   if (!ui.le_rcPort->text().trimmed().isEmpty()) {
     if ((ui.le_rcPort->text().trimmed().toInt() < 1024 &&
          ui.le_rcPort->text().trimmed().toInt() > 0) ||
         ui.le_rcPort->text().trimmed().toInt() > 65535) {
-
       QMessageBox::warning(
           this, "Warning",
-          "Wrong RC port!\n\nAllowed RC ports are between 1024 and "
+          "Wrong RC port.\n\nAllowed RC ports are between 1024 and "
           "65535, 0 for auto or leave it empty.");
       ui.tabWidget->setCurrentIndex(2);
       ui.le_rcPort->setFocus(Qt::FocusReason::OtherFocusReason);
@@ -500,7 +588,7 @@ bool MountDialog::validateOptions() {
       ui.le_rcPort->text().trimmed().toInt() > 65535 ||
       ui.le_rcPort->text().trimmed().isEmpty()) {
     QMessageBox::warning(this, "Warning",
-                         "Wrong RC port!\n\nAllowed RC ports are between "
+                         "Wrong RC port.\n\nAllowed RC ports are between "
                          "1024 and 65535, or 0 for auto.");
     ui.tabWidget->setCurrentIndex(2);
     ui.le_rcPort->setFocus(Qt::FocusReason::OtherFocusReason);
@@ -514,7 +602,7 @@ bool MountDialog::validateOptions() {
 
       QMessageBox::warning(
           this, "Warning",
-          "Please enter mount base and mount point directories!");
+          "Please enter mount base and mount point directories.");
       ui.tabWidget->setCurrentIndex(0);
 
       if (ui.le_mountPointWin->text().trimmed().isEmpty()) {
@@ -540,7 +628,9 @@ void MountDialog::done(int r) {
     if (!validateOptions()) {
       return;
     }
+    mountOptionsWriteSettings();
   }
+
   QDialog::done(r);
 }
 
@@ -602,4 +692,15 @@ void MountDialog::putJobOptions() {
   ui.le_rcPort->setText(mJobOptions->mountRcPort);
 
   return;
+}
+
+void MountDialog::mountOptionsWriteSettings() {
+
+  auto settings = GetSettings();
+  settings->beginGroup("MountDialog");
+  WriteSettings(settings.get(), this);
+  settings->remove("remoteToMount");
+  settings->remove("taskName");
+  settings->remove("cb_taskAutostart");
+  settings->endGroup();
 }

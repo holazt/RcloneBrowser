@@ -10,7 +10,7 @@ public:
   ProgressDialog(const QString &title, const QString &operation,
                  const QString &message, QProcess *process,
                  QWidget *parent = nullptr, bool close = true,
-                 bool trim = false);
+                 bool trim = false, QString toolTip = "");
   ~ProgressDialog();
 
   void expand();

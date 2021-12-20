@@ -17,9 +17,10 @@ JobOptions::JobOptions()
       dontUpdateModified(false), maxDepth(0), deleteExcluded(false),
       isFolder(false), DriveSharedWithMe(false), mountReadOnly(false),
       mountCacheLevel(UnknownCacheLevel), mountAutoStart(false),
-      mountWinDriveMode(false) {}
+      mountWinDriveMode(false), noTraverse(false), createEmptySrcDirs(false),
+      deleteEmptySrcDirs(false) {}
 
-const qint32 JobOptions::classVersion = 5;
+const qint32 JobOptions::classVersion = 8;
 
 JobOptions::~JobOptions() {}
 
@@ -46,8 +47,20 @@ QStringList JobOptions::getOptions() const {
   list << source;
   list << dest;
 
-  if (dryRun) {
-    list << "--dry-run";
+  if (!GetDefaultOptionsList("defaultRcloneOptions").isEmpty()) {
+    list << GetDefaultOptionsList("defaultRcloneOptions");
+  }
+
+  if (jobType == JobOptions::JobType::Download) {
+    if (!GetDefaultOptionsList("defaultDownloadOptions").isEmpty()) {
+      list << GetDefaultOptionsList("defaultDownloadOptions");
+    }
+  }
+
+  if (jobType == JobOptions::JobType::Upload) {
+    if (!GetDefaultOptionsList("defaultUploadOptions").isEmpty()) {
+      list << GetDefaultOptionsList("defaultUploadOptions");
+    }
   }
 
   if (sync) {
@@ -94,13 +107,24 @@ QStringList JobOptions::getOptions() const {
     }
   }
 
-  // always verbose
-  list << "--verbose";
   if (sameFilesystem) {
     list << "--one-file-system";
   }
+
   if (dontUpdateModified) {
     list << "--no-update-modtime";
+  }
+
+  if (noTraverse) {
+    list << "--no-traverse";
+  }
+
+  if (createEmptySrcDirs) {
+    list << "--create-empty-src-dirs";
+  }
+
+  if (deleteEmptySrcDirs) {
+    list << "--delete-empty-src-dirs";
   }
 
   list << "--transfers" << transfers;
@@ -147,10 +171,22 @@ QStringList JobOptions::getOptions() const {
     }
   }
 
-  // excluded after extra options as they can contain included
+  if (!included.isEmpty()) {
+    for (auto line : included.split('\n')) {
+      list << "--include" << line;
+    }
+  }
+
+  // excluded after included and extra options as they can also contain included
   if (!excluded.isEmpty()) {
     for (auto line : excluded.split('\n')) {
       list << "--exclude" << line;
+    }
+  }
+
+  if (!filtered.isEmpty()) {
+    for (auto line : filtered.split('\n')) {
+      list << "--filter" << line;
     }
   }
 
@@ -174,26 +210,17 @@ QStringList JobOptions::getOptions() const {
     }
   }
 
+  // always verbose
+  list << "--verbose";
+
   list << "--stats"
        << "1s";
 
   list << "--stats-file-name-length"
        << "0";
 
-  if (!GetDefaultOptionsList("defaultRcloneOptions").isEmpty()) {
-    list << GetDefaultOptionsList("defaultRcloneOptions");
-  }
-
-  if (jobType == JobOptions::JobType::Download) {
-    if (!GetDefaultOptionsList("defaultDownloadOptions").isEmpty()) {
-      list << GetDefaultOptionsList("defaultDownloadOptions");
-    }
-  }
-
-  if (jobType == JobOptions::JobType::Upload) {
-    if (!GetDefaultOptionsList("defaultUploadOptions").isEmpty()) {
-      list << GetDefaultOptionsList("defaultUploadOptions");
-    }
+  if (dryRun) {
+    list << "--dry-run";
   }
 
   return list;

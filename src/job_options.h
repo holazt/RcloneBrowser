@@ -72,6 +72,15 @@ public:
   QString mountScript;
   bool mountWinDriveMode;
 
+  // added options for multi items operations
+  QString included;
+  bool noTraverse;
+  bool createEmptySrcDirs;
+
+  // additional options for multi items operations
+  QString filtered;
+  bool deleteEmptySrcDirs;
+
   void setJobType(bool isDownload) {
     jobType = (isDownload) ? Download : Upload;
   }

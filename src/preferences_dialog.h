@@ -36,6 +36,8 @@ public:
 
   bool getDarkMode() const;
 
+  bool getRememberLastOptions() const;
+
   QString getButtonStyle() const;
   QString getIconsLayout() const;
   QString getIconsColour() const;
@@ -55,6 +57,10 @@ public:
   QString getQueueScript() const;
   QString getTransferOnScript() const;
   QString getTransferOffScript() const;
+
+  bool getQueueScriptRun() const;
+  bool getJobStartScriptRun() const;
+  bool getJobLastFinishedScriptRun() const;
 
 private:
   Ui::PreferencesDialog ui;

@@ -16,6 +16,7 @@
 #include "mac_os_power_saving.h"
 #include "osx_helper.h"
 #endif
+#include "file_dialog.h"
 
 MainWindow::MainWindow() {
 
@@ -33,8 +34,6 @@ MainWindow::MainWindow() {
   }
 
   auto settings = GetSettings();
-  ui.queueScriptRun->setChecked(
-      (settings->value("Settings/queueScriptRun").toBool()));
 
 #if defined(Q_OS_WIN)
   // disable "?" WindowContextHelpButton
@@ -61,6 +60,8 @@ MainWindow::MainWindow() {
     darkPalette.setColor(QPalette::Text, Qt::white);
     darkPalette.setColor(QPalette::Disabled, QPalette::Text,
                          QColor(127, 127, 127));
+    darkPalette.setColor(QPalette::Disabled, QPalette::Light,
+                         QColor(35, 35, 35));
     darkPalette.setColor(QPalette::Dark, QColor(35, 35, 35));
     darkPalette.setColor(QPalette::Shadow, QColor(20, 20, 20));
     darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
@@ -96,23 +97,35 @@ MainWindow::MainWindow() {
       QPalette darkPalette;
       darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
       darkPalette.setColor(QPalette::WindowText, Qt::white);
-      darkPalette.setColor(QPalette::Base, QColor(25, 25, 25));
-      darkPalette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
+      darkPalette.setColor(QPalette::Disabled, QPalette::WindowText,
+                           QColor(127, 127, 127));
+      darkPalette.setColor(QPalette::Base, QColor(42, 42, 42));
+      darkPalette.setColor(QPalette::AlternateBase, QColor(66, 66, 66));
       darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
       darkPalette.setColor(QPalette::ToolTipText, Qt::white);
       darkPalette.setColor(QPalette::Text, Qt::white);
+      darkPalette.setColor(QPalette::Disabled, QPalette::Text,
+                           QColor(127, 127, 127));
+      darkPalette.setColor(QPalette::Disabled, QPalette::Light,
+                           QColor(35, 35, 35));
+      darkPalette.setColor(QPalette::Dark, QColor(35, 35, 35));
+      darkPalette.setColor(QPalette::Shadow, QColor(20, 20, 20));
       darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
       darkPalette.setColor(QPalette::ButtonText, Qt::white);
+      darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText,
+                           QColor(127, 127, 127));
       darkPalette.setColor(QPalette::BrightText, Qt::red);
       darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-
       darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
-      darkPalette.setColor(QPalette::HighlightedText, Qt::black);
-
+      darkPalette.setColor(QPalette::Disabled, QPalette::Highlight,
+                           QColor(80, 80, 80));
+      darkPalette.setColor(QPalette::HighlightedText, Qt::white);
+      darkPalette.setColor(QPalette::Disabled, QPalette::HighlightedText,
+                           QColor(127, 127, 127));
       qApp->setPalette(darkPalette);
-
-      qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: "
-                          "#2a82da; border: 1px solid white; }");
+      qApp->setStyleSheet(
+          "QToolTip { color: #ffffff; background-color: #2a82da; "
+          "border: 1px solid white;}");
     }
   }
 #endif
@@ -482,6 +495,7 @@ MainWindow::MainWindow() {
   ui.layoutcontrol2->hide();
   ui.layoutcontrol3->hide();
   ui.layoutcontrol1_sch->hide();
+  ui.layoutcontrol1_queue->hide();
 
   // statusTips
   ui.actionRefresh->setStatusTip("Refresh remotes view");
@@ -575,6 +589,9 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/showHidden", dialog.getShowHidden());
 
       settings->setValue("Settings/darkMode", dialog.getDarkMode());
+      settings->setValue("Settings/rememberLastOptions",
+                         dialog.getRememberLastOptions());
+
       settings->setValue("Settings/buttonStyle",
                          dialog.getButtonStyle().trimmed());
       settings->setValue("Settings/iconsLayout",
@@ -606,15 +623,11 @@ MainWindow::MainWindow() {
       settings->setValue("Settings/transferOffScript",
                          dialog.getTransferOffScript().trimmed());
 
-      // set queueScriptRun tooltip
-      QString queueScriptRunToolTip =
-          QString("Run script defined in preferences after all queue "
-                  "processing finishes.\n\n"
-                  "Can be used for example to hibernate your computer.\n\n") +
-          QString("Script set in preferences: ") + QString("\"") +
-          QString(settings->value("Settings/queueScript", false).toString()) +
-          QString("\"");
-      ui.queueScriptRun->setToolTip(queueScriptRunToolTip);
+      settings->setValue("Settings/queueScriptRun", dialog.getQueueScriptRun());
+      settings->setValue("Settings/jobStartScriptRun",
+                         dialog.getJobStartScriptRun());
+      settings->setValue("Settings/jobLastFinishedScriptRun",
+                         dialog.getJobLastFinishedScriptRun());
 
       SetRclone(dialog.getRclone());
       SetRcloneConf(dialog.getRcloneConf());
@@ -628,13 +641,6 @@ MainWindow::MainWindow() {
 
       mSystemTray.setVisible(mAlwaysShowInTray);
     }
-  });
-
-  QObject::connect(ui.actionQueueScriptRun, &QAction::triggered, this, [=]() {
-    // remember in settings queueScriptRun checkbox state
-    auto settings = GetSettings();
-    settings->setValue("Settings/queueScriptRun",
-                       ui.queueScriptRun->isChecked());
   });
 
   // intercept tab closure
@@ -721,7 +727,16 @@ MainWindow::MainWindow() {
                        &MainWindow::addTransfer);
       QObject::connect(remote, &RemoteWidget::addSavedTransfer, this,
                        &MainWindow::addSavedTransfer);
-      int index = ui.tabs->addTab(remote, name);
+
+      QString nameTrimmed = name;
+
+      if (name.length() > 15) {
+        nameTrimmed = nameTrimmed.left(12) + "...";
+      }
+
+      int index = ui.tabs->addTab(remote, nameTrimmed);
+      ui.tabs->setTabToolTip(index,
+                             "type: " + remoteType + "\n\nname: " + name);
       ui.tabs->setCurrentIndex(index);
     }
   });
@@ -955,7 +970,7 @@ MainWindow::MainWindow() {
             auto settings = GetSettings();
             if (settings->value("Settings/queueScriptRun", false).toBool()) {
               QString queueScript =
-                  settings->value("Settings/queueScript", false).toString();
+                  settings->value("Settings/queueScript").toString();
               if (!queueScript.isEmpty()) {
                 runScript(queueScript);
               }
@@ -1368,12 +1383,8 @@ MainWindow::MainWindow() {
     if (mJobsSort != "byStatus") {
       mJobsTimeSortOrder = !mJobsTimeSortOrder;
     }
-    mJobsSort = "byDate";
-    // QToolButton { border: 0; }\n\nQToolButton:pressed {\n border: 4;\n
-    // border-radius: 10px;\n border-style: inset;\n border-color: rgba(1, 1, 1,
-    // 0);\n}
 
-    // ui.buttonSortByTime->setStyleSheet("QToolButton { border: none; } ")
+    mJobsSort = "byDate";
 
     if (mJobsTimeSortOrder) {
       ui.buttonSortByTime->setIcon(sortTimeAZIcon);
@@ -2913,27 +2924,7 @@ void MainWindow::rcloneListRemotes() {
   ui.remotes->clear();
 
   auto settings = GetSettings();
-  QString iconsLayout = settings->value("Settings/iconsLayout").toString();
-
-  if (iconsLayout == "tiles") {
-    ui.remotes->setViewMode(QListWidget::IconMode);
-    // disable drag and drop
-    ui.remotes->setMovement(QListView::Static);
-    // always adjust icons after the window is resized
-    ui.remotes->setResizeMode(QListView::Adjust);
-    ui.remotes->setWrapping(true);
-    ui.remotes->setSpacing(10);
-  }
-  if (iconsLayout == "longlist") {
-    ui.remotes->setViewMode(QListWidget::ListMode);
-    ui.remotes->setResizeMode(QListView::Adjust);
-    ui.remotes->setWrapping(false);
-  }
-  if (iconsLayout == "list") {
-    ui.remotes->setViewMode(QListWidget::ListMode);
-    ui.remotes->setResizeMode(QListView::Adjust);
-    ui.remotes->setWrapping(true);
-  }
+  QString mIconsLayout = settings->value("Settings/iconsLayout").toString();
 
   QProcess *p = new QProcess();
 
@@ -2966,7 +2957,7 @@ void MainWindow::rcloneListRemotes() {
 
             QString name = parts[0].trimmed();
             QString type = parts[1].trimmed();
-            QString tooltip = type;
+            QString tooltip = "type: " + type + "\n\nname: " + name;
 
             QString img_add = "";
             int size;
@@ -3067,6 +3058,31 @@ void MainWindow::rcloneListRemotes() {
              }
 #endif
             ui.remotes->setIconSize(QSize(size, size));
+
+            if (mIconsLayout == "tiles") {
+              ui.remotes->setViewMode(QListWidget::IconMode);
+              // disable drag and drop
+              ui.remotes->setMovement(QListView::Static);
+              // always adjust icons after the window is resized
+              ui.remotes->setResizeMode(QListView::Adjust);
+              ui.remotes->setWrapping(true);
+              ui.remotes->setGridSize(QSize(size + 20, size + 40));
+              ui.remotes->setSpacing(10);
+              ui.remotes->setTextElideMode(Qt::ElideMiddle);
+            }
+            if (mIconsLayout == "longlist") {
+              ui.remotes->setViewMode(QListWidget::ListMode);
+              ui.remotes->setResizeMode(QListView::Adjust);
+              ui.remotes->setWrapping(false);
+              ui.remotes->setGridSize(QSize(size + 800, size + 20));
+            }
+            if (mIconsLayout == "list") {
+              ui.remotes->setViewMode(QListWidget::ListMode);
+              ui.remotes->setResizeMode(QListView::Adjust);
+              ui.remotes->setWrapping(true);
+              ui.remotes->setGridSize(QSize(size + 100, size + 20));
+              ui.remotes->setSpacing(10);
+            }
 
             QString path = ":media/images/remotes_icons/" +
                            type.replace(' ', '_') + img_add + ".png";
@@ -3251,17 +3267,6 @@ void MainWindow::addTasksToQueue() {
   // ignore no more existing
 
   ui.queueListWidget->clear();
-
-  // set queueScriptRun tooltip
-  auto settings = GetSettings();
-  QString queueScriptRunToolTip =
-      QString("Run script defined in preferences after all queue processing "
-              "finishes.\n\n"
-              "Can be used for example to hibernate your computer.\n\n") +
-      QString("Script set in preferences: ") + QString("\"") +
-      QString(settings->value("Settings/queueScript", false).toString()) +
-      QString("\"");
-  ui.queueScriptRun->setToolTip(queueScriptRunToolTip);
 
   auto items = ui.tasksListWidget->selectedItems();
 
@@ -3676,7 +3681,7 @@ void MainWindow::runItem(JobOptionsListWidgetItem *item,
 
   int widgetsCount = ui.jobs->count();
 
-  if ((widgetsCount - 2) / 2 > 150) {
+  if ((widgetsCount - 2) / 2 > 75) {
 
     // find the oldest inactive job
 
@@ -3984,9 +3989,11 @@ void MainWindow::editSelectedTask() {
 
     if (jobType == "Download" || jobType == "Upload") {
 
+      QStringList empty;
       TransferDialog td(isDownload, false, remote, path, jo->isFolder,
-                        remoteType, remoteMode, this, jo, true);
+                        remoteType, remoteMode, false, empty, this, jo, true);
       td.exec();
+
     } else {
       if (jobType == "Mount") {
         MountDialog md(remote, path, remoteType, remoteMode, this, jo, true);
@@ -4031,13 +4038,22 @@ void MainWindow::editSelectedTask() {
   // and the Save Task button closes it... so there is nothing more to do here
 }
 
-void MainWindow::saveQueueFile(void) {
+bool MainWindow::saveQueueFile(void) {
 
   QMutexLocker locker(&mSaveQueueFileMutex);
   QString filePath = GetConfigDir().absoluteFilePath("queue.conf");
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
   QFile file(filePath);
+#else
+  QSaveFile file(filePath);
+#endif
+
+  if (!file.open(QIODevice::WriteOnly)) {
+    return false;
+  }
+
   QTextStream out(&file);
-  file.open(QIODevice::WriteOnly);
 
   // loop over ui.queueListWidget
   for (int i = 0; i < ui.queueListWidget->count(); ++i) {
@@ -4056,17 +4072,31 @@ void MainWindow::saveQueueFile(void) {
 #endif
   }
 
-  file.close();
+  out.flush();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  return out.status() == QTextStream::Ok && file.commit();
+#else
+  return out.status() == QTextStream::Ok;
+#endif
 }
 
-void MainWindow::saveSchedulerFile(void) {
+bool MainWindow::saveSchedulerFile(void) {
 
   QMutexLocker locker(&mSaveSchedulerFileMutex);
   QString filePath = GetConfigDir().absoluteFilePath("scheduler.conf");
-  QFile file(filePath);
-  QTextStream out(&file);
-  file.open(QIODevice::WriteOnly);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
+  QFile file(filePath);
+#else
+  QSaveFile file(filePath);
+#endif
+
+  if (!file.open(QIODevice::WriteOnly)) {
+    return false;
+  };
+
+  QTextStream out(&file);
   int schedulersCount = ui.schedulers->count();
 
   for (int i = schedulersCount - 2; i >= 0; i = i - 2) {
@@ -4082,7 +4112,13 @@ void MainWindow::saveSchedulerFile(void) {
     }
   }
 
-  file.close();
+  out.flush();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  return out.status() == QTextStream::Ok && file.commit();
+#else
+  return out.status() == QTextStream::Ok;
+#endif
 }
 
 void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,
@@ -4238,9 +4274,16 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
           // run custom script
           auto settings = GetSettings();
           QString transferOffScript =
-              settings->value("Settings/transferOffScript", false).toString();
-          if (!transferOffScript.isEmpty()) {
-            runScript(transferOffScript);
+              settings->value("Settings/transferOffScript").toString();
+
+          bool jobLastFinishedScriptRun =
+              settings->value("Settings/jobLastFinishedScriptRun", false)
+                  .toBool();
+          if (jobLastFinishedScriptRun) {
+
+            if (!transferOffScript.isEmpty()) {
+              runScript(transferOffScript);
+            }
           }
         }
 
@@ -4306,7 +4349,7 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
 
               if (queueScriptRun) {
                 QString queueScript =
-                    settings->value("Settings/queueScript", false).toString();
+                    settings->value("Settings/queueScript").toString();
                 if (!queueScript.isEmpty()) {
                   runScript(queueScript);
                 }
@@ -4496,9 +4539,16 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   // run custom script
   auto settings = GetSettings();
   QString transferOnScript =
-      settings->value("Settings/transferOnScript", false).toString();
-  if (!transferOnScript.isEmpty()) {
-    runScript(transferOnScript);
+      settings->value("Settings/transferOnScript").toString();
+
+  bool jobStartScriptRun =
+      settings->value("Settings/jobStartScriptRun", false).toBool();
+
+  if (jobStartScriptRun) {
+
+    if (!transferOnScript.isEmpty()) {
+      runScript(transferOnScript);
+    }
   }
 
   ui.tabs->setTabText(1, QString("Jobs (%1)").arg(++mJobCount));
@@ -4797,8 +4847,10 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
         QString remote = isDownload ? joTasks->source : joTasks->dest;
         QString path = isDownload ? joTasks->dest : joTasks->source;
 
+        QStringList empty;
         TransferDialog td(isDownload, false, remote, path, joTasks->isFolder,
-                          remoteType, remoteMode, this, joTasks, true);
+                          remoteType, remoteMode, false, empty, this, joTasks,
+                          true);
         td.exec();
         break;
       }
@@ -4810,6 +4862,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
     mDoNotSort = true;
     // when quitting (waiting for unmount) don't start new tasks
     if (mAppQuittingStatus) {
+      mDoNotSort = false;
       return;
     }
 
@@ -4849,6 +4902,7 @@ void MainWindow::addScheduler(const QString &taskId, const QString &taskName,
             QString uniqueId_queue = jo_queue->uniqueId.toString();
             if (taskID == uniqueId_queue) {
               widget->updateTaskStatus(requestID, "task already in the queue");
+              mDoNotSort = false;
               return;
             }
           }

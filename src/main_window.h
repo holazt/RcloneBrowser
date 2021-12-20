@@ -43,8 +43,8 @@ private slots:
 
   void slotCloseTab(int index);
 
-  void saveQueueFile(void);
-  void saveSchedulerFile(void);
+  bool saveQueueFile(void);
+  bool saveSchedulerFile(void);
 
   void autoStartMounts(void);
 
@@ -137,4 +137,5 @@ private:
   bool mJobsTimeSortOrder = false;
   bool mJobsStatusSortOrder = false;
   QString mJobsSort = "byDate";
+  QString mIconsLayout;
 };

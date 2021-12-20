@@ -24,7 +24,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       sysInfo == "10.12" || sysInfo == "10.13") {
   } else {
     ui.darkMode->hide();
-    ui.darkMode_info->hide();
+    // ui.darkMode_info->hide();
   }
 #endif
 
@@ -281,11 +281,14 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
   ui.showFileIcons->setChecked(
       settings->value("Settings/showFileIcons", true).toBool());
   ui.rowColors->setChecked(
-      settings->value("Settings/rowColors", true).toBool());
+      settings->value("Settings/rowColors", false).toBool());
   ui.showHidden->setChecked(
       settings->value("Settings/showHidden", true).toBool());
 
   ui.darkMode->setChecked(settings->value("Settings/darkMode", true).toBool());
+
+  ui.rememberLastOptions->setChecked(
+      settings->value("Settings/rememberLastOptions", true).toBool());
 
   if ((settings->value("Settings/buttonStyle").toString()) == "icononly") {
     ui.cb_icononly->setChecked(true);
@@ -424,6 +427,56 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent) {
       settings->value("Settings/transferOnScript").toString()));
   ui.transferOffScript->setText(QDir::toNativeSeparators(
       settings->value("Settings/transferOffScript").toString()));
+
+  ui.queueScriptRun->setChecked(
+      settings->value("Settings/queueScriptRun", true).toBool());
+  ui.jobStartScriptRun->setChecked(
+      settings->value("Settings/jobStartScriptRun", true).toBool());
+  ui.jobLastFinishedScriptRun->setChecked(
+      settings->value("Settings/jobLastFinishedScriptRun", true).toBool());
+
+  if (ui.queueScript->text().trimmed().isEmpty()) {
+    ui.queueScriptRun->setEnabled(false);
+  } else {
+    ui.queueScriptRun->setEnabled(true);
+  }
+  if (ui.transferOnScript->text().trimmed().isEmpty()) {
+    ui.jobStartScriptRun->setEnabled(false);
+  } else {
+    ui.jobStartScriptRun->setEnabled(true);
+  }
+  if (ui.transferOffScript->text().trimmed().isEmpty()) {
+    ui.jobLastFinishedScriptRun->setEnabled(false);
+  } else {
+    ui.jobLastFinishedScriptRun->setEnabled(true);
+  }
+
+  QObject::connect(ui.queueScript, &QLineEdit::textChanged, this, [=]() {
+    if (ui.queueScript->text().trimmed().isEmpty()) {
+      ui.queueScriptRun->setEnabled(false);
+      ui.queueScriptRun->setChecked(false);
+    } else {
+      ui.queueScriptRun->setEnabled(true);
+    }
+  });
+
+  QObject::connect(ui.transferOnScript, &QLineEdit::textChanged, this, [=]() {
+    if (ui.transferOnScript->text().trimmed().isEmpty()) {
+      ui.jobStartScriptRun->setEnabled(false);
+      ui.jobStartScriptRun->setChecked(false);
+    } else {
+      ui.jobStartScriptRun->setEnabled(true);
+    }
+  });
+
+  QObject::connect(ui.transferOffScript, &QLineEdit::textChanged, this, [=]() {
+    if (ui.transferOffScript->text().trimmed().isEmpty()) {
+      ui.jobLastFinishedScriptRun->setEnabled(false);
+      ui.jobLastFinishedScriptRun->setChecked(false);
+    } else {
+      ui.jobLastFinishedScriptRun->setEnabled(true);
+    }
+  });
 }
 
 PreferencesDialog::~PreferencesDialog() {}
@@ -625,6 +678,10 @@ bool PreferencesDialog::getPreemptiveLoading() const {
 
 bool PreferencesDialog::getDarkMode() const { return ui.darkMode->isChecked(); }
 
+bool PreferencesDialog::getRememberLastOptions() const {
+  return ui.rememberLastOptions->isChecked();
+}
+
 QString PreferencesDialog::getPreemptiveLoadingLevel() const {
   if (ui.rb_preemptiveLoading_2->isChecked()) {
     return "2";
@@ -647,4 +704,16 @@ QString PreferencesDialog::getTransferOnScript() const {
 
 QString PreferencesDialog::getTransferOffScript() const {
   return ui.transferOffScript->text();
+}
+
+bool PreferencesDialog::getQueueScriptRun() const {
+  return ui.queueScriptRun->isChecked();
+}
+
+bool PreferencesDialog::getJobStartScriptRun() const {
+  return ui.jobStartScriptRun->isChecked();
+}
+
+bool PreferencesDialog::getJobLastFinishedScriptRun() const {
+  return ui.jobLastFinishedScriptRun->isChecked();
 }

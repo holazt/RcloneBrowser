@@ -98,6 +98,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="buttonCopy">
+            <property name="text">
+             <string>Copy</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonMove">
             <property name="text">
              <string>Move</string>
@@ -263,6 +273,16 @@
               <string>Trash</string>
              </property>
             </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="elidedMeasure">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Elided....measure</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -583,9 +603,7 @@ rclone tree</string>
     <string>M&amp;ove</string>
    </property>
    <property name="toolTip">
-    <string>Move
-
-rclone move</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Server side move&lt;/p&gt;&lt;p&gt;rclone move&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="shared">
@@ -618,7 +636,7 @@ rclone about</string>
     <string>Check</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check remote's integrity&lt;/p&gt;&lt;p&gt;rclone check/cryptcheck&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check remote's integrity.&lt;/p&gt;&lt;p&gt;rclone check/cryptcheck&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionTools">
@@ -634,7 +652,7 @@ rclone about</string>
     <string>Dedupe</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove duplicated files&lt;/p&gt;&lt;p&gt;rclone &lt;span style=&quot; font-family:'.SF NS Mono';&quot;&gt;dedupe&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove duplicated files.&lt;/p&gt;&lt;p&gt;rclone &lt;span style=&quot; font-family:'.SF NS Mono';&quot;&gt;dedupe&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionNewMount">
@@ -643,6 +661,22 @@ rclone about</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mount remote to local filesystem&lt;/p&gt;&lt;p&gt;rclone mount&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="copy">
+   <property name="text">
+    <string>C&amp;opy</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Server side copy&lt;/p&gt;&lt;p&gt;rclone copy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="cleanup">
+   <property name="text">
+    <string>Cleanup</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clean up the remote&lt;/p&gt;&lt;p&gt;rclone cleanup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

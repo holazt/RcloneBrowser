@@ -21,6 +21,7 @@ void SetRclonePassword(const QString &rclonePassword);
 QStringList GetDefaultOptionsList(const QString &settingsOptions);
 QStringList GetRemoteModeRcloneOptions();
 QStringList GetShowHidden();
+QStringList GetRcloneCmd(const QStringList &args);
 
 QDir GetConfigDir(void);
 

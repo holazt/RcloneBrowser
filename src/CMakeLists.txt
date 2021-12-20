@@ -14,7 +14,7 @@ else()
 endif()
 
 if (APPLE)
-  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.13)
 endif()
 
 project(rclone-browser)

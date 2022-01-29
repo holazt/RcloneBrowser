@@ -1,0 +1,125 @@
+name: Windows Release
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+
+  pull_request:
+    branches:
+      - 'master'
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  VCINSTALLDIR: 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/'
+  BUILD_TYPE: 'Release'
+  TARGET_NAME: 'RcloneBrowser.exe'
+
+jobs:
+  build:
+    name: RcloneBrowser ${{ matrix.config.arch }}
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        qt_ver: ['5.15.2']
+        qt_target: ['desktop']
+        config:
+          - {
+            arch: x86,
+            generator: "-G'Visual Studio 16 2019' -A Win32",
+            vcpkg_triplet: x86-windows,
+            qt_arch: win32_msvc2019,
+            qt_arch_install: msvc2019,
+            pak_arch: win32
+          }
+          - {
+            arch: x64,
+            generator: "-G'Visual Studio 16 2019' -A x64",
+            vcpkg_triplet: x64-windows,
+            qt_arch: win64_msvc2019_64,
+            qt_arch_install: msvc2019_64,
+            pak_arch: win64
+          }
+    steps:
+      - name: Checkout Source code
+        if: github.event_name == 'push'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Checkout Source code
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v3
+        with:
+          path: ./build/Qt/${{ matrix.qt_ver }}/${{ matrix.config.qt_arch_install }}
+          key: ${{ runner.os }}-QtCache/${{ matrix.qt_ver }}/${{ matrix.config.qt_arch }}
+
+      - name: Install Qt
+        # Installs the Qt SDK
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qt_ver }}
+          target:  ${{ matrix.qt_target }}
+          arch: ${{ matrix.config.qt_arch }}
+          dir: '${{ github.workspace }}/build/'
+          # modules: 'qtscript'
+          cache: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: cmake ${{matrix.config.generator}} -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
+
+      - name: Build
+        shell: cmd
+        # Build your program with the given configuration
+        run: |
+          call "${{ env.VCINSTALLDIR }}\Auxiliary\Build\vcvarsall.bat" ${{ matrix.config.arch }}
+          echo winSdkDir=%WindowsSdkDir% >> %GITHUB_ENV%
+          echo winSdkVer=%WindowsSdkVersion% >> %GITHUB_ENV%
+          echo vcToolsInstallDir=%VCToolsInstallDir% >> %GITHUB_ENV%
+          echo vcToolsRedistDir=%VCToolsRedistDir% >> %GITHUB_ENV%
+
+          cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+      - name: Package
+        id: package      
+        shell: pwsh
+        run: |
+          $archiveName="RcloneBrowser-${{ matrix.config.pak_arch }}"
+          New-Item -ItemType Directory $archiveName
+          Copy-Item ${{ github.workspace }}\build\build\${{ env.BUILD_TYPE }}\${{ env.TARGET_NAME }} $archiveName\
+          windeployqt --qmldir . --plugindir $archiveName\plugins --no-translations --compiler-runtime $archiveName\${{ env.TARGET_NAME }}
+          $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
+          Remove-Item -Path $archiveName -Include $excludeList -Recurse -Force
+          $redistDll="{0}{1}\*.CRT\*.dll" -f $env:vcToolsRedistDir.Trim(), "${{ matrix.config.arch }}"
+          Copy-Item $redistDll $archiveName\
+          $sdkDll="{0}Redist\{1}ucrt\DLLs\{2}\*.dll" -f $env:winSdkDir.Trim(),$env:winSdkVer.Trim(), "${{ matrix.config.arch }}"
+          Copy-Item $sdkDll $archiveName\
+          Compress-Archive -Path $archiveName $archiveName'.zip'
+          Write-Output "packageName=$archiveName" >> $env:GITHUB_OUTPUT
+
+      - name: Artifact Upload
+        uses: actions/upload-artifact@v3
+        with:
+          # name: Windows-artifact-${{ matrix.config.arch }}
+          # path: ${{ github.workspace }}/build/build/${{ env.BUILD_TYPE }}/*\
+          name: ${{ steps.package.outputs.packageName }}
+          path: ${{ steps.package.outputs.packageName }}

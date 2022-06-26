@@ -62,6 +62,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         R"(^Transferred:\s+(\S+ \S+) \(([^)]+)\)$)"); // Until rclone 1.42
     QRegExp rxSize2(
         R"(^Transferred:\s+([0-9.]+)(\S*) \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
+    QRegExp rxSize3(
+        R"(^Transferred:\s+([0-9.]+ \w+) \/ ([0-9.]+ \w+), ([0-9%-]+), ([0-9.]+ \w+\/s), \w+ (\S+)$)"); // Starting with rclone 1.57
     QRegExp rxErrors(R"(^Errors:\s+(\S+)$)");
     QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxChecks2(
@@ -69,7 +71,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                                                         // rclone 1.43
     QRegExp rxTransferred(R"(^Transferred:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxTransferred2(
-        R"(^Transferred:\s+(\S+) \/ (\S+), ([0-9%-]+)$)"); // Starting with
+        R"(^Transferred:\s+(\d+) \/ (\d+), ([0-9%-]+)$)"); // Starting with
                                                            // rclone 1.43
     QRegExp rxTime(R"(^Elapsed time:\s+(\S+)$)");
     QRegExp rxProgress(
@@ -114,6 +116,12 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.bandwidth->setText(rxSize2.cap(6));
         ui.eta->setText(rxSize2.cap(8));
         ui.totalsize->setText(rxSize2.cap(3) + " " + rxSize2.cap(4));
+      }
+      else if (rxSize3.exactMatch(line)) {
+          ui.size->setText(rxSize3.cap(1) + ", " + rxSize3.cap(3));
+          ui.bandwidth->setText(rxSize3.cap(4));
+          ui.eta->setText(rxSize3.cap(5));
+          ui.totalsize->setText(rxSize3.cap(2));
       } else if (rxErrors.exactMatch(line)) {
         ui.errors->setText(rxErrors.cap(1));
       } else if (rxChecks.exactMatch(line)) {

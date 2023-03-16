@@ -138,7 +138,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     QRegExp rxSize2(
         R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
     QRegExp rxSize3(
-        R"(^Transferred:\s+([0-9.]+)(\S+)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.56
+        R"(^Transferred:\s+([0-9.]+ \w+) \/ ([0-9.]+ \w+), ([0-9%-]+), ([0-9.]+ \w+\/s), \w+ (\S+)$)"); // Starting with rclone 1.57
     QRegExp rxErrors(
         R"(^Errors:\s+(\d+)(.*)$)"); // captures also following variant:
                                      // "Errors: 123 (bla bla bla)"
@@ -148,14 +148,15 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
                                                         // rclone 1.43
     QRegExp rxTransferred(R"(^Transferred:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxTransferred2(
-        R"(^Transferred:\s+(\S+) \/ (\S+), ([0-9%-]+)$)"); // Starting with
+        R"(^Transferred:\s+(\d+) \/ (\d+), ([0-9%-]+)$)"); // Starting with
                                                            // rclone 1.43
     QRegExp rxTime(R"(^Elapsed time:\s+(\S+)$)");
     QRegExp rxProgress(
         R"(^\*([^:]+):\s*([^%]+)% done.+(ETA: [^)]+)$)"); // Until rclone 1.38
     QRegExp rxProgress2(
         R"(\*([^:]+):\s*([^%]+)% \/[a-zA-z0-9.]+, [a-zA-z0-9.]+\/s, (\w+)$)"); // Starting with rclone 1.39
-
+    QRegExp rxProgress3(
+        R"(^\* ([^:]+):\s*([^%]+%) \/([0-9.]+\w+), ([0-9.]*[a-zA-Z\/]+s)*,)"); // Starting with rclone 1.56
     while (mProcess->canReadLine()) {
       QString line = mProcess->readLine().trimmed();
       if (++mLines == 10000) {
@@ -196,7 +197,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.bandwidth->setText(rxSize2.cap(6));
         ui.eta->setText(rxSize2.cap(8));
         ui.totalsize->setText(rxSize2.cap(3) + " " + rxSize2.cap(4));
-
+        
         ui.progress_info->setStyleSheet(
             "QLabel { color: green; font-weight: bold;}");
         ui.progress_info->setText("(" + rxSize2.cap(5) + ")");
@@ -209,21 +210,10 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
 
       } else if (rxSize3.exactMatch(line)) {
-        ui.size->setText(rxSize3.cap(1) + " " + rxSize3.cap(2) + ", " +
-                         rxSize3.cap(5));
-        ui.bandwidth->setText(rxSize3.cap(6));
-        ui.eta->setText(rxSize3.cap(8));
-        ui.totalsize->setText(rxSize3.cap(3) + " " + rxSize3.cap(4));
-
-        ui.progress_info->setStyleSheet(
-            "QLabel { color: green; font-weight: bold;}");
-        ui.progress_info->setText("(" + rxSize3.cap(5) + ")");
-
-
-
-
-
-
+        ui.size->setText(rxSize3.cap(1) + ", " + rxSize3.cap(3));
+        ui.bandwidth->setText(rxSize3.cap(4));
+        ui.eta->setText(rxSize3.cap(5));
+        ui.totalsize->setText(rxSize3.cap(2));
       } else if (rxErrors.exactMatch(line)) {
         ui.errors->setText(rxErrors.cap(1));
 
@@ -315,6 +305,45 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         bar->setToolTip(
             "File name: " + name + "\nFile stats" +
             rxProgress2.cap(0).mid(rxProgress2.cap(0).indexOf(':')));
+
+        mUpdated.insert(label);
+      } else if (rxProgress3.exactMatch(line)) {
+        QString name = rxProgress3.cap(1).trimmed();
+
+        auto it = mActive.find(name);
+
+        QLabel *label;
+        QProgressBar *bar;
+        if (it == mActive.end()) {
+          label = new QLabel();
+
+          QString nameTrimmed;
+
+          if (name.length() > 47) {
+            nameTrimmed = name.left(25) + "..." + name.right(19);
+          } else {
+            nameTrimmed = name;
+          }
+
+          label->setText(nameTrimmed);
+
+          bar = new QProgressBar();
+          bar->setMinimum(0);
+          bar->setMaximum(100);
+          bar->setTextVisible(true);
+
+          label->setBuddy(bar);
+
+          ui.progress->addRow(label, bar);
+
+          mActive.insert(name, label);
+        } else {
+          label = it.value();
+          bar = static_cast<QProgressBar *>(label->buddy());
+        }
+
+        bar->setValue(rxProgress3.cap(2).toInt());
+        bar->setToolTip("File name: " + name + "\nFile stats" + rxProgress3.cap(0).mid(rxProgress3.cap(0).indexOf(':')));
 
         mUpdated.insert(label);
       }

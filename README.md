@@ -6,13 +6,16 @@ Rclone browser
 ==============
 Simple cross platform GUI for [rclone](https://rclone.org/) command line tool.
 
-Supports macOS, GNU/Linux, BSD family and Windows.
+Supports macOS, Windows, GNU/Linux and BSD family.
+
+<img src="https://github.com/kapitainsky/RcloneBrowser/wiki/images/readme/osLogos.png" width="50%" />
 
 Table of contents
 -------------------
 *   [Features](https://github.com/kapitainsky/RcloneBrowser#features)
 *   [Sample screenshots](https://github.com/kapitainsky/RcloneBrowser#sample-screenshots)
 *   [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it)
+*   [Compatibility](https://github.com/kapitainsky/RcloneBrowser#compatibility)
 *   [Why AppImage only for Linux](https://github.com/kapitainsky/RcloneBrowser#why-appimage-only-for-linux)
 *   [Build instructions](https://github.com/kapitainsky/RcloneBrowser#build-instructions)
     *   [Linux](https://github.com/kapitainsky/RcloneBrowser#linux)
@@ -78,13 +81,26 @@ Sample screenshots
 
 How to get it
 --------------
-Get binaries for Windows, macOS and Linux on [releases][3]' page.
+Get binaries for Windows, macOS, Linux and Raspbian on [releases][3]' page.
 
+More and more operating systems include Rclone Browser in their offical distribution channels. You can check availibility for example [here](https://repology.org/project/rclone-browser/packages) or directly in your distribution repository. If not there yet give a shout to your system maintainers.
+
+ArchLinux users can install latest release from AUR repository: [rclone-browser][7].
+
+Fedora package is now available from [Fedora packages](https://apps.fedoraproject.org/packages/rclone-browser) - simply run `sudo dnf install rclone-browser`
+
+FreeBSD has its version available from [freshports](https://www.freshports.org/net/rclone-browser) website.
+
+There is docker version provided by [@romancin](https://github.com/romancin) - https://github.com/romancin/rclonebrowser-docker - perfect solution if you would like to run it directly on your NAS (Synology, QNAP, etc.)
+
+Compatibility
+--------------
 Windows installers (64-bit and 32-bit) are compatible with all x86 based Windows OS starting with Windows 7. If for whatever reason somebody would prefer not to run installer all files can be extracted using [innoextract](https://constexpr.org/innoextract/).
 
-Mac version is compiled to run on all versions of macOS starting with 10.9.
+Mac version is compiled with options making it compatible with any macOS starting with 10.9.
 
 Situation with Linux is a bit fuzzier...
+
 Linux binary ([AppImage](https://appimage.org/)) for armhf architecture runs on any Raspberry Pi hardware using Raspbian based on Stretch or Buster.
 
 Linux binaries (AppImage) for x86_64 and i386 architectures should run on systems using distributions released in the last few years. x86_64 one is built on CentOS 7 (released in 2014) and i386 on Ubuntu 16.04 LTS (released in 2016).
@@ -103,6 +119,7 @@ To make life easier when using AppImages on Linux, you can use [AppImageLauncher
 
 For all released binaries file with hashes signed with my [PGP key](https://github.com/kapitainsky/RcloneBrowser/wiki/PGP-key) is provided. It allows to verify that provided binaries were created by myself (authenticity) and are unchanged (integrity). If you would like to have properly signed releases with code signing certificates please see note at the end of this section.
 
+<<<<<<< HEAD
 More and more operating systems include Rclone Browser in their offical distribution channels. You can check availibility [here](https://repology.org/project/rclone-browser/packages).
 
 ArchLinux users can install latest release from AUR repository: [rclone-browser][7].
@@ -113,6 +130,8 @@ FreeBSD has its version available from [freshports](https://www.freshports.org/n
 
 And if you would like to run it directly on your NAS (e.g. Synology or QNAP) there is docker version provided by @romancin - https://github.com/romancin/rclonebrowser-docker
 
+=======
+>>>>>>> test2
 *Note: For Windows and macOS it would be much nicer (to avoid pop ups about unknown software origin) to properly sign released packages with code signing certificates however it does not come free even for open source software. I looked at it and it seems that to get keys for both systems for the next three years would cost about $500 (3x$99 for [Apple developer account](https://developer.apple.com/support/purchase-activation/) and $200 for cheapest Comodo [code signing certificate](https://comodosslstore.com/uk/code-signing). I am not prepared to budget it as I do this only as a hobby and I am entirely happy with this software as it is. If Rclone Browser users think that properly signed software would be beneficial for them they can [chip in](https://www.paypal.me/kapitainsky) some cash for it. If I raise required amount I will get keys. If not I will give money to some charity.*
 
 Why AppImage only for Linux
@@ -148,11 +167,11 @@ Build instructions
 
 ### Linux
 1.  Install dependencies for your particular distribution:
-    *   **Debian/Ubuntu and derivatives**: `sudo apt update && sudo apt -y install git g++ cmake make qtdeclarative5-dev` 
-    *   **Suse/OpenSuse**: `sudo zypper ref && sudo zypper --non-interactive install git cmake make gcc-c++ libQt5Core-devel libQt5Widgets-devel libQt5Network-devel`
-    *   **RHEL/CentOS**: `sudo yum -y install git gcc-c++ cmake make qt5-qtdeclarative`
-    *   **Fedora**: `sudo dnf -y install git g++ cmake make qt5-qtdeclarative-devel`
-    *   **Arch/Manjaro**: `sudo pacman -Sy --noconfirm --needed git gcc cmake make qt5-declarative`
+    *   **Debian/Ubuntu and derivatives**: `sudo apt update && sudo apt -y install git g++ cmake make qtdeclarative5-dev qtmultimedia5-dev`
+    *   **Suse/OpenSuse**: `sudo zypper ref && sudo zypper --non-interactive install git cmake make gcc-c++ libQt5Core-devel libQt5Widgets-devel libQt5Network-devel libqt5-qtmultimedia-devel`
+    *   **RHEL/CentOS**: `sudo yum -y install git gcc-c++ cmake make qt5-qtdeclarative qt5-qtmultimedia-devel`
+    *   **Fedora**: `sudo dnf -y install git g++ cmake make qt5-qtdeclarative-devel qt5-qtmultimedia-devel`
+    *   **Arch/Manjaro**: `sudo pacman -Sy --noconfirm --needed git gcc cmake make qt5-declarative qt5-multimedia`
 2.  Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3.  Go to source folder `cd RcloneBrowser`
 4.  Create new build folder - `mkdir build && cd build`
@@ -161,7 +180,7 @@ Build instructions
 7.  Install `sudo make install`
 
 ### FreeBSD
-1.  Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-qmake`
+1.  Install dependencies `sudo pkg install git cmake qt5-buildtools qt5-declarative qt5-multimedia qt5-qmake`
 2.  Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3.  Go to source folder `cd RcloneBrowser`
 4.  Create new build folder - `mkdir build && cd build`
@@ -183,7 +202,7 @@ Build instructions
 *Note: rclone for openBSD does not support `mount` hence this feature is disabled in Rclone Browser. cgofuse guys did not manage to implement it: [#18][billziss-gh_cgofuse_i18]*
 
 ### NetBSD
-1.  Install dependencies `sudo pkgin install git cmake qt5-qtdeclarative`
+1.  Install dependencies `sudo pkgin install git cmake qt5-qtdeclarative qt5-qtmultimedia`
 2.  Clone source code from this repo `git clone https://github.com/kapitainsky/RcloneBrowser.git`
 3.  Go to source folder `cd RcloneBrowser`
 4.  Create new build folder - `mkdir build && cd build`
@@ -225,17 +244,23 @@ In standard operations mode all configurations files are stored in the following
 *   macOS:
     *   preferences: ~/Library/Preferences/com.rclone-browser.rclone-browser.plist
     *   tasks file:  ~/Library/Application Support/rclone-browser/rclone-browser/tasks.bin
-    *   lock file:   in $TMPDIR assigned by OS
-
+    *   queue file:  ~/Library/Application Support/rclone-browser/rclone-browser/queue.conf
+    *   scheduler file:  ~/Library/Application Support/rclone-browser/rclone-browser/scheduler.conf
+    *   lock file:  in $TMPDIR assigned by OS
+    
 *   Linux/BSD:
     *   preferences: ~/.config/rclone-browser/rclone-browser.conf
     *   tasks file:  ~/.local/share/rclone-browser/rclone-browser/tasks.bin
-    *   lock file:   in $TMPDIR or /tmp if $TMPDIR is not defined
+    *   queue file:  ~/.local/share/rclone-browser/rclone-browser/queue.conf
+    *   scheduler file:  ~/.local/share/rclone-browser/rclone-browser/scheduler.conf
+    *   lock file:  in $TMPDIR or /tmp if $TMPDIR is not defined
 
 *   Windows:
     *   preferences: in registry Computer\HKEY_CURRENT_USER\Software\rclone-browser\rclone-browser
     *   tasks file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\tasks.bin
-    *   lock file:   %HOMEPATH%\AppData\Local\Temp\
+    *   queue file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\queue.conf
+    *   scheduler file:  %HOMEPATH%\AppData\Local\rclone-browser\rclone-browser\scheduler.conf
+    *   lock file:   %HOMEPATH%\AppData\Local\Temp\    
 
 Starting with version 1.7.0 of Rclone Browser portable mode is supported on all operating systems. To enable it you have to create .ini file (for Windows and macOS) next to executable with same name - e.g. if application name is `RcloneBrowser.exe` or `RcloneBrowser.app` create `RcloneBrowser.ini`. For Linux create a directory (not a file) with the same name as the AppImage plus the ".config" extension in the same directory as the AppImage file - e.g. if application name is `rclone-browser.AppImage` create folder `rclone-browser.AppImage.config` next to it. This is solution supported by [AppImage specification](https://docs.appimage.org/user-guide/portable-mode.html).
 
@@ -256,7 +281,7 @@ Code signing certificates donations
 
 If you would like to donate towards code signing keys please feel free to [do it](https://www.paypal.me/kapitainsky). If I don't raise required $500 I will give all money to some charity. Please see my note regarding it at the end of [How to get it](https://github.com/kapitainsky/RcloneBrowser#how-to-get-it) section. I will keep all updated with amount raised.
 
-Raised so far: 6.4 USD (1.3% of the required target)
+Raised so far: 7.82 USD (1.6% of the required target)
 
 [1]: https://travis-ci.org/kapitainsky/RcloneBrowser
 [2]: https://ci.appveyor.com/project/kapitainsky/RcloneBrowser

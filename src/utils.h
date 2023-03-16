@@ -18,8 +18,11 @@ void SetRcloneConf(const QString &rcloneConf);
 void UseRclonePassword(QProcess *process);
 void SetRclonePassword(const QString &rclonePassword);
 
-QStringList GetDriveSharedWithMe();
-QStringList GetDefaultRcloneOptionsList();
+QStringList GetDefaultOptionsList(const QString &settingsOptions);
+QStringList GetRemoteModeRcloneOptions();
 QStringList GetShowHidden();
+QStringList GetRcloneCmd(const QStringList &args);
+
+QDir GetConfigDir(void);
 
 unsigned int compareVersion(std::string, std::string);

@@ -8,27 +8,45 @@ class JobWidget : public QWidget {
 
 public:
   JobWidget(QProcess *process, const QString &info, const QStringList &args,
-            const QString &source, const QString &dest,
+            const QString &source, const QString &dest, const QString &uniqueID,
+            const QString &transferMode, const QString &requestId,
             QWidget *parent = nullptr);
   ~JobWidget();
 
   void showDetails();
+  bool isRunning = true;
+  QDateTime getStartDateTime();
+  QString getStatus();
 
 public slots:
   void cancel();
+  QString getUniqueID();
+  QString getRequestId();
+  QString getTransferMode();
 
 signals:
-  void finished(const QString &info);
+  void finished(const QString &info, const QString &jobFinalStatus);
   void closed();
 
 private:
   Ui::JobWidget ui;
 
-  bool mRunning = true;
   QProcess *mProcess;
   int mLines = 0;
 
   QStringList mArgs;
   QHash<QString, QLabel *> mActive;
   QSet<QLabel *> mUpdated;
+
+  QString mUniqueID = "";
+  QString mTransferMode = "";
+  QString mRequestId = "";
+  QString mJobFinalStatus = "";
+
+  // 0 - running, 1 - finished, 2 - error
+  QString mStatus = "0_transfer_running";
+
+  QDateTime mStartDateTime = QDateTime::currentDateTime();
+  QDateTime mFinishDateTime;
+  void updateStartFinishInfo();
 };

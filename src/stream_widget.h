@@ -8,8 +8,12 @@ class StreamWidget : public QWidget {
 
 public:
   StreamWidget(QProcess *rclone, QProcess *player, const QString &remote,
-               const QString &stream, QWidget *parent = nullptr);
+               const QString &stream, const QStringList &args,
+               QWidget *parent = nullptr);
   ~StreamWidget();
+  bool isRunning = true;
+  QDateTime getStartDateTime();
+  QString getStatus();
 
 public slots:
   void cancel();
@@ -21,7 +25,15 @@ signals:
 private:
   Ui::StreamWidget ui;
 
-  bool mRunning = true;
   QProcess *mRclone;
   QProcess *mPlayer;
+
+  QStringList mArgs;
+
+  // 0 - running, 1 - finished, 2 - error
+  QString mStatus = "0_stream_streaming";
+
+  QDateTime mStartDateTime = QDateTime::currentDateTime();
+  QDateTime mFinishDateTime;
+  void updateStartFinishInfo();
 };

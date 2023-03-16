@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>654</width>
-    <height>280</height>
+    <width>881</width>
+    <height>655</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -34,27 +40,95 @@
       </property>
       <item>
        <widget class="QToolButton" name="showDetails">
+        <property name="minimumSize">
+         <size>
+          <width>125</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
         <property name="toolButtonStyle">
          <enum>Qt::ToolButtonTextBesideIcon</enum>
         </property>
-        <property name="arrowType">
-         <enum>Qt::RightArrow</enum>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="info">
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">* { background-color: rgba(0, 0, 0, 0); }</string>
+        </property>
+        <property name="frame">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="info"/>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>10</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="copy">
+        <property name="toolTip">
+         <string>Copy rclone command to clipboard</string>
+        </property>
+        <property name="statusTip">
+         <string>Copy rclone command to clipboard</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="cancel">
         <property name="toolTip">
          <string>Unmount</string>
         </property>
+        <property name="statusTip">
+         <string>Unmount</string>
+        </property>
         <property name="styleSheet">
-         <string notr="true">QToolButton { border: 0 }</string>
+         <string notr="true">QToolButton { border: 0; }
+
+QToolButton:pressed {
+ border: 4;
+ border-radius: 10px;
+ border-style: inset;
+ border-color: rgba(1, 1, 1, 0);
+}</string>
         </property>
         <property name="text">
          <string/>
@@ -67,36 +141,128 @@
    <item>
     <widget class="QWidget" name="details" native="true">
      <layout class="QGridLayout" name="gridLayout_2">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
+      <item row="0" column="2">
+       <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { border: 0 }</string>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>10</number>
+         </property>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="folder">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="remote">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Remote:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Mount Point:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="le_StartFinishInfo">
+           <property name="contextMenuPolicy">
+            <enum>Qt::NoContextMenu</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">* { background-color: rgba(0, 0, 0, 0); }</string>
+           </property>
+           <property name="text">
+            <string>Started: Sat, 11-Apr-2020 09:15:01 BST                                                 Finished: Sat, 11-Apr-2020 09:15:01 BST</string>
+           </property>
+           <property name="frame">
+            <bool>false</bool>
+           </property>
+           <property name="cursorPosition">
+            <number>126</number>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="folder">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="remote">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
        <widget class="QToolButton" name="showOutput">
         <property name="styleSheet">
          <string notr="true">QToolButton { border: 0 }</string>
         </property>
         <property name="text">
-         <string>Show Output</string>
+         <string>  Show Output</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QToolButton" name="showScriptOutput">
+        <property name="styleSheet">
+         <string notr="true">QToolButton { border: 0 }</string>
+        </property>
+        <property name="text">
+         <string>  Show Script Output</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -105,11 +271,11 @@
          <enum>Qt::ToolButtonTextBesideIcon</enum>
         </property>
         <property name="arrowType">
-         <enum>Qt::RightArrow</enum>
+         <enum>Qt::NoArrow</enum>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="3">
+      <item row="3" column="1" colspan="2">
        <widget class="QPlainTextEdit" name="output">
         <property name="lineWrapMode">
          <enum>QPlainTextEdit::NoWrap</enum>
@@ -119,35 +285,23 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
+      <item row="4" column="1" colspan="2">
+       <widget class="QLabel" name="l_script">
         <property name="text">
-         <string>Mount point:</string>
+         <string>Running</string>
         </property>
-        <property name="buddy">
-         <cstring>folder</cstring>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="5" column="1" colspan="2">
+       <widget class="QPlainTextEdit" name="sOutput">
+        <property name="lineWrapMode">
+         <enum>QPlainTextEdit::NoWrap</enum>
         </property>
-        <property name="text">
-         <string>Remote:</string>
-        </property>
-        <property name="buddy">
-         <cstring>remote</cstring>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -159,10 +313,6 @@
  <tabstops>
   <tabstop>showDetails</tabstop>
   <tabstop>cancel</tabstop>
-  <tabstop>remote</tabstop>
-  <tabstop>folder</tabstop>
-  <tabstop>showOutput</tabstop>
-  <tabstop>output</tabstop>
  </tabstops>
  <resources/>
  <connections/>

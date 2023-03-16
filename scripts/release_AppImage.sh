@@ -30,7 +30,7 @@ set -e
 
 # for x86_64 and i686 platform
 # Qt 5.14.0 uses openssl 1.1 and some older distros still use 1.0
-# we build openssl 1.1.1d from source using following setup:
+# we build openssl 1.1.1g from source using following setup:
 # ./config shared --prefix=/opt/openssl-1.1.1/ && make --jobs=`nproc --all` && sudo make install
 # and add to build env
 # export LD_LIBRARY_PATH="/opt/openssl-1.1.1/lib/:$LD_LIBRARY_PATH"
@@ -132,12 +132,9 @@ cp "$ROOT"/LICENSE "$TEMP_BASE"/"$TARGET"/AppDir/License.txt
 linuxdeploy --appdir AppDir --desktop-file=AppDir/usr/share/applications/rclone-browser.desktop --plugin qt
 #linuxdeploy-plugin-qt --appdir AppDir
 
-if [ $(arch) != "armv7l" ]
-then
-  # we add openssl 1.1.1 libs needed for distros still using openssl 1.0
-  cp /opt/openssl-1.1.1/lib/libssl.so.1.1 ./AppDir/usr/bin/
-  cp /opt/openssl-1.1.1/lib/libcrypto.so.1.1 ./AppDir/usr/bin/
-fi
+# we add openssl 1.1.1 libs needed for distros still using openssl 1.0
+cp /opt/openssl-1.1.1/lib/libssl.so.1.1 ./AppDir/usr/bin/
+cp /opt/openssl-1.1.1/lib/libcrypto.so.1.1 ./AppDir/usr/bin/
 
 # https://github.com/linuxdeploy/linuxdeploy-plugin-appimage
 linuxdeploy-plugin-appimage --appdir=AppDir

@@ -14,7 +14,7 @@ else()
 endif()
 
 if (APPLE)
-  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.13)
 endif()
 
 project(rclone-browser)
@@ -22,6 +22,7 @@ FIND_PACKAGE(Qt5Core REQUIRED)
 FIND_PACKAGE(Qt5Gui REQUIRED)
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 FIND_PACKAGE(Qt5Network REQUIRED)
+FIND_PACKAGE(Qt5Multimedia REQUIRED)
 
 if (WIN32)
 FIND_PACKAGE(Qt5WinExtras REQUIRED)
@@ -35,19 +36,28 @@ set(UI
   main_window.ui
   remote_widget.ui
   transfer_dialog.ui
+  mount_dialog.ui
   export_dialog.ui
+  check_dialog.ui
+  dedupe_dialog.ui
   progress_dialog.ui
   job_widget.ui
   mount_widget.ui
   stream_widget.ui
   preferences_dialog.ui
+  scheduler_widget.ui
+  delete_progress_dialog.ui
+  remote_folder_dialog.ui
 )
 
 set(MOC
   main_window.h
   remote_widget.h
   transfer_dialog.h
+  mount_dialog.h
   export_dialog.h
+  check_dialog.h
+  dedupe_dialog.h
   progress_dialog.h
   job_widget.h
   mount_widget.h
@@ -56,12 +66,22 @@ set(MOC
   icon_cache.h
   list_of_job_options.h
   item_model.h
+  qcron.h
+  scheduler_widget.h
+  hours_spinbox.h
+  minutes_spinbox.h
+  delete_progress_dialog.h
+  file_dialog.h
+  remote_folder_dialog.h
 )
 
 set(OTHER
   pch.h
   utils.h
   job_options.h
+  global.h
+  qcronfield.h
+  qcronnode.h
 )
 
 set(SOURCE
@@ -70,7 +90,10 @@ set(SOURCE
   main_window.cpp
   remote_widget.cpp
   transfer_dialog.cpp
+  mount_dialog.cpp
   export_dialog.cpp
+  check_dialog.cpp
+  dedupe_dialog.cpp
   progress_dialog.cpp
   job_widget.cpp
   mount_widget.cpp
@@ -81,6 +104,15 @@ set(SOURCE
   utils.cpp
   job_options.cpp
   list_of_job_options.cpp
+  qcron.cpp
+  qcronfield.cpp
+  qcronnode.cpp
+  scheduler_widget.cpp
+  hours_spinbox.cpp
+  minutes_spinbox.cpp
+  delete_progress_dialog.cpp
+  file_dialog.cpp
+  remote_folder_dialog.cpp
 )
 
 if(WIN32)
@@ -88,6 +120,12 @@ if(WIN32)
 elseif(APPLE)
   set(OTHER ${OTHER} osx_helper.h)
   set(SOURCE ${SOURCE} osx_helper.mm)
+
+  set(OTHER ${OTHER} mac_os_notifications.h)
+  set(SOURCE ${SOURCE} mac_os_notifications.mm)
+
+  set(OTHER ${OTHER} mac_os_power_saving.h)
+  set(SOURCE ${SOURCE} mac_os_power_saving.mm)
 endif()
 
 set(QRC resources.qrc)
@@ -123,16 +161,16 @@ ADD_MSVC_PRECOMPILED_HEADER(pch.h pch.cpp MOC_OUT)
 
 if(WIN32)
   add_executable(RcloneBrowser WIN32 ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT})
-  target_link_libraries(RcloneBrowser Qt5::Widgets Qt5::Network Qt5::WinExtras)
+  target_link_libraries(RcloneBrowser Qt5::Widgets Qt5::Network Qt5::WinExtras Qt5::Multimedia)
 elseif(APPLE)
   set_source_files_properties(icon.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
   add_executable(rclone-browser MACOSX_BUNDLE ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT} icon.icns)
-  target_link_libraries(rclone-browser Qt5::Widgets Qt5::Network Qt5::MacExtras ${COCOA_LIB})
+  target_link_libraries(rclone-browser Qt5::Widgets Qt5::Network Qt5::MacExtras Qt5::Multimedia ${COCOA_LIB} ${IOKKIT_LIB})
   set_target_properties(rclone-browser PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
 
 else()
   add_executable(rclone-browser ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT})
-  target_link_libraries(rclone-browser Qt5::Widgets Qt5::Network)
+  target_link_libraries(rclone-browser Qt5::Widgets Qt5::Network Qt5::Multimedia)
 
   install(TARGETS rclone-browser RUNTIME DESTINATION bin)
   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../assets/rclone-browser.svg" DESTINATION "share/icons/hicolor/scalable/apps" RENAME "rclone-browser.svg")

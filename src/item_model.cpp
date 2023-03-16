@@ -1,4 +1,5 @@
 #include "item_model.h"
+#include "global.h"
 #include "icon_cache.h"
 #include "utils.h"
 #include <algorithm>
@@ -82,8 +83,9 @@ ItemModel::ItemModel(IconCache *icons, const QString &remote, QObject *parent)
     : QAbstractItemModel(parent), mRemote(remote),
       mFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)),
       mRegExpFolder(
-          R"(^[\d-]+ (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \s*[\d-]+ (.+)$)"),
-      mRegExpFile(R"(^(\d+) (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\.\d+ (.+)$)") {
+          R"(^\s*[\d-]+ (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \s*[\d-]+ (.+)$)"),
+      mRegExpFile(
+          R"(^\s*(\d+) (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\.\d+ (.+)$)") {
   QStyle *style = qApp->style();
   mDriveIcon = style->standardIcon(QStyle::SP_DriveNetIcon);
   mFolderIcon = style->standardIcon(QStyle::SP_DirIcon);
@@ -117,14 +119,29 @@ ItemModel::ItemModel(IconCache *icons, const QString &remote, QObject *parent)
       });
 }
 
-ItemModel::~ItemModel() { delete mRoot; }
+ItemModel::~ItemModel() {
+  delete mRoot;
+
+  // when remote widget terminated free global rclone ls processes
+  global.rcloneLsProcessCount =
+      global.rcloneLsProcessCount - mLocalRcloneLsProcessCount;
+
+  if (global.rcloneLsProcessCount < 0) {
+    global.rcloneLsProcessCount = 0;
+  }
+}
 
 const QDir &ItemModel::path(const QModelIndex &index) const {
   return get(index)->path;
 }
 
 bool ItemModel::isLoading(const QModelIndex &index) const {
-  return get(index)->parent->isLoading();
+  // if invalid index return false instead of crashing
+  if ((index.row() != -1) && (index.column() != -1)) {
+    return get(index)->parent->isLoading();
+  } else {
+    return false;
+  }
 }
 
 void ItemModel::refresh(const QModelIndex &index) {
@@ -393,6 +410,15 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   auto rcloneFinished = [=]() {
     sender()->deleteLater();
+    // free rclone ls count (global and local)
+    mRcloneLsProcessCountMutex.lock();
+    if (global.rcloneLsProcessCount > 0) {
+      global.rcloneLsProcessCount--;
+    }
+    if (mLocalRcloneLsProcessCount > 0) {
+      mLocalRcloneLsProcessCount--;
+    }
+    mRcloneLsProcessCountMutex.unlock();
 
     parent->state =
         parent->state == Item::Loading1 ? Item::Loading2 : Item::Ready;
@@ -487,7 +513,11 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   QObject::connect(lsd, &QProcess::readyRead, this, [=]() {
     while (lsd->canReadLine()) {
-      if (mRegExpFolder.exactMatch(lsd->readLine().trimmed())) {
+
+      QString line = lsd->readLine();
+      line.replace("\n", "");
+
+      if (mRegExpFolder.exactMatch(line)) {
         QStringList cap = mRegExpFolder.capturedTexts();
 
         Item *child = new Item();
@@ -503,7 +533,11 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
 
   QObject::connect(lsl, &QProcess::readyRead, this, [=]() {
     while (lsl->canReadLine()) {
-      if (mRegExpFile.exactMatch(lsl->readLine().trimmed())) {
+
+      QString line = lsl->readLine();
+      line.replace("\n", "");
+
+      if (mRegExpFile.exactMatch(line)) {
         QStringList cap = mRegExpFile.capturedTexts();
 
         Item *child = new Item();
@@ -527,17 +561,27 @@ void ItemModel::load(const QPersistentModelIndex &parentIndex, Item *parent) {
   UseRclonePassword(lsd);
   UseRclonePassword(lsl);
 
+  // keep track of number of lsl and lsd rclone processes
+  mRcloneLsProcessCountMutex.lock();
+  global.rcloneLsProcessCount++;
+  global.rcloneLsProcessCount++;
+  mLocalRcloneLsProcessCount++;
+  mLocalRcloneLsProcessCount++;
+  mRcloneLsProcessCountMutex.unlock();
+
   lsd->start(GetRclone(),
-             QStringList() << "lsd" << GetRcloneConf() << GetDriveSharedWithMe()
-                           << GetShowHidden() << GetDefaultRcloneOptionsList()
+             QStringList() << "lsd" << GetRcloneConf()
+                           << GetRemoteModeRcloneOptions() << GetShowHidden()
+                           << GetDefaultOptionsList("defaultRcloneOptions")
                            << mRemote + ":" + parent->path.path(),
              QIODevice::ReadOnly);
-  lsl->start(GetRclone(),
-             QStringList() << "lsl" << GetRcloneConf() << GetDriveSharedWithMe()
-                           << GetShowHidden() << "--max-depth"
-                           << "1" << GetDefaultRcloneOptionsList()
-                           << mRemote + ":" + parent->path.path(),
-             QIODevice::ReadOnly);
+  lsl->start(
+      GetRclone(),
+      QStringList() << "lsl" << GetRcloneConf() << GetRemoteModeRcloneOptions()
+                    << GetShowHidden() << "--max-depth"
+                    << "1" << GetDefaultOptionsList("defaultRcloneOptions")
+                    << mRemote + ":" + parent->path.path(),
+      QIODevice::ReadOnly);
 }
 
 void ItemModel::sortRecursive(Item *item, const ItemSorter &sorter) {

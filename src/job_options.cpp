@@ -15,9 +15,12 @@ JobOptions::JobOptions()
       syncTiming(UnknownTiming), skipNewer(false), skipExisting(false),
       compare(false), compareOption(), verbose(false), sameFilesystem(false),
       dontUpdateModified(false), maxDepth(0), deleteExcluded(false),
-      isFolder(false) {}
+      isFolder(false), DriveSharedWithMe(false), mountReadOnly(false),
+      mountCacheLevel(UnknownCacheLevel), mountAutoStart(false),
+      mountWinDriveMode(false), noTraverse(false), createEmptySrcDirs(false),
+      deleteEmptySrcDirs(false) {}
 
-const qint32 JobOptions::classVersion = 3;
+const qint32 JobOptions::classVersion = 8;
 
 JobOptions::~JobOptions() {}
 
@@ -41,8 +44,23 @@ QStringList JobOptions::getOptions() const {
     list << "sync";
   }
 
-  if (dryRun) {
-    list << "--dry-run";
+  list << source;
+  list << dest;
+
+  if (!GetDefaultOptionsList("defaultRcloneOptions").isEmpty()) {
+    list << GetDefaultOptionsList("defaultRcloneOptions");
+  }
+
+  if (jobType == JobOptions::JobType::Download) {
+    if (!GetDefaultOptionsList("defaultDownloadOptions").isEmpty()) {
+      list << GetDefaultOptionsList("defaultDownloadOptions");
+    }
+  }
+
+  if (jobType == JobOptions::JobType::Upload) {
+    if (!GetDefaultOptionsList("defaultUploadOptions").isEmpty()) {
+      list << GetDefaultOptionsList("defaultUploadOptions");
+    }
   }
 
   if (sync) {
@@ -89,13 +107,24 @@ QStringList JobOptions::getOptions() const {
     }
   }
 
-  // always verbose
-  list << "--verbose";
   if (sameFilesystem) {
     list << "--one-file-system";
   }
+
   if (dontUpdateModified) {
     list << "--no-update-modtime";
+  }
+
+  if (noTraverse) {
+    list << "--no-traverse";
+  }
+
+  if (createEmptySrcDirs) {
+    list << "--create-empty-src-dirs";
+  }
+
+  if (deleteEmptySrcDirs) {
+    list << "--delete-empty-src-dirs";
   }
 
   list << "--transfers" << transfers;
@@ -127,21 +156,62 @@ QStringList JobOptions::getOptions() const {
     list << "--delete-excluded";
   }
 
+  if (!extra.isEmpty()) {
+
+    for (auto line : extra.split('\n')) {
+      // split on spaces but not if inside quotes e.g. --option-1
+      // --option-2="arg1 arg2" --option-3 arg3 should generate "--option-1"
+      // "--option-2=\"arg1 arg2\"" "--option-3" "arg3"
+      for (QString arg :
+           line.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+        if (!arg.isEmpty()) {
+          list << arg.replace("\"", "");
+        }
+      }
+    }
+  }
+
+  if (!included.isEmpty()) {
+    for (auto line : included.split('\n')) {
+      list << "--include" << line;
+    }
+  }
+
+  // excluded after included and extra options as they can also contain included
   if (!excluded.isEmpty()) {
     for (auto line : excluded.split('\n')) {
       list << "--exclude" << line;
     }
   }
 
-  if (!extra.isEmpty()) {
-    for (auto arg : extra.split(' ')) {
-      list << arg;
+  if (!filtered.isEmpty()) {
+    for (auto line : filtered.split('\n')) {
+      list << "--filter" << line;
     }
   }
 
-  if (DriveSharedWithMe) {
-    list << "--drive-shared-with-me";
+  // get Google Drive mode option
+  if (remoteType == "drive") {
+    if (remoteMode == "shared") {
+      list << "--drive-shared-with-me";
+    } else {
+      if (remoteMode == "trash") {
+        list << "--drive-trashed-only";
+      } else {
+        if (remoteMode == "main") {
+        } else {
+          // older tasks dont't have googleDriveMode
+          // and value from DriveSharedWithMe has to be used
+          if (DriveSharedWithMe) {
+            list << "--drive-shared-with-me";
+          }
+        }
+      }
+    }
   }
+
+  // always verbose
+  list << "--verbose";
 
   list << "--stats"
        << "1s";
@@ -149,13 +219,9 @@ QStringList JobOptions::getOptions() const {
   list << "--stats-file-name-length"
        << "0";
 
-  QStringList defaultRcloneOptionsList = GetDefaultRcloneOptionsList();
-  if (!defaultRcloneOptionsList.isEmpty()) {
-    list << defaultRcloneOptionsList;
+  if (dryRun) {
+    list << "--dry-run";
   }
-
-  list << source;
-  list << dest;
 
   return list;
 }

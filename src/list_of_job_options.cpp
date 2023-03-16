@@ -11,6 +11,7 @@ static QDataStream &operator>>(QDataStream &in, JobOptions::Operation &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::SyncTiming &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::CompareOption &e);
 static QDataStream &operator>>(QDataStream &in, JobOptions::JobType &e);
+static QDataStream &operator>>(QDataStream &in, JobOptions::MountCacheLevel &e);
 
 ListOfJobOptions *ListOfJobOptions::SavedJobOptions = nullptr;
 const QString ListOfJobOptions::persistenceFileName = "tasks.bin";
@@ -122,25 +123,35 @@ bool ListOfJobOptions::RestoreFromUserData(ListOfJobOptions &dataIn) {
 }
 
 bool ListOfJobOptions::PersistToUserData() {
-  QFile *file = GetPersistenceFile(
-      QIODevice::WriteOnly); // note this mode implies Truncate also
+  QFile *file = GetPersistenceFile(QIODevice::ReadOnly);
+
   if (file == nullptr)
     return false;
-  QDataStream outstream(file);
-  outstream.setVersion(QDataStream::Qt_5_2);
 
+  QFileInfo fileToSaveInfo(*file);
+
+  QSaveFile fileToSave(fileToSaveInfo.absoluteFilePath());
+
+  // note this mode implies Truncate also
+  if (!fileToSave.open(QIODevice::WriteOnly)) {
+    file->close();
+    delete file;
+    return false;
+  }
+
+  QDataStream outstream(&fileToSave);
+
+  outstream.setVersion(QDataStream::Qt_5_2);
   for (JobOptions *it : tasks) {
     outstream << *it;
   }
 
-  file->flush();
   file->close();
+  delete file;
 
   emit tasksListUpdated();
 
-  delete file;
-
-  return true;
+  return fileToSave.commit();
 }
 
 QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {
@@ -153,7 +164,11 @@ QDataStream &operator<<(QDataStream &stream, JobOptions &jo) {
          << jo.connectTimeout << jo.idleTimeout << jo.retries
          << jo.lowLevelRetries << jo.deleteExcluded << jo.excluded << jo.extra
          << jo.DriveSharedWithMe << jo.source << jo.dest << jo.isFolder
-         << jo.uniqueId;
+         << jo.uniqueId << jo.remoteMode << jo.remoteType << jo.mountReadOnly
+         << jo.mountCacheLevel << jo.mountVolume << jo.mountAutoStart
+         << jo.mountRcPort << jo.mountScript << jo.mountWinDriveMode
+         << jo.included << jo.noTraverse << jo.createEmptySrcDirs << jo.filtered
+         << jo.deleteEmptySrcDirs;
 
   return stream;
 }
@@ -184,9 +199,38 @@ QDataStream &operator>>(QDataStream &stream, JobOptions &jo) {
   // stream value
   if (actualVersion >= 2) {
     stream >> jo.isFolder;
-    if (actualVersion >= 3) {
-      stream >> jo.uniqueId;
-    }
+  }
+
+  if (actualVersion >= 3) {
+    stream >> jo.uniqueId;
+  }
+  if (actualVersion >= 4) {
+    stream >> jo.remoteMode;
+    stream >> jo.remoteType;
+  }
+
+  if (actualVersion >= 5) {
+    stream >> jo.mountReadOnly;
+    stream >> jo.mountCacheLevel;
+    stream >> jo.mountVolume;
+    stream >> jo.mountAutoStart;
+    stream >> jo.mountRcPort;
+    stream >> jo.mountScript;
+    stream >> jo.mountWinDriveMode;
+  }
+
+  if (actualVersion >= 6) {
+    stream >> jo.included;
+  }
+
+  if (actualVersion >= 7) {
+    stream >> jo.noTraverse;
+    stream >> jo.createEmptySrcDirs;
+  }
+
+  if (actualVersion >= 8) {
+    stream >> jo.filtered;
+    stream >> jo.deleteEmptySrcDirs;
   }
 
   return stream;
@@ -208,6 +252,11 @@ QDataStream &operator>>(QDataStream &in, JobOptions::CompareOption &e) {
 }
 
 QDataStream &operator>>(QDataStream &in, JobOptions::JobType &e) {
+  in >> (quint32 &)e;
+  return in;
+}
+
+QDataStream &operator>>(QDataStream &in, JobOptions::MountCacheLevel &e) {
   in >> (quint32 &)e;
   return in;
 }

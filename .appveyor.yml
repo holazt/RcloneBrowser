@@ -20,7 +20,7 @@ environment:
 build_script:
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 16 2019" -A %BUILD_ARCH% -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=C:\Qt\5.13\%BUILD_MSVC% ..
+  - cmake -G "Visual Studio 16 2019" -A %BUILD_ARCH% -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=C:\Qt\5.14\%BUILD_MSVC% ..
   - cmake --build . --config Release
 
 artifacts:

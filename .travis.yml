@@ -7,10 +7,13 @@ matrix:
     - os: linux
       language: cpp
       sudo: false
+      dist: bionic
       addons:
         apt:
           packages:
             - qttools5-dev
+            - qtmultimedia5-dev
+
       script:
         - mkdir build && cd build
         - cmake ..

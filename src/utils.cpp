@@ -113,7 +113,10 @@ std::unique_ptr<QSettings> GetSettings() {
 
 void ReadSettings(QSettings *settings, QObject *widget) {
   QString name = widget->objectName();
-  if (!name.isEmpty() && settings->contains(name)) {
+
+  if (!name.isEmpty() &&
+      (settings->contains(name) || settings->contains(name + "/size"))) {
+
     if (QRadioButton *obj = qobject_cast<QRadioButton *>(widget)) {
       obj->setChecked(settings->value(name).toBool());
       return;
@@ -134,6 +137,7 @@ void ReadSettings(QSettings *settings, QObject *widget) {
       obj->setText(settings->value(name).toString());
       return;
     }
+
     if (QPlainTextEdit *obj = qobject_cast<QPlainTextEdit *>(widget)) {
       int count = settings->beginReadArray(name);
       QStringList lines;
@@ -156,6 +160,11 @@ void ReadSettings(QSettings *settings, QObject *widget) {
 
 void WriteSettings(QSettings *settings, QObject *widget) {
   QString name = widget->objectName();
+
+  if (QRadioButton *obj = qobject_cast<QRadioButton *>(widget)) {
+    settings->setValue(name, obj->isChecked());
+    return;
+  }
   if (QCheckBox *obj = qobject_cast<QCheckBox *>(widget)) {
     settings->setValue(name, obj->isChecked());
     return;
@@ -177,6 +186,7 @@ void WriteSettings(QSettings *settings, QObject *widget) {
     return;
   }
   if (QPlainTextEdit *obj = qobject_cast<QPlainTextEdit *>(widget)) {
+
     QString text = obj->toPlainText().trimmed();
     if (!text.isEmpty()) {
       QStringList lines = text.split('\n');
@@ -185,6 +195,9 @@ void WriteSettings(QSettings *settings, QObject *widget) {
         settings->setArrayIndex(i);
         settings->setValue("value", lines[i]);
       }
+      settings->endArray();
+    } else {
+      settings->beginWriteArray(name, 0);
       settings->endArray();
     }
     return;
@@ -258,27 +271,42 @@ void SetRclonePassword(const QString &rclonePassword) {
   gRclonePassword = rclonePassword;
 }
 
-QStringList GetDriveSharedWithMe() {
+QStringList GetRemoteModeRcloneOptions() {
   auto settings = GetSettings();
-  bool driveShared = settings->value("Settings/driveShared", false).toBool();
+  QString googleDriveMode =
+      settings->value("Settings/remoteMode", "main").toString();
+
   QStringList driveSharedOption;
-  if (driveShared) {
+
+  if (googleDriveMode == "shared") {
     driveSharedOption << "--drive-shared-with-me";
+  }
+  if (googleDriveMode == "trash") {
+    driveSharedOption << "--drive-trashed-only";
   }
   return driveSharedOption;
 }
 
-QStringList GetDefaultRcloneOptionsList() {
+QStringList GetDefaultOptionsList(const QString &settingsOptions) {
   auto settings = GetSettings();
-  QString defaultRcloneOptions =
-      settings->value("Settings/defaultRcloneOptions").toString();
-  QStringList defaultRcloneOptionsList;
-  if (!defaultRcloneOptions.isEmpty()) {
-    for (auto arg : defaultRcloneOptions.split(' ')) {
-      defaultRcloneOptionsList << arg;
+  QString defaultOptions =
+      settings->value("Settings/" + settingsOptions).toString();
+  //      settings->value("Settings/defaultRcloneOptions").toString();
+  QStringList defaultOptionsList;
+
+  if (!defaultOptions.isEmpty()) {
+    // split on spaces but not if inside quotes e.g. --option-1 --option-2="arg1
+    // arg2" --option-3 arg3 should generate "--option-1" "--option-2=\"arg1
+    // arg2\"" "--option-3" "arg3"
+    for (QString arg :
+         defaultOptions.split(QRegExp(" (?=[^\"]*(\"[^\"]*\"[^\"]*)*$)"))) {
+      if (!arg.isEmpty()) {
+        defaultOptionsList << arg.replace("\"", "");
+      }
     }
   }
-  return defaultRcloneOptionsList;
+
+  return defaultOptionsList;
 }
 
 QStringList GetShowHidden() {
@@ -292,4 +320,110 @@ QStringList GetShowHidden() {
                      << ".*";
   }
   return showHiddenOption;
+}
+
+QDir GetConfigDir() {
+
+  QDir outputDir;
+
+  if (IsPortableMode()) {
+    // in portable mode tasks' file will be saved in the same folder as
+    // excecutable
+#ifdef Q_OS_MACOS
+    // on macOS excecutable file is located in
+    // ./rclone-browser.app/Contents/MasOS/
+    // to get actual bundle folder we have
+    // to traverse three levels up
+    outputDir = QDir(qApp->applicationDirPath() + "/../../..");
+#else
+#ifdef Q_OS_WIN
+    // not macOS
+    outputDir = QDir(qApp->applicationDirPath());
+#else
+    QString xdg_config_home = qgetenv("XDG_CONFIG_HOME");
+    outputDir = QDir(xdg_config_home + "/rclone-browser");
+#endif
+#endif
+
+  } else {
+    // get data location folder from Qt  - OS dependend
+    outputDir =
+        QDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+  }
+
+  //  if (!outputDir.exists()) {
+  //    outputDir.mkpath(".");
+  //  }
+  //  QString filePath = outputDir.absoluteFilePath(persistenceFileName);
+  //  QFile *file = new QFile(filePath);
+  //
+  //  if (!file->open(mode)) {
+  //    qDebug() << QString("Could not open ") << file->fileName();
+  //    delete file;
+  //    file = nullptr;
+  //  }
+  return outputDir;
+}
+
+// build rclone cmd string (used for info, e.g. to show rclone cmd in transfer
+// dialog)
+QStringList GetRcloneCmd(const QStringList &args) {
+
+  QStringList rcloneTransferCmd;
+
+  QString rcloneCmd = (QDir::toNativeSeparators(GetRclone()));
+  QStringList rcloneConf = GetRcloneConf();
+
+  QStringList rcloneOptions = args;
+
+  // rclone executable
+  if (!rcloneCmd.isEmpty()) {
+    if (rcloneCmd.contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneCmd + "\"";
+    } else {
+      rcloneTransferCmd << rcloneCmd;
+    }
+  }
+
+  // rclone config
+  if (!rcloneConf.isEmpty()) {
+    // --config
+    rcloneTransferCmd << rcloneConf.at(0);
+    // file location
+    if (rcloneConf.at(1).contains(" ")) {
+      rcloneTransferCmd << "\"" + QDir::toNativeSeparators(rcloneConf.at(1)) +
+                               "\"";
+    } else {
+      rcloneTransferCmd << QDir::toNativeSeparators(rcloneConf.at(1));
+    }
+  }
+
+  if (!rcloneOptions.isEmpty() && rcloneOptions.count() > 1) {
+    // copy/move/sync
+    rcloneTransferCmd << rcloneOptions.takeAt(0);
+
+    // source and destination
+    if (rcloneOptions.at(0).contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
+    } else {
+      rcloneTransferCmd << rcloneOptions.takeAt(0);
+    }
+
+    if (rcloneOptions.at(0).contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneOptions.takeAt(0) + "\"";
+    } else {
+      rcloneTransferCmd << rcloneOptions.takeAt(0);
+    }
+  }
+
+  // rclone remaining options
+  for (int j = 0; j < rcloneOptions.count(); ++j) {
+    if (rcloneOptions.at(j).contains(" ")) {
+      rcloneTransferCmd << "\"" + rcloneOptions.at(j) + "\"";
+    } else {
+      rcloneTransferCmd << rcloneOptions.at(j);
+    }
+  }
+
+  return rcloneTransferCmd;
 }

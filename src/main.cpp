@@ -1,7 +1,66 @@
 #include "main_window.h"
 #include "utils.h"
 
+#ifdef Q_OS_WIN
+// required by messageHandler
+#include "stdio.h"
+#endif
+
+#ifdef Q_OS_MACOS
+extern void qt_set_sequence_auto_mnemonic(bool b);
+#endif
+
+#ifdef Q_OS_WIN
+// redirect debug to stderr so we can run "app.exe > log.txt 2>&1" on Windows
+void messageHandler(QtMsgType type, const QMessageLogContext &context,
+                    const QString &msg) {
+  QByteArray localMsg = msg.toLocal8Bit();
+  const char *file = context.file ? context.file : "";
+  const char *function = context.function ? context.function : "";
+  switch (type) {
+  case QtDebugMsg:
+    fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file,
+            context.line, function);
+    break;
+  case QtInfoMsg:
+    fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file,
+            context.line, function);
+    break;
+  case QtWarningMsg:
+    fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file,
+            context.line, function);
+    break;
+  case QtCriticalMsg:
+    fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file,
+            context.line, function);
+    break;
+  case QtFatalMsg:
+    fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file,
+            context.line, function);
+    break;
+  }
+}
+#endif
+
 int main(int argc, char *argv[]) {
+
+#ifdef Q_OS_WIN
+  // redirect debug to stderr so we can run "app.exe > log.txt 2>&1" on Windows
+  QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
+  qInstallMessageHandler(messageHandler);
+#endif
+
+  // set locale to UK english
+  // would be great to let Qt manage it but it leads to issue like this one:
+  // https://github.com/kapitainsky/RcloneBrowser/issues/96
+  // maybe one day somebody looks into localizing RB and solves this better
+  // From now on chaps - we speak english only
+  QLocale l(QLocale::English, QLocale::UnitedKingdom);
+  QLocale::setDefault(l);
+
+#ifdef Q_OS_MACOS
+  qt_set_sequence_auto_mnemonic(true);
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
   static const char ENV_VAR_QT_DEVICE_PIXEL_RATIO[] = "QT_DEVICE_PIXEL_RATIO";
@@ -10,6 +69,7 @@ int main(int argc, char *argv[]) {
       !qEnvironmentVariableIsSet("QT_SCALE_FACTOR") &&
       !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
   }
 #endif
 
@@ -60,13 +120,13 @@ int main(int argc, char *argv[]) {
   // during first run the darkModeIni key might not exist
   if (!(settings->contains("Settings/darkModeIni"))) {
     // if darkModeIni does not exist create new key
-    settings->setValue("Settings/darkModeIni", "false");
+    settings->setValue("Settings/darkModeIni", "true");
   };
 
   // during first run the darkMode key might not exist
   if (!(settings->contains("Settings/darkMode"))) {
     // if darkMode does not exist create new key
-    settings->setValue("Settings/darkMode", "false");
+    settings->setValue("Settings/darkMode", "true");
   };
 
   bool darkMode = settings->value("Settings/darkMode").toBool();
@@ -76,8 +136,146 @@ int main(int argc, char *argv[]) {
   // during first run the iconSize key might not exist
   if (!(settings->contains("Settings/iconSize"))) {
     // if iconSize does not exist create new key
-    settings->setValue("Settings/iconSize", "medium");
+    settings->setValue("Settings/iconSize", "M");
   };
+
+  // during first run the iconsLayout key might not exist
+  if (!(settings->contains("Settings/iconsLayout"))) {
+    // if iconsLayout does not exist create new key
+    settings->setValue("Settings/iconsLayout", "tiles");
+  };
+
+  // during first run the iconsColour key might not exist
+  if (!(settings->contains("Settings/iconsColour"))) {
+    // if iconsColour does not exist create new key
+    settings->setValue("Settings/iconsColour", "black");
+  };
+
+  // during first run the buttonStyle key might not exist
+  if (!(settings->contains("Settings/buttonStyle"))) {
+    // if buttonstyle does not exist create new key
+    settings->setValue("Settings/buttonStyle", "icononly");
+  };
+
+  // during first run the fontSize key might not exist
+  if (!(settings->contains("Settings/fontSize"))) {
+    // if fontSize does not exist create new key
+#ifdef Q_OS_WIN
+    // on Windows Fussion mode uses too small fonts
+    settings->setValue("Settings/fontSize", "1");
+#else
+    settings->setValue("Settings/fontSize", "0");
+#endif
+  };
+
+  // during first run the buttonSize key might not exist
+  if (!(settings->contains("Settings/buttonSize"))) {
+    // if buttonSize does not exist create new key
+    settings->setValue("Settings/buttonSize", "0");
+  };
+
+  // during first run the sortTask key might not exist
+  if (!(settings->contains("Settings/sortTask"))) {
+    // if sortTask does not exist create new key
+    settings->setValue("Settings/sortTask", "false");
+  };
+
+  // during first run the remoteMode key might not exist
+  if (!(settings->contains("Settings/remoteMode"))) {
+    // if remoteMode does not exist create new key
+    settings->setValue("Settings/remoteMode", "main");
+  };
+
+  // during first run the remoteType key might not exist
+  if (!(settings->contains("Settings/remoteType"))) {
+    // if remoteType does not exist create new key
+    settings->setValue("Settings/remoteType", "main");
+  };
+
+  if (!(settings->contains("Settings/soundNotif"))) {
+    settings->setValue("Settings/soundNotif", "false");
+  };
+
+  // true - scheduler runing, false - scheduler not runing
+  if (!(settings->contains("Settings/schedulerStatus"))) {
+    settings->setValue("Settings/schedulerStatus", "true");
+  };
+
+  // true - queue runing, false - queue not runing
+  if (!(settings->contains("Settings/queueStatus"))) {
+    settings->setValue("Settings/queueStatus", "true");
+  };
+
+  if (!(settings->contains("Settings/startMinimisedToTray"))) {
+    settings->setValue("Settings/startMinimisedToTray", "false");
+  };
+
+  if (!(settings->contains("Settings/transferAutoName"))) {
+    settings->setValue("Settings/transferAutoName", "false");
+  };
+
+  if (!(settings->contains("Settings/transferAddToQueue"))) {
+    settings->setValue("Settings/transferAddToQueue", "false");
+  };
+
+  // preemptive content loading on/off
+  if (!(settings->contains("Settings/preemptiveLoading"))) {
+    settings->setValue("Settings/preemptiveLoading", "true");
+  };
+
+  // preemptive content loading level (0,1,2)
+  if (!(settings->contains("Settings/preemptiveLoadingLevel"))) {
+    settings->setValue("Settings/preemptiveLoadingLevel", "0");
+  }
+
+  // during first run the queueScript key might not exist
+  if (!(settings->contains("Settings/queueScript"))) {
+    settings->setValue("Settings/queueScript", "");
+  };
+
+  // script to run when transfer jobs start
+  if (!(settings->contains("Settings/transferOnScript"))) {
+    settings->setValue("Settings/transferOnScript", "");
+  };
+
+  // script to run when last transfer jobs finished
+  if (!(settings->contains("Settings/transferOffScript"))) {
+    settings->setValue("Settings/transferOffScript", "");
+  };
+
+  // during first run the queueScriptRun key might not exist
+  if (!(settings->contains("Settings/queueScriptRun"))) {
+    settings->setValue("Settings/queueScriptRun", "false");
+  };
+
+  if (!(settings->contains("Settings/jobStartScriptRun"))) {
+    settings->setValue("Settings/jobStartScriptRun", "false");
+  };
+
+  if (!(settings->contains("Settings/jobLastFinishedScriptRun"))) {
+    settings->setValue("Settings/jobLastFinishedScriptRun", "false");
+  };
+
+  // remember and re-use last transfer options
+  if (!(settings->contains("Settings/rememberLastOptions"))) {
+    settings->setValue("Settings/rememberLastOptions", "true");
+  };
+
+  // use ports (49152-65535) -
+  // https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+  // during first run the rcPortStartWin key might not exist
+  if (!(settings->contains("Settings/rcPortStartWin"))) {
+    // if rcPortStartWin does not exist create new key
+    settings->setValue("Settings/rcPortStartWin", "49700");
+  };
+
+  // set application font size
+  int fontsize = 0;
+  fontsize = (settings->value("Settings/fontSize").toInt());
+
+  QFont defaultFont = QApplication::font();
+  defaultFont.setPointSize(defaultFont.pointSize() + fontsize);
+  qApp->setFont(defaultFont);
 
   // enforce one instance of Rclone Browser per user
   QString tmpDir;

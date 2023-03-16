@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>912</width>
+    <width>1103</width>
     <height>552</height>
    </rect>
   </property>
@@ -36,7 +36,7 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
+       <item alignment="Qt::AlignVCenter">
         <widget class="QWidget" name="buttons" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="leftMargin">
@@ -54,135 +54,302 @@
           <item>
            <widget class="QToolButton" name="buttonRefresh">
             <property name="text">
-             <string>&amp;Refresh</string>
+             <string>Refresh</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonMkdir">
             <property name="text">
-             <string>&amp;New Folder</string>
+             <string>Mkdir</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="buttonRename">
             <property name="text">
-             <string>R&amp;ename</string>
+             <string>Rename</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonCopy">
+            <property name="text">
+             <string>Copy</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="buttonMove">
             <property name="text">
-             <string>M&amp;ove</string>
+             <string>Move</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="buttonPurge">
             <property name="text">
-             <string>De&amp;lete</string>
+             <string>Delete</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonMount">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;Mount remote&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;rclone mount&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
-             <string>&amp;Mount</string>
+             <string>Mount</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="buttonStream">
             <property name="text">
-             <string>&amp;Stream</string>
+             <string>Stream</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="buttonUpload">
             <property name="text">
-             <string>&amp;Upload...</string>
+             <string>Upload</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignVCenter">
+           <widget class="QToolButton" name="buttonDownload">
+            <property name="text">
+             <string>Download</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="buttonDownload">
-            <property name="text">
-             <string>&amp;Download...</string>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
             </property>
-           </widget>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QToolButton" name="buttonSize">
             <property name="text">
-             <string>&amp;Get Size...</string>
+             <string>Size</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="buttonTree">
+           <widget class="QToolButton" name="buttonTools">
+            <property name="toolTip">
+             <string>Show additional tools</string>
+            </property>
+            <property name="statusTip">
+             <string>Show additional tools</string>
+            </property>
             <property name="text">
-             <string>&amp;Tree</string>
+             <string>Tools</string>
             </property>
             <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="buttonLink">
-            <property name="text">
-             <string>&amp;Link</string>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="buttonExport">
-            <property name="text">
-             <string>E&amp;xport...</string>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            <property name="arrowType">
+             <enum>Qt::NoArrow</enum>
             </property>
            </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cb_GoogleDriveMode">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Main</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Shared with me</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Trash</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="elidedMeasure">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Elided....measure</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>5</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <spacer name="spacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Expanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonInfo">
+            <property name="text">
+             <string>Info</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frameTools">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>12</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <spacer name="horizontalSpacer_6">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -195,36 +362,72 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBoxShared">
-            <property name="toolTip">
-             <string>Shared with Me (Google Drive)</string>
-            </property>
+           <widget class="QToolButton" name="buttonTree">
             <property name="text">
-             <string>Shared</string>
+             <string>Tree</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="spacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+           <widget class="QToolButton" name="buttonLink">
+            <property name="text">
+             <string>Link</string>
             </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>10</width>
-              <height>20</height>
-             </size>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonExport">
+            <property name="text">
+             <string>Export</string>
             </property>
-           </spacer>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonCheck">
+            <property name="text">
+             <string>Check</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonDedupe">
+            <property name="text">
+             <string>Dedupe</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="path">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>24</height>
+          </size>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -232,6 +435,12 @@
        </item>
        <item>
         <widget class="QTreeView" name="tree">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>3</verstretch>
+          </sizepolicy>
+         </property>
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>
@@ -248,7 +457,7 @@
           <enum>Qt::CopyAction</enum>
          </property>
          <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
+          <enum>QAbstractItemView::ExtendedSelection</enum>
          </property>
          <property name="selectionBehavior">
           <enum>QAbstractItemView::SelectRows</enum>
@@ -273,29 +482,41 @@
    <property name="text">
     <string>&amp;Refresh</string>
    </property>
+   <property name="toolTip">
+    <string>Refresh (F5)</string>
+   </property>
    <property name="shortcut">
     <string>F5</string>
    </property>
   </action>
   <action name="mount">
    <property name="text">
-    <string>&amp;Mount</string>
+    <string>Mount</string>
    </property>
    <property name="toolTip">
-    <string>rclone mount</string>
+    <string>Mount
+
+rclone mount</string>
    </property>
   </action>
   <action name="stream">
    <property name="text">
-    <string>&amp;Stream</string>
+    <string>Stream</string>
+   </property>
+   <property name="toolTip">
+    <string>Stream file
+
+rclone cat | player -</string>
    </property>
   </action>
   <action name="mkdir">
    <property name="text">
-    <string>&amp;New Folder</string>
+    <string>Mkdir</string>
    </property>
    <property name="toolTip">
-    <string>rclone mkdir</string>
+    <string>New Folder (F7)
+
+rclone mkdir</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
@@ -303,10 +524,12 @@
   </action>
   <action name="rename">
    <property name="text">
-    <string>R&amp;ename</string>
+    <string>Rename</string>
    </property>
    <property name="toolTip">
-    <string>rclone moveto</string>
+    <string>Rename (F2)
+
+rclone moveto</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -314,10 +537,12 @@
   </action>
   <action name="purge">
    <property name="text">
-    <string>De&amp;lete</string>
+    <string>Delete</string>
    </property>
    <property name="toolTip">
-    <string>rclone purge|delete</string>
+    <string>Delete (Del)
+
+rclone purge|delete</string>
    </property>
    <property name="shortcut">
     <string>Del</string>
@@ -325,20 +550,34 @@
   </action>
   <action name="upload">
    <property name="text">
-    <string>&amp;Upload</string>
+    <string>&amp;Upload </string>
+   </property>
+   <property name="toolTip">
+    <string>Upload (ALT-u)</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+U</string>
    </property>
   </action>
   <action name="download">
    <property name="text">
     <string>&amp;Download</string>
    </property>
+   <property name="toolTip">
+    <string>Download (ALT-d)</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+D</string>
+   </property>
   </action>
   <action name="getSize">
    <property name="text">
-    <string>&amp;Get Size</string>
+    <string>Size</string>
    </property>
    <property name="toolTip">
-    <string>rclone size</string>
+    <string>Get folder size
+
+rclone size</string>
    </property>
   </action>
   <action name="getTree">
@@ -346,12 +585,14 @@
     <string>DirTree</string>
    </property>
    <property name="toolTip">
-    <string>rclone tree</string>
+    <string>Show folders tree
+
+rclone tree</string>
    </property>
   </action>
   <action name="export_">
    <property name="text">
-    <string>E&amp;xport</string>
+    <string>Export</string>
    </property>
    <property name="toolTip">
     <string>Export files list</string>
@@ -362,7 +603,7 @@
     <string>M&amp;ove</string>
    </property>
    <property name="toolTip">
-    <string>rclone move</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Server side move&lt;/p&gt;&lt;p&gt;rclone move&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="shared">
@@ -372,10 +613,70 @@
   </action>
   <action name="link">
    <property name="text">
-    <string>Public Link</string>
+    <string>Link</string>
    </property>
    <property name="toolTip">
-    <string>rclone link</string>
+    <string>Fetch public link
+
+rclone link</string>
+   </property>
+  </action>
+  <action name="getInfo">
+   <property name="text">
+    <string>Info</string>
+   </property>
+   <property name="toolTip">
+    <string>Get remote info
+
+rclone about</string>
+   </property>
+  </action>
+  <action name="actionCheck">
+   <property name="text">
+    <string>Check</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check remote's integrity.&lt;/p&gt;&lt;p&gt;rclone check/cryptcheck&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionTools">
+   <property name="text">
+    <string>Tools</string>
+   </property>
+   <property name="toolTip">
+    <string>Show additional tools</string>
+   </property>
+  </action>
+  <action name="actionDedupe">
+   <property name="text">
+    <string>Dedupe</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove duplicated files.&lt;/p&gt;&lt;p&gt;rclone &lt;span style=&quot; font-family:'.SF NS Mono';&quot;&gt;dedupe&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionNewMount">
+   <property name="text">
+    <string>Mount</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mount remote to local filesystem&lt;/p&gt;&lt;p&gt;rclone mount&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="copy">
+   <property name="text">
+    <string>C&amp;opy</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Server side copy&lt;/p&gt;&lt;p&gt;rclone copy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="cleanup">
+   <property name="text">
+    <string>Cleanup</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clean up the remote&lt;/p&gt;&lt;p&gt;rclone cleanup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>
@@ -388,11 +689,26 @@
   <tabstop>buttonStream</tabstop>
   <tabstop>buttonUpload</tabstop>
   <tabstop>buttonDownload</tabstop>
-  <tabstop>buttonSize</tabstop>
-  <tabstop>buttonTree</tabstop>
   <tabstop>path</tabstop>
   <tabstop>tree</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cb_GoogleDriveMode</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>shared</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>881</x>
+     <y>27</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -10,13 +10,14 @@ public:
 
   ~JobOptions();
 
-  enum Operation { UnknownOp, Copy, Move, Sync };
+  enum Operation { UnknownOp, Copy, Move, Sync, Mount, Check, CryptCheck };
   enum JobType { UnknownJobType, Upload, Download };
 
   /*
    * The following enums have their int values synchronized with the
    * list indexes on the gui.  Changes needed to be synchronized.
    */
+  enum MountCacheLevel { Off, Minimal, Writes, Full, UnknownCacheLevel };
   enum SyncTiming { During, After, Before, UnknownTiming };
   enum CompareOption {
     SizeAndModTime,
@@ -59,6 +60,26 @@ public:
   bool isFolder;
   QUuid uniqueId;
   bool DriveSharedWithMe;
+  QString remoteMode;
+  QString remoteType;
+
+  // added for mount task
+  bool mountReadOnly;
+  MountCacheLevel mountCacheLevel;
+  QString mountVolume;
+  bool mountAutoStart;
+  QString mountRcPort;
+  QString mountScript;
+  bool mountWinDriveMode;
+
+  // added options for multi items operations
+  QString included;
+  bool noTraverse;
+  bool createEmptySrcDirs;
+
+  // additional options for multi items operations
+  QString filtered;
+  bool deleteEmptySrcDirs;
 
   void setJobType(bool isDownload) {
     jobType = (isDownload) ? Download : Upload;
@@ -87,14 +108,16 @@ public:
 class JobOptionsListWidgetItem : public QListWidgetItem {
 public:
   JobOptionsListWidgetItem(JobOptions *jo, const QIcon &icon,
-                           const QString &text)
-      : QListWidgetItem(icon, text), mJobData(jo) {}
+                           const QString &text, const QString &requestId)
+      : QListWidgetItem(icon, text), mJobData(jo), mRequestId(requestId) {}
 
   void SetData(JobOptions *jo) { mJobData = jo; }
   JobOptions *GetData() { return mJobData; }
+  QString GetRequestId() { return mRequestId; }
 
 private:
   JobOptions *mJobData;
+  QString mRequestId;
 };
 
 class SerializationException : public QException {

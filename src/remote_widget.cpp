@@ -1424,7 +1424,7 @@ RemoteWidget::RemoteWidget(IconCache *iconCache, const QString &remote,
 #if defined(Q_OS_MACOS)
       // on macOS we check if FUSE for macOS is installed
 
-      const QFileInfo outputDir("/Library/Filesystems/osxfuse.fs/");
+      const QFileInfo outputDir("/Library/Filesystems/macfuse.fs/");
 
       if (outputDir.exists()) {
 

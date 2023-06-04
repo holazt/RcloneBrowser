@@ -106,13 +106,13 @@ jobs:
           $archiveName="RcloneBrowser-${{ matrix.config.pak_arch }}"
           New-Item -ItemType Directory $archiveName
           Copy-Item ${{ github.workspace }}\build\build\${{ env.BUILD_TYPE }}\${{ env.TARGET_NAME }} $archiveName\
-          windeployqt --qmldir . --plugindir $archiveName\plugins --no-translations --compiler-runtime $archiveName\${{ env.TARGET_NAME }}
+          windeployqt --qmldir . --plugindir $archiveName\ --no-translations --compiler-runtime $archiveName\${{ env.TARGET_NAME }}
           $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
           Remove-Item -Path $archiveName -Include $excludeList -Recurse -Force
           $redistDll="{0}{1}\*.CRT\*.dll" -f $env:vcToolsRedistDir.Trim(), "${{ matrix.config.arch }}"
           Copy-Item $redistDll $archiveName\
-          $sdkDll="{0}Redist\{1}ucrt\DLLs\{2}\*.dll" -f $env:winSdkDir.Trim(),$env:winSdkVer.Trim(), "${{ matrix.config.arch }}"
-          Copy-Item $sdkDll $archiveName\
+          # $sdkDll="{0}Redist\{1}ucrt\DLLs\{2}\*.dll" -f $env:winSdkDir.Trim(),$env:winSdkVer.Trim(), "${{ matrix.config.arch }}"
+          # Copy-Item $sdkDll $archiveName\
           Compress-Archive -Path $archiveName $archiveName'.zip'
           Write-Output "packageName=$archiveName" >> $env:GITHUB_OUTPUT
 

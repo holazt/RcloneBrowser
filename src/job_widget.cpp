@@ -64,7 +64,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         R"(^Transferred:\s+([0-9.]+)(\S*) \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
     QRegExp rxSize3(
         R"(^Transferred:\s+([0-9.]+ \w+) \/ ([0-9.]+ \w+), ([0-9%-]+), ([0-9.]+ \w+\/s), \w+ (\S+)$)"); // Starting with rclone 1.57
-    QRegExp rxErrors(R"(^Errors:\s+(\S+)$)");
+    QRegExp rxErrors(R"(^Errors:\s+(\S+))");
     QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxChecks2(
         R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+)$)");   // Starting with

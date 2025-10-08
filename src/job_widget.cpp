@@ -69,6 +69,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     QRegExp rxChecks2(
         R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+)$)");   // Starting with
                                                         // rclone 1.43
+    QRegExp rxChecks3(
+      R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+), Listed (\S+)$)"); // Starting with rclone 1.70
     QRegExp rxTransferred(R"(^Transferred:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxTransferred2(
         R"(^Transferred:\s+(\d+) \/ (\d+), ([0-9%-]+)$)"); // Starting with
@@ -129,6 +131,9 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
       } else if (rxChecks2.exactMatch(line)) {
         ui.checks->setText(rxChecks2.cap(1) + " / " + rxChecks2.cap(2) + ", " +
                            rxChecks2.cap(3));
+      } else if (rxChecks3.exactMatch(line)) {
+        ui.checks->setText(rxChecks3.cap(1) + " / " + rxChecks3.cap(2) + ", " +
+                           rxChecks3.cap(3) + ", Listed " + rxChecks3.cap(4));
       } else if (rxTransferred.exactMatch(line)) {
         ui.transferred->setText(rxTransferred.cap(1));
       } else if (rxTransferred2.exactMatch(line)) {
